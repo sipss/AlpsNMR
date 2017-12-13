@@ -40,4 +40,3 @@ The nuclei in the sample are set according to the pulse sequence and the
 acqus parameters, following Sofia's advice.
 }
 \keyword{internal}
-

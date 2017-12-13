@@ -51,4 +51,17 @@ irods_metadata <- nmr_prepare_zip_files(meta_irods = irods_metadata,
 nmr_push_to_irods(irods_metadata, "/NIHSData/DUND-XXXXXX/study/Metabolomics")
 }
 }
+\author{
+\strong{Maintainer}: Sergio Oller Moreno \email{Sergio.OllerMoreno@rd.nestle.com}
 
+Authors:
+\itemize{
+  \item Ivan Montoliu Roura \email{Ivan.MontoliuRoura@rd.nestle.com}
+}
+
+Other contributors:
+\itemize{
+  \item Nestlé Institute of Health Sciences [copyright holder]
+}
+
+}

@@ -15,4 +15,3 @@ a logical. \code{TRUE} if checked columns are in the ontology, \code{FALSE} othe
 \description{
 Validate irods_meta
 }
-

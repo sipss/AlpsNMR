@@ -22,4 +22,3 @@ in the same matrix
 \details{
 For 2-D samples, we use two 1-D linear interpolations.
 }
-

@@ -16,4 +16,3 @@ a tibble with converted columns
 Simplifies a tibble with lists columns of length 1 of the same type
 }
 \keyword{internal}
-

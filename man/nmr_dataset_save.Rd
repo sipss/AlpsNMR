@@ -19,4 +19,3 @@ the passed nmr_dataset object
 \description{
 Wraps \code{save} to save the nmr_dataset object in RData format
 }
-

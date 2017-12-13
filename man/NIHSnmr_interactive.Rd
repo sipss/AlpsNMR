@@ -9,4 +9,3 @@ NIHSnmr_interactive()
 \description{
 Run interactive package example
 }
-

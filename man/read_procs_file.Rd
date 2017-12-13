@@ -19,4 +19,3 @@ a list with a list of parameters for each procs file given
 Reads a Bruker procs file
 }
 \keyword{internal}
-

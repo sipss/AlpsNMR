@@ -19,4 +19,3 @@ a data frame with the injection metadata
 \description{
 Get metadata
 }
-

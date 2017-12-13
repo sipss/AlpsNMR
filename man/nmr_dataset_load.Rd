@@ -15,4 +15,3 @@ the nmr_dataset object stored in file_name or NULL
 \description{
 Loads a nmr_dataset saved with nmr_save_dataset
 }
-

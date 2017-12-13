@@ -19,4 +19,3 @@ Key columns on the output data frame are "cntn_cf_fluidx_barcode" and "cntn_cf_s
 \description{
 This function reads an xlsx slims spreadsheet and converts it into a data frame
 }
-

@@ -20,4 +20,3 @@ an nmr_dataset object, with the matching rows
 \description{
 Extract samples from the nmr_dataset based on metadata column criteria
 }
-

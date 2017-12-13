@@ -19,4 +19,3 @@ a list with name-value pairs. If the title file has no field names,
 Read pdata title Bruker NMR file
 }
 \keyword{internal}
-

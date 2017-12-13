@@ -19,4 +19,3 @@ A list with the JDX information
 Read a ACD/Spectrus JDX file
 }
 \keyword{internal}
-

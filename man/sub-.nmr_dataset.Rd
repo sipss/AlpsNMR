@@ -23,4 +23,3 @@ data <- nm_read_samples_dir("your_dir")
 data2 <- data[1:3] # get the first 3 samples
 }
 }
-

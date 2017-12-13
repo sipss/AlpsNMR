@@ -18,4 +18,3 @@ to include the resolution in the third element (e.g. \code{c(0.2, 0.8, 0.05)})}
 This dataframe is useful for plotting with ggplot, although it may be very
 long and therefore eat a lot of RAM.
 }
-

@@ -22,4 +22,3 @@ A meta_irods data frame with an additional \code{src_path} column
 \description{
 Create one zip file for each sample
 }
-

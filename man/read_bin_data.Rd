@@ -15,4 +15,3 @@ read_bin_data(file_name, endian)
 Read binary Bruker NMR data
 }
 \keyword{internal}
-

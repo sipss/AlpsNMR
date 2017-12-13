@@ -25,4 +25,3 @@ The nmr_dataset object, with the samples normalized
 \description{
 Normalize NMR samples
 }
-

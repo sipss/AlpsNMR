@@ -30,4 +30,3 @@ irods_results <-
 plasmadata <- nmr_read_samples_irods(irods_results)
 }
 }
-

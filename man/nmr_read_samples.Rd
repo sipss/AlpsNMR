@@ -2,8 +2,8 @@
 % Please edit documentation in R/nmr_dataset.R
 \name{nmr_read_samples}
 \alias{nmr_read_samples}
-\alias{nmr_read_samples_bruker}
 \alias{nmr_read_samples_dir}
+\alias{nmr_read_samples_bruker}
 \alias{nmr_read_samples_jdx}
 \title{Read NMR samples}
 \usage{
@@ -40,4 +40,3 @@ a \code{nmr_dataset} object
 These functions load samples from files and return a \code{nmr_dataset}.
 }
 \keyword{internal}
-

@@ -17,4 +17,3 @@ data frame. The rest are returned in the \code{diff} data frame.
 The \code{const} data frame only has one row as all rows would be identical.
 }
 \keyword{internal}
-

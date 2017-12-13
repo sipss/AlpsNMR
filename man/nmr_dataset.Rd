@@ -23,4 +23,3 @@ It currently has the following elements:
                     interpolation, exclusion or normalization.}
 }
 }
-

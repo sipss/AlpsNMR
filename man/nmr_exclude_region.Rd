@@ -18,4 +18,3 @@ The nmr_dataset object, with the regions excluded
 \description{
 Sets to zero a given region (for instance to remove the water peak)
 }
-

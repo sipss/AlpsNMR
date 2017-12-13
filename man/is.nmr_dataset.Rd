@@ -15,4 +15,3 @@ is.nmr_dataset(x)
 \description{
 Object is of nmr_dataset class
 }
-

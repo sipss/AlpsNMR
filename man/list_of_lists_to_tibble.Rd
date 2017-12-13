@@ -33,4 +33,3 @@ mydata <- list_of_lists_to_tibble(data_as_list)
 }
 }
 \keyword{internal}
-

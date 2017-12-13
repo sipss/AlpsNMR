@@ -21,4 +21,3 @@ an NMR sample
 \description{
 Read Bruker NMR metadata
 }
-

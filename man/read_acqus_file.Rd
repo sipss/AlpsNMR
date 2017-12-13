@@ -19,4 +19,3 @@ a list with a list of parameters for each acqus file given
 Reads all common acqus files
 }
 \keyword{internal}
-

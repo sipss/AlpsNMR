@@ -28,4 +28,3 @@ The plot
 \description{
 Plot an nmr_dataset
 }
-

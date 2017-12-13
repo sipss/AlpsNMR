@@ -16,4 +16,3 @@ A character vector where the lines have been removed
 JDX comments start with \code{$$}.
 }
 \keyword{internal}
-

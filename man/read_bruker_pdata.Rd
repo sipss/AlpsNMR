@@ -26,4 +26,3 @@ an NMR sample
 Read processed Bruker NMR data
 }
 \keyword{internal}
-

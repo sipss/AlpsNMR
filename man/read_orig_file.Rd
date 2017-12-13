@@ -16,4 +16,3 @@ a list with name-value pairs
 Read orig Bruker NMR file
 }
 \keyword{internal}
-

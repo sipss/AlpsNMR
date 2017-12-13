@@ -23,4 +23,3 @@ a list with all the bruker sample information
 \description{
 Read a Bruker sample directory
 }
-

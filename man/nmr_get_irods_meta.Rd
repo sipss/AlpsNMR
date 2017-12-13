@@ -15,4 +15,3 @@ A data frame (tibble) with the columns used by NIHSrods
 \description{
 Get metadata from an nmr_dataset for irods
 }
-

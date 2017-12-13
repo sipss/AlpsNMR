@@ -9,4 +9,3 @@ log10_minus_min_trans()
 \description{
 Custom scale transformation for 2D plots of nmr_dataset objects
 }
-

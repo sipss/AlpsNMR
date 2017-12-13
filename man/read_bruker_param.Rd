@@ -16,4 +16,3 @@ list of parameter-value pairs
 Reads a BRUKER parameter file to a list
 }
 \keyword{internal}
-
