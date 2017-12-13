@@ -1,40 +1,41 @@
 #' nmr_dataset (S3 class)
 #'
-#' The \code{nmr_dataset} represents a set of NMR samples.
+#' The `nmr_dataset` represents a set of NMR samples.
 #' It is defined as an S3 class, and it can be treated as a regular list.
 #'
 #' It currently has the following elements:
 #'
-#' \describe{
-#'   \item{metadata}{The metadata fields. A data frame with one row per sample}
-#'   \item{axis}{A list with length equal to the dimensionality of the data.
-#'               For 1D spectra it is a list with one numeric vector}
-#'   \item{data_*}{Data arrays with the actual spectra. The first index represents
-#'                 the sample, the rest of the
-#'                 indices match the length of each \code{axis}. Typically
-#'                 \code{data_1r} is a matrix with one sample on each row
-#'                 and the chemical shifts in the columns.}
-#'   \item{processing}{The processing steps performed on the object, such as
-#'                     interpolation, exclusion or normalization.}
-#' }
+#' - `metadata`: The metadata fields. A data frame with one row per sample
+#' 
+#' - `axis`: A list with length equal to the dimensionality of the data.
+#' For 1D spectra it is a list with a numeric vector
+#' 
+#' - `data_*`: Data arrays with the actual spectra. The first index represents
+#' the sample, the rest of the indices match the length of each `axis`.
+#' Typically `data_1r` is a matrix with one sample on each row and the chemical 
+#' shifts in the columns.
+#' 
+#' - `processing`: The processing steps performed on the object, such as
+#' interpolation, exclusion or normalization.
+#' 
 #' @name nmr_dataset
 NULL
 
 
 #' Read NMR samples
 #'
-#' These functions load samples from files and return a \code{nmr_dataset}.
+#' These functions load samples from files and return a [nmr_dataset].
 #'
 #' @name nmr_read_samples
 #' @param sample_names A character vector with file or directory names.
 #' @param samples_dir A directory that contains multiple samples
-#' @param metadata_only A logical, to load only metadata (default: \code{FALSE})
+#' @param metadata_only A logical, to load only metadata (default: `FALSE`)
 #' @param pulse_sequence If it is set to a pulse sequence
 #'                       ("NOESY", "JRES", "CPMG"...) it will only load
 #'                       the samples that match that pulse sequence.
 #' @param overwrite_sample_names (Internal Use)
-#' @param ... Arguments passed to \code{\link{read_bruker_sample}} for data loading
-#' @return a \code{nmr_dataset} object
+#' @param ... Arguments passed to [read_bruker_sample()] for data loading
+#' @return a [nmr_dataset] object
 NULL
 
 #' @rdname nmr_read_samples
@@ -81,8 +82,8 @@ nmr_read_samples <- function(sample_names, pulse_sequence = NULL,
   return(samples)
 }
 
-#' @rdname nmr_read_samples
-#' @keywords internal
+# @rdname nmr_read_samples
+# @keywords internal
 nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
                                     metadata_only = FALSE,
                                     overwrite_sample_names = NULL,
@@ -199,7 +200,7 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
   return(samples)
 }
 
-#' @rdname nmr_read_samples
+# @rdname nmr_read_samples
 nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
   sample_names <- normalizePath(sample_names, mustWork = FALSE)
   raw_samples <- read_jdx(sample_names, metadata_only = metadata_only)
@@ -279,14 +280,14 @@ filter_.nmr_dataset <- function(.data, ..., .dots) {
   return(.data[indices_to_keep])
 }
 
-# From dplyr:::has_names
+# From rlang::have_name
 has_names <- function(x) {
   nms <- names(x)
   if (is.null(nms)) {
     rep(FALSE, length(x))
   }
   else {
-    !is.na(nms) & nms != ""
+    !(is.na(nms) | nms == "")
   }
 }
 

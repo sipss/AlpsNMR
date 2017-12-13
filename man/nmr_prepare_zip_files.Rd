@@ -17,7 +17,7 @@ nmr_prepare_zip_files(meta_irods, workdir, overwrite = FALSE, ...)
 }
 \value{
 A meta_irods data frame with an additional \code{src_path} column
-        containing the zip file path location.
+containing the zip file path location.
 }
 \description{
 Create one zip file for each sample

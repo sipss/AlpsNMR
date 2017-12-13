@@ -2,16 +2,16 @@
 % Please edit documentation in R/NIHSnmr.R
 \name{nmr_dataset_load}
 \alias{nmr_dataset_load}
-\title{Load a nmr_dataset from a file}
+\title{Load a \link{nmr_dataset} from a file}
 \usage{
 nmr_dataset_load(file_name)
 }
 \arguments{
-\item{file_name}{The file name with the nmr_dataset}
+\item{file_name}{The file name with the \link{nmr_dataset}}
 }
 \value{
-the nmr_dataset object stored in file_name or NULL
+the \link{nmr_dataset} object stored in \code{file_name}
 }
 \description{
-Loads a nmr_dataset saved with nmr_save_dataset
+Loads a \link{nmr_dataset} saved with \code{\link[=nmr_save_dataset]{nmr_save_dataset()}}
 }

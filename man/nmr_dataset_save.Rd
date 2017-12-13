@@ -2,20 +2,20 @@
 % Please edit documentation in R/NIHSnmr.R
 \name{nmr_dataset_save}
 \alias{nmr_dataset_save}
-\title{Save an nmr_dataset object}
+\title{Save an \link{nmr_dataset} object}
 \usage{
 nmr_dataset_save(nmr_dataset, file_name, ...)
 }
 \arguments{
-\item{nmr_dataset}{The \code{\link{nmr_dataset}} object to save}
+\item{nmr_dataset}{The \link{nmr_dataset} object to save}
 
 \item{file_name}{The output file name.}
 
-\item{...}{Optional arguments passed to \code{save}.}
+\item{...}{Optional arguments passed to \link{saveRDS}.}
 }
 \value{
-the passed nmr_dataset object
+the passed \link{nmr_dataset} object
 }
 \description{
-Wraps \code{save} to save the nmr_dataset object in RData format
+Wraps \code{save} to save the \link{nmr_dataset} object in \code{.RDS} format
 }

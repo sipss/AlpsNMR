@@ -11,21 +11,20 @@ processing to them. See an interactive example with
 \code{\link[=NIHSnmr_interactive]{NIHSnmr_interactive()}}
 }
 \details{
-The following functions can be combined with the \link[=\%>\%]{pipe}. They
-create or modify the \code{\link{nmr_dataset}} object.
-
+The following functions can be combined with the pipe. They
+create or modify the \link{nmr_dataset} object.
 \itemize{
- \item{\code{\link{nmr_read_samples_dir}} (or \code{\link{nmr_read_samples}})}
- \item{\code{\link{nmr_interpolate}}}
- \item{\code{\link{nmr_exclude_region}}}
- \item{\code{\link{nmr_normalize}}}
- \item{\code{\link[=plot.nmr_dataset]{plot}}}
+\item \code{\link[=nmr_read_samples_dir]{nmr_read_samples_dir()}} or \code{\link[=nmr_read_samples]{nmr_read_samples()}}
+\item \code{\link[=nmr_interpolate]{nmr_interpolate()}}
+\item \code{\link[=nmr_exclude_region]{nmr_exclude_region()}}
+\item \code{\link[=nmr_normalize]{nmr_normalize()}}
+\item \link[=plot.nmr_dataset]{plot()}
 }
 
 There are also functions to extract the metadata and submit the samples to
 irods, see the example below.
 
-The \code{nmr_dataset} object is essentially a list, so it is easy to access
+The \link{nmr_dataset} object is essentially a list, so it is easy to access
 its components for further analysis.
 }
 \examples{

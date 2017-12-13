@@ -8,12 +8,12 @@ nmr_interpolate(samples, axis1 = c(min = 0.4, max = 10, by = 8e-04),
   axis2 = NULL)
 }
 \arguments{
-\item{samples}{A \code{\link{nmr_dataset}} object}
+\item{samples}{A \link{nmr_dataset} object}
 
 \item{axis1, axis2}{Axis given as \code{c(minimum, maximum, step)}}
 }
 \value{
-The nmr_dataset object, with interpolated samples
+The \link{nmr_dataset} object, with interpolated samples
 }
 \description{
 Interpolate the samples so they share the same axis and can be placed

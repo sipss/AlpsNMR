@@ -8,7 +8,7 @@ nmr_normalize(samples, method = c("area", "max", "value", "region", "none"),
   values = NULL)
 }
 \arguments{
-\item{samples}{A \code{\link{nmr_dataset}} object}
+\item{samples}{A \link{nmr_dataset} object}
 
 \item{method}{The criteria to be used for normalization}
 
@@ -20,7 +20,7 @@ If \code{method == "region"} then values is the chemical shift
 region to integrate.}
 }
 \value{
-The nmr_dataset object, with the samples normalized
+The \link{nmr_dataset} object, with the samples normalized
 }
 \description{
 Normalize NMR samples

@@ -2,23 +2,21 @@
 #'
 #' NIHSnmr allows you to import NMR samples into R and applying basic data
 #' processing to them. See an interactive example with
-#' \code{\link[=NIHSnmr_interactive]{NIHSnmr_interactive()}}
+#' [NIHSnmr_interactive()]
 #'
-#' The following functions can be combined with the \link[=\%>\%]{pipe}. They
-#' create or modify the \code{\link{nmr_dataset}} object.
+#' The following functions can be combined with the pipe. They
+#' create or modify the [nmr_dataset] object.
 #'
-#' \itemize{
-#'  \item{\code{\link{nmr_read_samples_dir}} (or \code{\link{nmr_read_samples}})}
-#'  \item{\code{\link{nmr_interpolate}}}
-#'  \item{\code{\link{nmr_exclude_region}}}
-#'  \item{\code{\link{nmr_normalize}}}
-#'  \item{\code{\link[=plot.nmr_dataset]{plot}}}
-#' }
-#'
+#' - [nmr_read_samples_dir()] or [nmr_read_samples()]
+#' - [nmr_interpolate()]
+#' - [nmr_exclude_region()]
+#' - [nmr_normalize()]
+#' - [plot()][plot.nmr_dataset()]
+#' 
 #' There are also functions to extract the metadata and submit the samples to
 #' irods, see the example below.
 #'
-#' The \code{nmr_dataset} object is essentially a list, so it is easy to access
+#' The [nmr_dataset] object is essentially a list, so it is easy to access
 #' its components for further analysis.
 #'
 #' @examples
@@ -49,15 +47,15 @@
 
 #' Normalize NMR samples
 #'
-#' @param samples A \code{\link{nmr_dataset}} object
+#' @param samples A [nmr_dataset] object
 #' @param method The criteria to be used for normalization
-#' @param values If \code{method == "value"} then values is a list
+#' @param values If `method == "value"` then values is a list
 #'               with the normalization values. The list must be named as the
 #'               data fields to normalize. Typically would be something like:
-#'               \code{values = list(data_1r = c(val1, val2, val3))}.
-#'               If \code{method == "region"} then values is the chemical shift
+#'               `values = list(data_1r = c(val1, val2, val3))`.
+#'               If `method == "region"` then values is the chemical shift
 #'               region to integrate.
-#' @return The nmr_dataset object, with the samples normalized
+#' @return The [nmr_dataset] object, with the samples normalized
 #' @export
 nmr_normalize <- function(samples,
                           method = c("area", "max", "value", "region", "none"),
@@ -125,10 +123,10 @@ nmr_normalize <- function(samples,
 #' Exclude region from samples
 #'
 #' Sets to zero a given region (for instance to remove the water peak)
-#' @param samples A \code{\link{nmr_dataset}} object
+#' @param samples A [nmr_dataset] object
 #' @param exclude A list with regions to be zeroed. Typically:
-#'                \code{exclude = list(water = c(4.7, 5.0))}
-#' @return The nmr_dataset object, with the regions excluded
+#'                `exclude = list(water = c(4.7, 5.0))`
+#' @return The [nmr_dataset] object, with the regions excluded
 #' @export
 nmr_exclude_region <- function(samples, exclude = list(water = c(4.7, 5.0))) {
   if (is.null(exclude) || length(exclude) == 0) {
@@ -168,9 +166,9 @@ nmr_exclude_region <- function(samples, exclude = list(water = c(4.7, 5.0))) {
 #' For 2-D samples, we use two 1-D linear interpolations.
 #'
 #'
-#' @param samples A \code{\link{nmr_dataset}} object
-#' @param axis1,axis2 Axis given as \code{c(minimum, maximum, step)}
-#' @return The nmr_dataset object, with interpolated samples
+#' @param samples A [nmr_dataset] object
+#' @param axis1,axis2 Axis given as `c(minimum, maximum, step)`
+#' @return The [nmr_dataset] object, with interpolated samples
 #' @export
 nmr_interpolate <- function(samples,
                             axis1=c(min = 0.4, max = 10, by = 0.0008),
@@ -337,7 +335,7 @@ nmr_interpolate <- function(samples,
 
 
 #' Get metadata
-#' @param samples a \code{\link{nmr_dataset}} object
+#' @param samples a [nmr_dataset] object
 #' @param columns Columns to get. By default gets all the columns.
 #' @param simplify Removes columns that are constant along all samples
 #' @return a data frame with the injection metadata
@@ -356,29 +354,37 @@ nmr_get_metadata <- function(samples, columns = NULL, simplify = FALSE) {
 }
 
 
-#' Load a nmr_dataset from a file
+#' Load a [nmr_dataset] from a file
 #'
-#' Loads a nmr_dataset saved with nmr_save_dataset
+#' Loads a [nmr_dataset] saved with [nmr_save_dataset()]
 #'
-#' @param file_name The file name with the nmr_dataset
-#' @return the nmr_dataset object stored in file_name or NULL
+#' @param file_name The file name with the [nmr_dataset]
+#' @return the [nmr_dataset] object stored in `file_name`
 #' @export
 nmr_dataset_load <- function(file_name) {
-  nmr_dataset <- NULL
-  load(file_name)
+  return(readRDS(file_name))
+}
+
+#' Save an [nmr_dataset] object
+#'
+#' Wraps `save` to save the [nmr_dataset] object in `.RDS` format
+#'
+#' @param nmr_dataset The [nmr_dataset] object to save
+#' @param file_name The output file name.
+#' @param ... Optional arguments passed to [saveRDS].
+#' @return the passed [nmr_dataset] object
+#' @export
+nmr_dataset_save <- function(nmr_dataset, file_name, ...) {
+  saveRDS(nmr_dataset, file_name)
   return(nmr_dataset)
 }
 
-#' Save an nmr_dataset object
-#'
-#' Wraps \code{save} to save the nmr_dataset object in RData format
-#'
-#' @param nmr_dataset The \code{\link{nmr_dataset}} object to save
-#' @param file_name The output file name.
-#' @param ... Optional arguments passed to \code{save}.
-#' @return the passed nmr_dataset object
-#' @export
-nmr_dataset_save <- function(nmr_dataset, file_name, ...) {
-  save(nmr_dataset, file = file_name, ...)
-  return(nmr_dataset)
+# This function can be removed once we know it is not needed by our users
+nmr_dataset_load_old_and_save <- function(old_file_name, new_file_name) {
+  nmr_dataset <- NULL
+  load(old_file_name)
+  if (is.null(nmr_dataset)) {
+    stop("This was not saved with the NIHSnmr version 1.0 or lower")
+  }
+  nmr_dataset_save(nmr_dataset, new_file_name)
 }

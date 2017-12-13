@@ -15,7 +15,7 @@ If it is null it is autodetected and all files are loaded.}
 
 \item{pdata_path}{Path from \code{sample_path} to the preprocessed data}
 
-\item{all_components}{If FALSE load only the real component. Otherwise load all of them}
+\item{all_components}{If \code{FALSE} load only the real component. Otherwise load all of them}
 }
 \value{
 a list with all the bruker sample information

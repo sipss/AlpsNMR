@@ -27,16 +27,23 @@ Description: Reads Bruker NMR data directories.
 License: file LICENSE
 LazyData: TRUE
 Depends: R (>= 3.2.3)
-Imports: utils (>= 3.2.3), signal (>= 0.7-6), stringr (>= 1.1.0),
-        magrittr (>= 1.5), tibble(>= 1.2), plyr(>= 1.8.4), dplyr (>=
-        0.5.0), tidyr (>= 0.6.0), readxl (>= 0.1.1), ggplot2 (>=
-        2.2.0), reshape2 (>= 1.4.2), scales (>= 0.4.1)
-Suggests: testthat (>= 1.0.2), shiny (>= 0.14.2), plotly (>= 4.5.6),
-        NIHSrods
-RoxygenNote: 6.0.1.9000
-NeedsCompilation: no
-Packaged: 2016-12-07 16:06:45 UTC; RDOllerMSe
-Author: Ivan Montoliu Roura [aut],
-  Sergio Oller Moreno [aut, cre],
-  Nestlé Institute of Health Sciences [cph]
-Maintainer: Sergio Oller Moreno <Sergio.OllerMoreno@rd.nestle.com>
+Imports:
+ utils (>= 3.2.3),
+ signal (>= 0.7-6),
+ stringr (>= 1.1.0),
+ magrittr (>= 1.5),
+ tibble(>= 1.2),
+ plyr(>= 1.8.4),
+ dplyr (>= 0.5.0),
+ tidyr (>= 0.6.0),
+ readxl (>= 0.1.1),
+ ggplot2 (>= 2.2.0),
+ reshape2 (>= 1.4.2),
+ scales (>= 0.4.1)
+Suggests:
+ testthat (>= 1.0.2),
+ shiny (>= 0.14.2),
+ plotly (>= 4.5.6),
+ NIHSrods
+RoxygenNote: 6.0.1
+Roxygen: list(markdown = TRUE)

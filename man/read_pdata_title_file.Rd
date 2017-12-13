@@ -13,7 +13,7 @@ read_pdata_title_file(sample_path, pdata_path = "pdata/1")
 }
 \value{
 a list with name-value pairs. If the title file has no field names,
-        then fields are named V1, V2...
+then fields are named V1, V2...
 }
 \description{
 Read pdata title Bruker NMR file

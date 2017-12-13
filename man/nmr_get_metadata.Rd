@@ -7,7 +7,7 @@
 nmr_get_metadata(samples, columns = NULL, simplify = FALSE)
 }
 \arguments{
-\item{samples}{a \code{\link{nmr_dataset}} object}
+\item{samples}{a \link{nmr_dataset} object}
 
 \item{columns}{Columns to get. By default gets all the columns.}
 

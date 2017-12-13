@@ -3,8 +3,7 @@
 \name{nmr_read_samples}
 \alias{nmr_read_samples}
 \alias{nmr_read_samples_dir}
-\alias{nmr_read_samples_bruker}
-\alias{nmr_read_samples_jdx}
+\alias{nmr_read_samples}
 \title{Read NMR samples}
 \usage{
 nmr_read_samples_dir(samples_dir, pulse_sequence = NULL,
@@ -12,11 +11,6 @@ nmr_read_samples_dir(samples_dir, pulse_sequence = NULL,
 
 nmr_read_samples(sample_names, pulse_sequence = NULL, metadata_only = FALSE,
   overwrite_sample_names = NULL, ...)
-
-nmr_read_samples_bruker(sample_names, pulse_sequence = NULL,
-  metadata_only = FALSE, overwrite_sample_names = NULL, ...)
-
-nmr_read_samples_jdx(sample_names, metadata_only = FALSE)
 }
 \arguments{
 \item{samples_dir}{A directory that contains multiple samples}
@@ -29,14 +23,13 @@ the samples that match that pulse sequence.}
 
 \item{overwrite_sample_names}{(Internal Use)}
 
-\item{...}{Arguments passed to \code{\link{read_bruker_sample}} for data loading}
+\item{...}{Arguments passed to \code{\link[=read_bruker_sample]{read_bruker_sample()}} for data loading}
 
 \item{sample_names}{A character vector with file or directory names.}
 }
 \value{
-a \code{nmr_dataset} object
+a \link{nmr_dataset} object
 }
 \description{
-These functions load samples from files and return a \code{nmr_dataset}.
+These functions load samples from files and return a \link{nmr_dataset}.
 }
-\keyword{internal}

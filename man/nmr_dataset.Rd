@@ -9,17 +9,15 @@ It is defined as an S3 class, and it can be treated as a regular list.
 }
 \details{
 It currently has the following elements:
-
-\describe{
-  \item{metadata}{The metadata fields. A data frame with one row per sample}
-  \item{axis}{A list with length equal to the dimensionality of the data.
-              For 1D spectra it is a list with one numeric vector}
-  \item{data_*}{Data arrays with the actual spectra. The first index represents
-                the sample, the rest of the
-                indices match the length of each \code{axis}. Typically
-                \code{data_1r} is a matrix with one sample on each row
-                and the chemical shifts in the columns.}
-  \item{processing}{The processing steps performed on the object, such as
-                    interpolation, exclusion or normalization.}
+\itemize{
+\item \code{metadata}: The metadata fields. A data frame with one row per sample
+\item \code{axis}: A list with length equal to the dimensionality of the data.
+For 1D spectra it is a list with a numeric vector
+\item \code{data_*}: Data arrays with the actual spectra. The first index represents
+the sample, the rest of the indices match the length of each \code{axis}.
+Typically \code{data_1r} is a matrix with one sample on each row and the chemical
+shifts in the columns.
+\item \code{processing}: The processing steps performed on the object, such as
+interpolation, exclusion or normalization.
 }
 }
