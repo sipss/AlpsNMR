@@ -40,7 +40,7 @@ read_bruker_param <- function(file_name) {
 
   # Match each pattern to all lines. If there is a match and there was no
   # previous match then save the matching result.
-  for (pat_idx in 1:nrow(R)) {
+  for (pat_idx in seq_len(nrow(R))) {
     lines_matched <- stringr::str_match_all(lines, R$pattern[pat_idx])
     lines_with_match <- sapply(lines_matched, nrow) > 0
     new_lines_with_match <- is.na(type_of_row) & lines_with_match
@@ -49,14 +49,14 @@ read_bruker_param <- function(file_name) {
     all_matches[new_lines_with_match] <- lines_matched[new_lines_with_match]
   }
   # Use "ParVec"-like names instead of numbers, it is easier to read:
-  if (any(is.na(type_of_row))) {
+  if (anyNA(type_of_row)) {
     lines_no_match <- which(is.na(type_of_row))
     stop("Line without a match:", paste(lines_no_match, collapse = " "))
   }
   type_of_row <- R$name[type_of_row]
   # Generate the output list. We will use the matched information of each line
   output <- list()
-  for (i in 1:length(type_of_row)) {
+  for (i in seq_len(length(type_of_row))) {
     if (type_of_row[i] == "ParVecVal") {
       field_name <- all_matches[[i]][1,2]
       output[[field_name]] <- all_matches[[i]][1,4]
