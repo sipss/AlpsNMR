@@ -318,7 +318,7 @@ read_orig_file <- function(sample_path) {
 
 #' Read pdata title Bruker NMR file
 #' @param sample_path A character path of the sample directory
-#' @param pdata_path Path from \code{sample_path} to the preprocessed data
+#' @param pdata_path Path from `sample_path` to the preprocessed data
 #' @return a list with name-value pairs. If the title file has no field names,
 #'         then fields are named V1, V2...
 #' @keywords internal
@@ -355,9 +355,9 @@ read_pdata_title_file <- function(sample_path, pdata_path = "pdata/1") {
 #' @param pdata_file File name of the binary NMR data to load. Usually "1r".
 #'                   If it is null it is autodetected and all files are loaded.
 #' @param sample_path A character path of the sample directory
-#' @param pdata_path Path from \code{sample_path} to the preprocessed data
-#' @param all_components If FALSE load only the real component. Otherwise load all of them
-#' @param read_pdata_title If TRUE also reads metadata from pdata title file.
+#' @param pdata_path Path from `sample_path` to the preprocessed data
+#' @param all_components If `FALSE` load only the real component. Otherwise load all of them
+#' @param read_pdata_title If `TRUE` also reads metadata from pdata title file.
 #' @return an NMR sample
 #' @keywords internal
 read_bruker_pdata <- function(sample_path,
