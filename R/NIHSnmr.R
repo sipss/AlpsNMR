@@ -356,7 +356,7 @@ nmr_get_metadata <- function(samples, columns = NULL, simplify = FALSE) {
 
 #' Load a [nmr_dataset] from a file
 #'
-#' Loads a [nmr_dataset] saved with [nmr_save_dataset()]
+#' Loads a [nmr_dataset] saved with [nmr_dataset_save()]
 #'
 #' @param file_name The file name with the [nmr_dataset]
 #' @return the [nmr_dataset] object stored in `file_name`

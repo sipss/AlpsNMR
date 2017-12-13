@@ -9,3 +9,9 @@
   `NIHSnmr:::nmr_dataset_load_old_and_save("your_old_file.RData", "your_old_file.RDS")`
   to convert the files. Sorry for the inconvenience, but the sooner we fix this
   the better.
+
+- `filter` to select a subset of samples from an `nmr_dataset` object has
+  been adapted to `dplyr >= 0.7.4`. Unless you used the `.dots` argument in
+  your calls there is no need to change anything. This means we now use a tidy
+  evaluation syntax for `filter`.
+

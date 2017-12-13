@@ -13,5 +13,5 @@ nmr_dataset_load(file_name)
 the \link{nmr_dataset} object stored in \code{file_name}
 }
 \description{
-Loads a \link{nmr_dataset} saved with \code{\link[=nmr_save_dataset]{nmr_save_dataset()}}
+Loads a \link{nmr_dataset} saved with \code{\link[=nmr_dataset_save]{nmr_dataset_save()}}
 }

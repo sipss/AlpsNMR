@@ -262,21 +262,23 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
 #' @export
 is.nmr_dataset <- function(x) inherits(x, "nmr_dataset")
 
-
-#' Extract samples from the nmr_dataset based on metadata column criteria
-#'
-#' @param .data An nmr_dataset object
-#' @param ... conditions, as in dplyr
-#' @param .dots Used to work around non-standard evaluation. See
-#'              \code{vignette("nse", package = "dplyr")}
-#' @return an nmr_dataset object, with the matching rows
-#' @importFrom dplyr filter_
-#' @method filter_ nmr_dataset
+# Needed for filter.nmr_dataset:
+#' @importFrom dplyr filter
 #' @export
-filter_.nmr_dataset <- function(.data, ..., .dots) {
+dplyr::filter
+
+#' Extract samples from the [nmr_dataset] based on metadata column criteria
+#'
+#' @param .data An [nmr_dataset] object
+#' @param ... conditions, as in [dplyr]
+#' @return an [nmr_dataset] object, with the matching rows
+#' @importFrom dplyr filter
+#' @export
+filter.nmr_dataset <- function(.data, ...) {
+  dots <- rlang::quos(...)
   meta <- .data$metadata
   meta$tmp_row_idx <- seq_len(nrow(meta))
-  indices_to_keep <- dplyr::filter_(meta, ..., .dots = .dots)$tmp_row_idx
+  indices_to_keep <- dplyr::filter(meta, !!! dots)$tmp_row_idx
   return(.data[indices_to_keep])
 }
 
@@ -293,7 +295,7 @@ has_names <- function(x) {
 
 
 #' Extract parts of an nmr_dataset
-#' @param x an nmr_dataset object
+#' @param x an [nmr_dataset] object
 #' @param i indices of the samples to keep
 #' @return an nmr_dataset with the extracted samples
 #' @examples

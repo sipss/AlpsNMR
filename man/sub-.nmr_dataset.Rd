@@ -7,7 +7,7 @@
 \method{[}{nmr_dataset}(x, i)
 }
 \arguments{
-\item{x}{an nmr_dataset object}
+\item{x}{an \link{nmr_dataset} object}
 
 \item{i}{indices of the samples to keep}
 }
