@@ -1,0 +1,42 @@
+Package: NIHSnmr
+Type: Package
+Title: Import and preprocess NMR data (from Bruker)
+Version: 1.0.0
+Encoding: UTF-8
+Authors@R: c(
+    person(given = "Ivan",
+           family = "Montoliu Roura",
+           email = "Ivan.MontoliuRoura@rd.nestle.com",
+           role = c("aut")),
+    person(given = "Sergio",
+           family = "Oller Moreno",
+           email = "Sergio.OllerMoreno@rd.nestle.com",
+           role = c("aut", "cre")),
+    person(given = "Nestlé Institute of Health Sciences",
+           role = "cph")
+    )
+Description: Reads Bruker NMR data directories.
+ It allows to interpolate, exclude regions and normalize the samples,
+ being tested in 1-D, with some support for 2-D and extendable for higher
+ dimensionallity data.
+ The package also provides NIHS irods integration, by extracting sample metadata,
+ compressing sample directories in zip files and pushing them to iRods.
+ Efficient plotting with 1-D data is also available and a shiny Graphical
+ User Interface is also provided for an easy visualization.
+ Basic reading of 1D  ACD/Labs exported JDX samples is also available.
+License: file LICENSE
+LazyData: TRUE
+Depends: R (>= 3.2.3)
+Imports: utils (>= 3.2.3), signal (>= 0.7-6), stringr (>= 1.1.0),
+        magrittr (>= 1.5), tibble(>= 1.2), plyr(>= 1.8.4), dplyr (>=
+        0.5.0), tidyr (>= 0.6.0), readxl (>= 0.1.1), ggplot2 (>=
+        2.2.0), reshape2 (>= 1.4.2), scales (>= 0.4.1)
+Suggests: testthat (>= 1.0.2), shiny (>= 0.14.2), plotly (>= 4.5.6),
+        NIHSrods
+RoxygenNote: 5.0.1
+NeedsCompilation: no
+Packaged: 2016-12-07 16:06:45 UTC; RDOllerMSe
+Author: Ivan Montoliu Roura [aut],
+  Sergio Oller Moreno [aut, cre],
+  Nestlé Institute of Health Sciences [cph]
+Maintainer: Sergio Oller Moreno <Sergio.OllerMoreno@rd.nestle.com>
