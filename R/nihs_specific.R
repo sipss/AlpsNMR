@@ -77,11 +77,11 @@ nmr_get_irods_meta <- function(nmr_data) {
   # paste0("Bruker ", c("RoomTemp", NA)) is c("Bruker RoomTemp", "Bruker NA")
   # and str_c does "the right thing"
   # stringr::str_c("Bruker ", c("RoomTemp", NA)) is c("Bruker RoomTemp", NA)
-  meta_irods$assay_technique <- stringr::str_c("Nuclear Magnetic Resonance-",
-                                               nmr_data$metadata$info_dimension,
-                                               "D", "-", nmr_data$metadata$info_nuclei,
-                                               "-", nmr_data$metadata$info_pulse_sequence)
-
+  meta_irods$assay_technique <- stringr::str_c(
+    "Nuclear Magnetic Resonance-",
+    nmr_data$metadata$info_dimension,
+    "D", "-", nmr_data$metadata$info_nuclei,
+    "-", nmr_data$metadata$info_pulse_sequence)
 
   # Remove "Parameter file, "
   meta_irods$software_platform <- gsub(pattern = "Parameter file, ",
