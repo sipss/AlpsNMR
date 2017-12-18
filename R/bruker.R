@@ -41,7 +41,7 @@ read_bruker_param <- function(file_name) {
   # Match each pattern to all lines. If there is a match and there was no
   # previous match then save the matching result.
   for (pat_idx in seq_len(nrow(R))) {
-    lines_matched <- stringr::str_match_all(lines, R$pattern[pat_idx])
+    lines_matched <- stringr::str_match_all(lines, R[["pattern"]][pat_idx])
     lines_with_match <- sapply(lines_matched, nrow) > 0
     new_lines_with_match <- is.na(type_of_row) & lines_with_match
     type_of_row[new_lines_with_match] <- pat_idx
@@ -53,7 +53,7 @@ read_bruker_param <- function(file_name) {
     lines_no_match <- which(is.na(type_of_row))
     stop("Line without a match:", paste(lines_no_match, collapse = " "))
   }
-  type_of_row <- R$name[type_of_row]
+  type_of_row <- R[["name"]][type_of_row]
   # Generate the output list. We will use the matched information of each line
   output <- list()
   for (i in seq_len(length(type_of_row))) {
@@ -184,12 +184,12 @@ read_levels <- function(full_pdata_path, endian = NULL, NC_proc = NULL) {
   file_clevel <- file.path(full_pdata_path, "clevels")
   if (file.exists(file_clevel)) {
     clev <- read_bruker_param(file_name = file_clevel)
-    if (clev$LEVSIGN == 1) {
-      levels_vec <- clev$LEVELS[clev$LEVELS > 0]
-    } else if (clev$LEVSIGN == 2) {
-      levels_vec <- clev$LEVELS[clev$LEVELS < 0]
-    } else if (clev$LEVSIGN == 3) {
-      levels_vec <- clev$LEVELS[1:clev$MAXLEV*2]
+    if (clev[["LEVSIGN"]] == 1) {
+      levels_vec <- clev[["LEVELS"]][clev[["LEVELS"]] > 0]
+    } else if (clev[["LEVSIGN"]] == 2) {
+      levels_vec <- clev[["LEVELS"]][clev[["LEVELS"]] < 0]
+    } else if (clev[["LEVSIGN"]] == 3) {
+      levels_vec <- clev$LEVELS[seq_len(clev[["MAXLEV"]])*2]
     } else {
       # this case was ommited in the MATLAB function, so maybe the
       # stop can be ignored. If you reach this point please check carefully.
@@ -245,9 +245,9 @@ guess_shape_and_submatrix_shape <- function(sample) {
   xdim_0 <- procs[['XDIM']]
 
   if (!"proc2s" %in% names(sample)) { # 1D data
-    output$dimension <- 1
-    output$shape <- si_0
-    output$submatrix_shape <- xdim_0
+    output[["dimension"]] <- 1
+    output[["shape"]] <- si_0
+    output[["submatrix_shape"]] <- xdim_0
     return(output)
   }
 
@@ -261,9 +261,9 @@ guess_shape_and_submatrix_shape <- function(sample) {
 
 
   if (!"proc3s" %in% names(sample)) { # 2D data
-    output$dimension <- 2
-    output$shape <- c(si_0, si_1)
-    output$submatrix_shape <- c(xdim_0, xdim_1)
+    output[["dimension"]] <- 2
+    output[["shape"]] <- c(si_0, si_1)
+    output[["submatrix_shape"]] <- c(xdim_0, xdim_1)
     return(output)
   }
 
@@ -277,9 +277,9 @@ guess_shape_and_submatrix_shape <- function(sample) {
   xdim_2 <- proc3s[['XDIM']]
 
   if (!"proc4s" %in% names(sample)) { # 3D data
-    output$dimension <- 3
-    output$shape <- c(si_0, si_1, si_2)
-    output$submatrix_shape <- c(xdim_0, xdim_1, xdim_2)
+    output[["dimension"]] <- 3
+    output[["shape"]] <- c(si_0, si_1, si_2)
+    output[["submatrix_shape"]] <- c(xdim_0, xdim_1, xdim_2)
     return(output)
   }
 
@@ -292,9 +292,9 @@ guess_shape_and_submatrix_shape <- function(sample) {
   si_3 <- proc4s[["SI"]]
   xdim_3 <- proc4s[['XDIM']]
   # Assume 4D
-  output$dimension <- 4
-  output$shape <- c(si_0, si_1, si_2, si_3)
-  output$submatrix_shape <- c(xdim_0, xdim_1, xdim_2, xdim_3)
+  output[["dimension"]] <- 4
+  output[["shape"]] <- c(si_0, si_1, si_2, si_3)
+  output[["submatrix_shape"]] <- c(xdim_0, xdim_1, xdim_2, xdim_3)
   return(output)
 }
 
