@@ -15,3 +15,8 @@
   your calls there is no need to change anything. This means we now use a tidy
   evaluation syntax for `filter`.
 
+## Fixes
+
+- Remove workaround to dplyr issue: https://github.com/tidyverse/dplyr/issues/2203
+  (Sergio Oller reported and fixed the issue, dplyr-0.7.0 is fixed)
+
