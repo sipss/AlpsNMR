@@ -23,3 +23,6 @@
 - The Bruker title file has quite a free format definition. A title file can
   contain lines like "Field value" or "Field value ;" or simply "value".
   The heuristics to parse the title file have been improved.
+  
+- Depend on tidyr 0.8.1. tidyr 0.8.0 had a bug that we reported (and for which we
+  also provided a fix): https://github.com/tidyverse/tidyr/pull/419
