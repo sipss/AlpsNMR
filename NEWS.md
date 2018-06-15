@@ -15,8 +15,11 @@
   your calls there is no need to change anything. This means we now use a tidy
   evaluation syntax for `filter`.
 
-## Fixes
+## Other changes
 
 - Remove workaround to dplyr issue: https://github.com/tidyverse/dplyr/issues/2203
   (Sergio Oller reported and fixed the issue, dplyr-0.7.0 is fixed)
 
+- The Bruker title file has quite a free format definition. A title file can
+  contain lines like "Field value" or "Field value ;" or simply "value".
+  The heuristics to parse the title file have been improved.

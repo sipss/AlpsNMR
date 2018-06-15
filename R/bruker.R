@@ -316,6 +316,33 @@ read_orig_file <- function(sample_path) {
   return(output)
 }
 
+parse_title_file <- function(title_lines) {
+  # Two options:
+  #   (a) On each line you find: "Name Value" (and optionally a " ;" in the end)
+  #   (b) On each line you find  "Value" (no names)
+  # What option do we have? Lets guess:
+  lines_split <- strsplit(title_lines, split = " ", fixed = TRUE)
+  number_of_fields_per_line <- vapply(lines_split, length, numeric(1))
+  
+  # Case (a): (and empty lines are accepted)
+  if (all(number_of_fields_per_line >= 2)) {
+    all_names <- sapply(lines_split, function(line) line[[1]])
+    all_vals <- sapply(lines_split, function(line) {
+      value <- paste0(line[2:length(line)], collapse = " ")
+      # Remove spaces and ";" at the end of the value, if they are present:
+      gsub(pattern = "[\\s;]+$", replacement = "", x = value)
+    })
+    output <- list()
+    output[all_names] <- all_vals
+    return(output)
+  }
+  # Case (b):
+  all_names <- paste0("V", seq_len(length(title_lines)))
+  output <- as.list(title_lines)
+  names(output) <- all_names
+  return(output)
+}
+
 #' Read pdata title Bruker NMR file
 #' @param sample_path A character path of the sample directory
 #' @param pdata_path Path from `sample_path` to the preprocessed data
@@ -328,26 +355,7 @@ read_pdata_title_file <- function(sample_path, pdata_path = "pdata/1") {
     return(NULL)
   }
   title_lines <- readLines(title_file, warn = FALSE)
-  # Two options:
-  #   (a) On each line you find: "Name Value"
-  #   (b) On each line you find  "Value" (no names)
-  # What option do we have? Lets guess:
-  lines_split <- strsplit(title_lines, split = " ", fixed = TRUE)
-  number_of_fields_per_line <- vapply(lines_split, length, numeric(1))
-
-  # Case (a): (and empty lines are accepted)
-  if (all(number_of_fields_per_line == 2)) {
-    all_names <- sapply(lines_split, function(line) line[[1]])
-    all_vals <- sapply(lines_split, function(line) paste0(line[2:length(line)], collapse = " "))
-    output <- list()
-    output[all_names] <- all_vals
-    return(output)
-  }
-  # Case (b):
-  all_names <- paste0("V", seq_len(length(title_lines)))
-  output <- as.list(title_lines)
-  names(output) <- all_names
-  return(output)
+  return(parse_title_file(title_lines))
 }
 
 #' Read processed Bruker NMR data
