@@ -28,8 +28,8 @@ nmr_batman_export_dataset(nmr_dataset, batman_dir = "BatmanInput",
 nmr_batman_multi_data_user_hmdb(batman_dir = "BatmanInput",
   filename = "multi_data_user.csv")
 
-nmr_batman_metabolites_list(multiplet_data, batman_dir = "BatmanInput",
-  filename = "metabolitesList.csv", ...)
+nmr_batman_metabolites_list(metabolite_names, batman_dir = "BatmanInput",
+  filename = "metabolitesList.csv")
 }
 \arguments{
 \item{ppmRange}{ppm ranges for analys}
@@ -42,9 +42,7 @@ nmr_batman_metabolites_list(multiplet_data, batman_dir = "BatmanInput",
 
 \item{filename}{Filename to use, inside \code{batman_dir}}
 
-\item{multiplet_data}{The multiplet dataframe}
-
-\item{...}{Parameters passed on to filter, to use only the metabolites of interest}
+\item{metabolite_names}{A character vector of the metabolite names to consider}
 }
 \description{
 These are helper functions to make Batman tests easier

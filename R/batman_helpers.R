@@ -7,8 +7,7 @@
 #' @param bopts Batman options
 #' @param batman_dir Batman input directorye
 #' @param filename Filename to use, inside `batman_dir`
-#' @param multiplet_data The multiplet dataframe
-#' @param ... Parameters passed on to filter, to use only the metabolites of interest
+#' @param metabolite_names A character vector of the metabolite names to consider
 #' 
 #' @name nmr_batman
 #' 
@@ -73,7 +72,7 @@ nmr_batman_options <- function(ppmRange = matrix(c(3.0, 3.1,
 
 #' @rdname nmr_batman
 #' @export
-nmr_batman_write_options <- function(bopts, batman_dir = "BatmanInput", filename = "BatmanOptions.txt") {
+nmr_batman_write_options <- function(bopts, batman_dir = "BatmanInput", filename = "batmanOptions.txt") {
   # ppmRange:
   full_filename <- batman_get_full_filename(batman_dir, filename)
   bopts2 <- bopts
@@ -177,24 +176,27 @@ nmr_batman_export_dataset <- function(nmr_dataset, batman_dir = "BatmanInput", f
 nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput", filename = "multi_data_user.csv") {
   full_filename <- batman_get_full_filename(batman_dir, filename)
   utils::data("hmdb", envir = environment())
+  hmdb[["overwrite_pos"]] <- -50
+  hmdb[["overwrite_truncation"]] <- -50
+  hmdb[["Include_multiplet"]] <- 1
   cols <- c("Metabolite", "pos_in_ppm", "couple_code", "J_constant",
             "relative_intensity", "overwrite_pos", "overwrite_truncation",
             "Include_multiplet")
   
-  hmdb$J_constant[is.na(hmdb$J_constant)] <- 0 # batman does not accept NA...
-  hmdb$Metabolite <- gsub(pattern = ",", replacement = "_", hmdb$Metabolite)
+  hmdb[["J_constant"]][is.na(hmdb[["J_constant"]])] <- 0 # batman does not accept NA...
+  hmdb[["Metabolite"]] <- gsub(pattern = ",", replacement = "_", hmdb[["Metabolite"]])
   utils::write.csv(hmdb[,cols], full_filename, row.names = FALSE)
   hmdb
 }
 
 #' @rdname nmr_batman
 #' @export
-nmr_batman_metabolites_list <- function(multiplet_data, batman_dir = "BatmanInput", filename = "metabolitesList.csv", ...) {
+nmr_batman_metabolites_list <- function(metabolite_names,
+                                        batman_dir = "BatmanInput",
+                                        filename = "metabolitesList.csv") {
   full_filename <- batman_get_full_filename(batman_dir, filename)
-  filtered_metabs <- dplyr::filter(multiplet_data, ...)
-  metab_names <- sort(unique(filtered_metabs[["Metabolite"]]))
-  write(metab_names, file = full_filename)
-  metab_names
+  write(unique(metabolite_names), file = full_filename)
+  metabolite_names
 }
 
 
