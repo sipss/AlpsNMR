@@ -20,7 +20,7 @@ nmr_batman_options(ppmRange = matrix(c(3, 3.1, 3.6, 3.7, 3.9, 4, 4, 4.1, 6.95,
   rdelta = 0.02, csFlag = 0)
 
 nmr_batman_write_options(bopts, batman_dir = "BatmanInput",
-  filename = "BatmanOptions.txt")
+  filename = "batmanOptions.txt")
 
 nmr_batman_export_dataset(nmr_dataset, batman_dir = "BatmanInput",
   filename = "NMRdata.txt")
