@@ -6,19 +6,20 @@
 #' This function reads an xlsx slims spreadsheet and converts it into a data frame
 #'
 #' @param file_name The exported slims spreadsheet in excel format
+#' @param sheet passed on to read_excel
 #' @param all_character Read all columns as text
 #' @return a data frame with the slims information
 #'
 #' Key columns on the output data frame are "cntn_cf_fluidx_barcode" and "cntn_cf_subject_id" "cntn_cf_fk_masterSample"
 #'
 #' @export
-read_exported_slims <- function(file_name, all_character = FALSE) {
+read_exported_slims <- function(file_name, sheet = NULL, all_character = FALSE) {
   # Row 1: Slims logo
   # Row 2: Internal column names (this column is sometimes hidden)
   # Row 3: Human readable column names
   # Then the rest of the excel sheet is the actual data
   # We read the excel file twice, on the first time we skip the logo (skip = 1)
-  slims <- readxl::read_excel(file_name, skip = 1)
+  slims <- readxl::read_excel(file_name, skip = 1, sheet = sheet)
   # This allows us to have the internal column names that are more
   # reliable (they should never change, slims uses them internally)
   standard_slims_names <- colnames(slims)
@@ -30,7 +31,7 @@ read_exported_slims <- function(file_name, all_character = FALSE) {
   # However, when we do this read_excel assumes that all the spreadsheet is of
   # type character, because row 3 is text.
   # Therefore we read again the spreadsheet skipping the first two rows (skip = 2)
-  slims <- readxl::read_excel(file_name, skip = 2)
+  slims <- readxl::read_excel(file_name, skip = 2, sheet = sheet)
   # human_readable_colnames <- colnames(slims)
   # And finally we set the standard slims names as column names
   colnames(slims) <- standard_slims_names

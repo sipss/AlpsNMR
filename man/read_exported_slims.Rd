@@ -4,10 +4,12 @@
 \alias{read_exported_slims}
 \title{Reads an exported xlsx slims spreadsheet}
 \usage{
-read_exported_slims(file_name, all_character = FALSE)
+read_exported_slims(file_name, sheet = NULL, all_character = FALSE)
 }
 \arguments{
 \item{file_name}{The exported slims spreadsheet in excel format}
+
+\item{sheet}{passed on to read_excel}
 
 \item{all_character}{Read all columns as text}
 }
