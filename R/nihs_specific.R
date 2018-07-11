@@ -416,7 +416,7 @@ nmr_irods_search <- function(project_NPDI_ID = NA, study_nickname = NA,
     # Remove Unit column:
     metadata <- metadata[, !colnames(metadata) %in% "Unit", drop = FALSE]
   } else {
-    metadata <- tidyr::unite_(metadata, "Attribute_Unit", from = c("Attribute", "Unit"))
+    metadata <- tidyr::unite(metadata, "Attribute_Unit", c("Attribute", "Unit"))
   }
   remove_rows <- metadata$Attribute_Unit == "" & metadata$Value == ""
   metadata <- metadata[!remove_rows,]
