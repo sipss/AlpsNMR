@@ -41,7 +41,9 @@ Imports:
  ggplot2 (>= 2.2.1),
  glue (>= 1.2.0),
  reshape2 (>= 1.4.3),
- scales (>= 0.5.0)
+ scales (>= 0.5.0),
+ GGally (>= 1.4.0),
+ mixOmics (>= 6.3.2)
 Suggests:
  testthat (>= 2.0.0),
  shiny (>= 1.0.5),
