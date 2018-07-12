@@ -37,6 +37,16 @@ Installation
 Depending on your access permissions, one of this options will be
 suitable:
 
+### At IBEC
+
+1. Go to: https://gitnose.ibec.local/compmetabolomics/NIHSnmr
+
+2. Download zip file: https://gitnose.ibec.local/compmetabolomics/NIHSnmr/-/archive/master/NIHSnmr-master.zip
+
+3. `devtools::install_local("C:/blahblahbla/NIHSnmr-master.zip")`
+
+### At NIHS
+
     # Zip file:
     devtools::install_local("C:/blahblahbla/NIHSnmr.zip")
 
@@ -74,7 +84,7 @@ Plot the spectra
 
     plot(nmrdata)
 
-### Submit data to irods
+### Submit data to irods (at NIHS)
 
     sample_names <- c("dataset/10/", "dataset/20/", "dataset/30/") # samples to upload, you can as well use nm_read_samples_dir
     nmrdata <- nmr_read_samples(sample_names, metadata_only = TRUE)
@@ -88,7 +98,7 @@ Plot the spectra
     # Finally push the data to the irods directory
     nmr_push_to_irods(irods_metadata, "/NIHSData/DUND-XXXXXX/study/.../Metabolomics")
 
-### Read samples from irods
+### Read samples from irods (at NIHS)
 
     # Search samples in irods
     irods_results <- nmr_irods_search(project_NPDI_ID = "DUND-100713",
@@ -113,6 +123,15 @@ To open a graphical user interface you just need to run:
 
 Contributing
 ------------
+
+### At IBEC
+
+To start contributing to this project you can use RStudio:
+
+    File / New Project / Version Control / Git
+    Repository URL: `git@gitnose.ibec.local:compmetabolomics/NIHSnmr.git`
+
+### At NIHS
 
 To start contributing to this project you can use RStudio:
 
