@@ -75,5 +75,8 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
   loadings <- matrix(0, nrow = length(ppm_axis), ncol = length(comp))
   loadings[attr(pca_model, "nmr_included"),] <- pca_model$rotation[, comp, drop = FALSE]
   # loadings[,1] # first loading
-  matplot(x = ppm_axis, y = loadings, type = "l")
+  loadings <- as.data.frame(loadings)
+  loadings$ppm <- ppm_axis
+  loadings_long <- reshape2::melt(loadings, id.vars = "ppm", variable.name = "component", value.name = "loading")
+  ggplot2::ggplot(loadings_long, ggplot2::aes_string(x = "ppm", y = "loading", group = "component")) + ggplot2::geom_line()
 }
