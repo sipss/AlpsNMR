@@ -78,5 +78,11 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
   loadings <- as.data.frame(loadings)
   loadings$ppm <- ppm_axis
   loadings_long <- reshape2::melt(loadings, id.vars = "ppm", variable.name = "component", value.name = "loading")
-  ggplot2::ggplot(loadings_long, ggplot2::aes_string(x = "ppm", y = "loading", group = "component")) + ggplot2::geom_line()
+  ggplot2::ggplot(
+    loadings_long,
+    ggplot2::aes_string(x = "ppm", y = "loading", group = "component")
+  ) +
+    ggplot2::geom_line() +
+    ggplot2::scale_x_reverse()
 }
+
