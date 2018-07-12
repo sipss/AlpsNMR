@@ -13,6 +13,17 @@
 #' 
 NULL
 
+#' The Human Metabolome DataBase multiplet table
+#' 
+#' Used by the batman helpers
+#'
+#' @name hmdb
+#' @docType data
+#' @references \url{hmdb.ca}
+#' @keywords data
+NULL
+
+
 #' @rdname nmr_batman
 #' @export
 nmr_batman_options <- function(ppmRange = matrix(c(3.0, 3.1,
@@ -218,9 +229,3 @@ nmr_batman_metabolites_list <- function(metabolite_names,
   write(unique(metabolite_names), file = full_filename)
   metabolite_names
 }
-
-
-
-
-
-
