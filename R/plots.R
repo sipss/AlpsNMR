@@ -62,11 +62,11 @@ plot_nmr_dataset_1D <- function(x, sample_idx = NULL,
   }
   longdf <- nmr_get_long_df(nmr_data = x, sample_idx = sample_idx,
                             chemshift_range = chemshift_range)
-  fixed_aes <- list(x = "chemshift", y = "intensity", group = "injection_id")
+  fixed_aes <- list(x = "chemshift", y = "intensity", group = "NMRExperiment")
   dotdotdot_aes <- list(...)
   all_aes <- c(fixed_aes, dotdotdot_aes)
   if (!"color" %in% names(all_aes)) {
-    all_aes <- c(all_aes, list(color = "injection_id"))
+    all_aes <- c(all_aes, list(color = "NMRExperiment"))
   }
 
   linera <- NULL
@@ -90,7 +90,7 @@ plot_nmr_dataset_1D <- function(x, sample_idx = NULL,
     decimate_qspectra <- decimate_axis(xaxis = x$axis[[1]],
                                        xrange = chemshift_range)
     q_spectra <- apply(x$data_1r[,decimate_qspectra], 2, function(x) stats::quantile(x, quantile_plot))
-    linera <- tibble::tibble(injection_id = rep(paste0("Quantile ", 100*quantile_plot, "%"),
+    linera <- tibble::tibble(NMRExperiment = rep(paste0("Quantile ", 100*quantile_plot, "%"),
                                                 each = sum(decimate_qspectra)),
                              color = rep(quantile_colors, each = sum(decimate_qspectra)),
                              chemshift = rep(x$axis[[1]][decimate_qspectra],
@@ -103,7 +103,7 @@ plot_nmr_dataset_1D <- function(x, sample_idx = NULL,
   if (!is.null(quantile_plot)) {
     gplt <- gplt +
       ggplot2::geom_line(data = linera,
-                         ggplot2::aes_string(x = "chemshift", y = "intensity", group = "injection_id"),
+                         ggplot2::aes_string(x = "chemshift", y = "intensity", group = "NMRExperiment"),
                          color = linera$color, # out of aes so it does not show up in the legend
                          size = 1, linetype = "dashed")
   }
@@ -181,7 +181,7 @@ plot_nmr_dataset_2D <- function(x, sample_idx = NULL,
   gplt <- ggplot2::ggplot(sample_long, ggplot2::aes_string(x = "axis1", y = "axis2")) +
     ggplot2::geom_raster(ggplot2::aes_string(fill = "intensity")) +
     ggplot2::scale_fill_gradient(trans = "log10_minus_min") +
-    ggplot2::ggtitle(paste("Sample:", x$metadata$injection_id[sample_idx]))
+    ggplot2::ggtitle(paste("Sample:", x$metadata$NMRExperiment[sample_idx]))
 
   if (interactive) {
     if (!requireNamespace("plotly", quietly = TRUE)) {
@@ -254,13 +254,13 @@ nmr_get_long_df <- function(nmr_data, sample_idx = NULL, chemshift_range = NULL)
   chemshift_in_range <- decimate_axis(xaxis = nmr_data$axis[[1]],
                                       xrange = chemshift_range)
   meta_df <- nmr_get_metadata(nmr_data)
-  injection_ids <- meta_df$injection_id[sample_idx]
+  NMRExperiments <- meta_df$NMRExperiment[sample_idx]
   chemshifts <- nmr_data$axis[[1]][chemshift_in_range]
   raw_data <- reshape2::melt(nmr_data$data_1r[sample_idx, chemshift_in_range, drop = FALSE])
-  raw_data$Var1 <- injection_ids[raw_data$Var1]
+  raw_data$Var1 <- NMRExperiments[raw_data$Var1]
   raw_data$Var2 <- chemshifts[raw_data$Var2]
-  colnames(raw_data) <- c("injection_id", "chemshift", "intensity")
-  result <- dplyr::left_join(raw_data, meta_df, by = "injection_id")
+  colnames(raw_data) <- c("NMRExperiment", "chemshift", "intensity")
+  result <- dplyr::left_join(raw_data, meta_df, by = "NMRExperiment")
   return(result)
 }
 

@@ -135,7 +135,7 @@ shinyServer(function(input, output) {
   ###################################################
   detected_peak_list <- reactive({
     #data frame with injection id, chemshift, intensity, samplerow, chemshift_idx
-    inj <- nmr_get_metadata(data$samples_prep, columns = c("injection_id"))$injection_id
+    exp <- nmr_get_metadata(data$samples_prep, columns = c("NMRExperiment"))$NMRExperiment
     dataset <- data$samples_prep$data_1r
     chemshifts <- data$samples_prep$axis[[1]]
     peak_found <- lapply(1:data$samples_prep$num_samples, function(samplerow) {
@@ -143,7 +143,7 @@ shinyServer(function(input, output) {
                             m = input$peak_detection_m, y_min = input$peak_detection_y_min)
       chemshift <- chemshifts[indices]
       intensity <- dataset[samplerow, indices]
-      tibble(injection_id = rep(as.character(inj[samplerow]), length(indices)),
+      tibble(NMRExperiment = rep(as.character(exp[samplerow]), length(indices)),
              chemshift = chemshift,
              intensity = intensity,
              samplerow = rep(samplerow, length(indices)),

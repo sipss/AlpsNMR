@@ -114,10 +114,10 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
                     sampl <- normalizePath(sampl)
                     if (grepl("\\.zip$", sampl)) {
                       is_zip <- TRUE
-                      injection_id <- gsub(pattern = "\\.zip$", replacement = "", basename(overwr))
-                      sampl_temp_dir <- tempfile(pattern = paste0("nmr_sample_", injection_id, "_"))
+                      NMRExperiment <- gsub(pattern = "\\.zip$", replacement = "", basename(overwr))
+                      sampl_temp_dir <- tempfile(pattern = paste0("nmr_sample_", NMRExperiment, "_"))
                       utils::unzip(sampl, exdir = sampl_temp_dir)
-                      sampl_dir <- normalizePath(file.path(sampl_temp_dir, injection_id))
+                      sampl_dir <- normalizePath(file.path(sampl_temp_dir, NMRExperiment))
                     } else {
                       is_zip <- FALSE
                       sampl_dir <- sampl
@@ -182,7 +182,7 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
 
   samples <- list()
   metadata <- dplyr::bind_cols(sample_meta)
-  names(metadata)[names(metadata) == 'info_injection_id'] <- 'injection_id'
+  names(metadata)[names(metadata) == 'info_NMRExperiment'] <- 'NMRExperiment'
   samples[["metadata"]] <- metadata
 
   if (!metadata_only) {
@@ -228,13 +228,13 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
   # Metadata:
   metadata <- dplyr::bind_rows(lapply(raw_samples, create_df_from_jdx_sample))
   metadata$file_name <- sample_names
-  # Make a reasonable injection_id:
-  if (!("injection_id" %in% colnames(metadata))) {
-    injection_ids <- basename(sample_names)
-    if (any(duplicated(injection_ids))) {
-      injection_ids <- sample_names
+  # Make a reasonable NMRExperiment:
+  if (!("NMRExperiment" %in% colnames(metadata))) {
+    NMRExperiments <- basename(sample_names)
+    if (any(duplicated(NMRExperiments))) {
+      NMRExperiments <- sample_names
     }
-    metadata$injection_id <- injection_ids
+    metadata$NMRExperiment <- NMRExperiments
   }
   samples[["metadata"]] <- metadata
   if (!metadata_only) {

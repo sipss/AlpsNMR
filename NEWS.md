@@ -2,6 +2,8 @@
 
 ## Breaking changes
 
+- Rename `injection_id` to `NMRExperiment`.
+
 - `nmr_dataset_load` and `nmr_dataset_save` now use `readRDS` and `saveRDS` 
   instead of `load` and `save`. This is the right approach to serialize
   single R objects. If you need a script to convert previously saved datasets (created

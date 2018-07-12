@@ -9,7 +9,7 @@ nmr_push_to_irods(meta_irods, dest_path, check_metadata_issues = TRUE,
 }
 \arguments{
 \item{meta_irods}{a dataframe as obtained from \code{\link{nmr_get_irods_meta}} with
-these columns: \code{injection_id}, \code{sample_path}, \code{"src_path",
+these columns: \code{NMRExperiment}, \code{sample_path}, \code{"src_path",
                   "project_NPDI_ID", "study_nickname", "assay_ID", "file_type",
                   "file_format", "master_sample_accession", "operational_sample_accession",
                   "run_ID", "assay_platform", "software_platform", "taxonomy",

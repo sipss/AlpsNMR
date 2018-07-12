@@ -45,7 +45,7 @@ read_exported_slims <- function(file_name, sheet = NULL, all_character = FALSE) 
 #' @return A data frame (tibble) with the columns used by NIHSrods
 #' @export
 nmr_get_irods_meta <- function(nmr_data) {
-  meta_irods <- tibble::tibble(injection_id = nmr_data$metadata$injection_id)
+  meta_irods <- tibble::tibble(NMRExperiment = nmr_data$metadata$NMRExperiment)
 
   check_and_add <- function(meta_irods, irods_column, injection_column) {
     if (injection_column %in% colnames(nmr_data$metadata)) {
@@ -211,7 +211,7 @@ nmr_push_one_to_irods <- function(element, dest_path, extra_columns = NULL) {
 
 #' Push NMR data to irods
 #' @param meta_irods a dataframe as obtained from \code{\link{nmr_get_irods_meta}} with
-#'                   these columns: \code{injection_id}, \code{sample_path}, \code{"src_path",
+#'                   these columns: \code{NMRExperiment}, \code{sample_path}, \code{"src_path",
 #'                   "project_NPDI_ID", "study_nickname", "assay_ID", "file_type",
 #'                   "file_format", "master_sample_accession", "operational_sample_accession",
 #'                   "run_ID", "assay_platform", "software_platform", "taxonomy",
@@ -252,7 +252,7 @@ nmr_push_to_irods <- function(meta_irods, dest_path, check_metadata_issues = TRU
     stop("To push to irods you need to use first nmr_get_irods_meta and nmr_prepare_zip_files")
   }
 
-  mandatory_cols <- c("injection_id", "src_path", "project_NPDI_ID",
+  mandatory_cols <- c("NMRExperiment", "src_path", "project_NPDI_ID",
                       "study_nickname", "assay_ID", "file_type", "file_format", "run_ID",
                       "assay_platform", "software_platform", "taxonomy", "hardware_platform",
                       "assay_technique", "operational_sample_accession",

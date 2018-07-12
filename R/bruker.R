@@ -602,7 +602,7 @@ read_bruker_metadata <- function(sample_path, pdata_path = "pdata/1",
     stop("No acqus file found in ", sample_path)
   }
   info <- list()
-  info$injection_id <- basename(sample_path)
+  info$NMRExperiment <- basename(sample_path)
   info$file_format <- "Zipped Bruker NMR directory"
   info$sample_path <- sample_path
   info$import_time <- Sys.time()
