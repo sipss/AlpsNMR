@@ -6,6 +6,7 @@
 \alias{nmr_batman_write_options}
 \alias{nmr_batman_export_dataset}
 \alias{nmr_batman_multi_data_user_hmdb}
+\alias{nmr_batman_multi_data_user}
 \alias{nmr_batman_metabolites_list}
 \title{Batman helpers}
 \usage{
@@ -26,6 +27,9 @@ nmr_batman_export_dataset(nmr_dataset, batman_dir = "BatmanInput",
   filename = "NMRdata.txt")
 
 nmr_batman_multi_data_user_hmdb(batman_dir = "BatmanInput",
+  filename = "multi_data_user.csv")
+
+nmr_batman_multi_data_user(multiplet_table, batman_dir = "BatmanInput",
   filename = "multi_data_user.csv")
 
 nmr_batman_metabolites_list(metabolite_names, batman_dir = "BatmanInput",

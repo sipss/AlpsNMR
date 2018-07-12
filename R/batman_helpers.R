@@ -174,19 +174,39 @@ nmr_batman_export_dataset <- function(nmr_dataset, batman_dir = "BatmanInput", f
 #' @rdname nmr_batman
 #' @export
 nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput", filename = "multi_data_user.csv") {
+  hmdb <- NULL
+  utils::data("hmdb", package = "NIHSnmr", envir = environment())
+  hmdb <- nmr_batman_multi_data_user(multiplet_table = hmdb, batman_dir = batman_dir, filename = filename)
+  hmdb
+}
+
+#' @rdname nmr_batman
+#' @export
+nmr_batman_multi_data_user <- function(multiplet_table, batman_dir = "BatmanInput", filename = "multi_data_user.csv") {
   full_filename <- batman_get_full_filename(batman_dir, filename)
-  utils::data("hmdb", envir = environment())
-  hmdb[["overwrite_pos"]] <- -50
-  hmdb[["overwrite_truncation"]] <- -50
-  hmdb[["Include_multiplet"]] <- 1
+  
+  # column default values: Create them if they don't exist
+  col_def <- data.frame(name = c("overwrite_pos", "overwrite_truncation", "Include_multiplet"),
+                        value = c(-50, -50, 1),
+                        stringsAsFactors = FALSE)
+  
+  for (i in seq_len(nrow(col_def))) {
+    col_name <- col_def[["name"]][i]
+    col_val <- col_def[["value"]][i]
+    if (!col_name %in% colnames(multiplet_table)) {
+      multiplet_table[[col_name]] <- col_val
+    }
+  }
+  
+  # Columns to be written, as needed by Batman
   cols <- c("Metabolite", "pos_in_ppm", "couple_code", "J_constant",
             "relative_intensity", "overwrite_pos", "overwrite_truncation",
             "Include_multiplet")
   
-  hmdb[["J_constant"]][is.na(hmdb[["J_constant"]])] <- 0 # batman does not accept NA...
-  hmdb[["Metabolite"]] <- gsub(pattern = ",", replacement = "_", hmdb[["Metabolite"]])
-  utils::write.csv(hmdb[,cols], full_filename, row.names = FALSE)
-  hmdb
+  multiplet_table[["J_constant"]][is.na(multiplet_table[["J_constant"]])] <- 0 # batman does not accept NA...
+  multiplet_table[["Metabolite"]] <- gsub(pattern = ",", replacement = "_", multiplet_table[["Metabolite"]])
+  utils::write.csv(multiplet_table[,cols], full_filename, row.names = FALSE)
+  multiplet_table
 }
 
 #' @rdname nmr_batman
