@@ -51,7 +51,7 @@ nmr_push_to_irods(irods_metadata, "/NIHSData/DUND-XXXXXX/study/Metabolomics")
 }
 }
 \author{
-\strong{Maintainer}: Sergio Oller Moreno \email{Sergio.OllerMoreno@rd.nestle.com}
+\strong{Maintainer}: Sergio Oller Moreno \email{soller@ibecbarcelona.eu}
 
 Authors:
 \itemize{
@@ -61,6 +61,7 @@ Authors:
 Other contributors:
 \itemize{
   \item Nestlé Institute of Health Sciences [copyright holder]
+  \item Institute for Bioengineering of Catalonia [copyright holder]
 }
 
 }

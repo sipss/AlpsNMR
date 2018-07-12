@@ -1,7 +1,7 @@
 Package: NIHSnmr
 Type: Package
-Title: Import and preprocess NMR data (from Bruker)
-Version: 1.0.0
+Title: Import and preprocess Nuclear Magnetic Resonance data
+Version: 1.1.0
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -10,15 +10,19 @@ Authors@R: c(
            role = c("aut")),
     person(given = "Sergio",
            family = "Oller Moreno",
-           email = "Sergio.OllerMoreno@rd.nestle.com",
+           email = "soller@ibecbarcelona.eu",
            role = c("aut", "cre")),
     person(given = "Nestlé Institute of Health Sciences",
+           role = "cph"),
+    person(given = "Institute for Bioengineering of Catalonia",
            role = "cph")
     )
 Description: Reads Bruker NMR data directories.
  It allows to interpolate, exclude regions and normalize the samples,
  being tested in 1-D, with some support for 2-D and extendable for higher
- dimensionallity data.
+ dimensionality data.
+ It has some support for Quality Control checks based on Principal Component Analysis and 
+ metabolite identification via the Batman package.
  The package also provides NIHS irods integration, by extracting sample metadata,
  compressing sample directories in zip files and pushing them to iRods.
  Efficient plotting with 1-D data is also available and a shiny Graphical
@@ -26,10 +30,10 @@ Description: Reads Bruker NMR data directories.
  Basic reading of 1D  ACD/Labs exported JDX samples is also available.
 License: file LICENSE
 LazyData: TRUE
-Depends: R (>= 3.2.3)
+Depends: R (>= 3.2.0)
 Imports:
  rlang (>= 0.2.1),
- utils (>= 3.2.3),
+ utils (>= 3.2.0),
  signal (>= 0.7-6),
  stringr (>= 1.3.1),
  magrittr (>= 1.5),
@@ -39,6 +43,7 @@ Imports:
  tidyr (>= 0.8.1),
  readxl (>= 1.1.0),
  ggplot2 (>= 2.2.1),
+ purrr (>= 0.2.5),
  glue (>= 1.2.0),
  reshape2 (>= 1.4.3),
  scales (>= 0.5.0),
