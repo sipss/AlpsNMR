@@ -18,7 +18,7 @@
 nmr_pca_build_model <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
   zero_var_cols <- mixOmics::nearZeroVar(nmr_data$data_1r) # excluded
   data_1r <- nmr_data$data_1r[,-zero_var_cols$Position]
-  rownames(data_1r) <- nmr_data$metadata$NMRExperiment
+  rownames(data_1r) <- nmr_get_metadata(nmr_data, "NMRExperiment")$NMRExperiment
   pca_model <- mixOmics::pca(X = data_1r, ncomp = ncomp, center = center, scale = scale, ...)
   # These attributes are used by nmr_pca_loadingplot:
   attr(pca_model, "nmr_data_axis") <- nmr_data$axis[[1]]

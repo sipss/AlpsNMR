@@ -13,8 +13,7 @@ plot.nmr_dataset <- function(x, sample_idx = NULL,
                              chemshift_range = NULL,
                              quantile_plot = FALSE,
                              interactive = FALSE, ...) {
-
-  dimension <- unique(x$metadata$info_dimension)
+  dimension <- unique(nmr_get_metadata(x, "info_dimension")$info_dimension)
   if (length(dimension) > 1) {
     stop("Samples with different dimensionality")
   }
@@ -178,10 +177,12 @@ plot_nmr_dataset_2D <- function(x, sample_idx = NULL,
   sample_long$Var2 <- yaxis[sample_long$Var2]
   colnames(sample_long) <- c("axis1", "axis2", "intensity")
 
+  titl <- paste("Sample:",
+                nmr_get_metadata(x, "NMRExperiment")$NMRExperiment[sample_idx])
   gplt <- ggplot2::ggplot(sample_long, ggplot2::aes_string(x = "axis1", y = "axis2")) +
     ggplot2::geom_raster(ggplot2::aes_string(fill = "intensity")) +
     ggplot2::scale_fill_gradient(trans = "log10_minus_min") +
-    ggplot2::ggtitle(paste("Sample:", x$metadata$NMRExperiment[sample_idx]))
+    ggplot2::ggtitle(titl)
 
   if (interactive) {
     if (!requireNamespace("plotly", quietly = TRUE)) {
@@ -249,7 +250,7 @@ log10_minus_min_trans = function() {
 #' @export
 nmr_get_long_df <- function(nmr_data, sample_idx = NULL, chemshift_range = NULL) {
   if (is.null(sample_idx)) {
-    sample_idx <- 1:nmr_data$num_samples
+    sample_idx <- seq_len(nmr_data$num_samples)
   }
   chemshift_in_range <- decimate_axis(xaxis = nmr_data$axis[[1]],
                                       xrange = chemshift_range)

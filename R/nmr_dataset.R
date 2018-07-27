@@ -276,7 +276,7 @@ dplyr::filter
 #' @export
 filter.nmr_dataset <- function(.data, ...) {
   dots <- rlang::quos(...)
-  meta <- .data$metadata
+  meta <- nmr_get_metadata(.data)
   meta$tmp_row_idx <- seq_len(nrow(meta))
   indices_to_keep <- dplyr::filter(meta, !!! dots)$tmp_row_idx
   return(.data[indices_to_keep])

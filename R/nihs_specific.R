@@ -45,11 +45,12 @@ read_exported_slims <- function(file_name, sheet = NULL, all_character = FALSE) 
 #' @return A data frame (tibble) with the columns used by NIHSrods
 #' @export
 nmr_get_irods_meta <- function(nmr_data) {
-  meta_irods <- tibble::tibble(NMRExperiment = nmr_data$metadata$NMRExperiment)
+  full_meta <- nmr_get_metadata(nmr_data)
+  meta_irods <- nmr_get_metadata(nmr_data, "NMRExperiment")
 
-  check_and_add <- function(meta_irods, irods_column, injection_column) {
-    if (injection_column %in% colnames(nmr_data$metadata)) {
-      meta_irods[[irods_column]] <- nmr_data$metadata[[injection_column]]
+  check_and_add <- function(meta_irods, irods_column, dataset_column) {
+    if (dataset_column %in% colnames(full_meta)) {
+      meta_irods[[irods_column]] <- full_meta[[dataset_column]]
     } else {
       meta_irods[[irods_column]] <- NA
     }
@@ -57,21 +58,21 @@ nmr_get_irods_meta <- function(nmr_data) {
   }
 
   meta_irods <- meta_irods %>%
-    check_and_add(irods_column = "sample_path", injection_column = "info_sample_path") %>%
+    check_and_add(irods_column = "sample_path", dataset_column = "info_sample_path") %>%
     dplyr::mutate(src_path = NA) %>%
-    check_and_add(irods_column = "project_NPDI_ID", injection_column = "orig_NPDI_ID") %>%
-    check_and_add(irods_column = "study_nickname", injection_column = "orig_StudyNickname") %>%
-    check_and_add(irods_column = "assay_ID", injection_column = "orig_AssayID") %>%
+    check_and_add(irods_column = "project_NPDI_ID", dataset_column = "orig_NPDI_ID") %>%
+    check_and_add(irods_column = "study_nickname", dataset_column = "orig_StudyNickname") %>%
+    check_and_add(irods_column = "assay_ID", dataset_column = "orig_AssayID") %>%
     dplyr::mutate(file_type = "Raw data file") %>%
-    check_and_add(irods_column = "file_format", injection_column = "info_file_format") %>%
-    check_and_add(irods_column = "master_sample_accession", injection_column = "orig_MasterRBarcode") %>%
-    check_and_add(irods_column = "operational_sample_accession", injection_column = "orig_RBarcode") %>%
-    check_and_add(irods_column = "run_ID", injection_column = "orig_RunID") %>%
+    check_and_add(irods_column = "file_format", dataset_column = "info_file_format") %>%
+    check_and_add(irods_column = "master_sample_accession", dataset_column = "orig_MasterRBarcode") %>%
+    check_and_add(irods_column = "operational_sample_accession", dataset_column = "orig_RBarcode") %>%
+    check_and_add(irods_column = "run_ID", dataset_column = "orig_RunID") %>%
     dplyr::mutate(assay_platform = "Metabolomics") %>%
-    check_and_add(irods_column = "software_platform", injection_column = "acqus_TITLE") %>%
-    check_and_add(irods_column = "taxonomy", injection_column = "orig_Taxonomy") %>%
-    check_and_add(irods_column = "hardware_platform", injection_column = "orig_Spectrometer") %>%
-    check_and_add(irods_column = "taxonomy", injection_column = "orig_Taxonomy")
+    check_and_add(irods_column = "software_platform", dataset_column = "acqus_TITLE") %>%
+    check_and_add(irods_column = "taxonomy", dataset_column = "orig_Taxonomy") %>%
+    check_and_add(irods_column = "hardware_platform", dataset_column = "orig_Spectrometer") %>%
+    check_and_add(irods_column = "taxonomy", dataset_column = "orig_Taxonomy")
 
 
   # stringr::str_c is like paste0 BUT:
@@ -80,9 +81,9 @@ nmr_get_irods_meta <- function(nmr_data) {
   # stringr::str_c("Bruker ", c("RoomTemp", NA)) is c("Bruker RoomTemp", NA)
   meta_irods$assay_technique <- stringr::str_c(
     "Nuclear Magnetic Resonance-",
-    nmr_data$metadata$info_dimension,
-    "D", "-", nmr_data$metadata$info_nuclei,
-    "-", nmr_data$metadata$info_pulse_sequence)
+    full_meta$info_dimension,
+    "D", "-", full_meta$info_nuclei,
+    "-", full_meta$info_pulse_sequence)
 
   # Remove "Parameter file, "
   meta_irods$software_platform <- gsub(pattern = "Parameter file, ",
@@ -492,9 +493,11 @@ nmr_read_samples_irods <- function(irods_search_results, ...) {
                               overwrite_sample_names = full_irods_path, ...)
   message("Appending irods metadata to nmr_dataset")
   colnames(irods_search_results) <- paste0("irods_", colnames(irods_search_results))
-  dataset$metadata <- dplyr::left_join(dataset$metadata,
-                                       irods_search_results,
-                                       by = c("info_sample_path" = "irods_full_irods_path"))
+  dataset <- nmr_add_metadata(
+    dataset,
+    irods_search_results,
+    by = c("info_sample_path" = "irods_full_irods_path")
+  )
   return(dataset)
 }
 
