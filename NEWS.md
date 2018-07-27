@@ -17,6 +17,9 @@
   your calls there is no need to change anything. This means we now use a tidy
   evaluation syntax for `filter`.
 
+- `nmr_get_metadata` returns always a data frame / tibble, even when only a single
+  column is requested. It also always includes the "NMRExperiment" column.
+
 ## Other changes
 
 - Remove workaround to dplyr issue: https://github.com/tidyverse/dplyr/issues/2203
@@ -28,3 +31,6 @@
   
 - Depend on tidyr 0.8.1. tidyr 0.8.0 had a bug that we reported (and for which we
   also provided a fix): https://github.com/tidyverse/tidyr/pull/419
+
+- `nmr_get_metadata` gives a warning if the user asks for metadata columns that
+  are missing.
