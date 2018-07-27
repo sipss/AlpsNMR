@@ -99,7 +99,7 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
     # We overwrite with the same name:
     overwrite_sample_names <- sample_names
   }
-  if (show_progress_bar(1,0)) {
+  if (show_progress_bar()) {
     prgrs <- "text"
   } else {
     prgrs <- "none"

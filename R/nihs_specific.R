@@ -287,7 +287,7 @@ nmr_push_to_irods <- function(meta_irods, dest_path, check_metadata_issues = TRU
     res <- vector('list', nrow(meta_irods))
     tryCatch({
       pb = NULL
-      if (show_progress_bar(1, 0)) {
+      if (show_progress_bar()) {
         pb <- utils::txtProgressBar(min = 1, max = nrow(meta_irods), style = 3)
       }
       for (i in seq_len(nrow(meta_irods))) {
@@ -388,7 +388,7 @@ nmr_irods_search <- function(project_NPDI_ID = NA, study_nickname = NA,
   metadata <- NULL
   tryCatch({
     pb <- NULL
-    if (show_progress_bar(nrow(samples), 3)) {
+    if (show_progress_bar(nrow(samples) > 3)) {
       pb <- utils::txtProgressBar(min = 1, max = nrow(samples), style = 3)
     }
 
@@ -471,7 +471,7 @@ nmr_read_samples_irods <- function(irods_search_results, ...) {
   message("Fetching samples from irods...")
   tryCatch({
     pb <- NULL
-    if (show_progress_bar(length(full_irods_path))) {
+    if (show_progress_bar(length(full_irods_path) > 5)) {
       pb <- utils::txtProgressBar(min = 0, max = length(full_irods_path), style = 3)
     }
     for (i in seq_along(full_irods_path)) {

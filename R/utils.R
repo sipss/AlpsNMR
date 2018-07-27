@@ -201,10 +201,9 @@ tibble_lists_columns_to_vector_columns <- function(data) {
 }
 
 
-# Returns a logical that determines if there is a need to show a progress bar
-# More than 5 iterations, interactive and not knitting
-show_progress_bar <- function(num_iterations, num_iterations_threshold = 5) {
-  return(num_iterations > num_iterations_threshold &&
-           interactive() &&
-           is.null(getOption("knitr.in.progress")))
+# Determine if there is a need to show a progress bar
+# @param ... Conditions that must be all fullfilled
+# @return A logical
+show_progress_bar <- function(...) {
+  all(...) && interactive() && is.null(getOption("knitr.in.progress"))
 }

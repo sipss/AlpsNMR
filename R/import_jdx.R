@@ -198,7 +198,7 @@ process_block <- function(lines, metadata_only = FALSE) {
 #' @return A list with the JDX information
 #' @keywords internal
 read_jdx <- function(file_names, metadata_only = FALSE) {
-  if (show_progress_bar(length(file_names))) {
+  if (show_progress_bar(length(file_names) > 5)) {
     prog <- "text"
   } else {
     prog <- "none"

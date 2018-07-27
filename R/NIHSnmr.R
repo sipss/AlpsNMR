@@ -232,13 +232,13 @@ nmr_interpolate <- function(samples,
     axis1_full <- seq(from = axis1["min"], to = axis1["max"], by = axis1["by"])
     samples[["axis"]] <- list(axis1_full)
     for (data_field in data_fields) {
-      if (show_progress_bar(samples$num_samples)) {
+      if (show_progress_bar(samples$num_samples > 5)) {
         message("Interpolating ", data_field, "...")
       }
       data_matr <- matrix(NA, nrow = num_samples, ncol = length(axis1_full))
       tryCatch({
         pb <- NULL
-        if (show_progress_bar(samples$num_samples)) {
+        if (show_progress_bar(samples$num_samples > 5)) {
           pb <- utils::txtProgressBar(min = 0, max = samples$num_samples, style = 3)
         }
         for (i in seq_len(samples$num_samples)) {
@@ -275,13 +275,13 @@ nmr_interpolate <- function(samples,
     # axis2_scaled <- axis2_scalefun(axis2_full)
 
     for (data_field in data_fields) {
-      if (show_progress_bar(1, 0)) {
+      if (show_progress_bar()) {
         message("Interpolating ", data_field, "...")
       }
       data_matr <- array(data = NA, dim = c(num_samples, length(axis1_full), length(axis2_full)))
       tryCatch({
         pb <- NULL
-        if (show_progress_bar(samples$num_samples, 0)) {
+        if (show_progress_bar(samples$num_samples > 0)) {
           pb <- utils::txtProgressBar(min = 0, max = 2*samples$num_samples, style = 3)
         }
         for (i in seq_len(samples$num_samples)) {
