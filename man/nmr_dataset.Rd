@@ -10,6 +10,7 @@ It is defined as an S3 class, and it can be treated as a regular list.
 \details{
 It currently has the following elements:
 \itemize{
+\item \code{metadata_ext}: The added metadata fields. A data frame with one row per sample
 \item \code{metadata}: The metadata fields. A data frame with one row per sample
 \item \code{axis}: A list with length equal to the dimensionality of the data.
 For 1D spectra it is a list with a numeric vector
