@@ -340,23 +340,14 @@ has_names <- function(x) {
   return(output)
 }
 
-#' Add metadata to an nmr_dataset object
+#' Add metadata (internal function)
 #' 
-#' This is useful to add metadata to datasets that can be later used for
-#' plotting spectra or further analysis (PCA...).
-#' 
-#' @param nmr_data an [nmr_dataset] object
-#' @param metadata A data frame with metadata to add
-#' @param by A column name of both the `nmr_dataset$metadata` and the metadata
-#' data.frame. If you want to merge two columns with different headers you can
-#' use a named character vector `c("NMRExperiment" = "ExperimentNMR")` where
-#' the left side is the column name of the `nmr_dataset$metadata` and the right side is
-#' the column name of the metadata data frame.
-#' 
-#' @return
-#' The nmr_dataset object with the added metadata
-#' @export
-nmr_add_metadata <- function(nmr_data, metadata, by = "NMRExperiment") {
+#' @inheritParams nmr_add_metadata
+#' @param internal logical. Add metadata to $metadata (`internal==TRUE`) or
+#'                          to $metadata_ext (`internal == FALSE`)
+#' @seealso nmr_add_metadata
+#' @noRd
+nmr_add_metadata_internal <- function(nmr_data, metadata, by = "NMRExperiment", internal = TRUE) {
   nmr_meta <- nmr_get_metadata(nmr_data)
   by_left <- ifelse(is.null(names(by)), by, names(by))
   existing_vars <- base::setdiff(colnames(nmr_meta), by_left)
@@ -375,4 +366,24 @@ nmr_add_metadata <- function(nmr_data, metadata, by = "NMRExperiment") {
   nmr_meta_new <- dplyr::select(nmr_meta_new, -dplyr::ends_with("__REMOVE__"))
   nmr_data$metadata <- nmr_meta_new
   nmr_data
+}
+
+#' Add metadata to an nmr_dataset object
+#' 
+#' This is useful to add metadata to datasets that can be later used for
+#' plotting spectra or further analysis (PCA...).
+#' 
+#' @param nmr_data an [nmr_dataset] object
+#' @param metadata A data frame with metadata to add
+#' @param by A column name of both the `nmr_dataset$metadata` and the metadata
+#' data.frame. If you want to merge two columns with different headers you can
+#' use a named character vector `c("NMRExperiment" = "ExperimentNMR")` where
+#' the left side is the column name of the `nmr_dataset$metadata` and the right side is
+#' the column name of the metadata data frame.
+#' 
+#' @return
+#' The nmr_dataset object with the added metadata
+#' @export
+nmr_add_metadata <- function(nmr_data, metadata, by = "NMRExperiment") {
+  nmr_add_metadata_internal(nmr_data, metadata, by, internal = FALSE)
 }
