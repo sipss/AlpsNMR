@@ -16,6 +16,7 @@
 #' @param file_name File name of a BRUKER parameter file
 #' @return list of parameter-value pairs
 #' @keywords internal
+#' @noRd
 read_bruker_param <- function(file_name) {
   lines <- readLines(file_name)
   # There are vectors, values, stamps... many types of values
@@ -129,6 +130,7 @@ convert_field <- function(element) {
 #'                    procs_files is NULL default sensible names are tested.
 #' @return a list with a list of parameters for each procs file given
 #' @keywords internal
+#' @noRd
 read_procs_file <- function(full_pdata_path, procs_files = NULL) {
   if (is.null(procs_files)) {
     procs_files <- c("procs", "proc2s", "proc3s", "proc4s")
@@ -148,6 +150,7 @@ read_procs_file <- function(full_pdata_path, procs_files = NULL) {
 #'                    default set of acqus files is used.
 #' @return a list with a list of parameters for each acqus file given
 #' @keywords internal
+#' @noRd
 read_acqus_file <- function(sample_path, acqus_files = NULL) {
   if (is.null(acqus_files)) {
     acqus_files <- c("acqus", "acqu2s", "acqu3s", "acqu4s")
@@ -208,6 +211,7 @@ read_levels <- function(full_pdata_path, endian = NULL, NC_proc = NULL) {
 #' @param file_name The file name to read
 #' @param endian Passed to \code{readBin}.
 #' @keywords internal
+#' @noRd
 read_bin_data <- function(file_name, endian) {
   tryCatch({
     con <- file(file_name, "rb")
@@ -302,6 +306,7 @@ guess_shape_and_submatrix_shape <- function(sample) {
 #' @param sample_path A character path of the sample directory
 #' @return a list with name-value pairs
 #' @keywords internal
+#' @noRd
 read_orig_file <- function(sample_path) {
   orig_file <- file.path(sample_path, "orig")
   if (!file.exists(orig_file)) {
@@ -349,6 +354,7 @@ parse_title_file <- function(title_lines) {
 #' @return a list with name-value pairs. If the title file has no field names,
 #'         then fields are named V1, V2...
 #' @keywords internal
+#' @noRd
 read_pdata_title_file <- function(sample_path, pdata_path = "pdata/1") {
   title_file <- file.path(sample_path, pdata_path, "title")
   if (!file.exists(title_file)) {
@@ -368,6 +374,7 @@ read_pdata_title_file <- function(sample_path, pdata_path = "pdata/1") {
 #' @param read_pdata_title If `TRUE` also reads metadata from pdata title file.
 #' @return an NMR sample
 #' @keywords internal
+#' @noRd
 read_bruker_pdata <- function(sample_path,
                               pdata_file = NULL, pdata_path  = "pdata/1",
                               all_components = FALSE, read_pdata_title = TRUE) {
@@ -530,6 +537,7 @@ read_bruker_pdata <- function(sample_path,
 #' @param acqus_list The list of information retrieved by \code{read_acqus_file}
 #' @return A list with dimension, pulse_sequence and nuclei
 #' @keywords internal
+#' @noRd
 #'
 infer_dim_pulse_nuclei <- function(acqus_list) {
   output <- list(dimension = NULL,
@@ -638,7 +646,12 @@ read_bruker_metadata <- function(sample_path, pdata_path = "pdata/1",
 
 #' Read a Bruker sample directory
 #'
-#' @inheritParams read_bruker_pdata
+#' @param pdata_file File name of the binary NMR data to load. Usually "1r".
+#'                   If it is null it is autodetected and all files are loaded.
+#' @param sample_path A character path of the sample directory
+#' @param pdata_path Path from `sample_path` to the preprocessed data
+#' @param all_components If `FALSE` load only the real component. Otherwise load all of them
+#' @param read_pdata_title If `TRUE` also reads metadata from pdata title file.
 #' @return a list with all the bruker sample information
 #' @export
 read_bruker_sample <- function(sample_path,

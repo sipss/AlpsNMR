@@ -13,6 +13,7 @@ magrittr::`%>%`
 #'
 #' @param data a data frame
 #' @keywords internal
+#' @noRd
 simplify_df <- function(data) {
   if (is.null(data)) {
     return(NULL)
@@ -59,6 +60,7 @@ simplify_df <- function(data) {
 #' @param ls A list
 #' @return A tibble
 #' @keywords internal
+#' @noRd
 #' @examples
 #' \dontrun{
 #' data_as_list <- list(list(Gender = "Male", Height = 170),
@@ -116,6 +118,7 @@ list_of_lists_to_tibble <- function(ls) {
 #' @param data a tibble
 #' @return a tibble with converted columns
 #' @keywords internal
+#' @noRd
 tibble_lists_columns_to_vector_columns <- function(data) {
   # based on http://stackoverflow.com/questions/40046603/tibble-with-list-columns-convert-to-array-if-possible/
 

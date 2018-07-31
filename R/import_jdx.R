@@ -18,6 +18,7 @@ startsWith <- function(x, prefix) {
 #' @param lines A character vector with the lines of the jdx file
 #' @return A character vector where the lines have been removed
 #' @keywords internal
+#' @noRd
 #'
 strip_comments <- function(lines) {
   gsub("(.*)?\\$\\$.*", "\\1", lines)
@@ -42,6 +43,7 @@ DATA_RELATED_FIELDS <- c("FIRSTX", "LASTX", "MAXX", "MINX", "MAXY", "MINY",
 #' @param metadata_only ignore data (do not parse it)
 #' @return A list with two elements: the new block and the number of lines read from lines
 #' @keywords internal
+#' @noRd
 #'
 process_block <- function(lines, metadata_only = FALSE) {
   # Only one DATA_FIELD per block.
@@ -197,6 +199,7 @@ process_block <- function(lines, metadata_only = FALSE) {
 #'                      spectrum. (default: \code{FALSE})
 #' @return A list with the JDX information
 #' @keywords internal
+#' @noRd
 read_jdx <- function(file_names, metadata_only = FALSE) {
   if (show_progress_bar(length(file_names) > 5)) {
     prog <- "text"

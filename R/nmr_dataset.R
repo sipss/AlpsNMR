@@ -84,8 +84,9 @@ nmr_read_samples <- function(sample_names, pulse_sequence = NULL,
   return(samples)
 }
 
-# @rdname nmr_read_samples
-# @keywords internal
+#' @rdname nmr_read_samples
+#' @keywords internal
+#' @noRd
 nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
                                     metadata_only = FALSE,
                                     overwrite_sample_names = NULL,
