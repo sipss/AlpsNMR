@@ -5,6 +5,8 @@
 #'
 #' It currently has the following elements:
 #'
+#' - `metadata_ext`: The added metadata fields. A data frame with one row per sample
+#' 
 #' - `metadata`: The metadata fields. A data frame with one row per sample
 #' 
 #' - `axis`: A list with length equal to the dimensionality of the data.
@@ -183,6 +185,7 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
   samples <- list()
   metadata <- dplyr::bind_cols(sample_meta)
   names(metadata)[names(metadata) == 'info_NMRExperiment'] <- 'NMRExperiment'
+  samples[["metadata_ext"]] <- metadata[,"NMRExperiment", drop = FALSE]
   samples[["metadata"]] <- metadata
 
   if (!metadata_only) {
@@ -236,6 +239,7 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
     }
     metadata$NMRExperiment <- NMRExperiments
   }
+  samples[["metadata_ext"]] <- metadata[,"NMRExperiment", drop = FALSE]
   samples[["metadata"]] <- metadata
   if (!metadata_only) {
     samples[["data_1r"]] <- vector(mode = "list", length = num_samples)
@@ -306,6 +310,7 @@ has_names <- function(x) {
 #' @export
 `[.nmr_dataset` <- function(x, i) {
   output <- x
+  output$metadata_ext <- output$metadata_ext[i, , drop = FALSE]
   output$metadata <- output$metadata[i, , drop = FALSE]
   data_fields <- names(output)[grepl(pattern = "^data_.*", x = names(output))]
 
