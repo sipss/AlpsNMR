@@ -210,3 +210,8 @@ tibble_lists_columns_to_vector_columns <- function(data) {
 show_progress_bar <- function(...) {
   all(...) && interactive() && is.null(getOption("knitr.in.progress"))
 }
+
+
+cat_line <- function(...) {
+  cat(paste0(..., "\n"), sep = "")
+}
