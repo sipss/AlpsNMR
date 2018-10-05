@@ -17,8 +17,13 @@
   your calls there is no need to change anything. This means we now use a tidy
   evaluation syntax for `filter`.
 
-- `nmr_get_metadata` returns always a data frame / tibble, even when only a single
+- `nmr_get_metadata()` returns always a data frame / tibble, even when only a single
   column is requested. It also always includes the "NMRExperiment" column.
+
+- `nmr_dataset` object has two tables `metadata` and `metadata_ext`. The
+  `metadata_ext` table includes all the metadata we add with `nmr_add_metadata` while
+  `metadata` has the internal metadata (acquisition parameters, etc).
+  Please use `nmr_get_metadata(nmr_dataset)` instead of `nmr_dataset$metadata`.
 
 ## Other changes
 
