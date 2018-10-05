@@ -349,7 +349,12 @@ has_names <- function(x) {
 #' @seealso nmr_add_metadata
 #' @noRd
 nmr_add_metadata_internal <- function(nmr_data, metadata, by = "NMRExperiment", internal = TRUE) {
-  nmr_meta <- nmr_get_metadata(nmr_data)
+  if (isTRUE(internal)) {
+    nmr_meta <- nmr_get_metadata(nmr_data, columns = colnames(nmr_data$metadata))
+  } else {
+    nmr_meta <- nmr_get_metadata(nmr_data, columns = colnames(nmr_data$metadata_ext))
+  }
+  
   by_left <- ifelse(is.null(names(by)), by, names(by))
   existing_vars <- base::setdiff(colnames(nmr_meta), by_left)
   conflict <- base::intersect(existing_vars, colnames(metadata))
@@ -365,7 +370,11 @@ nmr_add_metadata_internal <- function(nmr_data, metadata, by = "NMRExperiment", 
     stop("Can't add metadata because of column conflict at: ", paste(conflict[!are_identical], sep = ", ", collapse = ", "))
   }
   nmr_meta_new <- dplyr::select(nmr_meta_new, -dplyr::ends_with("__REMOVE__"))
-  nmr_data$metadata <- nmr_meta_new
+  if (isTRUE(internal)) {
+    nmr_data$metadata <- nmr_meta_new
+  } else {
+    nmr_data$metadata_ext <- nmr_meta_new
+  }
   nmr_data
 }
 

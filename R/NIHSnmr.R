@@ -341,7 +341,9 @@ nmr_interpolate <- function(samples,
 #' @return a data frame with the injection metadata
 #' @export
 nmr_get_metadata <- function(samples, columns = NULL, simplify = FALSE) {
-  metadata <- samples[["metadata"]]
+  metadata <- dplyr::left_join(samples[["metadata_ext"]],
+                               samples[["metadata"]],
+                               by = "NMRExperiment")
   
   # Default columns means all columns
   if (is.null(columns)) {
