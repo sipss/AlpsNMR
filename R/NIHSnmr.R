@@ -432,7 +432,7 @@ nmr_get_metadata <- function(samples, columns = NULL, simplify = FALSE) {
       show_cols <- 5
     }
     warning("Missing columns: ",
-            paste(head(cols_miss, n = show_cols), collapse = ", "),
+            paste(utils::head(cols_miss, n = show_cols), collapse = ", "),
             " and ", length(cols_miss) - show_cols, " columns more.")
     rm(cols_miss, show_cols)
   }
