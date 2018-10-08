@@ -39,3 +39,5 @@
 
 - `nmr_get_metadata` gives a warning if the user asks for metadata columns that
   are missing.
+
+- New `nmr_integrate_regions` function

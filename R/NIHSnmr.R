@@ -333,6 +333,30 @@ nmr_interpolate <- function(samples,
 }
 
 
+#' Integrate regions
+#' 
+#' Integrate given regions and return a data frame with them
+#' @param samples A [nmr_dataset] object
+#' @param regions A named list. Each element of the list is a region,
+#'                given as a named numeric vector of length two with the range
+#'                to integrate. The name of the region will be the name of the
+#'                column
+#'
+#' The integration is very naïve and consists of the sum of the intensities
+#' in the given ppm range.
+#' 
+#' @return A data frame with the NMRExperiment column and one additional column
+#'         for each given region.
+#' @export
+nmr_integrate_regions <- function(samples, regions) {
+  areas <- purrr::map_dfc(regions, function(region) {
+    to_sum <- samples$axis[[1]] >= min(region) & samples$axis[[1]] < max(region)
+    rowSums(samples$data_1r[, to_sum])
+  })
+  dplyr::bind_cols(nmr_get_metadata(samples, "NMRExperiment"),
+                   areas)
+}
+
 
 #' Get metadata
 #' @param samples a [nmr_dataset] object
