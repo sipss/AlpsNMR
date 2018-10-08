@@ -4,8 +4,9 @@
 \alias{plot.nmr_dataset}
 \title{Plot an nmr_dataset}
 \usage{
-\method{plot}{nmr_dataset}(x, sample_idx = NULL, chemshift_range = NULL,
-  quantile_plot = FALSE, interactive = FALSE, ...)
+\method{plot}{nmr_dataset}(x, sample_idx = NULL,
+  chemshift_range = NULL, quantile_plot = FALSE, interactive = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{a \code{\link{nmr_dataset}} object}

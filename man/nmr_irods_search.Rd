@@ -4,11 +4,12 @@
 \alias{nmr_irods_search}
 \title{Search NMR samples in irods}
 \usage{
-nmr_irods_search(project_NPDI_ID = NA, study_nickname = NA, assay_ID = NA,
-  master_sample_accession = NA, operational_sample_accession = NA,
-  run_ID = NA, software_platform = NA, taxonomy = NA,
-  hardware_platform = NA, assay_technique = NA,
-  file_type = "Raw data file", file_format = "Zipped Bruker NMR directory",
+nmr_irods_search(project_NPDI_ID = NA, study_nickname = NA,
+  assay_ID = NA, master_sample_accession = NA,
+  operational_sample_accession = NA, run_ID = NA,
+  software_platform = NA, taxonomy = NA, hardware_platform = NA,
+  assay_technique = NA, file_type = "Raw data file",
+  file_format = "Zipped Bruker NMR directory",
   assay_platform = "Metabolomics", author = NA, exclude_trash = TRUE)
 }
 \arguments{

@@ -3,14 +3,13 @@
 \name{nmr_read_samples}
 \alias{nmr_read_samples}
 \alias{nmr_read_samples_dir}
-\alias{nmr_read_samples}
 \title{Read NMR samples}
 \usage{
 nmr_read_samples_dir(samples_dir, pulse_sequence = NULL,
   metadata_only = FALSE, overwrite_sample_names = NULL, ...)
 
-nmr_read_samples(sample_names, pulse_sequence = NULL, metadata_only = FALSE,
-  overwrite_sample_names = NULL, ...)
+nmr_read_samples(sample_names, pulse_sequence = NULL,
+  metadata_only = FALSE, overwrite_sample_names = NULL, ...)
 }
 \arguments{
 \item{samples_dir}{A directory that contains multiple samples}

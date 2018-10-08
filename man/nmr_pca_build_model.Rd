@@ -4,8 +4,8 @@
 \alias{nmr_pca_build_model}
 \title{Build a PCA on for an nmr_dataset}
 \usage{
-nmr_pca_build_model(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE,
-  ...)
+nmr_pca_build_model(nmr_data, ncomp = NULL, center = TRUE,
+  scale = FALSE, ...)
 }
 \arguments{
 \item{nmr_data}{a \code{\link{nmr_dataset}} object}
