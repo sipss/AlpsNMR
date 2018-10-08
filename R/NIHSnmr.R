@@ -45,6 +45,38 @@
 
 
 
+#' PQN normalization
+#' @noRd
+#' @param spectra A matrix with one spectrum on each row
+#' @return A matrix with one spectrum on each row (normalized)
+norm_pqn <- function(spectra) {
+  num_samples <- nrow(spectra)
+  if (num_samples < 10) {
+    warning("The Probabalistic Quotient Normalization requires several samples ",
+            "to compute the median spectra. Your number of samples is low")
+  }
+  # Normalize to the area
+  spectra <- spectra / rowSums(spectra)
+  if (num_samples == 1) {
+    # We have warned, and here there is nothing to do anymore
+    warning("PQN is absurd with a single sample. We have normalized it to the area.")
+    return(spectra)
+  }
+  # Move spectra above zero:
+  if (any(spectra < 0)) {
+    spectra <- spectra - min(spectra)
+  }
+  # Median of each ppm: (We need multiple spectra in order to get a reliable median!)
+  m <- matrixStats::colMedians(spectra)
+  # Divide at each ppm by its median:
+  f <- spectra/m[col(spectra)]
+  f <- matrixStats::rowMedians(f)
+  # Divide each spectra by its f value
+  spectra <- spectra / f
+  spectra
+}
+
+
 #' Normalize NMR samples
 #'
 #' @param samples A [nmr_dataset] object
@@ -58,13 +90,13 @@
 #' @return The [nmr_dataset] object, with the samples normalized
 #' @export
 nmr_normalize <- function(samples,
-                          method = c("area", "max", "value", "region", "none"),
+                          method = c("area", "max", "value", "region", "pqn", "none"),
                           values = NULL) {
   # This function does not consider >1D samples. Some things may work by chance,
   # but it needs testing and revision.
 
   method <- tolower(method[1])
-  if (!(method %in% c("area", "max", "value", "region", "none"))) {
+  if (!(method %in% c("area", "max", "value", "region", "pqn", "none"))) {
     stop("Unknown method: ", method)
   }
   if (method == "none") {
@@ -106,6 +138,16 @@ nmr_normalize <- function(samples,
     }
     samples[["processing"]][["normalization_params"]] <- list(method = method,
                                                               norm_factor = norm_factor)
+  } else if (method == "pqn") {
+    # only for 1D
+    if (length(samples[["axis"]]) > 1) {
+      stop("PQN normalization not implemented for dimensionality > 1")
+    }
+    for (data_field in data_fields) {
+      samples[[data_field]] <- norm_pqn(samples[[data_field]])
+    }
+    samples[["processing"]][["normalization"]] <- TRUE
+    return(samples)
   } else {
     stop("Unimplemented method: ", method)
   }

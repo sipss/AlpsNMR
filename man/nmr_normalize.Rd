@@ -4,8 +4,8 @@
 \alias{nmr_normalize}
 \title{Normalize NMR samples}
 \usage{
-nmr_normalize(samples, method = c("area", "max", "value", "region", "none"),
-  values = NULL)
+nmr_normalize(samples, method = c("area", "max", "value", "region",
+  "pqn", "none"), values = NULL)
 }
 \arguments{
 \item{samples}{A \link{nmr_dataset} object}
