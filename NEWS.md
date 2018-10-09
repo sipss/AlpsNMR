@@ -1,4 +1,8 @@
-# NIHSnmr 1.1.0.9000
+# NIHSnmr 1.2.0.9000
+
+- Allow reversed ranges in `nmr_exclude_region`.
+
+# NIHSnmr 1.2.0
 
 ## Breaking changes
 

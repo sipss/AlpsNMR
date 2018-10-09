@@ -182,14 +182,15 @@ nmr_exclude_region <- function(samples, exclude = list(water = c(4.7, 5.0))) {
   data_fields <- names(samples)[grepl(pattern = "^data_.*", x = names(samples))]
   for (data_field in data_fields) {
     dimension <- length(dim(samples[[data_field]])) - 1 # first dim is samples
-    for (i_region in 1:length(exclude)) {
+    for (i_region in seq_along(exclude)) {
       region <- exclude[[i_region]]
       if (dimension == 1) {
-        excl_dim1 <- samples[["axis"]][[1]] >= region[1] & samples[["axis"]][[1]] <= region[2]
+        
+        excl_dim1 <- samples[["axis"]][[1]] >= min(region) & samples[["axis"]][[1]] <= max(region)
         samples[[data_field]][,excl_dim1] <- 0
       } else if (dimension == 2) {
-        excl_dim1 <- samples[["axis"]][[1]] >= region[1] & samples[["axis"]][[1]] <= region[2]
-        excl_dim2 <- samples[["axis"]][[2]] >= region[3] & samples[["axis"]][[2]] <= region[4]
+        excl_dim1 <- samples[["axis"]][[1]] >= min(region[1:2]) & samples[["axis"]][[1]] <= max(region[1:2])
+        excl_dim2 <- samples[["axis"]][[2]] >= max(region[3:4]) & samples[["axis"]][[2]] <= max(region[3:4])
         samples[[data_field]][,excl_dim1, excl_dim2] <- 0
       } else {
         stop("Not implemented error")
