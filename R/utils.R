@@ -204,9 +204,10 @@ tibble_lists_columns_to_vector_columns <- function(data) {
 }
 
 
-# Determine if there is a need to show a progress bar
-# @param ... Conditions that must be all fullfilled
-# @return A logical
+#' Determine if there is a need to show a progress bar
+#' @noRd
+#' @param ... Conditions that must be all fullfilled
+#' @return A logical
 show_progress_bar <- function(...) {
   all(...) && interactive() && is.null(getOption("knitr.in.progress"))
 }
