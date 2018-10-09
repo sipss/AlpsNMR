@@ -40,7 +40,7 @@ NULL
 #' @rdname nmr_pca_plots
 #' @export
 nmr_pca_plot_variance <- function(pca_model) {
-  cum_var_percent <- 100*cumsum(pca_model$sdev^2/sum(pca_model$sdev^2))
+  cum_var_percent <- 100*cumsum(pca_model$sdev^2/pca_model$var.tot)
   ggplot2::qplot(x = seq_along(cum_var_percent), y = cum_var_percent, geom = "line") +
     ggplot2::xlab("Number of Principal Components") +
     ggplot2::ylab("Explained Variance (%)")

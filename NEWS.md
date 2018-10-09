@@ -1,6 +1,7 @@
 # NIHSnmr 1.2.0.9000
 
 - Allow reversed ranges in `nmr_exclude_region`.
+- Fix bug in `nmr_pca_plot_variance` when `ncomp` was fixed when building the model
 
 # NIHSnmr 1.2.0
 
