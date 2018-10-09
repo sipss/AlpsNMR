@@ -211,7 +211,3 @@ show_progress_bar <- function(...) {
   all(...) && interactive() && is.null(getOption("knitr.in.progress"))
 }
 
-
-cat_line <- function(...) {
-  cat(paste0(..., "\n"), sep = "")
-}

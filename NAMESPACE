@@ -2,7 +2,9 @@
 
 S3method("[",nmr_dataset)
 S3method(filter,nmr_dataset)
+S3method(format,nmr_dataset)
 S3method(plot,nmr_dataset)
+S3method(print,nmr_dataset)
 export("%>%")
 export(NIHSnmr_interactive)
 export(filter)

@@ -398,7 +398,13 @@ nmr_add_metadata <- function(nmr_data, metadata, by = "NMRExperiment") {
   nmr_add_metadata_internal(nmr_data, metadata, by, internal = FALSE)
 }
 
+#' @export
 print.nmr_dataset <- function(x, ...) {
-  cat_line("An nmr_dataset (", x$num_samples, " samples)")
+  cat(format(x, ...), "\n")
   invisible(x)
+}
+
+#' @export
+format.nmr_dataset <- function(x, ...) {
+  paste0("An nmr_dataset (", x$num_samples, " samples)")
 }
