@@ -54,6 +54,7 @@ Suggests:
  testthat (>= 2.0.0),
  shiny (>= 1.0.5),
  plotly (>= 4.7.1),
+ ChemoSpec,
  NIHSrods
 RoxygenNote: 6.1.0
 Roxygen: list(markdown = TRUE)

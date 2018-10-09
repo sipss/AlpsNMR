@@ -212,3 +212,29 @@ show_progress_bar <- function(...) {
   all(...) && interactive() && is.null(getOption("knitr.in.progress"))
 }
 
+# Minimal conversion from nmr_dataset to ChemoSpec Spectra:
+# Not exposed externally, but ready if we need it.
+as.Spectra.nmr_dataset <- function(nmr_dataset, desc = "A nmr_dataset") {
+  if (!requireNamespace("ChemoSpec", quietly = TRUE)) {
+    stop("ChemoSpec needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  # Now build the Spectra object
+  Spectra <- vector("list", 9)
+  Spectra[[1]] <- nmr_dataset$axis[[1]]
+  Spectra[[2]] <- nmr_dataset$data_1r
+  Spectra[[3]] <- nmr_dataset$metadata$NMRExperiment
+  Spectra[[4]] <- as.factor(rep(NA_character_, nmr_dataset$num_samples)) # groups
+  Spectra[[5]] <- rep("black", nmr_dataset$num_samples) # colors
+  Spectra[[6]] <- rep(1L, nmr_dataset$num_samples) # sym
+  Spectra[[7]] <- rep("a", nmr_dataset$num_samples) # alt.sym
+  Spectra[[8]] <- c("ppm", "a.u.") # units
+  Spectra[[9]] <- desc # desc
+  
+  # Clean up and verify
+  
+  class(Spectra) <- "Spectra"
+  names(Spectra) <- c("freq", "data", "names", "groups", "colors", "sym", "alt.sym", "units", "desc")
+  ChemoSpec::chkSpectra(Spectra)
+  return(Spectra)
+}
