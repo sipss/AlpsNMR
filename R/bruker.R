@@ -683,3 +683,57 @@ bruker_merge_meta_pdata <- function(meta, pdata) {
   # will continue working if it calls this.
   return(c(meta, pdata))
 }
+
+#' Create one zip file for each brucker sample path
+#'
+#' @param path Character vector with sample directories
+#' @param workdir Directory to store zip files
+#' @param overwrite Should existing zip files be overwritten?
+#' @param ... Passed to \code{\link[utils]{zip}}
+#' @return A character vector of the same length as path, with the zip file names
+#' @export
+nmr_zip_bruker_samples <- function(path, workdir, overwrite = FALSE, ...) {
+  current_wd <- getwd()
+  dir.create(workdir, recursive = TRUE)
+  workdir <- normalizePath(workdir)
+  outpaths <- rep(NA_character_, length(path))
+  # tryCatch to make sure the working directory is restored
+  # The zip utility in R is very basic. On Windows it relies on the zip.exe
+  # program being installed and in the path. zip.exe is found on RTools.
+  tryCatch({
+    for (i in seq_len(length(path))) {
+      path_i <- path[i]
+      # The directory where the NMR sample is: (e.g. "/nihs/Instrument/.../DUND-plasma/10")
+      dir_to_compress <- normalizePath(path_i)
+      # dir_name: (e.g. "10")
+      dir_name <- basename(dir_to_compress)
+      # parent_dir: "/nihs/Instrument/.../DUND-plasma"
+      parent_dir <- normalizePath(dirname(dir_to_compress))
+      # destination_file: /tmp/my_temp_dir/10.zip
+      destination_file <- file.path(workdir, paste0(dir_name, ".zip"))
+      outpaths[i] <- destination_file
+      if (file.exists(destination_file)) {
+        if (overwrite) {
+          # deletes destination zip file if overwrite is true
+          unlink(destination_file)
+        } else {
+          # Skips otherwise
+          warning("File ", destination_file, " already exists. Skipping")
+          next
+        }
+      }
+      # Change to the parent_dir so the zip file does not include the whole
+      # directory tree folders
+      setwd(parent_dir)
+      # Zip it!
+      utils::zip(zipfile = destination_file, files = dir_name, ...)
+      # Go back to the initial directory, so the next file can be
+      # found if relative paths are used
+      setwd(current_wd)
+    }
+  }, finally = {
+    # Always restore the working directory, even if there are errors somewhere
+    setwd(current_wd)
+  })
+  return(outpaths)
+}
