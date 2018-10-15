@@ -56,24 +56,26 @@ norm_pqn <- function(spectra) {
             "to compute the median spectra. Your number of samples is low")
   }
   # Normalize to the area
-  spectra <- spectra / rowSums(spectra)
+  areas <- rowSums(spectra)
+  spectra2 <- spectra / areas
   if (num_samples == 1) {
     # We have warned, and here there is nothing to do anymore
     warning("PQN is absurd with a single sample. We have normalized it to the area.")
-    return(spectra)
+    return(spectra2)
   }
   # Move spectra above zero:
-  if (any(spectra < 0)) {
-    spectra <- spectra - min(spectra)
+  if (any(spectra2 < 0)) {
+    spectra2 <- spectra2 - min(spectra2)
   }
   # Median of each ppm: (We need multiple spectra in order to get a reliable median!)
-  m <- matrixStats::colMedians(spectra)
+  m <- matrixStats::colMedians(spectra2)
   # Divide at each ppm by its median:
-  f <- spectra/m[col(spectra)]
+  f <- spectra2/m[col(spectra2)]
   f <- matrixStats::rowMedians(f)
   # Divide each spectra by its f value
-  spectra <- spectra / f
-  spectra
+  spectra3 <- spectra2 / f
+  list(spectra = spectra3,
+       norm_factor = f*areas)
 }
 
 
@@ -144,7 +146,9 @@ nmr_normalize <- function(samples,
       stop("PQN normalization not implemented for dimensionality > 1")
     }
     for (data_field in data_fields) {
-      samples[[data_field]] <- norm_pqn(samples[[data_field]])
+      norm_result <- norm_pqn(samples[[data_field]])
+      samples[[data_field]] <- norm_result$spectra
+      norm_factor[[data_field]] <- norm_result$norm_factor
     }
     samples[["processing"]][["normalization"]] <- TRUE
     return(samples)
