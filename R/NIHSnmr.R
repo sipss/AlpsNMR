@@ -61,7 +61,8 @@ norm_pqn <- function(spectra) {
   if (num_samples == 1) {
     # We have warned, and here there is nothing to do anymore
     warning("PQN is absurd with a single sample. We have normalized it to the area.")
-    return(spectra2)
+    return(list(spectra = spectra2,
+                norm_factor = areas))
   }
   # Move spectra above zero:
   if (any(spectra2 < 0)) {
@@ -145,6 +146,7 @@ nmr_normalize <- function(samples,
     if (length(samples[["axis"]]) > 1) {
       stop("PQN normalization not implemented for dimensionality > 1")
     }
+    norm_factor <- list()
     for (data_field in data_fields) {
       norm_result <- norm_pqn(samples[[data_field]])
       samples[[data_field]] <- norm_result$spectra
