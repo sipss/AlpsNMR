@@ -43,7 +43,7 @@ nmr_pca_plot_variance <- function(pca_model) {
   cum_var_percent <- 100*cumsum(pca_model$sdev^2/pca_model$var.tot)
   ggplot2::qplot(x = seq_along(cum_var_percent), y = cum_var_percent, geom = "line") +
     ggplot2::xlab("Number of Principal Components") +
-    ggplot2::ylab("Explained Variance (%)")
+    ggplot2::ylab("Cummulated Explained Variance (%)")
 }
 
 #' @rdname nmr_pca_plots
@@ -52,18 +52,23 @@ nmr_pca_scoreplot <- function(nmr_data, pca_model, comp = 1:2, ...) {
   nmr_metadata <- nmr_get_metadata(nmr_data)
   scores <- tibble::as_tibble(pca_model$x, rownames = "NMRExperiment") %>%
     dplyr::left_join(nmr_metadata, by = "NMRExperiment")
-  
+  var_percent <- 100*pca_model$sdev^2/pca_model$var.tot
+  axis_labels <- paste0("PC", seq_along(var_percent), " (", round(var_percent, 2),"%)")
+  names(axis_labels) <- paste0("PC", seq_along(var_percent))
   if (length(comp) == 2) {
     xy <- paste0("PC", comp)
     gplt <- ggplot2::ggplot(
       data = scores, 
       mapping = ggplot2::aes(x = !!rlang::sym(xy[1]), y = !! rlang::sym(xy[2]), ...)
     ) +
-      ggplot2::geom_point()
-  } else {
-    gplt <- GGally::ggpairs(data = scores, mapping = ggplot2::aes(...),
-                            columns = comp + 1, # +1 because the NMRExperiment becomes the first column
-                            progress = FALSE)
+      ggplot2::geom_point() +
+      ggplot2::xlab(axis_labels[xy[1]]) +
+      ggplot2::ylab(axis_labels[xy[2]])
+    } else {
+      gplt <- GGally::ggpairs(data = scores, mapping = ggplot2::aes(...),
+                              columns = comp + 1, # +1 because the NMRExperiment becomes the first column
+                              progress = FALSE,
+                              labeller = ggplot2::as_labeller(axis_labels))
   }
   gplt
 }
