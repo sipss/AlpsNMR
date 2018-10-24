@@ -42,20 +42,3 @@
 #' nmr_push_to_irods(irods_metadata, "/NIHSData/DUND-XXXXXX/study/Metabolomics")
 #' }
 "_PACKAGE"
-
-
-
-#' Read Free Induction Decay file
-#' 
-#' Reads an FID file. This is a very simple function.
-#' 
-#' @param sample_name A single sample name
-#' @param endian Endianness of the fid file ("little" by default, use "big" if acqus$BYTORDA == 1)
-#' @return A numeric vector with the free induction decay values
-#' @export
-nmr_read_bruker_fid <- function(sample_name, endian = "little") {
-  fid_file <- file.path(sample_name, "fid")
-  num_numbers <- file.size(fid_file)/8
-  fid <- readBin(fid_file, what = "integer", n = num_numbers, size = 4, signed = TRUE, endian = endian)
-  fid
-}
