@@ -160,8 +160,6 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
   # Remove samples that could not be loaded:
   any_error <- vapply(X = list_of_samples, FUN = is.null, FUN.VALUE = logical(1))
   list_of_samples <- list_of_samples[!any_error]
-  # The number of samples
-  num_samples <- length(list_of_samples)
 
   if (length(list_of_samples) == 0) {
     stop("No samples loaded")
@@ -183,24 +181,21 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
     }
   }
 
-  samples <- list()
   metadata <- dplyr::bind_cols(sample_meta)
   names(metadata)[names(metadata) == 'info_NMRExperiment'] <- 'NMRExperiment'
-  samples[["metadata_ext"]] <- metadata[,"NMRExperiment", drop = FALSE]
-  samples[["metadata"]] <- metadata
-
+  
+  data_fields_full <- list()
+  axis <- NULL
   if (!metadata_only) {
     for (data_field in data_fields) {
-      samples[[data_field]] <- lapply(list_of_samples, function(x) x[[data_field]])
+      data_fields_full[[data_field]] <- lapply(list_of_samples, function(x) x[[data_field]])
     }
-    samples[["axis"]] <- lapply(list_of_samples, function(x) x[["axis"]])
+    axis <- lapply(list_of_samples, function(x) x[["axis"]])
   }
-  samples[["num_samples"]] <- num_samples
-  samples[["processing"]] <- list(data_loaded = !metadata_only,
-                                  interpolation = FALSE,
-                                  exclusion = FALSE,
-                                  normalization = FALSE)
-  class(samples) <- "nmr_dataset"
+  samples <- new_nmr_dataset(metadata_ext = metadata[,"NMRExperiment", drop = FALSE],
+                             metadata = metadata,
+                             data_fields = data_fields_full,
+                             axis = axis)
   return(samples)
 }
 
@@ -209,7 +204,6 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
   sample_names <- normalizePath(sample_names, mustWork = FALSE)
   raw_samples <- read_jdx(sample_names, metadata_only = metadata_only)
   # Assume 1-D
-  samples <- list()
   if (!metadata_only) {
     block_with_data_per_sample <-
       vapply(raw_samples,
@@ -240,23 +234,22 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
     }
     metadata$NMRExperiment <- NMRExperiments
   }
-  samples[["metadata_ext"]] <- metadata[,"NMRExperiment", drop = FALSE]
-  samples[["metadata"]] <- metadata
+  
+  axis <- NULL
+  data_fields <- list()
   if (!metadata_only) {
-    samples[["data_1r"]] <- vector(mode = "list", length = num_samples)
-    samples[["axis"]] <- vector(mode = "list", length(num_samples))
+    data_fields[["data_1r"]] <- vector(mode = "list", length = num_samples)
+    axis <- vector(mode = "list", length(num_samples))
     for (sample_idx in seq_along(raw_samples)) {
       xydata <- raw_samples[[sample_idx]]$blocks[[block_with_data_per_sample[sample_idx]]][["XYDATA"]]
-      samples[["data_1r"]][[sample_idx]] <- xydata$y
-      samples[["axis"]][[sample_idx]] <- list(x = xydata$x)
+      data_fields[["data_1r"]][[sample_idx]] <- xydata$y
+      axis[[sample_idx]] <- list(x = xydata$x)
     }
   }
-  samples[["num_samples"]] <- num_samples
-  samples[["processing"]] <- list(data_loaded = !metadata_only,
-                                  interpolation = FALSE,
-                                  exclusion = FALSE,
-                                  normalization = FALSE)
-  class(samples) <- "nmr_dataset"
+  samples <- new_nmr_dataset(metadata = metadata,
+                             metadata_ext = metadata[,"NMRExperiment", drop = FALSE],
+                             data_fields = data_fields,
+                             axis = axis)
   return(samples)
 }
 
@@ -408,3 +401,24 @@ print.nmr_dataset <- function(x, ...) {
 format.nmr_dataset <- function(x, ...) {
   paste0("An nmr_dataset (", x$num_samples, " samples)")
 }
+
+validate_nmr_dataset <- function(samples) {
+  samples
+}
+
+new_nmr_dataset <- function(metadata, metadata_ext, data_fields, axis) {
+  samples <- list()
+  samples[["metadata_ext"]] <- metadata_ext
+  samples[["metadata"]] <- metadata
+  samples <- append(x = samples, values = data_fields)
+  samples[["axis"]] <- axis
+  samples[["num_samples"]] <- nrow(metadata)
+  samples[["processing"]] <- list(data_loaded = !is.null(axis),
+                                  interpolation = FALSE,
+                                  exclusion = FALSE,
+                                  normalization = FALSE)
+  class(samples) <- c("nmr_dataset")
+  validate_nmr_dataset(samples)
+  samples
+}
+
