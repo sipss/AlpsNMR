@@ -44,19 +44,8 @@ nmr_interpolate <- function(samples,
     }
     return(axisn)
   }
-  if (dimensions_per_sample >= 1) {
-    # axis1 will be based on sample 1, dimension 1
-    axis1 <- verify_axisn(axis1, samples[["axis"]][[1]][[1]])
-  }
-  if (dimensions_per_sample >= 2) {
-    # axis2 will be based on sample 1, dimension 2
-    axis2 <- verify_axisn(axis2, samples[["axis"]][[1]][[2]])
-  }
-  if (dimensions_per_sample >= 3) {
-    warning("Interpolation not implemented for dimensions > 2. Skipping interpolation.")
-    return(samples)
-  }
-  
+  axis1 <- verify_axisn(axis1, samples[["axis"]][[1]][[1]])
+
   # Do interpolation:
   orig_axis <- samples[["axis"]]
   data_fields <- names(samples)[grepl(pattern = "^data_.*", x = names(samples))]
@@ -89,7 +78,9 @@ nmr_interpolate <- function(samples,
       })
       samples[[data_field]] <- data_matr
     }
-  } else if (dimensions_per_sample == 2) {
+  } else {
+    # axis2 will be based on sample 1, dimension 2
+    axis2 <- verify_axisn(axis2, samples[["axis"]][[1]][[2]])
     # For 2-D samples, we use two 1-D linear interpolations instead of a bilinear one. (FIXME)
     # Akima needs similar axis for interpolation. We will scale the axes.
     # rescale <- function(x0, y0, x1, y1) {
