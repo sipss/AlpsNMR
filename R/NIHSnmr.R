@@ -60,26 +60,19 @@
 nmr_interpolate <- function(samples,
                             axis1=c(min = 0.4, max = 10, by = 0.0008),
                             axis2=NULL) {
-
-  # If samples have been interpolated don't do it again.
-  if (samples[["processing"]][["interpolation"]]) {
-    warning("Samples already interpolated. Skipping interpolation.")
-    return(samples)
-  }
-
-
   # Check if we can interpolate:
-
+  
   # 1. Check that each of the loaded samples has the same dimensionality
   dimensions_per_sample <- vapply(samples$axis, length, numeric(1))
   if (any(dimensions_per_sample != dimensions_per_sample[1])) {
     # Have different dimensionality, can't merge
-    warning("Samples have different dimensionality. Cant't interpolate.")
-    return(samples)
+    stop("Samples have different dimensionality. Cant't interpolate.")
   }
-
   dimensions_per_sample <- dimensions_per_sample[1]
-
+  if (!dimensions_per_sample %in% c(1, 2)) {
+    stop("Interpolation not implemented for dimensions different than 1 or 2.")
+  }
+  
   # 2. Check that we have the interpolation axis
   verify_axisn <- function(axisn, one_sample_axis) {
     if (is.null(axisn)) {
