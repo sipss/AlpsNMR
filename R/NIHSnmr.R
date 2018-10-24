@@ -432,8 +432,9 @@ nmr_integrate_regions <- function(samples, regions, fix_baseline = TRUE) {
     region_to_sum <- samples$data_1r[, to_sum]
     area <- rowSums(region_to_sum)
     if (fix_baseline) {
-      basel <- apply(region_to_sum, 1, rough_baseline)
-      area <- area - basel
+      basel <- t(apply(region_to_sum, 1, rough_baseline))
+      area_basel <- rowSums(basel)
+      area <- area - area_basel
     }
     area
   })
