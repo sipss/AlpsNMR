@@ -1,3 +1,33 @@
+verify_dimensionality <- function(samples, valid_dimensions) {
+  # 1. Check that each of the loaded samples has the same dimensionality
+  dimensions_per_sample <- vapply(samples$axis, length, numeric(1))
+  if (any(dimensions_per_sample != dimensions_per_sample[1])) {
+    stop("Samples were expected to have the same dimensionality")
+  }
+  if (!all(dimensions_per_sample %in% valid_dimensions)) {
+    stop("Samples have unexpected dimensionality")
+  }
+  dimensions_per_sample
+} 
+
+verify_axisn <- function(axisn, one_sample_axis) {
+  if (is.null(axisn)) {
+    # axisn will be built on sample_axis:
+    axisn <- c(min = min(one_sample_axis),
+               max = max(one_sample_axis),
+               by = abs(one_sample_axis[2] - one_sample_axis[1]))
+  } else {
+    if (length(axisn) == 2) {
+      axisn <- c(axisn, abs(one_sample_axis[2] - one_sample_axis[1]))
+      names(axisn) <- c("min", "max", "by")
+    }
+    if (is.null(names(axisn))) {
+      names(axisn) <- c("min", "max", "by")
+    }
+  }
+  return(axisn)
+}
+
 #' Interpolate samples
 #'
 #' Interpolate the samples so they share the same axis and can be placed
@@ -14,75 +44,72 @@ nmr_interpolate <- function(samples,
                             axis1=c(min = 0.4, max = 10, by = 0.0008),
                             axis2=NULL) {
   # Check if we can interpolate:
+  dimensions_per_sample <- verify_dimensionality(samples, valid_dimensions = c(1, 2))
   
-  # 1. Check that each of the loaded samples has the same dimensionality
-  dimensions_per_sample <- vapply(samples$axis, length, numeric(1))
-  if (any(dimensions_per_sample != dimensions_per_sample[1])) {
-    # Have different dimensionality, can't merge
-    stop("Samples have different dimensionality. Cant't interpolate.")
+  if (dimensions_per_sample[1] == 1) {
+    nmr_interpolate_1D(samples, axis1 = axis1)
+  } else {
+    nmr_interpolate_2D(samples, axis1 = axis1, axis2 = axis2)
   }
-  dimensions_per_sample <- dimensions_per_sample[1]
-  if (!dimensions_per_sample %in% c(1, 2)) {
-    stop("Interpolation not implemented for dimensions different than 1 or 2.")
-  }
+}
+
+nmr_interpolate_1D <- function(samples, axis1 = c(min = 0.2, max = 10, by = 0.0008)) {
+  # Check if we can interpolate:
+  verify_dimensionality(samples, valid_dimensions = 1)
   
   # 2. Check that we have the interpolation axis
-  verify_axisn <- function(axisn, one_sample_axis) {
-    if (is.null(axisn)) {
-      # axisn will be built on sample_axis:
-      axisn <- c(min = min(one_sample_axis),
-                 max = max(one_sample_axis),
-                 by = abs(one_sample_axis[2] - one_sample_axis[1]))
-    } else {
-      if (length(axisn) == 2) {
-        axisn <- c(axisn, abs(one_sample_axis[2] - one_sample_axis[1]))
-        names(axisn) <- c("min", "max", "by")
-      }
-      if (is.null(names(axisn))) {
-        names(axisn) <- c("min", "max", "by")
-      }
-    }
-    return(axisn)
-  }
   axis1 <- verify_axisn(axis1, samples[["axis"]][[1]][[1]])
+  
+  data_fields <- names(samples)[grepl(pattern = "^data_.*", x = names(samples))]
+  
+  axis1_full <- seq(from = axis1["min"], to = axis1["max"], by = axis1["by"])
+  for (data_field in data_fields) {
+    if (show_progress_bar(samples$num_samples > 5)) {
+      message("Interpolating ", data_field, "...")
+    }
+    data_matr <- interpolate_1d(list_of_ppms = purrr::map(samples[["axis"]], 1),
+                                list_of_1r = samples[[data_field]],
+                                ppm_axis = axis1_full)
+    samples[[data_field]] <- data_matr
+  }
+  samples[["axis"]] <- list(axis1_full)
+  samples[["processing"]][["interpolation"]] <- TRUE
+  samples
+}
 
+nmr_interpolate_2D <- function(samples,
+                               axis1=c(min = 0.4, max = 10, by = 0.0008),
+                               axis2=NULL) {
+  # Check if we can interpolate:
+  verify_dimensionality(samples, valid_dimensions = 2)
+  
+  # 2. Check that we have the interpolation axis
+  axis1 <- verify_axisn(axis1, samples[["axis"]][[1]][[1]])
+  
   # Do interpolation:
   data_fields <- names(samples)[grepl(pattern = "^data_.*", x = names(samples))]
-  if (dimensions_per_sample == 1) {
-    axis1_full <- seq(from = axis1["min"], to = axis1["max"], by = axis1["by"])
-    samples[["axis"]] <- list(axis1_full)
-    for (data_field in data_fields) {
-      if (show_progress_bar(samples$num_samples > 5)) {
-        message("Interpolating ", data_field, "...")
-      }
-      data_matr <- interpolate_1d(list_of_ppms = purrr::map(samples[["axis"]], 1),
-                                  list_of_1r = samples[[data_field]],
-                                  ppm_axis = axis1_full)
-      samples[[data_field]] <- data_matr
+  # axis2 will be based on sample 1, dimension 2
+  axis2 <- verify_axisn(axis2, samples[["axis"]][[1]][[2]])
+  
+  axis1_full <- seq(from = axis1["min"], to = axis1["max"], by = axis1["by"])
+  axis2_full <- seq(from = axis2["min"], to = axis2["max"], by = axis2["by"])
+  
+  for (data_field in data_fields) {
+    if (show_progress_bar()) {
+      message("Interpolating ", data_field, "...")
     }
-  } else {
-    # axis2 will be based on sample 1, dimension 2
-    axis2 <- verify_axisn(axis2, samples[["axis"]][[1]][[2]])
-
-    axis1_full <- seq(from = axis1["min"], to = axis1["max"], by = axis1["by"])
-    axis2_full <- seq(from = axis2["min"], to = axis2["max"], by = axis2["by"])
-
-    for (data_field in data_fields) {
-      if (show_progress_bar()) {
-        message("Interpolating ", data_field, "...")
-      }
-      data_matr <- interpolate_2d(list_of_f1 = purrr::map(samples[["axis"]], 1),
-                                  list_of_f2 = purrr::map(samples[["axis"]], 2),
-                                  list_of_data = samples[[data_field]],
-                                  f1_axis = axis1_full,
-                                  f2_axis = axis2_full)
-      samples[["axis"]] <- list(axis1_full, axis2_full)
-      samples[[data_field]] <- data_matr
-    }
+    data_matr <- interpolate_2d(list_of_f1 = purrr::map(samples[["axis"]], 1),
+                                list_of_f2 = purrr::map(samples[["axis"]], 2),
+                                list_of_data = samples[[data_field]],
+                                f1_axis = axis1_full,
+                                f2_axis = axis2_full)
+    samples[[data_field]] <- data_matr
   }
+  samples[["axis"]] <- list(axis1_full, axis2_full)
   samples[["processing"]][["interpolation"]] <- TRUE
-  return(samples)
+  samples
 }
+
 
 interpolate_1d <- function(list_of_ppms, list_of_1r, ppm_axis) {
   num_samples <- length(list_of_1r)
