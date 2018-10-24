@@ -57,25 +57,9 @@ nmr_interpolate <- function(samples,
       if (show_progress_bar(samples$num_samples > 5)) {
         message("Interpolating ", data_field, "...")
       }
-      data_matr <- matrix(NA, nrow = num_samples, ncol = length(axis1_full))
-      tryCatch({
-        pb <- NULL
-        if (show_progress_bar(samples$num_samples > 5)) {
-          pb <- utils::txtProgressBar(min = 0, max = samples$num_samples, style = 3)
-        }
-        for (i in seq_len(samples$num_samples)) {
-          data_matr[i, ] <- signal::interp1(x = orig_axis[[i]][[1]],
-                                            y = samples[[data_field]][[i]],
-                                            xi = axis1_full, method = "spline")
-          if (!is.null(pb)) {
-            utils::setTxtProgressBar(pb, i)
-          }
-        }
-      }, finally = {
-        if (!is.null(pb)) {
-          close(pb)
-        }
-      })
+      data_matr <- interpolate_1d(list_of_ppms = purrr::map(samples[["axis"]], 1),
+                                  list_of_1r = samples[[data_field]],
+                                  ppm_axis = axis1_full)
       samples[[data_field]] <- data_matr
     }
   } else {
@@ -155,3 +139,29 @@ nmr_interpolate <- function(samples,
   samples[["processing"]][["interpolation"]] <- TRUE
   return(samples)
 }
+
+interpolate_1d <- function(list_of_ppms, list_of_1r, ppm_axis) {
+  num_samples <- length(list_of_1r)
+  data_matr <- matrix(NA, nrow = num_samples, ncol = length(ppm_axis))
+  tryCatch({
+    pb <- NULL
+    if (show_progress_bar(num_samples > 5)) {
+      pb <- utils::txtProgressBar(min = 0, max = num_samples, style = 3)
+    }
+    for (i in seq_len(num_samples)) {
+      data_matr[i, ] <- signal::interp1(x = list_of_ppms[[i]],
+                                        y = list_of_1r[[i]],
+                                        xi = ppm_axis,
+                                        method = "spline")
+      if (!is.null(pb)) {
+        utils::setTxtProgressBar(pb, i)
+      }
+    }
+  }, finally = {
+    if (!is.null(pb)) {
+      close(pb)
+    }
+  })
+  data_matr
+}
+
