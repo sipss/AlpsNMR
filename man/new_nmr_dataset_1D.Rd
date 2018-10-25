@@ -4,16 +4,14 @@
 \alias{new_nmr_dataset_1D}
 \title{Creates a new 1D nmr_dataset object from scratch}
 \usage{
-new_nmr_dataset_1D(ppm_axis, data_1r, metadata, metadata_ext)
+new_nmr_dataset_1D(ppm_axis, data_1r, metadata)
 }
 \arguments{
 \item{ppm_axis}{A numeric vector with the ppm values for the columns of data_1r}
 
 \item{data_1r}{A numeric matrix with one NMR spectrum on each row}
 
-\item{metadata}{A data frame with at least the \code{NMRExperiment} column}
-
-\item{metadata_ext}{A data frame with at least the \code{NMRExperiment} column}
+\item{metadata}{A list of data frames with at least the \code{NMRExperiment} column}
 }
 \description{
 Creates a new 1D nmr_dataset object from scratch
