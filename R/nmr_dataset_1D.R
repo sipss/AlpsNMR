@@ -67,10 +67,6 @@ new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
   samples[["data_1r"]] <- data_1r
   samples[["axis"]] <- ppm_axis
   samples[["num_samples"]] <- nrow(data_1r)
-  samples[["processing"]] <- list(data_loaded = TRUE,
-                                  interpolation = TRUE,
-                                  exclusion = FALSE,
-                                  normalization = FALSE)
   class(samples) <- "nmr_dataset_1D"
   validate_nmr_dataset_1D(samples)
   samples
