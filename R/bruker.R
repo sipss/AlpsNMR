@@ -611,7 +611,7 @@ read_bruker_metadata <- function(sample_path, pdata_path = "pdata/1",
   }
   info <- list()
   info$NMRExperiment <- basename(sample_path)
-  info$file_format <- "Zipped Bruker NMR directory"
+  info$file_format <- "Bruker NMR directory"
   info$sample_path <- sample_path
   info <- c(info, infer_dim_pulse_nuclei(acqus_list))
 

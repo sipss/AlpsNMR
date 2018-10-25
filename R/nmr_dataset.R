@@ -130,6 +130,9 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
                       return(NULL)
                     }
                     meta <- read_bruker_metadata(sampl_dir)
+                    if (is_zip) {
+                      meta$info$file_format <- "Zipped Bruker NMR directory"
+                    }
                     meta$info$sample_path <- overwr
                     if (!is.null(pulse_sequence) &&
                         toupper(meta$info$pulse_sequence) != toupper(pulse_sequence)) {
