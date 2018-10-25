@@ -32,6 +32,7 @@ License: file LICENSE
 LazyData: TRUE
 Depends: R (>= 3.2.0)
 Imports:
+ assertthat (>= 0.2.0),
  rlang (>= 0.2.1),
  utils (>= 3.2.0),
  signal (>= 0.7-6),
