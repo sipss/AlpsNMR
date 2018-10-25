@@ -11,10 +11,10 @@ nmr_add_metadata(nmr_data, metadata, by = "NMRExperiment")
 
 \item{metadata}{A data frame with metadata to add}
 
-\item{by}{A column name of both the \code{nmr_dataset$metadata} and the metadata
+\item{by}{A column name of both the \code{nmr_dataset$metadata$external} and the metadata
 data.frame. If you want to merge two columns with different headers you can
 use a named character vector \code{c("NMRExperiment" = "ExperimentNMR")} where
-the left side is the column name of the \code{nmr_dataset$metadata} and the right side is
+the left side is the column name of the \code{nmr_dataset$metadata$external} and the right side is
 the column name of the metadata data frame.}
 }
 \value{
