@@ -16,6 +16,10 @@
 #' 
 #' @export
 nmr_pca_build_model <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
+  UseMethod("nmr_pca_build_model")
+}
+
+nmr_pca_build_model.nmr_dataset <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
   zero_var_cols <- mixOmics::nearZeroVar(nmr_data$data_1r) # excluded
   data_1r <- nmr_data$data_1r[,-zero_var_cols$Position]
   rownames(data_1r) <- nmr_get_metadata(nmr_data, "NMRExperiment")$NMRExperiment
@@ -25,6 +29,17 @@ nmr_pca_build_model <- function(nmr_data, ncomp = NULL, center = TRUE, scale = F
   attr(pca_model, "nmr_included") <- base::setdiff(seq_along(nmr_data$axis[[1]]), zero_var_cols$Position)
   pca_model
 }
+
+nmr_pca_build_model.nmr_dataset_1D <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
+  data_1r <- nmr_data$data_1r
+  rownames(data_1r) <- nmr_get_metadata(nmr_data, "NMRExperiment")$NMRExperiment
+  pca_model <- mixOmics::pca(X = data_1r, ncomp = ncomp, center = center, scale = scale, ...)
+  # These attributes are used by nmr_pca_loadingplot:
+  attr(pca_model, "nmr_data_axis") <- nmr_data$axis
+  attr(pca_model, "nmr_included") <- seq_along(nmr_data$axis)
+  pca_model
+}
+
 
 #' Plotting functions for PCA
 #' 
