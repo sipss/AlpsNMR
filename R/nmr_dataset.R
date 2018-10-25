@@ -191,7 +191,7 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
                                 dplyr::mutate(NMRExperiment = nmr_experiment_col) %>%
                                 dplyr::select(NMRExperiment, dplyr::everything())
                             })
-  
+  sample_meta[["external"]] = tibble::tibble(NMRExperiment = nmr_experiment_col)
   data_fields_full <- list()
   axis <- NULL
   if (!metadata_only) {
@@ -242,6 +242,8 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
     metadata$NMRExperiment <- NMRExperiments
   }
   metadata <- dplyr::select(metadata, NMRExperiment, dplyr::everything())
+  metadata_external = tibble::tibble(NMRExperiment = metadata$NMRExperiment)
+  
   
   axis <- NULL
   data_fields <- list()
@@ -254,7 +256,8 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
       axis[[sample_idx]] <- list(x = xydata$x)
     }
   }
-  samples <- new_nmr_dataset(metadata = list(metadata),
+  samples <- new_nmr_dataset(metadata = list(external = metadata_external,
+                                             metadata = metadata),
                              data_fields = data_fields,
                              axis = axis)
   return(samples)
@@ -311,8 +314,9 @@ has_names <- function(x) {
 #' @export
 `[.nmr_dataset` <- function(x, i) {
   output <- x
-  output$metadata_ext <- output$metadata_ext[i, , drop = FALSE]
-  output$metadata <- output$metadata[i, , drop = FALSE]
+  output$metadata <- purrr::map(output$metadata, function(metad) {
+    metad[i, , drop = FALSE]
+  })
   data_fields <- names(output)[grepl(pattern = "^data_.*", x = names(output))]
 
   if (!output[["processing"]][["interpolation"]]) {
@@ -341,20 +345,25 @@ has_names <- function(x) {
   return(output)
 }
 
-#' Add metadata (internal function)
+
+#' Add metadata to an nmr_dataset object
 #' 
-#' @inheritParams nmr_add_metadata
-#' @param internal logical. Add metadata to $metadata (`internal==TRUE`) or
-#'                          to $metadata_ext (`internal == FALSE`)
-#' @seealso nmr_add_metadata
-#' @noRd
-nmr_add_metadata_internal <- function(nmr_data, metadata, by = "NMRExperiment", internal = TRUE) {
-  if (isTRUE(internal)) {
-    nmr_meta <- nmr_get_metadata(nmr_data, columns = colnames(nmr_data$metadata))
-  } else {
-    nmr_meta <- nmr_get_metadata(nmr_data, columns = colnames(nmr_data$metadata_ext))
-  }
-  
+#' This is useful to add metadata to datasets that can be later used for
+#' plotting spectra or further analysis (PCA...).
+#' 
+#' @param nmr_data an [nmr_dataset] object
+#' @param metadata A data frame with metadata to add
+#' @param by A column name of both the `nmr_dataset$metadata$external` and the metadata
+#' data.frame. If you want to merge two columns with different headers you can
+#' use a named character vector `c("NMRExperiment" = "ExperimentNMR")` where
+#' the left side is the column name of the `nmr_dataset$metadata$external` and the right side is
+#' the column name of the metadata data frame.
+#' 
+#' @return
+#' The nmr_dataset object with the added metadata
+#' @export
+nmr_add_metadata <- function(nmr_data, metadata, by = "NMRExperiment") {
+  nmr_meta <- nmr_get_metadata(nmr_data, columns = colnames(nmr_data$metadata$external))
   by_left <- ifelse(is.null(names(by)), by, names(by))
   existing_vars <- base::setdiff(colnames(nmr_meta), by_left)
   conflict <- base::intersect(existing_vars, colnames(metadata))
@@ -370,32 +379,8 @@ nmr_add_metadata_internal <- function(nmr_data, metadata, by = "NMRExperiment", 
     stop("Can't add metadata because of column conflict at: ", paste(conflict[!are_identical], sep = ", ", collapse = ", "))
   }
   nmr_meta_new <- dplyr::select(nmr_meta_new, -dplyr::ends_with("__REMOVE__"))
-  if (isTRUE(internal)) {
-    nmr_data$metadata <- nmr_meta_new
-  } else {
-    nmr_data$metadata_ext <- nmr_meta_new
-  }
+  nmr_data$metadata$external <- nmr_meta_new
   nmr_data
-}
-
-#' Add metadata to an nmr_dataset object
-#' 
-#' This is useful to add metadata to datasets that can be later used for
-#' plotting spectra or further analysis (PCA...).
-#' 
-#' @param nmr_data an [nmr_dataset] object
-#' @param metadata A data frame with metadata to add
-#' @param by A column name of both the `nmr_dataset$metadata` and the metadata
-#' data.frame. If you want to merge two columns with different headers you can
-#' use a named character vector `c("NMRExperiment" = "ExperimentNMR")` where
-#' the left side is the column name of the `nmr_dataset$metadata` and the right side is
-#' the column name of the metadata data frame.
-#' 
-#' @return
-#' The nmr_dataset object with the added metadata
-#' @export
-nmr_add_metadata <- function(nmr_data, metadata, by = "NMRExperiment") {
-  nmr_add_metadata_internal(nmr_data, metadata, by, internal = FALSE)
 }
 
 #' @export
@@ -410,6 +395,24 @@ format.nmr_dataset <- function(x, ...) {
 }
 
 validate_nmr_dataset <- function(samples) {
+  assert_that(inherits(samples, "nmr_dataset"),
+              msg = "Not an nmr_dataset object")
+  assert_that(is.list(samples),
+              msg = "nmr_dataset objects are list-like. This object is not")
+  
+  assert_that("metadata" %in% names(samples),
+              msg = "Missing the metadata list in the nmr_dataset object")
+  metadata_list <- samples$metadata
+  assert_that("external" %in% names(metadata_list),
+              msg = "Missing 'external' data frame in the metadata list")
+  for (i in seq_along(metadata_list)) {
+    metad <- metadata_list[[i]]
+    metad_name <- names(metadata_list)[i]
+    assert_that(is.data.frame(metad),
+                msg = paste0("'", metad_name, "' metadata should be a data frame"))
+    assert_that("NMRExperiment" %in% colnames(metad),
+                msg = paste0("NMRExperiment should be a column of the '", metad_name, "' metadata data frame"))
+  }
   samples
 }
 
