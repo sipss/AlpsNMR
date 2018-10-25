@@ -5,15 +5,11 @@
 #' @export
 nmr_get_metadata <- function(samples, columns = NULL) {
   metadata_list <- samples[["metadata"]]
-  if (length(metadata_list) == 0) {
-    metadata <- data.frame()
-  } else {
-    metadata <- metadata_list[[1]]
-    for (i in tail(seq_along(metadata_list), -1)) {
-      metadata <- dplyr::left_join(metadata,
-                                   metadata_list[[i]],
-                                   by = "NMRExperiment")
-    }
+  metadata <- metadata_list[[1]]
+  for (i in tail(seq_along(metadata_list), -1)) {
+    metadata <- dplyr::left_join(metadata,
+                                 metadata_list[[i]],
+                                 by = "NMRExperiment")
   }
 
   # Default columns means all columns
