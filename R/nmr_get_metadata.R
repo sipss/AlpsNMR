@@ -1,10 +1,9 @@
 #' Get metadata
 #' @param samples a [nmr_dataset] object
 #' @param columns Columns to get. By default gets all the columns.
-#' @param simplify Removes columns that are constant along all samples
 #' @return a data frame with the injection metadata
 #' @export
-nmr_get_metadata <- function(samples, columns = NULL, simplify = FALSE) {
+nmr_get_metadata <- function(samples, columns = NULL) {
   metadata <- dplyr::left_join(samples[["metadata_ext"]],
                                samples[["metadata"]],
                                by = "NMRExperiment")
@@ -38,8 +37,5 @@ nmr_get_metadata <- function(samples, columns = NULL, simplify = FALSE) {
   columns <- columns[columns %in% colnames(metadata)]
   # drop = FALSE ensures we never return a vector (always a data frame/tibble)
   metadata <- metadata[,columns, drop = FALSE]
-  if (simplify) {
-    metadata <- simplify_df(metadata)$diff
-  }
   return(metadata)
 }

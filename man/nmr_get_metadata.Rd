@@ -4,14 +4,12 @@
 \alias{nmr_get_metadata}
 \title{Get metadata}
 \usage{
-nmr_get_metadata(samples, columns = NULL, simplify = FALSE)
+nmr_get_metadata(samples, columns = NULL)
 }
 \arguments{
 \item{samples}{a \link{nmr_dataset} object}
 
 \item{columns}{Columns to get. By default gets all the columns.}
-
-\item{simplify}{Removes columns that are constant along all samples}
 }
 \value{
 a data frame with the injection metadata

@@ -4,46 +4,6 @@
 #' @export
 magrittr::`%>%`
 
-#' Split data frame into constant and non-constant columns
-#'
-#' Columns that do not changes across observations are moved to the \code{const}
-#' data frame. The rest are returned in the \code{diff} data frame.
-#'
-#' The \code{const} data frame only has one row as all rows would be identical.
-#'
-#' @param data a data frame
-#' @keywords internal
-#' @noRd
-simplify_df <- function(data) {
-  if (is.null(data)) {
-    return(NULL)
-  }
-  # equal_cols is a logical array of length equal to the columns of data, with
-  # TRUE if the column is constant
-  # It is more complex than expected because of R "list columns" (storing a list
-  # inside a dataframe column)
-  equal_cols <- sapply(seq_len(ncol(data)),
-                       function(col) {
-                         are_na <- is.na(data[[col]])
-                         if (all(are_na)) {
-                           # They are all equal
-                           return(TRUE)
-                         }
-                         if (any(are_na)) {
-                           # Some are NA, but not all of them (already considered)
-                           # so they are not equal
-                           return(FALSE)
-                         }
-                         # There are no NA, so let's check if they are all equal or not
-                         all(sapply(seq_len(nrow(data)),
-                                    function(row) {
-                                      identical(data[[row, col]], data[[1, col]])
-                                    }))
-                       })
-  data_diff <- data[,!equal_cols, drop = FALSE]
-  data_const <- data[1,equal_cols, drop = FALSE]
-  return(list(const = data_const, diff = data_diff))
-}
 
 #' Convert a list of lists to a tibble
 #'
