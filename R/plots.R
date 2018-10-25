@@ -33,12 +33,34 @@ plot.nmr_dataset <- function(x, sample_idx = NULL,
   return(output)
 }
 
+plot.nmr_dataset_1D <- function(x, sample_idx = NULL,
+                                chemshift_range = NULL,
+                                quantile_plot = FALSE,
+                                interactive = FALSE, ...) {
+  plot_nmr_dataset_1D(x = x, sample_idx = sample_idx,
+                      chemshift_range = chemshift_range,
+                      interactive = interactive,
+                      quantile_plot = quantile_plot, ...)
+}
+
 plot_nmr_dataset_1D <- function(x, sample_idx = NULL,
                                 chemshift_range = NULL,
                                 interactive = FALSE,
                                 quantile_plot = NULL,
                                 quantile_colors = NULL,
                                 ...) {
+  # Once we drop nmr_dataset usage after interpolation, we can drop this method as well
+  UseMethod("plot_nmr_dataset_1D")
+}
+
+
+plot_nmr_dataset_1D.nmr_dataset <- function(x, sample_idx = NULL,
+                                            chemshift_range = NULL,
+                                            interactive = FALSE,
+                                            quantile_plot = NULL,
+                                            quantile_colors = NULL,
+                                            ...) {
+  # This is a Legacy function
   if (!isTRUE(x$processing$data_loaded)) {
     stop("Can't plot an nmr_dataset without data")
   }
@@ -123,6 +145,93 @@ plot_nmr_dataset_1D <- function(x, sample_idx = NULL,
   }
   return(output)
 }
+
+
+plot_nmr_dataset_1D.nmr_dataset_1D <- function(x, sample_idx = NULL,
+                                               chemshift_range = NULL,
+                                               interactive = FALSE,
+                                               quantile_plot = NULL,
+                                               quantile_colors = NULL,
+                                               ...) {
+
+  if (is.null(chemshift_range)) {
+    chemshift_range <- range(x$axis)
+  }
+  
+  if (is.null(sample_idx)) {
+    if (x$num_samples > 20) {
+      sample_idx <- sample(1:x$num_samples, size = 10)
+    } else {
+      sample_idx <- 1:x$num_samples
+    }
+  } else if (any(sample_idx == "all")) {
+    sample_idx <- 1:x$num_samples
+  }
+  longdf <- nmr_get_long_df(nmr_data = x, sample_idx = sample_idx,
+                            chemshift_range = chemshift_range)
+  fixed_aes <- list(x = "chemshift", y = "intensity", group = "NMRExperiment")
+  dotdotdot_aes <- list(...)
+  all_aes <- c(fixed_aes, dotdotdot_aes)
+  if (!"color" %in% names(all_aes)) {
+    all_aes <- c(all_aes, list(color = "NMRExperiment"))
+  }
+  
+  linera <- NULL
+  if (is.null(quantile_plot) || identical(quantile_plot, FALSE)) {
+    quantile_plot <- NULL
+  } else {
+    if (isTRUE(quantile_plot)) {
+      quantile_plot <- c(0.1, 0.5, 0.9)
+    }
+    if (is.null(quantile_colors)) {
+      if (length(quantile_plot) %% 2 == 0) {
+        # even number of quantiles.
+        tmp <- grDevices::gray.colors(length(quantile_plot)/2, start = 0.5, end = 0.8)
+        quantile_colors <- c(rev(tmp), tmp)
+      } else {
+        tmp <- grDevices::gray.colors(ceiling(length(quantile_plot)/2), start = 0.5, end = 0.8)
+        quantile_colors <- c(rev(tmp[2:length(tmp)]), tmp)
+      }
+    }
+    stopifnot(length(quantile_plot) == length(quantile_colors))
+    decimate_qspectra <- decimate_axis(xaxis = x$axis,
+                                       xrange = chemshift_range)
+    q_spectra <- apply(x$data_1r[,decimate_qspectra], 2, function(x) stats::quantile(x, quantile_plot))
+    linera <- tibble::tibble(NMRExperiment = rep(paste0("Quantile ", 100*quantile_plot, "%"),
+                                                 each = sum(decimate_qspectra)),
+                             color = rep(quantile_colors, each = sum(decimate_qspectra)),
+                             chemshift = rep(x$axis[decimate_qspectra],
+                                             times = length(quantile_plot)),
+                             intensity = as.numeric(t(q_spectra)))
+  }
+  
+  gplt <- ggplot2::ggplot(longdf)
+  
+  if (!is.null(quantile_plot)) {
+    gplt <- gplt +
+      ggplot2::geom_line(data = linera,
+                         ggplot2::aes_string(x = "chemshift", y = "intensity", group = "NMRExperiment"),
+                         color = linera$color, # out of aes so it does not show up in the legend
+                         size = 1, linetype = "dashed")
+  }
+  
+  gplt <- gplt +
+    ggplot2::geom_line(do.call(ggplot2::aes_string, all_aes)) +
+    ggplot2::scale_x_reverse(name = "Chemical Shift (ppm)", limits = rev(chemshift_range[1:2])) +
+    ggplot2::scale_y_continuous(name = "Intensity (a.u.)")
+  
+  if (interactive) {
+    if (!requireNamespace("plotly", quietly = TRUE)) {
+      stop("plotly needed for this plot to work. Please install it or use `interactive = FALSE`.",
+           call. = FALSE)
+    }
+    output <- plotly::ggplotly(gplt)
+  } else {
+    output <- gplt
+  }
+  return(output)
+}
+
 
 plot_nmr_dataset_2D <- function(x, sample_idx = NULL,
                                 chemshift_range = NULL,
@@ -249,6 +358,10 @@ log10_minus_min_trans = function() {
 #'        to include the resolution in the third element (e.g. \code{c(0.2, 0.8, 0.05)})
 #' @export
 nmr_get_long_df <- function(nmr_data, sample_idx = NULL, chemshift_range = NULL) {
+  UseMethod("nmr_get_long_df")
+}
+
+nmr_get_long_df.nmr_dataset <- function(nmr_data, sample_idx = NULL, chemshift_range = NULL) {
   if (is.null(sample_idx)) {
     sample_idx <- seq_len(nmr_data$num_samples)
   }
@@ -257,6 +370,23 @@ nmr_get_long_df <- function(nmr_data, sample_idx = NULL, chemshift_range = NULL)
   meta_df <- nmr_get_metadata(nmr_data)
   NMRExperiments <- meta_df$NMRExperiment[sample_idx]
   chemshifts <- nmr_data$axis[[1]][chemshift_in_range]
+  raw_data <- reshape2::melt(nmr_data$data_1r[sample_idx, chemshift_in_range, drop = FALSE])
+  raw_data$Var1 <- NMRExperiments[raw_data$Var1]
+  raw_data$Var2 <- chemshifts[raw_data$Var2]
+  colnames(raw_data) <- c("NMRExperiment", "chemshift", "intensity")
+  result <- dplyr::left_join(raw_data, meta_df, by = "NMRExperiment")
+  return(result)
+}
+
+nmr_get_long_df.nmr_dataset_1D <- function(nmr_data, sample_idx = NULL, chemshift_range = NULL) {
+  if (is.null(sample_idx)) {
+    sample_idx <- seq_len(nmr_data$num_samples)
+  }
+  chemshift_in_range <- decimate_axis(xaxis = nmr_data$axis,
+                                      xrange = chemshift_range)
+  meta_df <- nmr_get_metadata(nmr_data)
+  NMRExperiments <- meta_df$NMRExperiment[sample_idx]
+  chemshifts <- nmr_data$axis[chemshift_in_range]
   raw_data <- reshape2::melt(nmr_data$data_1r[sample_idx, chemshift_in_range, drop = FALSE])
   raw_data$Var1 <- NMRExperiments[raw_data$Var1]
   raw_data$Var2 <- chemshifts[raw_data$Var2]
