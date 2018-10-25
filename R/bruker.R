@@ -599,7 +599,8 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
 #' @param pdata_path Optional character path of the processed data (to read pdata title file)
 #' @param read_pdata_title logical. If \code{TRUE} reads the \code{pdata/1/title}
 #'                         file if it exists.
-#' @return an NMR sample
+#' @return A list with the read metadata
+#' @noRd
 #' @export
 read_bruker_metadata <- function(sample_path, pdata_path = "pdata/1",
                                  read_pdata_title = TRUE) {
@@ -650,19 +651,14 @@ read_bruker_metadata <- function(sample_path, pdata_path = "pdata/1",
 #' @param sample_path A character path of the sample directory
 #' @param pdata_path Path from `sample_path` to the preprocessed data
 #' @param all_components If `FALSE` load only the real component. Otherwise load all of them
-#' @param read_pdata_title If `TRUE` also reads metadata from pdata title file.
 #' @return a list with all the bruker sample information
 #' @export
 read_bruker_sample <- function(sample_path,
                                pdata_file = NULL, pdata_path  = "pdata/1",
                                all_components = FALSE) {
-  # This is the equivalent to the rbnmr function. It has been splitted into
-  # two parts, the one reading the sample metadata and the one reading the
-  # processed data (pdata) directory. The idea is that we may want to load
-  # the metadata only, which should be faster so it is convenient to have a
-  # simple read_bruker_metadata function
 
-  meta <- read_bruker_metadata(sample_path, pdata_path)
+  meta <- read_bruker_metadata(sample_path, pdata_path,
+                               read_pdata_title = TRUE)
 
   pdata <- read_bruker_pdata(sample_path = sample_path,
                              pdata_file = pdata_file,
