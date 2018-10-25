@@ -421,4 +421,3 @@ new_nmr_dataset <- function(metadata, metadata_ext, data_fields, axis) {
   validate_nmr_dataset(samples)
   samples
 }
-
