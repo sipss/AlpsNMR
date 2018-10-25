@@ -7,14 +7,14 @@
 nmr_exclude_region(samples, exclude = list(water = c(4.7, 5)))
 }
 \arguments{
-\item{samples}{A \link{nmr_dataset} object}
+\item{samples}{A \link{nmr_dataset} or \link{nmr_dataset_1D} object}
 
 \item{exclude}{A list with regions to be zeroed. Typically:
 \code{exclude = list(water = c(4.7, 5.0))}}
 }
 \value{
-The \link{nmr_dataset} object, with the regions excluded
+The same object, with the regions excluded
 }
 \description{
-Sets to zero a given region (for instance to remove the water peak)
+Excludes a given region (for instance to remove the water peak)
 }

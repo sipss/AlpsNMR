@@ -1,12 +1,17 @@
 #' Exclude region from samples
 #'
-#' Sets to zero a given region (for instance to remove the water peak)
-#' @param samples A [nmr_dataset] object
+#' Excludes a given region (for instance to remove the water peak)
+#' @param samples A [nmr_dataset] or [nmr_dataset_1D] object
 #' @param exclude A list with regions to be zeroed. Typically:
 #'                `exclude = list(water = c(4.7, 5.0))`
-#' @return The [nmr_dataset] object, with the regions excluded
+#' @return The same object, with the regions excluded
 #' @export
 nmr_exclude_region <- function(samples, exclude = list(water = c(4.7, 5.0))) {
+  UseMethod("nmr_exclude_region")
+}
+
+nmr_exclude_region.nmr_dataset <- function(samples, exclude = list(water = c(4.7, 5.0))) {
+  # FIXME: This does not exclude, it sets to zero
   if (is.null(exclude) || length(exclude) == 0) {
     return(samples)
   }
@@ -36,3 +41,19 @@ nmr_exclude_region <- function(samples, exclude = list(water = c(4.7, 5.0))) {
   samples[["processing"]][["exclusion"]] <- TRUE
   return(samples)
 }
+
+nmr_exclude_region.nmr_dataset_1D <- function(samples, exclude = list(water = c(4.7, 5.0))) {
+  if (is.null(exclude) || length(exclude) == 0) {
+    return(samples)
+  }
+  axis_include <- rep(TRUE, length(samples[["axis"]]))
+  for (i_region in seq_along(exclude)) {
+    region <- exclude[[i_region]]
+    excl_dim1 <- samples[["axis"]] >= min(region) & samples[["axis"]] <= max(region)
+    axis_include[excl_dim1] <- FALSE
+  }
+  samples[["axis"]] <- samples[["axis"]][axis_include]
+  samples[["data_1r"]] <- samples[["data_1r"]][, axis_include]
+  return(samples)
+}
+
