@@ -4,7 +4,7 @@
 \alias{nmr_interpolate}
 \title{Interpolate samples}
 \usage{
-nmr_interpolate(samples, axis1 = c(min = 0.4, max = 10, by = 8e-04),
+nmr_interpolate(samples, axis1 = c(min = 0.2, max = 10, by = 8e-04),
   axis2 = NULL)
 }
 \arguments{

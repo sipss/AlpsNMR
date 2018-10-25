@@ -41,7 +41,7 @@ verify_axisn <- function(axisn, one_sample_axis) {
 #' @return The [nmr_dataset] object, with interpolated samples
 #' @export
 nmr_interpolate <- function(samples,
-                            axis1=c(min = 0.4, max = 10, by = 0.0008),
+                            axis1=c(min = 0.2, max = 10, by = 0.0008),
                             axis2=NULL) {
   # Check if we can interpolate:
   dimensions_per_sample <- verify_dimensionality(samples, valid_dimensions = c(1, 2))
