@@ -1,6 +1,5 @@
-new_nmr_dataset_2D <- function(f1_axis, f2_axis, data_2rr, metadata, metadata_ext) {
+new_nmr_dataset_2D <- function(f1_axis, f2_axis, data_2rr, metadata) {
   samples <- list()
-  samples[["metadata_ext"]] <- metadata_ext
   samples[["metadata"]] <- metadata
   samples[["data_2rr"]] <- data_2rr
   samples[["f1_axis"]] <- f1_axis
