@@ -47,13 +47,41 @@ nmr_interpolate <- function(samples,
   dimensions_per_sample <- verify_dimensionality(samples, valid_dimensions = c(1, 2))
   
   if (dimensions_per_sample[1] == 1) {
-    nmr_interpolate_1D(samples, axis1 = axis1)
+    nmr_interpolate_1D_legacy(samples, axis1 = axis1)
   } else {
-    nmr_interpolate_2D(samples, axis1 = axis1, axis2 = axis2)
+    nmr_interpolate_2D_legacy(samples, axis1 = axis1, axis2 = axis2)
   }
 }
 
+#' Interpolate a set of 1D NMR Spectra
+#' @export
 nmr_interpolate_1D <- function(samples, axis1 = c(min = 0.2, max = 10, by = 0.0008)) {
+  UseMethod("nmr_interpolate_1D")
+}
+
+nmr_interpolate_1D.nmr_dataset <- function(samples, axis1 = c(min = 0.2, max = 10, by = 0.0008)) {
+  # Check if we can interpolate:
+  verify_dimensionality(samples, valid_dimensions = 1)
+  
+  # 2. Check that we have the interpolation axis
+  axis1 <- verify_axisn(axis1, samples[["axis"]][[1]][[1]])
+  
+  axis1_full <- seq(from = axis1["min"], to = axis1["max"], by = axis1["by"])
+  if (show_progress_bar(samples$num_samples > 5)) {
+    message("Interpolating data_1r...")
+  }
+  data_1r <- interpolate_1d(list_of_ppms = purrr::map(samples[["axis"]], 1),
+                            list_of_1r = samples[["data_1r"]],
+                            ppm_axis = axis1_full)
+
+  new_nmr_dataset_1D(ppm_axis = axis1_full,
+                     data_1r = data_1r,
+                     metadata = samples$metadata)
+}
+
+# _legacy, because it returns an nmr_dataset instead of an nmr_dataset_1D
+# once the whole package works with the new structure, drop this
+nmr_interpolate_1D_legacy <- function(samples, axis1 = c(min = 0.2, max = 10, by = 0.0008)) {
   # Check if we can interpolate:
   verify_dimensionality(samples, valid_dimensions = 1)
   
@@ -77,9 +105,9 @@ nmr_interpolate_1D <- function(samples, axis1 = c(min = 0.2, max = 10, by = 0.00
   samples
 }
 
-nmr_interpolate_2D <- function(samples,
-                               axis1=c(min = 0.4, max = 10, by = 0.0008),
-                               axis2=NULL) {
+nmr_interpolate_2D_legacy <- function(samples,
+                                      axis1=c(min = 0.4, max = 10, by = 0.0008),
+                                      axis2=NULL) {
   # Check if we can interpolate:
   verify_dimensionality(samples, valid_dimensions = 2)
   
