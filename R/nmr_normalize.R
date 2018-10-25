@@ -48,6 +48,12 @@ norm_pqn <- function(spectra) {
 nmr_normalize <- function(samples,
                           method = c("area", "max", "value", "region", "pqn", "none"),
                           values = NULL) {
+  UseMethod("nmr_normalize")
+}
+
+nmr_normalize.nmr_dataset <- function(samples,
+                                      method = c("area", "max", "value", "region", "pqn", "none"),
+                                      values = NULL) {
   # This function does not consider >1D samples. Some things may work by chance,
   # but it needs testing and revision.
   
@@ -117,5 +123,41 @@ nmr_normalize <- function(samples,
                                    FUN = "/")
   }
   samples[["processing"]][["normalization"]] <- TRUE
+  return(samples)
+}
+
+
+nmr_normalize.nmr_dataset_1D <- function(samples,
+                                         method = c("area", "max", "value", "region", "pqn", "none"),
+                                         values = NULL) {
+  method <- tolower(method[1])
+  if (!(method %in% c("area", "max", "value", "region", "pqn", "none"))) {
+    stop("Unknown method: ", method)
+  }
+  if (method == "none") {
+    return(samples)
+  }
+  
+  if (method == "area") {
+    norm_factor <- rowSums(samples[["data_1r"]])
+  } else if (method == "max") {
+    norm_factor <- apply(samples[["data_1r"]], 1, max)
+  } else if (method == "value") {
+    norm_factor <- values
+  } else if (method == "region") {
+    region_range <- samples[["axis"]] >= min(values) & samples[["axis"]] <= max(values)
+    norm_factor <- rowSums(samples[["data_1r"]][,region_range])
+  } else if (method == "pqn") {
+    norm_result <- norm_pqn(samples[["data_1r"]])
+    samples[["data_1r"]] <- norm_result$spectra
+    norm_factor <- norm_result$norm_factor
+    return(samples)
+  } else {
+    stop("Unimplemented method: ", method)
+  }
+  samples[["data_1r"]] <- sweep(x = samples[["data_1r"]],
+                                MARGIN = 1,
+                                STATS = norm_factor,
+                                FUN = "/")
   return(samples)
 }
