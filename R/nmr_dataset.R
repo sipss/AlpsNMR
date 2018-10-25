@@ -1,13 +1,13 @@
 #' nmr_dataset (S3 class)
 #'
-#' The `nmr_dataset` represents a set of NMR samples.
+#' An `nmr_dataset` represents a set of NMR samples.
 #' It is defined as an S3 class, and it can be treated as a regular list.
 #'
 #' It currently has the following elements:
 #'
-#' - `metadata_ext`: The added metadata fields. A data frame with one row per sample
 #' 
-#' - `metadata`: The metadata fields. A data frame with one row per sample
+#' - `metadata`: A list of data frames. Each data frame contains metadata of
+#' a given area (acquisition parameters, preprocessing parameters, general sample information...)
 #' 
 #' - `axis`: A list with length equal to the dimensionality of the data.
 #' For 1D spectra it is a list with a numeric vector
@@ -183,9 +183,14 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
       colnames(sample_meta[[meta_field]]) <- paste(meta_field, colnames(sample_meta[[meta_field]]), sep = "_")
     }
   }
-
-  metadata <- dplyr::bind_cols(sample_meta)
-  names(metadata)[names(metadata) == 'info_NMRExperiment'] <- 'NMRExperiment'
+  
+  nmr_experiment_col <- sample_meta[["info"]][["info_NMRExperiment"]]
+  sample_meta <- purrr::map(sample_meta,
+                            function(x) {
+                              x %>%
+                                dplyr::mutate(NMRExperiment = nmr_experiment_col) %>%
+                                dplyr::select(NMRExperiment, dplyr::everything())
+                            })
   
   data_fields_full <- list()
   axis <- NULL
@@ -195,8 +200,7 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
     }
     axis <- lapply(list_of_samples, function(x) x[["axis"]])
   }
-  samples <- new_nmr_dataset(metadata_ext = metadata[,"NMRExperiment", drop = FALSE],
-                             metadata = metadata,
+  samples <- new_nmr_dataset(metadata = sample_meta,
                              data_fields = data_fields_full,
                              axis = axis)
   return(samples)
@@ -237,6 +241,7 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
     }
     metadata$NMRExperiment <- NMRExperiments
   }
+  metadata <- dplyr::select(metadata, NMRExperiment, dplyr::everything())
   
   axis <- NULL
   data_fields <- list()
@@ -249,8 +254,7 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
       axis[[sample_idx]] <- list(x = xydata$x)
     }
   }
-  samples <- new_nmr_dataset(metadata = metadata,
-                             metadata_ext = metadata[,"NMRExperiment", drop = FALSE],
+  samples <- new_nmr_dataset(metadata = list(metadata),
                              data_fields = data_fields,
                              axis = axis)
   return(samples)
@@ -409,13 +413,12 @@ validate_nmr_dataset <- function(samples) {
   samples
 }
 
-new_nmr_dataset <- function(metadata, metadata_ext, data_fields, axis) {
+new_nmr_dataset <- function(metadata, data_fields, axis) {
   samples <- list()
-  samples[["metadata_ext"]] <- metadata_ext
   samples[["metadata"]] <- metadata
   samples <- append(x = samples, values = data_fields)
   samples[["axis"]] <- axis
-  samples[["num_samples"]] <- nrow(metadata)
+  samples[["num_samples"]] <- nrow(metadata[[1]])
   samples[["processing"]] <- list(data_loaded = !is.null(axis),
                                   interpolation = FALSE,
                                   exclusion = FALSE,

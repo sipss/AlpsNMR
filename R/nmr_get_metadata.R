@@ -4,10 +4,18 @@
 #' @return a data frame with the injection metadata
 #' @export
 nmr_get_metadata <- function(samples, columns = NULL) {
-  metadata <- dplyr::left_join(samples[["metadata_ext"]],
-                               samples[["metadata"]],
-                               by = "NMRExperiment")
-  
+  metadata_list <- samples[["metadata"]]
+  if (length(metadata_list) == 0) {
+    metadata <- data.frame()
+  } else {
+    metadata <- metadata_list[[1]]
+    for (i in tail(seq_along(metadata_list), -1)) {
+      metadata <- dplyr::left_join(metadata,
+                                   metadata_list[[i]],
+                                   by = "NMRExperiment")
+    }
+  }
+
   # Default columns means all columns
   if (is.null(columns)) {
     columns <- colnames(metadata)
@@ -36,6 +44,6 @@ nmr_get_metadata <- function(samples, columns = NULL) {
   
   columns <- columns[columns %in% colnames(metadata)]
   # drop = FALSE ensures we never return a vector (always a data frame/tibble)
-  metadata <- metadata[,columns, drop = FALSE]
+  metadata <- metadata[, columns, drop = FALSE]
   return(metadata)
 }
