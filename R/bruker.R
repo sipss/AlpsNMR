@@ -432,8 +432,7 @@ read_bruker_pdata <- function(sample_path,
 
   if (isTRUE(read_pdata_title)) {
     title <- read_pdata_title_file(sample_path = sample_path, pdata_path = pdata_path)
-    names(title) <- paste0("title_", names(title))
-    output <- c(output, title)
+    output$title <- title
   }
 
   for (filename in pdata_file) {
