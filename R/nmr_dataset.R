@@ -341,7 +341,8 @@ has_names <- function(x) {
       }
     }
   }
-  output$num_samples <- nrow(output$metadata)
+  output$num_samples <- nrow(output$metadata[[1]])
+  validate_nmr_dataset(output)
   return(output)
 }
 
