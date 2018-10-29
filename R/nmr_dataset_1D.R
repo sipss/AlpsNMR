@@ -71,3 +71,9 @@ new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
   validate_nmr_dataset_1D(samples)
   samples
 }
+
+#' Object is of [nmr_dataset_1D] class
+#' @param x An object
+#' @return `TRUE` if the object is an `nmr_dataset_1D`, `FALSE` otherwise
+#' @export
+is.nmr_dataset_1D <- function(x) inherits(x, "nmr_dataset_1D")
