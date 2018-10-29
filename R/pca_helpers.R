@@ -19,6 +19,8 @@ nmr_pca_build_model <- function(nmr_data, ncomp = NULL, center = TRUE, scale = F
   UseMethod("nmr_pca_build_model")
 }
 
+#' @rdname nmr_pca_build_model
+#' @export
 nmr_pca_build_model.nmr_dataset <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
   zero_var_cols <- mixOmics::nearZeroVar(nmr_data$data_1r) # excluded
   data_1r <- nmr_data$data_1r[,-zero_var_cols$Position]
@@ -30,6 +32,8 @@ nmr_pca_build_model.nmr_dataset <- function(nmr_data, ncomp = NULL, center = TRU
   pca_model
 }
 
+#' @rdname nmr_pca_build_model
+#' @export
 nmr_pca_build_model.nmr_dataset_1D <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
   data_1r <- nmr_data$data_1r
   rownames(data_1r) <- nmr_get_metadata(nmr_data, "NMRExperiment")$NMRExperiment

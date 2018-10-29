@@ -46,6 +46,8 @@ nmr_integrate_regions <- function(samples, regions, fix_baseline = TRUE) {
   UseMethod("nmr_integrate_regions")
 }
 
+#' @rdname nmr_integrate_regions
+#' @export
 nmr_integrate_regions.nmr_dataset <- function(samples, regions, fix_baseline = TRUE) {
   areas <- purrr::map_dfc(regions, function(region) {
     to_sum <- samples$axis[[1]] >= min(region) & samples$axis[[1]] < max(region)
@@ -71,6 +73,8 @@ rough_baseline <- function(x) {
   basel
 }
 
+#' @rdname nmr_integrate_regions
+#' @export
 nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline = TRUE) {
   areas <- purrr::map_dfc(regions, function(region) {
     to_sum <- samples$axis >= min(region) & samples$axis < max(region)

@@ -2,10 +2,18 @@
 % Please edit documentation in R/pca_helpers.R
 \name{nmr_pca_build_model}
 \alias{nmr_pca_build_model}
+\alias{nmr_pca_build_model.nmr_dataset}
+\alias{nmr_pca_build_model.nmr_dataset_1D}
 \title{Build a PCA on for an nmr_dataset}
 \usage{
 nmr_pca_build_model(nmr_data, ncomp = NULL, center = TRUE,
   scale = FALSE, ...)
+
+\method{nmr_pca_build_model}{nmr_dataset}(nmr_data, ncomp = NULL,
+  center = TRUE, scale = FALSE, ...)
+
+\method{nmr_pca_build_model}{nmr_dataset_1D}(nmr_data, ncomp = NULL,
+  center = TRUE, scale = FALSE, ...)
 }
 \arguments{
 \item{nmr_data}{a \code{\link{nmr_dataset}} object}

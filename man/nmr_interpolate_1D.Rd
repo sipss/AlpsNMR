@@ -2,9 +2,13 @@
 % Please edit documentation in R/nmr_interpolate.R
 \name{nmr_interpolate_1D}
 \alias{nmr_interpolate_1D}
+\alias{nmr_interpolate_1D.nmr_dataset}
 \title{Interpolate a set of 1D NMR Spectra}
 \usage{
 nmr_interpolate_1D(samples, axis1 = c(min = 0.2, max = 10, by = 8e-04))
+
+\method{nmr_interpolate_1D}{nmr_dataset}(samples, axis1 = c(min = 0.2,
+  max = 10, by = 8e-04))
 }
 \description{
 Interpolate a set of 1D NMR Spectra

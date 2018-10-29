@@ -59,6 +59,8 @@ nmr_interpolate_1D <- function(samples, axis1 = c(min = 0.2, max = 10, by = 0.00
   UseMethod("nmr_interpolate_1D")
 }
 
+#' @rdname nmr_interpolate_1D
+#' @export
 nmr_interpolate_1D.nmr_dataset <- function(samples, axis1 = c(min = 0.2, max = 10, by = 0.0008)) {
   # Check if we can interpolate:
   verify_dimensionality(samples, valid_dimensions = 1)

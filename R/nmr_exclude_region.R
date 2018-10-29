@@ -10,6 +10,8 @@ nmr_exclude_region <- function(samples, exclude = list(water = c(4.7, 5.0))) {
   UseMethod("nmr_exclude_region")
 }
 
+#' @rdname nmr_exclude_region
+#' @export
 nmr_exclude_region.nmr_dataset <- function(samples, exclude = list(water = c(4.7, 5.0))) {
   # FIXME: This does not exclude, it sets to zero
   if (is.null(exclude) || length(exclude) == 0) {
@@ -42,6 +44,8 @@ nmr_exclude_region.nmr_dataset <- function(samples, exclude = list(water = c(4.7
   return(samples)
 }
 
+#' @rdname nmr_exclude_region
+#' @export
 nmr_exclude_region.nmr_dataset_1D <- function(samples, exclude = list(water = c(4.7, 5.0))) {
   if (is.null(exclude) || length(exclude) == 0) {
     return(samples)
