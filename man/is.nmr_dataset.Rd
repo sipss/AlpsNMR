@@ -2,7 +2,7 @@
 % Please edit documentation in R/nmr_dataset.R
 \name{is.nmr_dataset}
 \alias{is.nmr_dataset}
-\title{Object is of nmr_dataset class}
+\title{Object is of \link{nmr_dataset} class}
 \usage{
 is.nmr_dataset(x)
 }
@@ -10,8 +10,8 @@ is.nmr_dataset(x)
 \item{x}{An object}
 }
 \value{
-\code{TRUE} if the object is an \code{\link{nmr_dataset}}, \code{FALSE} otherwise
+\code{TRUE} if the object is an \link{nmr_dataset}, \code{FALSE} otherwise
 }
 \description{
-Object is of nmr_dataset class
+Object is of \link{nmr_dataset} class
 }

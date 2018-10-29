@@ -2,9 +2,12 @@
 % Please edit documentation in R/nmr_dataset.R
 \name{filter.nmr_dataset}
 \alias{filter.nmr_dataset}
+\alias{filter.nmr_dataset_1D}
 \title{Extract samples from the \link{nmr_dataset} based on metadata column criteria}
 \usage{
 \method{filter}{nmr_dataset}(.data, ...)
+
+\method{filter}{nmr_dataset_1D}(.data, ...)
 }
 \arguments{
 \item{.data}{An \link{nmr_dataset} object}
@@ -12,7 +15,7 @@
 \item{...}{conditions, as in \link{dplyr}}
 }
 \value{
-an \link{nmr_dataset} object, with the matching rows
+The same object, with the matching rows
 }
 \description{
 Extract samples from the \link{nmr_dataset} based on metadata column criteria

@@ -264,9 +264,9 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
 }
 
 
-#' Object is of nmr_dataset class
+#' Object is of [nmr_dataset] class
 #' @param x An object
-#' @return \code{TRUE} if the object is an \code{\link{nmr_dataset}}, \code{FALSE} otherwise
+#' @return `TRUE` if the object is an [nmr_dataset], `FALSE` otherwise
 #' @export
 is.nmr_dataset <- function(x) inherits(x, "nmr_dataset")
 
@@ -279,7 +279,7 @@ dplyr::filter
 #'
 #' @param .data An [nmr_dataset] object
 #' @param ... conditions, as in [dplyr]
-#' @return an [nmr_dataset] object, with the matching rows
+#' @return The same object, with the matching rows
 #' @importFrom dplyr filter
 #' @export
 filter.nmr_dataset <- function(.data, ...) {
@@ -289,6 +289,10 @@ filter.nmr_dataset <- function(.data, ...) {
   indices_to_keep <- dplyr::filter(meta, !!! dots)$tmp_row_idx
   return(.data[indices_to_keep])
 }
+
+#' @rdname filter.nmr_dataset
+#' @export
+filter.nmr_dataset_1D <- filter.nmr_dataset
 
 # From rlang::have_name
 has_names <- function(x) {
