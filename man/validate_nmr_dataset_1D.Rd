@@ -7,10 +7,10 @@
 validate_nmr_dataset_1D(nmr_dataset_1D)
 }
 \arguments{
-\item{nmr_dataset_1D}{An nmr_dataset_1D object}
+\item{nmr_dataset_1D}{An \link{nmr_dataset_1D} object}
 }
 \value{
-The nmr_dataset_1D unchanged
+The \link{nmr_dataset_1D} unchanged
 
 This function is useful for its side-effects. Stopping in case of error
 }

@@ -1,6 +1,26 @@
+#' nmr_dataset_1D (S3 class)
+#'
+#' An `nmr_dataset_1D` represents a set of 1D interpolated NMR samples.
+#' It is defined as an S3 class, and it can be treated as a regular list.
+#'
+#' It currently has the following elements:
+#'
+#' 
+#' - `metadata`: A list of data frames. Each data frame contains metadata of
+#' a given area (acquisition parameters, preprocessing parameters, general sample information...)
+#' 
+#' - `axis`: A numeric vector with the chemical shift axis in ppm.
+#' 
+#' - `data_1r`: A matrix with one sample on each row and the chemical 
+#' shifts in the columns.
+#' 
+#' 
+#' @name nmr_dataset_1D
+NULL
+
 #' Validate 1D nmr datasets
-#' @param nmr_dataset_1D An nmr_dataset_1D object
-#' @return The nmr_dataset_1D unchanged
+#' @param nmr_dataset_1D An [nmr_dataset_1D] object
+#' @return The [nmr_dataset_1D] unchanged
 #' 
 #' This function is useful for its side-effects. Stopping in case of error
 #' 
