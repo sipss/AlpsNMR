@@ -108,3 +108,19 @@ print.nmr_dataset_1D <- function(x, ...) {
 format.nmr_dataset_1D <- function(x, ...) {
   paste0("An nmr_dataset_1D (", x$num_samples, " samples)")
 }
+
+#' Extract parts of an nmr_dataset_1D
+#' @param x an [nmr_dataset_1D] object
+#' @param i indices of the samples to keep
+#' @return an nmr_dataset_1D with the extracted samples
+#' @export
+`[.nmr_dataset_1D` <- function(x, i) {
+  output <- x
+  output$metadata <- purrr::map(output$metadata, function(metad) {
+    metad[i, , drop = FALSE]
+  })
+  output[["data_1r"]] <- output[["data_1r"]][i, , drop = FALSE]
+  output$num_samples <- nrow(output$metadata[[1]])
+  validate_nmr_dataset_1D(output)
+  return(output)
+}
