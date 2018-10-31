@@ -294,17 +294,6 @@ filter.nmr_dataset <- function(.data, ...) {
 #' @export
 filter.nmr_dataset_1D <- filter.nmr_dataset
 
-# From rlang::have_name
-has_names <- function(x) {
-  nms <- names(x)
-  if (is.null(nms)) {
-    rep(FALSE, length(x))
-  }
-  else {
-    !(is.na(nms) | nms == "")
-  }
-}
-
 
 #' Extract parts of an nmr_dataset
 #' @param x an [nmr_dataset] object
