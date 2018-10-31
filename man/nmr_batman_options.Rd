@@ -21,7 +21,7 @@ nmr_batman_options(ppmRange = matrix(c(3, 3.1, 3.6, 3.7, 3.9, 4, 4, 4.1,
 
 \item{paraProc}{Number of cores to use}
 
-\item{negThresh}{}
+\item{negThresh}{Truncation threshold for negative intensities}
 
 \item{scaleFac}{Divide each spectrum by this number}
 

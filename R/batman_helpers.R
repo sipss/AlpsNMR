@@ -27,7 +27,7 @@ NULL
 #' @param ppmRange Range of ppm to process
 #' @param specNo Index of spectra to process
 #' @param paraProc Number of cores to use
-#' @param negThresh 
+#' @param negThresh Truncation threshold for negative intensities
 #' @param scaleFac Divide each spectrum by this number
 #' @param downSamp Decimate each spectrum by this factor
 #' @param hiresFlag Keep High Resolution deconvolved spectra
