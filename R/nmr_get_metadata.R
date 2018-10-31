@@ -6,7 +6,7 @@
 nmr_get_metadata <- function(samples, columns = NULL) {
   metadata_list <- samples[["metadata"]]
   metadata <- metadata_list[[1]]
-  for (i in tail(seq_along(metadata_list), -1)) {
+  for (i in utils::tail(seq_along(metadata_list), -1)) {
     metadata <- dplyr::left_join(metadata,
                                  metadata_list[[i]],
                                  by = "NMRExperiment")
