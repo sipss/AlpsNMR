@@ -31,6 +31,10 @@ nmr_batman_metabolites_list(metabolite_names, batman_dir = "BatmanInput",
 
 \item{filename}{Filename to use, inside \code{batman_dir}}
 
+\item{nmr_dataset}{An \link{nmr_dataset_1D} object}
+
+\item{multiplet_table}{A data frame, like the \link{hmdb} dataset}
+
 \item{metabolite_names}{A character vector of the metabolite names to consider}
 }
 \description{

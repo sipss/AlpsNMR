@@ -6,6 +6,8 @@
 #' @param batman_dir Batman input directorye
 #' @param filename Filename to use, inside `batman_dir`
 #' @param metabolite_names A character vector of the metabolite names to consider
+#' @param nmr_dataset An [nmr_dataset_1D] object
+#' @param multiplet_table A data frame, like the [hmdb] dataset
 #' 
 #' @name nmr_batman
 #' 
