@@ -54,6 +54,8 @@ nmr_interpolate <- function(samples,
 }
 
 #' Interpolate a set of 1D NMR Spectra
+#' @param samples An NMR dataset
+#' @param axis1 The desired ppm axis range and optionally the ppm step
 #' @export
 nmr_interpolate_1D <- function(samples, axis1 = c(min = 0.2, max = 10, by = 0.0008)) {
   UseMethod("nmr_interpolate_1D")
