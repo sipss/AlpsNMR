@@ -33,6 +33,9 @@ plot.nmr_dataset <- function(x, sample_idx = NULL,
   return(output)
 }
 
+
+#' @rdname plot.nmr_dataset
+#' @export
 plot.nmr_dataset_1D <- function(x, sample_idx = NULL,
                                 chemshift_range = NULL,
                                 quantile_plot = FALSE,

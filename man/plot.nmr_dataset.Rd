@@ -2,9 +2,14 @@
 % Please edit documentation in R/plots.R
 \name{plot.nmr_dataset}
 \alias{plot.nmr_dataset}
+\alias{plot.nmr_dataset_1D}
 \title{Plot an nmr_dataset}
 \usage{
 \method{plot}{nmr_dataset}(x, sample_idx = NULL,
+  chemshift_range = NULL, quantile_plot = FALSE, interactive = FALSE,
+  ...)
+
+\method{plot}{nmr_dataset_1D}(x, sample_idx = NULL,
   chemshift_range = NULL, quantile_plot = FALSE, interactive = FALSE,
   ...)
 }
