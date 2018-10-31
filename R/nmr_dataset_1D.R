@@ -97,3 +97,14 @@ new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
 #' @return `TRUE` if the object is an `nmr_dataset_1D`, `FALSE` otherwise
 #' @export
 is.nmr_dataset_1D <- function(x) inherits(x, "nmr_dataset_1D")
+
+#' @export
+print.nmr_dataset_1D <- function(x, ...) {
+  cat(format(x, ...), "\n")
+  invisible(x)
+}
+
+#' @export
+format.nmr_dataset_1D <- function(x, ...) {
+  paste0("An nmr_dataset_1D (", x$num_samples, " samples)")
+}
