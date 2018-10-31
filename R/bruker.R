@@ -596,11 +596,10 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
 #'
 #' @param sample_path A character path of the sample directory
 #' @param pdata_path Optional character path of the processed data (to read pdata title file)
-#' @param read_pdata_title logical. If \code{TRUE} reads the \code{pdata/1/title}
+#' @param read_pdata_title logical. If `TRUE` reads the `pdata/1/title`
 #'                         file if it exists.
 #' @return A list with the read metadata
 #' @noRd
-#' @export
 read_bruker_metadata <- function(sample_path, pdata_path = "pdata/1",
                                  read_pdata_title = TRUE) {
   # Read parameters
