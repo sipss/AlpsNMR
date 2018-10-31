@@ -2,8 +2,6 @@
 #' 
 #' These are helper functions to make Batman tests easier
 #' 
-#' @param ppmRange ppm ranges for analys
-#' @param specNo Ranges of spectra number to be included
 #' @param bopts Batman options
 #' @param batman_dir Batman input directorye
 #' @param filename Filename to use, inside `batman_dir`
@@ -24,7 +22,37 @@ NULL
 NULL
 
 
-#' @rdname nmr_batman
+#' Batman Options helper
+#'
+#' @param ppmRange Range of ppm to process
+#' @param specNo Index of spectra to process
+#' @param paraProc Number of cores to use
+#' @param negThresh 
+#' @param scaleFac Divide each spectrum by this number
+#' @param downSamp Decimate each spectrum by this factor
+#' @param hiresFlag Keep High Resolution deconvolved spectra
+#' @param randSeed A random seed
+#' @param nItBurnin Number of burn-in iterations
+#' @param nItPostBurnin Number of iterations after burn-in
+#' @param multFile Multiplet file (integer)
+#' @param thinning Save MCMC state every thinning iterations
+#' @param cfeFlag Same concentration for all spectra (fixed effect)
+#' @param nItRerun Number of iterations for a batman rerun
+#' @param startTemp Start temperature
+#' @param specFreq NMR Spectrometer frequency
+#' @param a Shape parameter for the gamma distribution (used for lambda, the precision)
+#' @param b Rate distribution parameter for the gamma distribution (used for lambda, the precision)
+#' @param muMean Peak width mean in ln(Hz)
+#' @param muVar Peak width variance in ln(Hz)
+#' @param muVar_prop Peak width proposed variance in ln(Hz)
+#' @param nuMVar Peak width metabolite variance in ln(Hz)
+#' @param nuMVarProp Peak width metabolite proposed variance in ln(Hz)
+#' @param tauMean mean of the prior on tau
+#' @param tauPrec inverse of variance of prior on tau
+#' @param rdelta Truncation of the prior on peak shift (ppm)
+#' @param csFlag Specify chemical shift for each multiplet in each spectrum? (chemShiftperSpectra.csv file) 
+#'
+#' @return A batman_options object with the Batman Options
 #' @export
 nmr_batman_options <- function(ppmRange = matrix(c(3.0, 3.1,
                                                    3.6, 3.7,
