@@ -43,3 +43,84 @@ nmr_get_metadata <- function(samples, columns = NULL) {
   metadata <- metadata[, columns, drop = FALSE]
   return(metadata)
 }
+
+
+#' Add metadata to an nmr_dataset object
+#' 
+#' This is useful to add metadata to datasets that can be later used for
+#' plotting spectra or further analysis (PCA...).
+#' 
+#' @param nmr_data an [nmr_dataset] object
+#' @param metadata A data frame with metadata to add
+#' @param by A column name of both the `nmr_dataset$metadata$external` and the metadata
+#' data.frame. If you want to merge two columns with different headers you can
+#' use a named character vector `c("NMRExperiment" = "ExperimentNMR")` where
+#' the left side is the column name of the `nmr_dataset$metadata$external` and the right side is
+#' the column name of the metadata data frame.
+#' 
+#' @return
+#' The nmr_dataset object with the added metadata
+#' @export
+#' @examples 
+#' # Load a demo dataset with four samples:
+#' dataset <- system.file("dataset-demo", package = "NIHSnmr")
+#' nmr_dataset <- nmr_read_samples_dir(dataset)
+#' 
+#' # At first we just have the NMRExperiment column
+#' print(nmr_dataset$metadata$external)
+#' # The first excel file contains an "NMRExperiment" column:
+#' first_excel_fn <- system.file("dataset-demo", "first_excel.xlsx", package = "NIHSnmr")
+#' first_excel <- readxl::read_excel(first_excel_fn)
+#' print(first_excel)
+#' # We can link the SubjectID column of the first excel into the dataset
+#' nmr_dataset <- nmr_add_metadata(nmr_dataset, first_excel, by = "NMRExperiment")
+#' print(nmr_dataset$metadata$external)
+#' # The second excel can use the SubjectID:
+#' second_excel_fn <- system.file("dataset-demo", "second_excel.xlsx", package = "NIHSnmr")
+#' second_excel <- readxl::read_excel(second_excel_fn)
+#' print(second_excel)
+#' # Add the metadata by its SubjectID:
+#' nmr_dataset <- nmr_add_metadata(nmr_dataset, second_excel, by = "SubjectID")
+#' # The final loaded metadata:
+#' print(nmr_dataset$metadata$external)
+#' 
+nmr_add_metadata <- function(nmr_data, metadata, by = "NMRExperiment") {
+  nmr_meta <- nmr_get_metadata(nmr_data, columns = colnames(nmr_data$metadata$external))
+  by_left <- ifelse(is.null(names(by)), by, names(by))
+  existing_vars <- base::setdiff(colnames(nmr_meta), by_left)
+  conflict <- base::intersect(existing_vars, colnames(metadata))
+  # We must ensure metadata[[by]] is unique:
+  metadata <- dplyr::distinct(metadata, !!!rlang::syms(by), .keep_all = TRUE)
+  nmr_meta_new <- dplyr::left_join(nmr_meta, metadata, by = by, suffix = c("", "__REMOVE__"))
+  are_identical <- purrr::map_lgl(conflict, function(col) {
+    col1 <- col
+    col2 <- paste0(col, "__REMOVE__")
+    identical(nmr_meta_new[[col1]], nmr_meta_new[[col2]])
+  })
+  if (!all(are_identical)) {
+    stop("Can't add metadata because of column conflict at: ", paste(conflict[!are_identical], sep = ", ", collapse = ", "))
+  }
+  nmr_meta_new <- dplyr::select(nmr_meta_new, -dplyr::ends_with("__REMOVE__"))
+  nmr_data$metadata$external <- nmr_meta_new
+  nmr_data
+}
+
+#' Export Metadata to an Excel file
+#'
+#' @param nmr_dataset An nmr_dataset object
+#' @param xlsx_file "The .xlsx excel file"
+#' @param groups A character vector. Use `"external"` for the external metadata or
+#'  the default for a more generic solution
+#' @return The Excel file name
+#' @export
+#'
+nmr_export_metadata <- function(nmr_dataset, 
+                                xlsx_file,
+                                groups = c("info", "orig", "title", "external")) {
+  groups_present <- groups %in% names(nmr_dataset$metadata)
+  if (!all(groups_present)) {
+    warning("These metadata groups are missing and will be ignored: \n", paste(groups[!groups_present]), collapse = ", ")
+    groups <- groups[groups_present]
+  }
+  writexl::write_xlsx(x = nmr_dataset$metadata[groups], path = xlsx_file)
+}

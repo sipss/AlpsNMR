@@ -342,43 +342,6 @@ filter.nmr_dataset_1D <- filter.nmr_dataset
 }
 
 
-#' Add metadata to an nmr_dataset object
-#' 
-#' This is useful to add metadata to datasets that can be later used for
-#' plotting spectra or further analysis (PCA...).
-#' 
-#' @param nmr_data an [nmr_dataset] object
-#' @param metadata A data frame with metadata to add
-#' @param by A column name of both the `nmr_dataset$metadata$external` and the metadata
-#' data.frame. If you want to merge two columns with different headers you can
-#' use a named character vector `c("NMRExperiment" = "ExperimentNMR")` where
-#' the left side is the column name of the `nmr_dataset$metadata$external` and the right side is
-#' the column name of the metadata data frame.
-#' 
-#' @return
-#' The nmr_dataset object with the added metadata
-#' @export
-nmr_add_metadata <- function(nmr_data, metadata, by = "NMRExperiment") {
-  nmr_meta <- nmr_get_metadata(nmr_data, columns = colnames(nmr_data$metadata$external))
-  by_left <- ifelse(is.null(names(by)), by, names(by))
-  existing_vars <- base::setdiff(colnames(nmr_meta), by_left)
-  conflict <- base::intersect(existing_vars, colnames(metadata))
-  # We must ensure metadata[[by]] is unique:
-  metadata <- dplyr::distinct(metadata, !!!rlang::syms(by), .keep_all = TRUE)
-  nmr_meta_new <- dplyr::left_join(nmr_meta, metadata, by = by, suffix = c("", "__REMOVE__"))
-  are_identical <- purrr::map_lgl(conflict, function(col) {
-    col1 <- col
-    col2 <- paste0(col, "__REMOVE__")
-    identical(nmr_meta_new[[col1]], nmr_meta_new[[col2]])
-  })
-  if (!all(are_identical)) {
-    stop("Can't add metadata because of column conflict at: ", paste(conflict[!are_identical], sep = ", ", collapse = ", "))
-  }
-  nmr_meta_new <- dplyr::select(nmr_meta_new, -dplyr::ends_with("__REMOVE__"))
-  nmr_data$metadata$external <- nmr_meta_new
-  nmr_data
-}
-
 #' @export
 print.nmr_dataset <- function(x, ...) {
   cat(format(x, ...), "\n")
