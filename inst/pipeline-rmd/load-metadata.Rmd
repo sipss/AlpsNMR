@@ -41,7 +41,7 @@ excel_df <- excel_files %>%
 
 ```{r print-input}
 excel_df %>%
-  purrr::map(DT::datatable) %>%
+  purrr::map(rmarkdown::paged_table) %>%
   htmltools::tagList()
 ```
 
@@ -57,6 +57,6 @@ for (i in seq_along(excel_files)) {
 ```{r print-output}
 nmr_export_metadata(nmr_dataset, xlsx_file, groups = "external")
 
-DT::datatable(nmr_dataset$metadata$external)
+rmarkdown::paged_table(nmr_dataset$metadata$external)
 ```
 
