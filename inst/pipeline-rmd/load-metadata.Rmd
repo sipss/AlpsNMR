@@ -1,0 +1,62 @@
+---
+title: "Loading Metadata Report"
+author: ""
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    df_print: "paged"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r libraries}
+# Dependencies
+library(NIHSnmr)
+requireNamespace("purrr")
+requireNamespace("readxl")
+requireNamespace("htmltools")
+```
+
+
+```{r default-values}
+# These should be defined in the environment that calls rmarkdown::render
+# nmr_dataset <- NULL
+# excel_files <- character(0)
+# key_columns <- character(0)
+# xlsx_file <- ""
+```
+
+
+## xlsx Input files
+
+These are the input metadata tables that will be integrated:
+
+```{r read-input}
+excel_df <- excel_files %>%
+  purrr::map(readxl::read_excel)
+```
+
+
+```{r print-input}
+excel_df %>%
+  purrr::map(DT::datatable) %>%
+  htmltools::tagList()
+```
+
+
+## The added and linked metadata
+
+```{r integrate-metadata}
+for (i in seq_along(excel_files)) {
+  nmr_dataset <- nmr_add_metadata(nmr_dataset, metadata = excel_df[[i]], by = key_columns[[i]])
+}
+```
+
+```{r print-output}
+nmr_export_metadata(nmr_dataset, xlsx_file, groups = "external")
+
+DT::datatable(nmr_dataset$metadata$external)
+```
+
