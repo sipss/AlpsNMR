@@ -74,3 +74,32 @@ pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
 }
 
 
+#' Pipeline: Interpolate 1D samples
+#'
+#' @family pipeline functions
+#' @param nmr_dataset_rds 
+#' @inheritParams nmr_interpolate_1D 
+#' @param output_dir The output directory for this pipe element
+#'
+#' @return This function saves the result to the output directory
+#' @export
+pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
+  nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+  metadata_fn <- as.character(fs::path(output_dir, "metadata.xlsx"))
+  raw_data_matrix_fn <- as.character(fs::path(output_dir, "raw_data.csv"))
+  nmr_dataset_outfile <- as.character(fs::path(output_dir, "nmr_dataset.rds"))
+  plot_html <- as.character(fs::path(output_dir, "plot-samples.html"))
+  fs::dir_create(output_dir)
+  nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis1 = axis1)
+  data_1r <- nmr_dataset$data_1r
+  rownames(data_1r) <- nmr_get_metadata(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
+  colnames(data_1r) <- nmr_dataset$axis
+  utils::write.csv(data_1r, file = raw_data_matrix_fn)
+  writexl::write_xlsx(nmr_get_metadata(nmr_dataset, groups = "external"), metadata_fn)
+  nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
+  plot(nmr_dataset) %>% 
+    plotly::toWebGL() %>%
+    htmltools::as.tags(standalone = TRUE) %>%
+    htmltools::save_html(file = plot_html)
+  message("Interpolation finished")
+}

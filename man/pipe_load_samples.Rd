@@ -25,6 +25,7 @@ pipe_load_samples("/dir/with/nmr/samples/", "/dir/to/save/output", glob = "*0")
 }
 }
 \seealso{
-Other pipeline functions: \code{\link{pipe_add_metadata}}
+Other pipeline functions: \code{\link{pipe_add_metadata}},
+  \code{\link{pipe_interpolate_1D}}
 }
 \concept{pipeline functions}

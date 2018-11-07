@@ -49,6 +49,7 @@ pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
 
 }
 \seealso{
-Other pipeline functions: \code{\link{pipe_load_samples}}
+Other pipeline functions: \code{\link{pipe_interpolate_1D}},
+  \code{\link{pipe_load_samples}}
 }
 \concept{pipeline functions}
