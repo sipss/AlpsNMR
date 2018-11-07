@@ -4,31 +4,31 @@
 \alias{pipe_add_metadata}
 \title{Pipeline: Add Metadata}
 \usage{
-pipe_add_metadata(nmr_dataset_rds, output_dir,
-  excel_files = character(0), key_columns = character(0))
+pipe_add_metadata(nmr_dataset_rds, output_dir, excel_file)
 }
 \arguments{
 \item{nmr_dataset_rds}{The nmr_dataset.rds coming from}
 
 \item{output_dir}{The output directory for this pipe element}
 
-\item{excel_files}{A character vector with excel file names}
+\item{excel_file}{An excel file name. See details for the requirements
 
-\item{key_columns}{A character vector with the key column to merge. See Details
+The excel file can have one or more sheets. The excel sheets need to be as
+simple as possible: One header column on the first row and values below.
 
-In the simplest case we will want to add an excel file with metadata to our
-dataset. The excel file needs to be tidy and this means: A single excel sheet
-with a single header column at the first row. This excel file will have
-an "NMRExperiment" column (please respect the exact name) with values like
-"10", "20", "30"... referring to the NMR samples and as many other columns
-as desired. The \code{key_columns} will be \code{"NMRExperiment"} as it is the common
-column present both in the dataset and in the excel file.
+Each of the sheets contain metadata that has to be integrated. The merge
+(technically a left join) is done using the first column of each sheet as key.
 
-A more useful scenario is when you provide several excel files: After the
-first file has been added as described above, the dataset will have
-additional metadata columns, for instance a \code{SubjectID} column. The second
-excel file may use the \code{SubjectID} as \code{key_column} so the criteria to add
-the metadata will be based on matching \code{SubjectID}}
+In practical terms this means that the first sheet of the excel file MUST
+start with an "NMRExperiment" column, and as many additional columns to add
+(e.g. FluidXBarcode, SampleCollectionDate,  TimePoint and SubjectID).
+
+The second sheet can have as the first column any of the already added columns,
+for instance the "SubjectID", and any additional columns (e.g. Gender, Age).
+
+The first column on each sheet, named the key column, MUST have unique values.
+For instance, a sheet starting with "SubjectID" MUST specify each subject ID
+only once (without repetitions).}
 }
 \value{
 This function saves the result to the output directory
@@ -37,39 +37,16 @@ This function saves the result to the output directory
 Pipeline: Add Metadata
 }
 \examples{
-
-# Load a demo dataset with four samples:
 dataset <- system.file("dataset-demo", package = "NIHSnmr")
+excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "NIHSnmr")
 nmr_dataset <- nmr_read_samples_dir(dataset)
-
-# At first we just have the NMRExperiment column
-print(nmr_dataset$metadata$external)
-# The first excel file contains an "NMRExperiment" column:
-first_excel_fn <- system.file("dataset-demo", "first_excel.xlsx", package = "NIHSnmr")
-first_excel <- readxl::read_excel(first_excel_fn)
-print(first_excel)
-# We can link the SubjectID column of the first excel into the dataset
-nmr_dataset <- nmr_add_metadata(nmr_dataset, first_excel, by = "NMRExperiment")
-print(nmr_dataset$metadata$external)
-# The second excel can use the SubjectID:
-second_excel_fn <- system.file("dataset-demo", "second_excel.xlsx", package = "NIHSnmr")
-second_excel <- readxl::read_excel(second_excel_fn)
-print(second_excel)
-# Add the metadata by its SubjectID:
-nmr_dataset <- nmr_add_metadata(nmr_dataset, second_excel, by = "SubjectID")
-# The final loaded metadata:
-print(nmr_dataset$metadata$external)
-
-# This example is equivalent to:
-\dontrun{
 nmr_dataset_rds <- tempfile(fileext = ".rds")
 nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 output_dir <- tempdir()
-excel_files <-  c(first_excel_fn, second_excel_fn)
-key_columns <- c("NMRExperiment", "SubjectID")
-pipe_add_metadata(nmr_dataset_rds = a_tmp_file, output_dir = output_dir,
-   excel_files = excel_files, key_columns = key_columns)
-}
+pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
+                  excel_file = excel_file)
+# Check out output_dir
+
 }
 \seealso{
 Other pipeline functions: \code{\link{pipe_load_samples}}

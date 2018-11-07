@@ -52,7 +52,8 @@ Imports:
  mixOmics (>= 6.3.2),
  matrixStats (>= 0.54.0),
  writexl (>= 1.0),
- fs (>= 1.2.6)
+ fs (>= 1.2.6),
+ rmarkdown (>= 1.10)
 Suggests:
  testthat (>= 2.0.0),
  shiny (>= 1.0.5),

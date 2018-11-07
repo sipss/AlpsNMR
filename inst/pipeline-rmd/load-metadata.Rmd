@@ -22,10 +22,18 @@ requireNamespace("htmltools")
 
 ```{r default-values}
 # These should be defined in the environment that calls rmarkdown::render
-# nmr_dataset <- NULL
-# excel_files <- character(0)
-# key_columns <- character(0)
-# xlsx_file <- ""
+if (!exists("nmr_dataset")) {
+  stop("nmr_dataset should be defined before running this notebook")
+  nmr_dataset <- NULL # to make linter happy
+}
+if (!exists("excel_file")) {
+  stop("excel_file should be defined before running this notebook")
+  excel_file <- NULL # to make linter happy
+}
+if (!exists("xlsx_file")) {
+  stop("xlsx_file should be defined before running this notebook")
+  xlsx_file <- NULL # to make linter happy
+}
 ```
 
 
@@ -34,13 +42,14 @@ requireNamespace("htmltools")
 These are the input metadata tables that will be integrated:
 
 ```{r read-input}
-excel_df <- excel_files %>%
-  purrr::map(readxl::read_excel)
+excel_dfs <- excel_file %>%
+  readxl::excel_sheets() %>%
+  purrr::map(readxl::read_excel(path = excel_file, sheet = .))
 ```
 
 
 ```{r print-input}
-excel_df %>%
+excel_dfs %>%
   purrr::map(rmarkdown::paged_table) %>%
   htmltools::tagList()
 ```
@@ -49,14 +58,27 @@ excel_df %>%
 ## The added and linked metadata
 
 ```{r integrate-metadata}
-for (i in seq_along(excel_files)) {
-  nmr_dataset <- nmr_add_metadata(nmr_dataset, metadata = excel_df[[i]], by = key_columns[[i]])
+for (excel_df in excel_dfs) {
+  if (nrow(excel_df) == 0 || ncol(excel_df) == 0) {
+    # Empty sheet
+    next
+  }
+  key_column <- colnames(excel_df)[1]
+  avail_columns <- colnames(nmr_get_metadata(nmr_dataset, groups = "external"))
+  if (!key_column %in% avail_columns) {
+    stop(glue::glue("Key Column {key_column} is not present in the metadata.",
+                    "Can't add metadata.\n Available columns:",
+                    glue::glue_collapse(avail_columns, sep = ", ", last = " and ")))
+  }
+  nmr_dataset <- nmr_add_metadata(nmr_dataset, metadata = excel_df, by = )
 }
 ```
 
 ```{r print-output}
 nmr_export_metadata(nmr_dataset, xlsx_file, groups = "external")
 
-rmarkdown::paged_table(nmr_dataset$metadata$external)
+nmr_dataset %>%
+  nmr_get_metadata(groups = "external") %>%
+  rmarkdown::paged_table()
 ```
 
