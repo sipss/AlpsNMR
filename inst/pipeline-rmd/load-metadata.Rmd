@@ -17,6 +17,7 @@ library(NIHSnmr)
 requireNamespace("purrr")
 requireNamespace("readxl")
 requireNamespace("htmltools")
+requireNamespace("DT")
 ```
 
 
@@ -34,6 +35,10 @@ if (!exists("xlsx_file")) {
   stop("xlsx_file should be defined before running this notebook")
   xlsx_file <- NULL # to make linter happy
 }
+if (!exists("nmr_dataset_outfile")) {
+  stop("nmr_dataset_outfile should be defined before running this notebook")
+  nmr_dataset_outfile <- NULL # to make linter happy
+}
 ```
 
 
@@ -42,15 +47,15 @@ if (!exists("xlsx_file")) {
 These are the input metadata tables that will be integrated:
 
 ```{r read-input}
-excel_dfs <- excel_file %>%
+excel_dfs <- excel_file %>% 
   readxl::excel_sheets() %>%
-  purrr::map(readxl::read_excel(path = excel_file, sheet = .))
+  purrr::map(~readxl::read_excel(path = excel_file, sheet = .))
 ```
 
 
 ```{r print-input}
 excel_dfs %>%
-  purrr::map(rmarkdown::paged_table) %>%
+  purrr::map(DT::datatable) %>%
   htmltools::tagList()
 ```
 
@@ -70,15 +75,15 @@ for (excel_df in excel_dfs) {
                     "Can't add metadata.\n Available columns:",
                     glue::glue_collapse(avail_columns, sep = ", ", last = " and ")))
   }
-  nmr_dataset <- nmr_add_metadata(nmr_dataset, metadata = excel_df, by = )
+  nmr_dataset <- nmr_add_metadata(nmr_dataset, metadata = excel_df, by = key_column)
 }
 ```
 
 ```{r print-output}
 nmr_export_metadata(nmr_dataset, xlsx_file, groups = "external")
-
+nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
 nmr_dataset %>%
   nmr_get_metadata(groups = "external") %>%
-  rmarkdown::paged_table()
+  DT::datatable()
 ```
 

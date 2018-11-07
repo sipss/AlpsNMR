@@ -70,6 +70,7 @@ pipe_add_metadata <- function(nmr_dataset_rds,
   env$nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   env$excel_file <- excel_file
   env$xlsx_file <- as.character(fs::path(output_dir, "nmr_metadata_added.xlsx"))
+  env$nmr_dataset_outfile <- as.character(fs::path(output_dir, "nmr_dataset.rds"))
   rmd_file <- system.file("pipeline-rmd", "load-metadata.Rmd", package = "NIHSnmr")
   rmarkdown::render(input = rmd_file, output_dir = output_dir, envir = env)
   message("Done")
