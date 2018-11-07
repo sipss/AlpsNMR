@@ -4,12 +4,10 @@
 \alias{pipe_add_metadata}
 \title{Pipeline: Add Metadata}
 \usage{
-pipe_add_metadata(nmr_dataset_rds, output_dir, excel_file)
+pipe_add_metadata(nmr_dataset_rds, excel_file, output_dir)
 }
 \arguments{
 \item{nmr_dataset_rds}{The nmr_dataset.rds coming from}
-
-\item{output_dir}{The output directory for this pipe element}
 
 \item{excel_file}{An excel file name. See details for the requirements
 
@@ -29,6 +27,8 @@ for instance the "SubjectID", and any additional columns (e.g. Gender, Age).
 The first column on each sheet, named the key column, MUST have unique values.
 For instance, a sheet starting with "SubjectID" MUST specify each subject ID
 only once (without repetitions).}
+
+\item{output_dir}{The output directory for this pipe element}
 }
 \value{
 This function saves the result to the output directory
@@ -45,7 +45,7 @@ nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 output_dir <- tempdir()
 pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
                   excel_file = excel_file)
-# Check out output_dir
+# Check out: output_dir
 
 }
 \seealso{

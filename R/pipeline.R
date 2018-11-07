@@ -20,7 +20,6 @@ pipe_load_samples <- function(samples_dir, output_dir, glob = "*0") {
   nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
   nmr_export_metadata(nmr_dataset, fs::path(output_dir, "nmr_dataset_metadata.xlsx"))
   message(nmr_dataset$num_samples, " samples loaded.")
-  nmr_dataset_rds
 }
 
 
@@ -28,7 +27,6 @@ pipe_load_samples <- function(samples_dir, output_dir, glob = "*0") {
 #'
 #' @family pipeline functions
 #' @param nmr_dataset_rds The nmr_dataset.rds coming from
-#' @param output_dir The output directory for this pipe element
 #' @param excel_file An excel file name. See details for the requirements
 #' 
 #' 
@@ -48,6 +46,7 @@ pipe_load_samples <- function(samples_dir, output_dir, glob = "*0") {
 #' The first column on each sheet, named the key column, MUST have unique values.
 #' For instance, a sheet starting with "SubjectID" MUST specify each subject ID
 #' only once (without repetitions).
+#' @param output_dir The output directory for this pipe element
 #' 
 #' @return This function saves the result to the output directory
 #' @export
@@ -61,19 +60,17 @@ pipe_load_samples <- function(samples_dir, output_dir, glob = "*0") {
 #' output_dir <- tempdir()
 #' pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
 #'                   excel_file = excel_file)
-#' # Check out output_dir
+#' # Check out: output_dir
 #' 
-pipe_add_metadata <- function(nmr_dataset_rds,
-                              output_dir,
-                              excel_file) {
+pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
   env <- new.env()
   env$nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   env$excel_file <- excel_file
   env$xlsx_file <- as.character(fs::path(output_dir, "nmr_metadata_added.xlsx"))
   env$nmr_dataset_outfile <- as.character(fs::path(output_dir, "nmr_dataset.rds"))
-  rmd_file <- system.file("pipeline-rmd", "load-metadata.Rmd", package = "NIHSnmr")
+  rmd_file <- system.file("pipeline-rmd", "add-metadata.Rmd", package = "NIHSnmr")
   rmarkdown::render(input = rmd_file, output_dir = output_dir, envir = env)
-  message("Done")
+  message("Add metadata completed")
 }
 
 
