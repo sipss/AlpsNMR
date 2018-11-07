@@ -428,3 +428,21 @@ decimate_axis <- function(xaxis, xrange = NULL) {
   return(decimated_axis_bool)
 }
 
+#' Plot a dataset into a HTML file
+#' 
+#' Uses WebGL for performance
+#'
+#' @param nmr_dataset An [nmr_dataset_1D]
+#' @param html_filename The output HTML filename to be created
+#' @inheritDotParams plot.nmr_dataset_1D
+#'
+#' @return the html filename created
+#' @export
+#'
+plot_webgl <- function(nmr_dataset, html_filename, ...) {
+  plot(nmr_dataset, ...) %>% 
+    plotly::toWebGL() %>%
+    htmltools::as.tags(standalone = TRUE) %>%
+    htmltools::save_html(file = html_filename)
+  html_filename
+}
