@@ -97,9 +97,6 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
   utils::write.csv(data_1r, file = raw_data_matrix_fn)
   writexl::write_xlsx(nmr_get_metadata(nmr_dataset, groups = "external"), metadata_fn)
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
-  plot(nmr_dataset) %>% 
-    plotly::toWebGL() %>%
-    htmltools::as.tags(standalone = TRUE) %>%
-    htmltools::save_html(file = plot_html)
+  plot_webgl(nmr_dataset, html_filename = plot_html)
   message("Interpolation finished")
 }
