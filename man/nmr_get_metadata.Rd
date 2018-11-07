@@ -4,12 +4,17 @@
 \alias{nmr_get_metadata}
 \title{Get metadata}
 \usage{
-nmr_get_metadata(samples, columns = NULL)
+nmr_get_metadata(samples, columns = NULL, groups = NULL)
 }
 \arguments{
 \item{samples}{a \link{nmr_dataset} object}
 
 \item{columns}{Columns to get. By default gets all the columns.}
+
+\item{groups}{Groups to get. Groups are predefined of columns. Typically
+\code{"external"} for metadata added with \link{nmr_add_metadata}.
+
+Both \code{groups} and \code{columns} can't be given simultaneously.}
 }
 \value{
 a data frame with the injection metadata

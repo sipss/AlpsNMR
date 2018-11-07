@@ -1,9 +1,14 @@
 #' Get metadata
 #' @param samples a [nmr_dataset] object
 #' @param columns Columns to get. By default gets all the columns.
+#' @param groups Groups to get. Groups are predefined of columns. Typically 
+#' `"external"` for metadata added with [nmr_add_metadata].
+#' 
+#' Both `groups` and `columns` can't be given simultaneously.
+#' 
 #' @return a data frame with the injection metadata
 #' @export
-nmr_get_metadata <- function(samples, columns = NULL) {
+nmr_get_metadata <- function(samples, columns = NULL, groups = NULL) {
   metadata_list <- samples[["metadata"]]
   metadata <- metadata_list[[1]]
   for (i in utils::tail(seq_along(metadata_list), -1)) {
@@ -13,7 +18,15 @@ nmr_get_metadata <- function(samples, columns = NULL) {
   }
 
   # Default columns means all columns
-  if (is.null(columns)) {
+  if (!is.null(columns) && !is.null(groups)) {
+    stop("groups and columns can't be given simultaneously")
+  }
+  if (is.null(columns) && !is.null(groups)) {
+    columns <- metadata_list[groups] %>%
+      purrr::map(colnames) %>%
+      purrr::flatten_chr() %>%
+      unique()
+  } else if (is.null(columns)) {
     columns <- colnames(metadata)
   }
   
