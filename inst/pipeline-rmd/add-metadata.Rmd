@@ -75,6 +75,9 @@ for (excel_df in excel_dfs) {
                     "Can't add metadata.\n Available columns:",
                     glue::glue_collapse(avail_columns, sep = ", ", last = " and ")))
   }
+  if ("NMRExperiment" %in% colnames(excel_df)) {
+    excel_df$NMRExperiment <- as.character(excel_df$NMRExperiment)
+  }
   nmr_dataset <- nmr_add_metadata(nmr_dataset, metadata = excel_df, by = key_column)
 }
 ```
