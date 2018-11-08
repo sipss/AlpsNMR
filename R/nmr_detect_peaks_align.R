@@ -130,5 +130,5 @@ nmr_align_find_ref <- function(nmr_dataset, peak_data) {
   peakList <- peak_data_to_peakList(nmr_dataset, peak_data)
   resFindRef <- speaq::findRef(peakList)
   NMRExperiment <- nmr_get_metadata(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
-  NMRExperiment[resFindRef]
+  c(NMRExperiment = NMRExperiment[resFindRef$refInd])
 }
