@@ -7,6 +7,7 @@
 #'
 nmr_detect_peaks <- function(nmr_dataset, nDivRange = 128, scales = seq(1, 16, 2),
                              baselineThresh = 0.01, SNR.Th = -1) {
+  validate_nmr_dataset_1D(nmr_dataset)
   # The speaq package uses partial matching of arguments.
   #
   # ## What is partial argument matching?
@@ -63,7 +64,7 @@ nmr_detect_peaks <- function(nmr_dataset, nDivRange = 128, scales = seq(1, 16, 2
 #' @keywords internal
 peakList_to_dataframe <- function(nmr_dataset, peakList) {
   NMRExperiment <- nmr_get_metadata(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
-  purrr::imap_dfr(peakList, function(peak_idx, sample_idx) {
+  purrr::imap_dfr(peakList, function(peak_idx, sample_idx, nmr_dataset, NMRExperiment) {
     num_of_peaks_in_sample <- length(peak_idx)
     spec <- as.numeric(nmr_dataset$data_1r[sample_idx,])
     data.frame(NMRExperiment = rep(NMRExperiment[sample_idx], num_of_peaks_in_sample),
@@ -72,7 +73,7 @@ peakList_to_dataframe <- function(nmr_dataset, peakList) {
                pos = peak_idx,
                intensity = spec[peak_idx],
                stringsAsFactors = FALSE)
-  })
+  }, nmr_dataset = nmr_dataset, NMRExperiment = NMRExperiment)
 }
 
 #' Convert the data frame created by [peakList_to_dataframe] back to a peakList
@@ -103,6 +104,7 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #' @export
 #'
 nmr_align <- function(nmr_dataset, peak_data, maxShift = 3, acceptLostPeak = FALSE) {
+  validate_nmr_dataset_1D(nmr_dataset)
   peakList <- peak_data_to_peakList(nmr_dataset, peak_data)
   resFindRef <- speaq::findRef(peakList)
   nmr_dataset$data_1r <- speaq::dohCluster(
