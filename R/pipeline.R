@@ -116,7 +116,6 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
 #' @return This function saves the result to the output directory
 #' @export
 #'
-#' @examples
 pipe_exclude_regions <- function(nmr_dataset_rds,
                                  exclude,
                                  output_dir) {

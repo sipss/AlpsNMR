@@ -2,17 +2,27 @@
 % Please edit documentation in R/pipeline.R
 \name{pipe_exclude_regions}
 \alias{pipe_exclude_regions}
-\title{Title}
+\title{Pipeline: Exclude regions}
 \usage{
 pipe_exclude_regions(nmr_dataset_rds, exclude, output_dir)
 }
 \arguments{
 \item{nmr_dataset_rds}{}
 
-\item{output_dir}{}
+\item{exclude}{A list with regions to be zeroed. Typically:
+\code{exclude = list(water = c(4.7, 5.0))}}
 
-\item{exclude_regions}{}
+\item{output_dir}{}
+}
+\value{
+This function saves the result to the output directory
 }
 \description{
-Title
+Pipeline: Exclude regions
 }
+\seealso{
+Other pipeline functions: \code{\link{pipe_add_metadata}},
+  \code{\link{pipe_interpolate_1D}},
+  \code{\link{pipe_load_samples}}
+}
+\concept{pipeline functions}

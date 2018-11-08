@@ -21,6 +21,7 @@ Pipeline: Interpolate 1D samples
 }
 \seealso{
 Other pipeline functions: \code{\link{pipe_add_metadata}},
+  \code{\link{pipe_exclude_regions}},
   \code{\link{pipe_load_samples}}
 }
 \concept{pipeline functions}
