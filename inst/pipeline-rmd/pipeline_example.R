@@ -53,6 +53,17 @@ exclude_regions <-  list(water = c(4.6, 5.0), methanol = c(3.33, 3.39))
 output_dir_exclude <- file.path(output_dir, "04-exclude-regions")
 pipe_exclude_regions(nmr_dataset_rds, exclude_regions, output_dir_exclude)
 
+#########################################################################
+## Fifth node: Peak detection and Alignment
+#########################################################################
+nmr_dataset_rds <- file.path(output_dir_exclude, "nmr_dataset.rds")
+output_dir_alignment <- file.path(output_dir, "05-alignment")
+
+pipe_peakdet_align(nmr_dataset_rds,
+                   nDivRange = 128, scales = seq(1, 16, 2),
+                   baselineThresh = 0.01, SNR.Th = -1,
+                   maxShift = 3, acceptLostPeak = FALSE,
+                   output_dir = output_dir_alignment)
 
 
 message("Don't forget to check out: ",  output_dir)

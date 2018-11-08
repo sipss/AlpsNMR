@@ -7,7 +7,7 @@
 pipe_add_metadata(nmr_dataset_rds, excel_file, output_dir)
 }
 \arguments{
-\item{nmr_dataset_rds}{The nmr_dataset.rds coming from}
+\item{nmr_dataset_rds}{The nmr_dataset.rds file name coming from previous nodes}
 
 \item{excel_file}{An excel file name. See details for the requirements
 

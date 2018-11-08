@@ -26,7 +26,7 @@ pipe_load_samples <- function(samples_dir, output_dir, glob = "*0") {
 #' Pipeline: Add Metadata
 #'
 #' @family pipeline functions
-#' @param nmr_dataset_rds The nmr_dataset.rds coming from
+#' @param nmr_dataset_rds The nmr_dataset.rds file name coming from previous nodes
 #' @param excel_file An excel file name. See details for the requirements
 #' 
 #' 
@@ -78,9 +78,8 @@ pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
 #' Pipeline: Interpolate 1D samples
 #'
 #' @family pipeline functions
-#' @param nmr_dataset_rds 
+#' @inheritParams pipe_add_metadata
 #' @inheritParams nmr_interpolate_1D 
-#' @param output_dir The output directory for this pipe element
 #'
 #' @return This function saves the result to the output directory
 #' @export
@@ -109,9 +108,8 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
 #' Pipeline: Exclude regions
 #'
 #' @family pipeline functions
-#' @param nmr_dataset_rds 
+#' @inheritParams pipe_add_metadata
 #' @inheritParams nmr_exclude_region
-#' @param output_dir 
 #'
 #' @return This function saves the result to the output directory
 #' @export
@@ -138,3 +136,44 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
   message("Regions excluded")
 }
 
+#' Pipeline: Peak detection and Alignment
+#' @inheritParams pipe_add_metadata
+#' @inheritParams nmr_detect_peaks
+#' @inheritParams nmr_align
+#'
+#' @export
+#'
+pipe_peakdet_align <- function(nmr_dataset_rds,
+                         nDivRange = 128, scales = seq(1, 16, 2),
+                         baselineThresh = 0.01, SNR.Th = -1,
+                         maxShift = 3, acceptLostPeak = FALSE,
+                         output_dir = NULL) {
+  if (is.null(output_dir)) {
+    stop("An output directory must be specified")
+  }
+  
+  fs::dir_create(output_dir)
+  
+  metadata_fn <- file.path(output_dir, "metadata.xlsx")
+  raw_data_matrix_fn <- file.path(output_dir, "raw_data.csv")
+  nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
+  plot_html <- file.path(output_dir, "plot-samples.html")
+  
+  
+  nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+  peak_data <- nmr_detect_peaks(nmr_dataset,
+                                nDivRange = nDivRange,
+                                scales = scales,
+                                baselineThresh = baselineThresh,
+                                SNR.Th = SNR.Th)
+  nmr_dataset <- nmr_align(nmr_dataset, peak_data, maxShift = maxShift,
+                           acceptLostPeak = acceptLostPeak)
+  
+  nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
+  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
+  plot_webgl(nmr_dataset, html_filename = plot_html)
+  write.csv(peak_data, "peak_list.csv")
+  
+  message("Peaks detected and spectra aligned")
+}

@@ -7,12 +7,12 @@
 pipe_exclude_regions(nmr_dataset_rds, exclude, output_dir)
 }
 \arguments{
-\item{nmr_dataset_rds}{}
+\item{nmr_dataset_rds}{The nmr_dataset.rds file name coming from previous nodes}
 
 \item{exclude}{A list with regions to be zeroed. Typically:
 \code{exclude = list(water = c(4.7, 5.0))}}
 
-\item{output_dir}{}
+\item{output_dir}{The output directory for this pipe element}
 }
 \value{
 This function saves the result to the output directory

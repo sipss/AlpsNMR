@@ -7,7 +7,7 @@
 pipe_interpolate_1D(nmr_dataset_rds, axis1, output_dir)
 }
 \arguments{
-\item{nmr_dataset_rds}{}
+\item{nmr_dataset_rds}{The nmr_dataset.rds file name coming from previous nodes}
 
 \item{axis1}{The desired ppm axis range and optionally the ppm step}
 
