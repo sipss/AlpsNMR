@@ -64,11 +64,13 @@ nmr_detect_peaks <- function(nmr_dataset, nDivRange = 128, scales = seq(1, 16, 2
 peakList_to_dataframe <- function(nmr_dataset, peakList) {
   NMRExperiment <- nmr_get_metadata(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
   purrr::imap_dfr(peakList, function(peak_idx, sample_idx) {
-    data.frame(NMRExperiment = NMRExperiment[sample_idx],
-               sample_idx = sample_idx,
+    num_of_peaks_in_sample <- length(peak_idx)
+    spec <- as.numeric(nmr_dataset$data_1r[sample_idx,])
+    data.frame(NMRExperiment = rep(NMRExperiment[sample_idx], num_of_peaks_in_sample),
+               sample_idx = rep(sample_idx, num_of_peaks_in_sample),
                ppm = nmr_dataset$axis[peak_idx],
                pos = peak_idx,
-               intensity = as.numeric(nmr_dataset$data_1r[sample_idx, peak_idx]),
+               intensity = spec[peak_idx],
                stringsAsFactors = FALSE)
   })
 }
@@ -79,13 +81,16 @@ peakList_to_dataframe <- function(nmr_dataset, peakList) {
 #' @param peak_data The peak list returned by [peakList_to_dataframe]
 #' @return a peakList
 #' @keywords internal
-peak_data_to_peakList <- function(peak_data) {
-  peak_data %>%
+peak_data_to_peakList <- function(nmr_dataset, peak_data) {
+  sample_idx <- pos <- NULL # make R CMD check happy
+  peakList <- rep(list(numeric(0)), nmr_dataset$num_samples)
+  sample_idx_peaks <- peak_data %>%
     dplyr::arrange(sample_idx, pos) %>%
     dplyr::group_by(sample_idx) %>%
-    dplyr::summarize(peak_pos = list(pos)) %>%
-    dplyr::ungroup() %>%
-    dplyr::pull(peak_pos)
+    dplyr::summarise(peak_pos = list(pos)) %>%
+    dplyr::ungroup()
+  peakList[sample_idx_peaks$sample_idx] <- sample_idx_peaks$peak_pos
+  peakList
 }
 
 #' Align NMR spectra
@@ -98,7 +103,7 @@ peak_data_to_peakList <- function(peak_data) {
 #' @export
 #'
 nmr_align <- function(nmr_dataset, peak_data, maxShift = 3, acceptLostPeak = FALSE) {
-  peakList <- peak_data_to_peakList(peak_data)
+  peakList <- peak_data_to_peakList(nmr_dataset, peak_data)
   nmr_dataset_align <- nmr_dataset
   resFindRef <- speaq::findRef(peakList)
   nmr_dataset_align$data_1r <- speaq::dohCluster(
