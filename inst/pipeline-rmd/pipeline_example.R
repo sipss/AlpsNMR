@@ -41,8 +41,19 @@ pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds,
 ## Third node: Interpolate 1D
 #########################################################################
 nmr_dataset_rds <- file.path(output_dir_add_metadata, "nmr_dataset.rds")
-ppm_axis = c(min = 0.2, max = 10, by = 8e-4)
+ppm_axis <- c(min = 0.2, max = 10, by = 8e-4)
 output_dir_interpolate1D <- file.path(output_dir, "03-interpolate-1D")
 pipe_interpolate_1D(nmr_dataset_rds, ppm_axis, output_dir_interpolate1D)
 
+#########################################################################
+## Fourth node: Exclude regions
+#########################################################################
+nmr_dataset_rds <- file.path(output_dir_interpolate1D, "nmr_dataset.rds")
+exclude_regions <-  list(water = c(4.6, 5.0), methanol = c(3.33, 3.39))
+output_dir_exclude <- file.path(output_dir, "04-exclude-regions")
+pipe_exclude_regions(nmr_dataset_rds, exclude_regions, output_dir_exclude)
+
+
+
 message("Don't forget to check out: ",  output_dir)
+
