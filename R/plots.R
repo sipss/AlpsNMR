@@ -440,7 +440,7 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #' @export
 #'
 plot_webgl <- function(nmr_dataset, html_filename, ...) {
-  plot(nmr_dataset, ...) %>% 
+  graphics::plot(nmr_dataset, ...) %>% 
     plotly::toWebGL() %>%
     htmltools::as.tags(standalone = TRUE) %>%
     htmltools::save_html(file = html_filename)
