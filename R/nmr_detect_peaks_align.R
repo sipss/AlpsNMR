@@ -104,15 +104,14 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #'
 nmr_align <- function(nmr_dataset, peak_data, maxShift = 3, acceptLostPeak = FALSE) {
   peakList <- peak_data_to_peakList(nmr_dataset, peak_data)
-  nmr_dataset_align <- nmr_dataset
   resFindRef <- speaq::findRef(peakList)
-  nmr_dataset_align$data_1r <- speaq::dohCluster(
+  nmr_dataset$data_1r <- speaq::dohCluster(
     nmr_dataset$data_1r,
     peakList = peakList,
     refInd = resFindRef$refInd,
-    maxShift  = 3,
-    acceptLostPeak = FALSE, 
+    maxShift  = maxShift,
+    acceptLostPeak = acceptLostPeak, 
     verbose = FALSE
   )
-  nmr_dataset_align
+  nmr_dataset
 }
