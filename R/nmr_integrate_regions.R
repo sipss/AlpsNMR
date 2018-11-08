@@ -76,6 +76,9 @@ rough_baseline <- function(x) {
 #' @rdname nmr_integrate_regions
 #' @export
 nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline = TRUE) {
+  if (is.null(names(regions))) {
+    names(regions) <- purrr::map_chr(regions, ~sprintf("ppm_%4.4f", mean(.)))
+  }
   areas <- purrr::map_dfc(regions, function(region) {
     to_sum <- samples$axis >= min(region) & samples$axis < max(region)
     region_to_sum <- samples$data_1r[, to_sum]
