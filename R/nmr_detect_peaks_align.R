@@ -117,3 +117,18 @@ nmr_align <- function(nmr_dataset, peak_data, maxShift = 3, acceptLostPeak = FAL
   )
   nmr_dataset
 }
+
+
+#' Find alignment reference
+#'
+#' @inheritParams nmr_align
+#'
+#' @return The NMRExperiment of the reference sample
+#' @export
+#'
+nmr_align_find_ref <- function(nmr_dataset, peak_data) {
+  peakList <- peak_data_to_peakList(nmr_dataset, peak_data)
+  resFindRef <- speaq::findRef(peakList)
+  NMRExperiment <- nmr_get_metadata(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
+  NMRExperiment[resFindRef]
+}
