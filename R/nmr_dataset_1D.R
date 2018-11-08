@@ -124,3 +124,20 @@ format.nmr_dataset_1D <- function(x, ...) {
   validate_nmr_dataset_1D(output)
   return(output)
 }
+
+#' Export 1D NMR data to a CSV file
+#'
+#' @param nmr_dataset An [nmr_dataset_1D] object
+#' @param filename The csv filename
+#'
+#' @return The nmr_dataset object (unmodified)
+#' @export
+#'
+nmr_export_data_1r <- function(nmr_dataset, filename) {
+  assert_that(is.nmr_dataset_1D(nmr_dataset), msg = "An nmr_dataset_1D should be given")
+  data_1r <- nmr_dataset$data_1r
+  rownames(data_1r) <- nmr_get_metadata(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
+  colnames(data_1r) <- nmr_dataset$axis
+  utils::write.csv(data_1r, file = filename)
+  nmr_dataset
+}
