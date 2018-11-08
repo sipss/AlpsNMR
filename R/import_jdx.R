@@ -202,21 +202,22 @@ process_block <- function(lines, metadata_only = FALSE) {
 #' @noRd
 read_jdx <- function(file_names, metadata_only = FALSE) {
   if (show_progress_bar(length(file_names) > 5)) {
-    prog <- "text"
+    prog <- TRUE
   } else {
-    prog <- "none"
+    prog <- FALSE
   }
-  output <- plyr::llply(file_names,
-                        function(file_name) {
-                          lines <- readLines(file_name)
-                          lines <- strip_comments(lines)
-                          sampl <- process_block(lines,
-                                                 metadata_only = metadata_only)$block
-                          info <- list(file_format = "JDX-JCAMP NMR sample")
-                          sampl$info <- info
-                          sampl
-                        }, .progress = prog)
-
+  output <- furrr::future_map(
+    file_names,
+    function(file_name) {
+      lines <- readLines(file_name)
+      lines <- strip_comments(lines)
+      sampl <- process_block(lines,
+                             metadata_only = metadata_only)$block
+      info <- list(file_format = "JDX-JCAMP NMR sample")
+      sampl$info <- info
+      sampl
+    }, .progress = prog)
+  
   return(output)
 }
 
