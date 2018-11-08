@@ -64,10 +64,12 @@ excel_dfs %>%
 
 ```{r integrate-metadata}
 for (excel_df in excel_dfs) {
+  # If the sheet is empty, skip
   if (nrow(excel_df) == 0 || ncol(excel_df) == 0) {
     # Empty sheet
     next
   }
+  # Check that the key column is already in the metadata:
   key_column <- colnames(excel_df)[1]
   avail_columns <- colnames(nmr_get_metadata(nmr_dataset, groups = "external"))
   if (!key_column %in% avail_columns) {
@@ -75,9 +77,12 @@ for (excel_df in excel_dfs) {
                     "Can't add metadata.\n Available columns:",
                     glue::glue_collapse(avail_columns, sep = ", ", last = " and ")))
   }
+  # The NMRExperiment column should of type character, although Excel may use numeric
+  # because usually all the identifiers are numeric. We convert it manually:
   if ("NMRExperiment" %in% colnames(excel_df)) {
     excel_df$NMRExperiment <- as.character(excel_df$NMRExperiment)
   }
+  # Add the metadata
   nmr_dataset <- nmr_add_metadata(nmr_dataset, metadata = excel_df, by = key_column)
 }
 ```
