@@ -127,9 +127,9 @@ nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
 #' @return The Excel file name
 #' @export
 #'
-nmr_export_metadata <- function(nmr_dataset, 
-                                xlsx_file,
-                                groups = c("info", "orig", "title", "external")) {
+nmr_meta_export <- function(nmr_dataset, 
+                            xlsx_file,
+                            groups = c("info", "orig", "title", "external")) {
   groups_present <- groups %in% names(nmr_dataset$metadata)
   if (!all(groups_present)) {
     warning("These metadata groups are missing and will be ignored: \n", paste(groups[!groups_present]), collapse = ", ")

@@ -18,7 +18,7 @@ pipe_load_samples <- function(samples_dir, output_dir, glob = "*0") {
   nmr_dataset <- nmr_read_samples(NMRExperiments)
   nmr_dataset_rds <- fs::path(output_dir, "nmr_dataset.rds")
   nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
-  nmr_export_metadata(nmr_dataset, fs::path(output_dir, "nmr_dataset_metadata.xlsx"))
+  nmr_meta_export(nmr_dataset, fs::path(output_dir, "nmr_dataset_metadata.xlsx"))
   message(nmr_dataset$num_samples, " samples loaded.")
 }
 
@@ -95,7 +95,7 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
   nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis1 = axis1)
   
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
-  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   plot_webgl(nmr_dataset, html_filename = plot_html)
   
@@ -129,7 +129,7 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
   nmr_dataset <- nmr_exclude_region(nmr_dataset, exclude = exclude)
   
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
-  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   plot_webgl(nmr_dataset, html_filename = plot_html)
   
@@ -173,7 +173,7 @@ pipe_filter_samples <- function(nmr_dataset_rds, conditions, output_dir) {
   
   message("Saving results...")
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
-  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   pasted_conditions <- glue::glue_collapse(conditions, sep = ", ", width = 80, last = ", ")
   message("Dataset filtered by: ", pasted_conditions)
@@ -222,7 +222,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   message("Saving alignment results...")
   # FIXME: Prepare a plot
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
-  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   plot_webgl(nmr_dataset, html_filename = plot_html)
   utils::write.csv(peak_data, peak_data_fn)
@@ -264,7 +264,7 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
                                              peak_pos_ppm = peak_data_integ$ppm,
                                              peak_width_ppm = peak_width_ppm)
   
-  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   utils::write.csv(peak_table, peak_table)
   message("Peak table integrated")
 }
@@ -302,7 +302,7 @@ pipe_full_spectra_normalization <- function(nmr_dataset_rds, internal_calibrant 
   nmr_dataset <- nmr_normalize(nmr_dataset, method = "pqn")
   
   nmr_export_data_1r(nmr_dataset, full_spectra_matrix_fn)
-  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   plot_webgl(nmr_dataset, html_filename = plot_html)
   message("Full spectra normalization finished")
@@ -333,7 +333,7 @@ pipe_peak_table_normalization <- function(nmr_dataset_rds, peak_table_no_norm_fn
                            norm_pqn(peak_table_no_nmrexp))
   
   utils::write.csv(peak_table_norm, peak_table_norm_fn)
-  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   message("PQN Normalization of the peak table finished")
 }
 

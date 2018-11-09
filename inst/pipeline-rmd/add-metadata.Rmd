@@ -88,7 +88,7 @@ for (excel_df in excel_dfs) {
 ```
 
 ```{r print-output}
-nmr_export_metadata(nmr_dataset, xlsx_file, groups = "external")
+nmr_meta_export(nmr_dataset, xlsx_file, groups = "external")
 nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
 nmr_dataset %>%
   nmr_meta_get(groups = "external") %>%
