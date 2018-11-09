@@ -175,7 +175,8 @@ pipe_filter_samples <- function(nmr_dataset_rds, conditions, output_dir) {
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
   nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
-  message("Dataset filtered by ", condition)
+  pasted_conditions <- glue::glue_collapse(conditions, sep = ", ", width = 80, last = ", ")
+  message("Dataset filtered by: ", pasted_conditions)
 }
 
 #' Pipeline: Peak detection and Alignment
@@ -255,7 +256,7 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
   peak_table <- file.path(output_dir, "peak_table_no_normalized.csv")
   
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
-  peak_data <- read.csv(file = peak_data_fn)
+  peak_data <- utils::read.csv(file = peak_data_fn)
   NMRExperimentRef <- readLines(NMRExp_ref_fn)
   NMRExperiment <- NULL # make rcmdcheck happy
   peak_data_integ <- dplyr::filter(peak_data, NMRExperiment == !!NMRExperimentRef)
@@ -329,7 +330,7 @@ pipe_peak_table_normalization <- function(nmr_dataset_rds, peak_table_no_norm_fn
   peak_table <- utils::read.csv(peak_table_no_norm_fn)
   peak_table_no_nmrexp <- as.matrix(peak_table[, 2:ncol(peak_table), drop = FALSE])
   peak_table_norm <- cbind(peak_table[, 1, drop = FALSE],
-                           NIHSnmr:::norm_pqn(peak_table_no_nmrexp))
+                           norm_pqn(peak_table_no_nmrexp))
   
   utils::write.csv(peak_table_norm, peak_table_norm_fn)
   nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
