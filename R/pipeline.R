@@ -231,7 +231,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
 }
 
 
-#' Title
+#' Pipeline: Peak integration
 #'
 #' @inheritParams pipe_add_metadata
 #' @param peak_det_align_dir Output directory from [pipe_peakdet_align]
@@ -267,3 +267,72 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
   utils::write.csv(peak_table, peak_table)
   message("Peak table integrated")
 }
+
+
+#' Pipe: Full spectra normalization
+#' 
+#' Normalize the full spectra to the internal calibrant region, then exclude
+#' that region and finally perform PQN normalization.
+#' 
+#' If there is no internal calibrant, only the PQN normalization is done.
+#'
+#' @inheritParams pipe_add_metadata
+#' @param internal_calibrant A ppm range where the internal calibrant is, or `NULL`.
+#'
+#' @export
+pipe_full_spectra_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, output_dir = NULL) {
+  if (is.null(output_dir)) {
+    stop("An output directory must be specified")
+  }
+  
+  fs::dir_create(output_dir)
+  
+  metadata_fn <- file.path(output_dir, "metadata.xlsx")
+  full_spectra_matrix_fn <- file.path(output_dir, "full_spectra_matrix.csv")
+  nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
+  plot_html <- file.path(output_dir, "plot-samples.html")
+  
+  nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+  if (!is.null(internal_calibrant)) {
+    nmr_dataset <- nmr_dataset %>%
+      nmr_normalize(method = "region", values = internal_calibrant) %>%
+      nmr_exclude_region(exclude = list(ic = internal_calibrant))
+  }
+  nmr_dataset <- nmr_normalize(nmr_dataset, method = "pqn")
+  
+  nmr_export_data_1r(nmr_dataset, full_spectra_matrix_fn)
+  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
+  plot_webgl(nmr_dataset, html_filename = plot_html)
+  message("Full spectra normalization finished")
+}
+
+#' Pipe: Peak table PQN Normalization
+#'
+#' @inheritParams pipe_add_metadata
+#' @param peak_table_no_norm_fn Filename of the CSV file that results from the peak integration pipeline
+#'
+#' @export
+#'
+pipe_peak_table_normalization <- function(nmr_dataset_rds, peak_table_no_norm_fn, output_dir) {
+  if (is.null(output_dir)) {
+    stop("An output directory must be specified")
+  }
+  
+  fs::dir_create(output_dir)
+  
+  peak_table_norm_fn <- file.path(output_dir, "peak_table_normalized.csv")
+  metadata_fn <- file.path(output_dir, "metadata.xlsx")
+  
+  nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+  
+  peak_table <- utils::read.csv(peak_table_no_norm_fn)
+  peak_table_no_nmrexp <- as.matrix(peak_table[, 2:ncol(peak_table), drop = FALSE])
+  peak_table_norm <- cbind(peak_table[, 1, drop = FALSE],
+                           NIHSnmr:::norm_pqn(peak_table_no_nmrexp))
+  
+  utils::write.csv(peak_table_norm, peak_table_norm_fn)
+  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  message("PQN Normalization of the peak table finished")
+}
+

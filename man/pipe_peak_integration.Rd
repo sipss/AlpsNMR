@@ -2,7 +2,7 @@
 % Please edit documentation in R/pipeline.R
 \name{pipe_peak_integration}
 \alias{pipe_peak_integration}
-\title{Title}
+\title{Pipeline: Peak integration}
 \usage{
 pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir, peak_width_ppm,
   output_dir)
@@ -17,5 +17,5 @@ pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir, peak_width_ppm,
 \item{output_dir}{The output directory for this pipe element}
 }
 \description{
-Title
+Pipeline: Peak integration
 }
