@@ -159,7 +159,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
   plot_html <- file.path(output_dir, "plot-samples.html")
   peak_data_fn <- file.path(output_dir, "peak_data.csv")
-  
+  NMRExp_ref_fn <- file.path(output_dir, "NMRExperiment_align_ref.txt")
   
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   message("Detecting peaks...")
@@ -181,6 +181,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   plot_webgl(nmr_dataset, html_filename = plot_html)
   utils::write.csv(peak_data, peak_data_fn)
+  write(NMRExp_ref, NMRExp_ref_fn)
   
   message("Peaks detected and spectra aligned")
 }
