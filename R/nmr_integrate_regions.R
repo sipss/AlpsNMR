@@ -103,7 +103,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
 #'         for each peak position.
 #' @export
 #'
-nmr_integrate_peak_positions <- function(nmr_dataset, peak_pos_ppm, peak_width_ppm, fix_baseline = TRUE) {
+nmr_integrate_peak_positions <- function(samples, peak_pos_ppm, peak_width_ppm, fix_baseline = TRUE) {
   regions <- regions_from_peak_table(peak_pos_ppm, peak_width_ppm)
-  nmr_integrate_regions(nmr_dataset, regions, fix_baseline = fix_baseline)
+  nmr_integrate_regions(samples, regions, fix_baseline = fix_baseline)
 }

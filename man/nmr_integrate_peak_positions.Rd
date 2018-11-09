@@ -4,10 +4,12 @@
 \alias{nmr_integrate_peak_positions}
 \title{Integrate peak positions}
 \usage{
-nmr_integrate_peak_positions(nmr_dataset, peak_pos_ppm, peak_width_ppm,
+nmr_integrate_peak_positions(samples, peak_pos_ppm, peak_width_ppm,
   fix_baseline = TRUE)
 }
 \arguments{
+\item{samples}{A \link{nmr_dataset} object}
+
 \item{peak_pos_ppm}{The peak positions, in ppm}
 
 \item{peak_width_ppm}{The peak widths (or a single peak width for all peaks)}
