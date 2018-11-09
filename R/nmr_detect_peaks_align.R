@@ -98,19 +98,27 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #'
 #' @param nmr_dataset An [nmr_dataset_1D]
 #' @param peak_data The detected peak data given by [nmr_detect_peaks].
+#' @param NMRExp_ref NMRExperiment of the reference to use for alignment
 #' @inheritParams speaq::dohCluster
 #'
 #' @return An [nmr_dataset_1D], with the spectra aligned
 #' @export
 #'
-nmr_align <- function(nmr_dataset, peak_data, maxShift = 3, acceptLostPeak = FALSE) {
+nmr_align <- function(nmr_dataset, peak_data, NMRExp_ref = NULL, maxShift = 3, acceptLostPeak = FALSE) {
   validate_nmr_dataset_1D(nmr_dataset)
+  if (is.null(NMRExp_ref)) {
+    NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
+  }
+  NMRExp <- nmr_get_metadata(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
+  refInd <- which(NMRExp == NMRExp_ref)
+  if (length(refInd) != 1) {
+    stop("Wrong NMRExperiment as align_ref? Please check.")
+  }
   peakList <- peak_data_to_peakList(nmr_dataset, peak_data)
-  resFindRef <- speaq::findRef(peakList)
   nmr_dataset$data_1r <- speaq::dohCluster(
     nmr_dataset$data_1r,
     peakList = peakList,
-    refInd = resFindRef$refInd,
+    refInd = refInd,
     maxShift  = maxShift,
     acceptLostPeak = acceptLostPeak, 
     verbose = FALSE

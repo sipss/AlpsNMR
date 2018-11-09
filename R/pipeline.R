@@ -162,14 +162,20 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   
   
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+  message("Detecting peaks...")
   peak_data <- nmr_detect_peaks(nmr_dataset,
                                 nDivRange = nDivRange,
                                 scales = scales,
                                 baselineThresh = baselineThresh,
                                 SNR.Th = SNR.Th)
-  nmr_dataset <- nmr_align(nmr_dataset, peak_data, maxShift = maxShift,
+  message("Choosing alignment reference...")
+  NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
+  message("Starting alignment...")
+  nmr_dataset <- nmr_align(nmr_dataset, peak_data,
+                           align_ref = NMRExp_ref,
+                           maxShift = maxShift,
                            acceptLostPeak = acceptLostPeak)
-  
+  message("Saving results...")
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
   nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
