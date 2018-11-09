@@ -24,7 +24,7 @@ nmr_pca_build_model <- function(nmr_data, ncomp = NULL, center = TRUE, scale = F
 nmr_pca_build_model.nmr_dataset <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
   zero_var_cols <- mixOmics::nearZeroVar(nmr_data$data_1r) # excluded
   data_1r <- nmr_data$data_1r[,-zero_var_cols$Position]
-  rownames(data_1r) <- nmr_get_metadata(nmr_data, "NMRExperiment")$NMRExperiment
+  rownames(data_1r) <- nmr_meta_get(nmr_data, "NMRExperiment")$NMRExperiment
   pca_model <- mixOmics::pca(X = data_1r, ncomp = ncomp, center = center, scale = scale, ...)
   # These attributes are used by nmr_pca_loadingplot:
   attr(pca_model, "nmr_data_axis") <- nmr_data$axis[[1]]
@@ -36,7 +36,7 @@ nmr_pca_build_model.nmr_dataset <- function(nmr_data, ncomp = NULL, center = TRU
 #' @export
 nmr_pca_build_model.nmr_dataset_1D <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
   data_1r <- nmr_data$data_1r
-  rownames(data_1r) <- nmr_get_metadata(nmr_data, "NMRExperiment")$NMRExperiment
+  rownames(data_1r) <- nmr_meta_get(nmr_data, "NMRExperiment")$NMRExperiment
   pca_model <- mixOmics::pca(X = data_1r, ncomp = ncomp, center = center, scale = scale, ...)
   # These attributes are used by nmr_pca_loadingplot:
   attr(pca_model, "nmr_data_axis") <- nmr_data$axis
@@ -68,7 +68,7 @@ nmr_pca_plot_variance <- function(pca_model) {
 #' @rdname nmr_pca_plots
 #' @export
 nmr_pca_scoreplot <- function(nmr_data, pca_model, comp = 1:2, ...) {
-  nmr_metadata <- nmr_get_metadata(nmr_data)
+  nmr_metadata <- nmr_meta_get(nmr_data)
   scores <- tibble::as_tibble(pca_model$x, rownames = "NMRExperiment") %>%
     dplyr::left_join(nmr_metadata, by = "NMRExperiment")
   var_percent <- 100*pca_model$sdev^2/pca_model$var.tot

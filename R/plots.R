@@ -13,7 +13,7 @@ plot.nmr_dataset <- function(x, sample_idx = NULL,
                              chemshift_range = NULL,
                              quantile_plot = FALSE,
                              interactive = FALSE, ...) {
-  dimension <- unique(nmr_get_metadata(x, "info_dimension")$info_dimension)
+  dimension <- unique(nmr_meta_get(x, "info_dimension")$info_dimension)
   if (length(dimension) > 1) {
     stop("Samples with different dimensionality")
   }
@@ -290,7 +290,7 @@ plot_nmr_dataset_2D <- function(x, sample_idx = NULL,
   colnames(sample_long) <- c("axis1", "axis2", "intensity")
 
   titl <- paste("Sample:",
-                nmr_get_metadata(x, "NMRExperiment")$NMRExperiment[sample_idx])
+                nmr_meta_get(x, "NMRExperiment")$NMRExperiment[sample_idx])
   gplt <- ggplot2::ggplot(sample_long, ggplot2::aes_string(x = "axis1", y = "axis2")) +
     ggplot2::geom_raster(ggplot2::aes_string(fill = "intensity")) +
     ggplot2::scale_fill_gradient(trans = "log10_minus_min") +
@@ -370,7 +370,7 @@ nmr_get_long_df.nmr_dataset <- function(nmr_data, sample_idx = NULL, chemshift_r
   }
   chemshift_in_range <- decimate_axis(xaxis = nmr_data$axis[[1]],
                                       xrange = chemshift_range)
-  meta_df <- nmr_get_metadata(nmr_data)
+  meta_df <- nmr_meta_get(nmr_data)
   NMRExperiments <- meta_df$NMRExperiment[sample_idx]
   chemshifts <- nmr_data$axis[[1]][chemshift_in_range]
   raw_data <- reshape2::melt(nmr_data$data_1r[sample_idx, chemshift_in_range, drop = FALSE])
@@ -387,7 +387,7 @@ nmr_get_long_df.nmr_dataset_1D <- function(nmr_data, sample_idx = NULL, chemshif
   }
   chemshift_in_range <- decimate_axis(xaxis = nmr_data$axis,
                                       xrange = chemshift_range)
-  meta_df <- nmr_get_metadata(nmr_data)
+  meta_df <- nmr_meta_get(nmr_data)
   NMRExperiments <- meta_df$NMRExperiment[sample_idx]
   chemshifts <- nmr_data$axis[chemshift_in_range]
   raw_data <- reshape2::melt(nmr_data$data_1r[sample_idx, chemshift_in_range, drop = FALSE])

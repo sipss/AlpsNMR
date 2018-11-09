@@ -260,7 +260,7 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
   NMRExperimentRef <- readLines(NMRExp_ref_fn)
   NMRExperiment <- NULL # make rcmdcheck happy
   peak_data_integ <- dplyr::filter(peak_data, NMRExperiment == !!NMRExperimentRef)
-  peak_table <- nmr_integrate_peak_positions(nmr_dataset = nmr_dataset,
+  peak_table <- nmr_integrate_peak_positions(samples = nmr_dataset,
                                              peak_pos_ppm = peak_data_integ$ppm,
                                              peak_width_ppm = peak_width_ppm)
   

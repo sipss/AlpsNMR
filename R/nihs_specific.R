@@ -45,8 +45,8 @@ read_exported_slims <- function(file_name, sheet = NULL, all_character = FALSE) 
 #' @return A data frame (tibble) with the columns used by NIHSrods
 #' @export
 nmr_get_irods_meta <- function(nmr_data) {
-  full_meta <- nmr_get_metadata(nmr_data)
-  meta_irods <- nmr_get_metadata(nmr_data, "NMRExperiment")
+  full_meta <- nmr_meta_get(nmr_data)
+  meta_irods <- nmr_meta_get(nmr_data, "NMRExperiment")
 
   check_and_add <- function(meta_irods, irods_column, dataset_column) {
     if (dataset_column %in% colnames(full_meta)) {

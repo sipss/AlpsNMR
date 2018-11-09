@@ -207,7 +207,7 @@ batman_get_full_filename <- function(batman_dir, filename) {
 nmr_batman_export_dataset <- function(nmr_dataset, batman_dir = "BatmanInput", filename = "NMRdata.txt") {
   full_filename <- batman_get_full_filename(batman_dir, filename)
   nmrdata <- t(as.matrix(nmr_dataset[["data_1r"]]))
-  nmr_exp <- nmr_get_metadata(nmr_dataset, "NMRExperiment")$NMRExperiment
+  nmr_exp <- nmr_meta_get(nmr_dataset, "NMRExperiment")$NMRExperiment
   colnames(nmrdata) <- paste0("NMRExperiment_", nmr_exp)
   nmrdata <- cbind(ppm = nmr_dataset[["axis"]][[1]], nmrdata)
   utils::write.table(nmrdata, full_filename, row.names = FALSE, sep = "\t")

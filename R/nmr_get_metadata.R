@@ -8,7 +8,7 @@
 #' 
 #' @return a data frame with the injection metadata
 #' @export
-nmr_get_metadata <- function(samples, columns = NULL, groups = NULL) {
+nmr_meta_get <- function(samples, columns = NULL, groups = NULL) {
   metadata_list <- samples[["metadata"]]
   metadata <- metadata_list[[1]]
   for (i in utils::tail(seq_along(metadata_list), -1)) {
@@ -80,7 +80,7 @@ nmr_get_metadata <- function(samples, columns = NULL, groups = NULL) {
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
 #' 
 #' # At first we just have the NMRExperiment column
-#' print(nmr_get_metadata(nmr_dataset, groups = "external"))
+#' print(nmr_meta_get(nmr_dataset, groups = "external"))
 #' # Get a table with NMRExperiment -> SubjectID
 #' dummy_metadata <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "NIHSnmr")
 #' NMRExp_SubjID <- readxl::read_excel(dummy_metadata, sheet = 1)
@@ -88,17 +88,17 @@ nmr_get_metadata <- function(samples, columns = NULL, groups = NULL) {
 #' print(NMRExp_SubjID)
 #' # We can link the SubjectID column of the first excel into the dataset
 #' nmr_dataset <- nmr_add_metadata(nmr_dataset, NMRExp_SubjID, by = "NMRExperiment")
-#' print(nmr_get_metadata(nmr_dataset, groups = "external"))
+#' print(nmr_meta_get(nmr_dataset, groups = "external"))
 #' # The second excel can use the SubjectID:
 #' SubjID_Age <- readxl::read_excel(dummy_metadata, sheet = 2)
 #' print(SubjID_Age)
 #' # Add the metadata by its SubjectID:
 #' nmr_dataset <- nmr_add_metadata(nmr_dataset, SubjID_Age, by = "SubjectID")
 #' # The final loaded metadata:
-#' print(nmr_get_metadata(nmr_dataset, groups = "external"))
+#' print(nmr_meta_get(nmr_dataset, groups = "external"))
 #' 
 nmr_add_metadata <- function(nmr_data, metadata, by = "NMRExperiment") {
-  nmr_meta <- nmr_get_metadata(nmr_data, groups = "external")
+  nmr_meta <- nmr_meta_get(nmr_data, groups = "external")
   by_left <- ifelse(is.null(names(by)), by, names(by))
   existing_vars <- base::setdiff(colnames(nmr_meta), by_left)
   conflict <- base::intersect(existing_vars, colnames(metadata))

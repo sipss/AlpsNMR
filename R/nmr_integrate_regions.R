@@ -60,7 +60,7 @@ nmr_integrate_regions.nmr_dataset <- function(samples, regions, fix_baseline = T
     }
     area
   })
-  dplyr::bind_cols(nmr_get_metadata(samples, "NMRExperiment"),
+  dplyr::bind_cols(nmr_meta_get(samples, "NMRExperiment"),
                    areas)
 }
 
@@ -90,7 +90,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
     }
     area
   })
-  dplyr::bind_cols(nmr_get_metadata(samples, "NMRExperiment"),
+  dplyr::bind_cols(nmr_meta_get(samples, "NMRExperiment"),
                    areas)
 }
 

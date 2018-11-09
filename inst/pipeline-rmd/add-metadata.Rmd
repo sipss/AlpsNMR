@@ -71,7 +71,7 @@ for (excel_df in excel_dfs) {
   }
   # Check that the key column is already in the metadata:
   key_column <- colnames(excel_df)[1]
-  avail_columns <- colnames(nmr_get_metadata(nmr_dataset, groups = "external"))
+  avail_columns <- colnames(nmr_meta_get(nmr_dataset, groups = "external"))
   if (!key_column %in% avail_columns) {
     stop(glue::glue("Key Column {key_column} is not present in the metadata.",
                     "Can't add metadata.\n Available columns:",
@@ -91,7 +91,7 @@ for (excel_df in excel_dfs) {
 nmr_export_metadata(nmr_dataset, xlsx_file, groups = "external")
 nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
 nmr_dataset %>%
-  nmr_get_metadata(groups = "external") %>%
+  nmr_meta_get(groups = "external") %>%
   DT::datatable()
 ```
 

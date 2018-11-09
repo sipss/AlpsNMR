@@ -30,7 +30,7 @@ dataset <- system.file("dataset-demo", package = "NIHSnmr")
 nmr_dataset <- nmr_read_samples_dir(dataset)
 
 # At first we just have the NMRExperiment column
-print(nmr_get_metadata(nmr_dataset, groups = "external"))
+print(nmr_meta_get(nmr_dataset, groups = "external"))
 # Get a table with NMRExperiment -> SubjectID
 dummy_metadata <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "NIHSnmr")
 NMRExp_SubjID <- readxl::read_excel(dummy_metadata, sheet = 1)
@@ -38,13 +38,13 @@ NMRExp_SubjID <- readxl::read_excel(dummy_metadata, sheet = 1)
 print(NMRExp_SubjID)
 # We can link the SubjectID column of the first excel into the dataset
 nmr_dataset <- nmr_add_metadata(nmr_dataset, NMRExp_SubjID, by = "NMRExperiment")
-print(nmr_get_metadata(nmr_dataset, groups = "external"))
+print(nmr_meta_get(nmr_dataset, groups = "external"))
 # The second excel can use the SubjectID:
 SubjID_Age <- readxl::read_excel(dummy_metadata, sheet = 2)
 print(SubjID_Age)
 # Add the metadata by its SubjectID:
 nmr_dataset <- nmr_add_metadata(nmr_dataset, SubjID_Age, by = "SubjectID")
 # The final loaded metadata:
-print(nmr_get_metadata(nmr_dataset, groups = "external"))
+print(nmr_meta_get(nmr_dataset, groups = "external"))
 
 }
