@@ -54,10 +54,21 @@ output_dir_exclude <- file.path(output_dir, "04-exclude-regions")
 pipe_exclude_regions(nmr_dataset_rds, exclude_regions, output_dir_exclude)
 
 #########################################################################
-## Fifth node: Peak detection and Alignment
+### Fifth node: Filter samples
 #########################################################################
+
+# This node is useful to filter by cohort
 nmr_dataset_rds <- file.path(output_dir_exclude, "nmr_dataset.rds")
-output_dir_alignment <- file.path(output_dir, "05-alignment")
+conditions <- 'NMRExperiment != "40"'
+output_dir_filter <- file.path(output_dir, "05-filter-samples")
+
+pipe_filter_samples(nmr_dataset_rds, conditions, output_dir_filter)
+
+#########################################################################
+## Sixth node: Peak detection and Alignment
+#########################################################################
+nmr_dataset_rds <- file.path(output_dir_filter, "nmr_dataset.rds")
+output_dir_alignment <- file.path(output_dir, "06-alignment")
 
 pipe_peakdet_align(nmr_dataset_rds,
                    nDivRange = 128, scales = seq(1, 16, 2),

@@ -136,6 +136,48 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
   message("Regions excluded")
 }
 
+
+#' Pipeline: Filter samples according to metadata conditions
+#'
+#' @inheritParams pipe_add_metadata
+#' @param conditions A character vector with conditions to filter metadata.
+#' 
+#' The `conditions` parameter should be a character vector of valid R logical conditions.
+#' Some examples:
+#' 
+#' - conditions <- 'Gender == "Female"'
+#' - conditions <- 'Cohort == "Chuv"'
+#' - conditions <- 'TimePoint %in% c("T0", "T31")'
+#' - conditions <- c(Cohort == "Chuv", 'TimePoint %in% c("T0", "T31")')
+#'
+#' Only samples fullfilling all the given conditions are kept in further analysis.
+#' 
+#' @export
+#'
+pipe_filter_samples <- function(nmr_dataset_rds, conditions, output_dir) {
+  if (is.null(output_dir)) {
+    stop("An output directory must be specified")
+  }
+  
+  fs::dir_create(output_dir)
+  
+  metadata_fn <- file.path(output_dir, "metadata.xlsx")
+  raw_data_matrix_fn <- file.path(output_dir, "raw_data.csv")
+  nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
+  
+  nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+
+  conditions_expr <- rlang::parse_exprs(conditions)
+  
+  nmr_dataset <- NIHSnmr::filter(nmr_dataset, !!!conditions_expr)
+  
+  message("Saving results...")
+  nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
+  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
+  message("Dataset filtered by ", condition)
+}
+
 #' Pipeline: Peak detection and Alignment
 #' @inheritParams pipe_add_metadata
 #' @inheritParams nmr_detect_peaks
