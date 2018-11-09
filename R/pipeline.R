@@ -218,7 +218,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
                            maxShift = maxShift,
                            acceptLostPeak = acceptLostPeak)
   
-  message("Saving results...")
+  message("Saving alignment results...")
   # FIXME: Prepare a plot
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
   nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
@@ -230,3 +230,40 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   message("Peaks detected and spectra aligned")
 }
 
+
+#' Title
+#'
+#' @inheritParams pipe_add_metadata
+#' @param peak_det_align_dir Output directory from [pipe_peakdet_align]
+#' @param peak_width_ppm A peak width in ppm
+#'
+#' @export
+#'
+pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_width_ppm, output_dir) {
+  if (is.null(output_dir)) {
+    stop("An output directory must be specified")
+  }
+  
+  fs::dir_create(output_dir)
+  
+  # Input files from previous node:
+  peak_data_fn <- file.path(peak_det_align_dir, "peak_data.csv")
+  NMRExp_ref_fn <- file.path(peak_det_align_dir, "NMRExperiment_align_ref.txt")
+  
+  # Output files:
+  metadata_fn <- file.path(output_dir, "metadata.xlsx")
+  peak_table <- file.path(output_dir, "peak_table_no_normalized.csv")
+  
+  nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+  peak_data <- read.csv(file = peak_data_fn)
+  NMRExperimentRef <- readLines(NMRExp_ref_fn)
+  NMRExperiment <- NULL # make rcmdcheck happy
+  peak_data_integ <- dplyr::filter(peak_data, NMRExperiment == !!NMRExperimentRef)
+  peak_table <- nmr_integrate_peak_positions(nmr_dataset = nmr_dataset,
+                                             peak_pos_ppm = peak_data_integ$ppm,
+                                             peak_width_ppm = peak_width_ppm)
+  
+  nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
+  utils::write.csv(peak_table, peak_table)
+  message("Peak table integrated")
+}

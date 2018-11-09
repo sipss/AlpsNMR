@@ -77,5 +77,15 @@ pipe_peakdet_align(nmr_dataset_rds,
                    output_dir = output_dir_alignment)
 
 
+########################################################################
+## Seventh node: Peak integration
+########################################################################
+nmr_dataset_rds <- file.path(output_dir_alignment, "nmr_dataset.rds")
+output_dir_integration <- file.path(output_dir, "07-peak-integration")
+
+peak_width_ppm <- 0.0023 # FIXME: Check me.
+pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir = output_dir_alignment,
+                      peak_width_ppm = peak_width_ppm, output_dir_integration)
+
 message("Don't forget to check out: ",  output_dir)
 
