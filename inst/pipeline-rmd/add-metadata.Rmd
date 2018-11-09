@@ -7,11 +7,11 @@ output:
     df_print: "paged"
 ---
 
-```{r setup, include=FALSE}
+```{r add-metadata-setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r libraries}
+```{r add-metadata-libraries}
 # Dependencies
 library(NIHSnmr)
 requireNamespace("purrr")
@@ -21,7 +21,7 @@ requireNamespace("DT")
 ```
 
 
-```{r default-values}
+```{r add-metadata-default-values}
 # These should be defined in the environment that calls rmarkdown::render
 if (!exists("nmr_dataset")) {
   stop("nmr_dataset should be defined before running this notebook")
@@ -46,14 +46,14 @@ if (!exists("nmr_dataset_outfile")) {
 
 These are the input metadata tables that will be integrated:
 
-```{r read-input}
+```{r add-metadata-read-input}
 excel_dfs <- excel_file %>% 
   readxl::excel_sheets() %>%
   purrr::map(~readxl::read_excel(path = excel_file, sheet = .))
 ```
 
 
-```{r print-input}
+```{r add-metadata-print-input}
 excel_dfs %>%
   purrr::map(DT::datatable) %>%
   htmltools::tagList()
@@ -62,7 +62,7 @@ excel_dfs %>%
 
 ## The added and linked metadata
 
-```{r integrate-metadata}
+```{r add-metadata-integrate-metadata}
 for (excel_df in excel_dfs) {
   # If the sheet is empty, skip
   if (nrow(excel_df) == 0 || ncol(excel_df) == 0) {
@@ -87,7 +87,7 @@ for (excel_df in excel_dfs) {
 }
 ```
 
-```{r print-output}
+```{r add-metadata-print-output}
 nmr_meta_export(nmr_dataset, xlsx_file, groups = "external")
 nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
 nmr_dataset %>%
