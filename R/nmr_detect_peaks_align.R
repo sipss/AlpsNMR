@@ -140,3 +140,20 @@ nmr_align_find_ref <- function(nmr_dataset, peak_data) {
   NMRExperiment <- nmr_get_metadata(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
   c(NMRExperiment = NMRExperiment[resFindRef$refInd])
 }
+
+#' Build list of regions for peak integration
+#'
+#' @param peak_pos_ppm The peak positions, in ppm
+#' @param peak_width_ppm The peak widths (or a single peak width for all peaks)
+#'
+#' @return A list of regions suitable for nmr_integrate_regions
+#'
+regions_from_peak_table <- function(peak_pos_ppm, peak_width_ppm) {
+  if (length(peak_width_ppm) == 1) {
+    peak_width_ppm <- rep(peak_width_ppm, length(peak_pos_ppm))
+  }
+  purrr::map2(peak_pos_ppm, peak_width_ppm,
+             function(ppm, peak_width) {
+               c(ppm - peak_width/2, ppm + peak_width/2)
+             })
+}

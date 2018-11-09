@@ -93,3 +93,17 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
   dplyr::bind_cols(nmr_get_metadata(samples, "NMRExperiment"),
                    areas)
 }
+
+#' Integrate peak positions
+#'
+#' @inheritParams nmr_integrate_regions
+#' @inheritParams regions_from_peak_table
+#'
+#' @return A data frame with the NMRExperiment column and one additional column
+#'         for each peak position.
+#' @export
+#'
+nmr_integrate_peak_positions <- function(nmr_dataset, peak_pos_ppm, peak_width_ppm, fix_baseline = TRUE) {
+  regions <- regions_from_peak_table(peak_pos_ppm, peak_width_ppm)
+  nmr_integrate_regions(nmr_dataset, regions, fix_baseline = fix_baseline)
+}
