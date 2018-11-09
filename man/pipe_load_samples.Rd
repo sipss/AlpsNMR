@@ -4,14 +4,14 @@
 \alias{pipe_load_samples}
 \title{Pipeline: Load NMR samples}
 \usage{
-pipe_load_samples(samples_dir, output_dir, glob = "*0")
+pipe_load_samples(samples_dir, glob = "*0", output_dir = NULL)
 }
 \arguments{
 \item{samples_dir}{The directory where the samples are}
 
-\item{output_dir}{Directory where the nmr_dataset and the excel files will be saved}
-
 \item{glob}{A wildcard aka globbing pattern (e.g. \code{*.csv}) passed on to \code{\link[=grep]{grep()}} to filter paths.}
+
+\item{output_dir}{Directory where the nmr_dataset and the excel files will be saved}
 }
 \value{
 This function saves the result to the output directory
@@ -21,7 +21,9 @@ Pipeline: Load NMR samples
 }
 \examples{
 \dontrun{
-pipe_load_samples("/dir/with/nmr/samples/", "/dir/to/save/output", glob = "*0")
+pipe_load_samples("/dir/with/nmr/samples/",
+                  glob = "*0",
+                  output_dir = "/dir/to/save/output")
 }
 }
 \seealso{

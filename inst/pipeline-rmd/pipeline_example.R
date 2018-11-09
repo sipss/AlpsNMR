@@ -52,8 +52,8 @@ output_dir_load <- file.path(output_dir, "01-load-samples")
 
 # Load all samples ending in "0":
 pipe_load_samples(samples_dir = load_samples_input_dir,
-                  output_dir = output_dir_load,
-                  glob = load_samples_glob)
+                  glob = load_samples_glob,
+                  output_dir = output_dir_load)
 
 
 #### Second node: Append metadata ##############################################

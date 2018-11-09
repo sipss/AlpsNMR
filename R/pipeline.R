@@ -10,9 +10,15 @@
 #'
 #' @examples
 #' \dontrun{
-#' pipe_load_samples("/dir/with/nmr/samples/", "/dir/to/save/output", glob = "*0")
+#' pipe_load_samples("/dir/with/nmr/samples/",
+#'                   glob = "*0",
+#'                   output_dir = "/dir/to/save/output")
 #' }
-pipe_load_samples <- function(samples_dir, output_dir, glob = "*0") {
+pipe_load_samples <- function(samples_dir, glob = "*0", output_dir = NULL) {
+  if (is.null(output_dir)) {
+    stop("An output directory must be specified")
+  }
+  
   fs::dir_create(output_dir)
   NMRExperiments <- as.character(fs::dir_ls(samples_dir, glob = glob))
   nmr_dataset <- nmr_read_samples(NMRExperiments)
@@ -63,6 +69,10 @@ pipe_load_samples <- function(samples_dir, output_dir, glob = "*0") {
 #' # Check out: output_dir
 #' 
 pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
+  if (is.null(output_dir)) {
+    stop("An output directory must be specified")
+  }
+  
   fs::dir_create(output_dir)
   env <- new.env()
   env$nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
@@ -84,6 +94,10 @@ pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
 #' @return This function saves the result to the output directory
 #' @export
 pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
+  if (is.null(output_dir)) {
+    stop("An output directory must be specified")
+  }
+  
   fs::dir_create(output_dir)
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   
@@ -117,6 +131,10 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
 pipe_exclude_regions <- function(nmr_dataset_rds,
                                  exclude,
                                  output_dir) {
+  if (is.null(output_dir)) {
+    stop("An output directory must be specified")
+  }
+  
   fs::dir_create(output_dir)
   
   metadata_fn <- file.path(output_dir, "metadata.xlsx")
