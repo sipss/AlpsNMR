@@ -83,7 +83,7 @@ for (excel_df in excel_dfs) {
     excel_df$NMRExperiment <- as.character(excel_df$NMRExperiment)
   }
   # Add the metadata
-  nmr_dataset <- nmr_add_metadata(nmr_dataset, metadata = excel_df, by = key_column)
+  nmr_dataset <- nmr_meta_add(nmr_dataset, metadata = excel_df, by = key_column)
 }
 ```
 

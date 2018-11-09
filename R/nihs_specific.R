@@ -493,7 +493,7 @@ nmr_read_samples_irods <- function(irods_search_results, ...) {
                               overwrite_sample_names = full_irods_path, ...)
   message("Appending irods metadata to nmr_dataset")
   colnames(irods_search_results) <- paste0("irods_", colnames(irods_search_results))
-  dataset <- nmr_add_metadata(
+  dataset <- nmr_meta_add(
     dataset,
     irods_search_results,
     by = c("info_sample_path" = "irods_full_irods_path")

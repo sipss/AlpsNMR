@@ -12,7 +12,7 @@ nmr_meta_get(samples, columns = NULL, groups = NULL)
 \item{columns}{Columns to get. By default gets all the columns.}
 
 \item{groups}{Groups to get. Groups are predefined of columns. Typically
-\code{"external"} for metadata added with \link{nmr_add_metadata}.
+\code{"external"} for metadata added with \link{nmr_meta_add}.
 
 Both \code{groups} and \code{columns} can't be given simultaneously.}
 }

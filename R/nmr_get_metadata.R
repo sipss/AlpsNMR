@@ -2,7 +2,7 @@
 #' @param samples a [nmr_dataset] object
 #' @param columns Columns to get. By default gets all the columns.
 #' @param groups Groups to get. Groups are predefined of columns. Typically 
-#' `"external"` for metadata added with [nmr_add_metadata].
+#' `"external"` for metadata added with [nmr_meta_add].
 #' 
 #' Both `groups` and `columns` can't be given simultaneously.
 #' 
@@ -87,17 +87,17 @@ nmr_meta_get <- function(samples, columns = NULL, groups = NULL) {
 #' 
 #' print(NMRExp_SubjID)
 #' # We can link the SubjectID column of the first excel into the dataset
-#' nmr_dataset <- nmr_add_metadata(nmr_dataset, NMRExp_SubjID, by = "NMRExperiment")
+#' nmr_dataset <- nmr_meta_add(nmr_dataset, NMRExp_SubjID, by = "NMRExperiment")
 #' print(nmr_meta_get(nmr_dataset, groups = "external"))
 #' # The second excel can use the SubjectID:
 #' SubjID_Age <- readxl::read_excel(dummy_metadata, sheet = 2)
 #' print(SubjID_Age)
 #' # Add the metadata by its SubjectID:
-#' nmr_dataset <- nmr_add_metadata(nmr_dataset, SubjID_Age, by = "SubjectID")
+#' nmr_dataset <- nmr_meta_add(nmr_dataset, SubjID_Age, by = "SubjectID")
 #' # The final loaded metadata:
 #' print(nmr_meta_get(nmr_dataset, groups = "external"))
 #' 
-nmr_add_metadata <- function(nmr_data, metadata, by = "NMRExperiment") {
+nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
   nmr_meta <- nmr_meta_get(nmr_data, groups = "external")
   by_left <- ifelse(is.null(names(by)), by, names(by))
   existing_vars <- base::setdiff(colnames(nmr_meta), by_left)
