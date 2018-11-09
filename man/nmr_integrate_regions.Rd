@@ -2,14 +2,10 @@
 % Please edit documentation in R/nmr_integrate_regions.R
 \name{nmr_integrate_regions}
 \alias{nmr_integrate_regions}
-\alias{nmr_integrate_regions.nmr_dataset}
 \alias{nmr_integrate_regions.nmr_dataset_1D}
 \title{Integrate regions}
 \usage{
 nmr_integrate_regions(samples, regions, fix_baseline = TRUE)
-
-\method{nmr_integrate_regions}{nmr_dataset}(samples, regions,
-  fix_baseline = TRUE)
 
 \method{nmr_integrate_regions}{nmr_dataset_1D}(samples, regions,
   fix_baseline = TRUE)

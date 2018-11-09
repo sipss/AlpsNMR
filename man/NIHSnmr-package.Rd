@@ -15,10 +15,10 @@ The following functions can be combined with the pipe. They
 create or modify the \link{nmr_dataset} object.
 \itemize{
 \item \code{\link[=nmr_read_samples_dir]{nmr_read_samples_dir()}} or \code{\link[=nmr_read_samples]{nmr_read_samples()}}
-\item \code{\link[=nmr_interpolate]{nmr_interpolate()}}
+\item \code{\link[=nmr_interpolate_1D]{nmr_interpolate_1D()}}
 \item \code{\link[=nmr_exclude_region]{nmr_exclude_region()}}
 \item \code{\link[=nmr_normalize]{nmr_normalize()}}
-\item \link[=plot.nmr_dataset]{plot()}
+\item \link[=plot.nmr_dataset_1D]{plot()}
 }
 
 There are also functions to extract the metadata and submit the samples to
@@ -32,9 +32,9 @@ its components for further analysis.
 library(NIHSnmr)
 sample_names <- c("dataset/10/", "dataset/20/", "dataset/30/")
 my_nmr_dataset <- nmr_read_samples(sample_names) \%>\%
-  nmr_interpolate(axis1 = c(0.4, 10)) \%>\%
-  nmr_exclude_region(exclude = list(water = c(4.7, 5))) \%>\%
-  nmr_normalize(method = "area") \%>\%
+  nmr_interpolate_1D(axis1 = c(0.4, 10)) \%>\%
+  nmr_exclude_region(exclude = list(water = c(4.6, 5))) \%>\%
+  nmr_normalize(method = "pqn") \%>\%
   plot
 }
 \dontrun{

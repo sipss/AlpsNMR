@@ -13,10 +13,11 @@ plot_webgl(nmr_dataset, html_filename, ...)
 
 \item{...}{Arguments passed on to \code{plot.nmr_dataset_1D}
 \describe{
-  \item{x}{a \code{\link{nmr_dataset}} object}
+  \item{x}{a \link{nmr_dataset_1D} object}
   \item{sample_idx}{numeric vector with the sample indices to include. Use "all" to include all}
   \item{quantile_plot}{If \code{TRUE} plot the 10\%, 50\%, 90\% percentiles of the spectra as reference.
 If two numbers between 0 and 1 are given then a custom percentile can be plotted}
+  \item{quantile_colors}{A vector with the colors for each of the quantiles}
   \item{interactive}{if \code{TRUE} return an interactive plotly plot, otherwise return a ggplot one.}
   \item{chemshift_range}{range of the chemical shifts to be included. Can be of length 3
 to include the resolution in the third element (e.g. \code{c(0.2, 0.8, 0.05)})}

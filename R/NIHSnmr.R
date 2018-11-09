@@ -8,10 +8,10 @@
 #' create or modify the [nmr_dataset] object.
 #'
 #' - [nmr_read_samples_dir()] or [nmr_read_samples()]
-#' - [nmr_interpolate()]
+#' - [nmr_interpolate_1D()]
 #' - [nmr_exclude_region()]
 #' - [nmr_normalize()]
-#' - [plot()][plot.nmr_dataset()]
+#' - [plot()][plot.nmr_dataset_1D()]
 #' 
 #' There are also functions to extract the metadata and submit the samples to
 #' irods, see the example below.
@@ -24,9 +24,9 @@
 #' library(NIHSnmr)
 #' sample_names <- c("dataset/10/", "dataset/20/", "dataset/30/")
 #' my_nmr_dataset <- nmr_read_samples(sample_names) %>%
-#'   nmr_interpolate(axis1 = c(0.4, 10)) %>%
-#'   nmr_exclude_region(exclude = list(water = c(4.7, 5))) %>%
-#'   nmr_normalize(method = "area") %>%
+#'   nmr_interpolate_1D(axis1 = c(0.4, 10)) %>%
+#'   nmr_exclude_region(exclude = list(water = c(4.6, 5))) %>%
+#'   nmr_normalize(method = "pqn") %>%
 #'   plot
 #' }
 #' \dontrun{

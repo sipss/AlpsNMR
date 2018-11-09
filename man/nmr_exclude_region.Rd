@@ -2,14 +2,10 @@
 % Please edit documentation in R/nmr_exclude_region.R
 \name{nmr_exclude_region}
 \alias{nmr_exclude_region}
-\alias{nmr_exclude_region.nmr_dataset}
 \alias{nmr_exclude_region.nmr_dataset_1D}
 \title{Exclude region from samples}
 \usage{
 nmr_exclude_region(samples, exclude = list(water = c(4.7, 5)))
-
-\method{nmr_exclude_region}{nmr_dataset}(samples, exclude = list(water =
-  c(4.7, 5)))
 
 \method{nmr_exclude_region}{nmr_dataset_1D}(samples, exclude = list(water
   = c(4.7, 5)))
@@ -17,7 +13,7 @@ nmr_exclude_region(samples, exclude = list(water = c(4.7, 5)))
 \arguments{
 \item{samples}{A \link{nmr_dataset} or \link{nmr_dataset_1D} object}
 
-\item{exclude}{A list with regions to be zeroed. Typically:
+\item{exclude}{A list with regions to be removed Typically:
 \code{exclude = list(water = c(4.7, 5.0))}}
 }
 \value{

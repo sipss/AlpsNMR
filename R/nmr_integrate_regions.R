@@ -46,24 +46,6 @@ nmr_integrate_regions <- function(samples, regions, fix_baseline = TRUE) {
   UseMethod("nmr_integrate_regions")
 }
 
-#' @rdname nmr_integrate_regions
-#' @export
-nmr_integrate_regions.nmr_dataset <- function(samples, regions, fix_baseline = TRUE) {
-  areas <- purrr::map_dfc(regions, function(region) {
-    to_sum <- samples$axis[[1]] >= min(region) & samples$axis[[1]] < max(region)
-    region_to_sum <- samples$data_1r[, to_sum]
-    area <- rowSums(region_to_sum)
-    if (fix_baseline) {
-      basel <- t(apply(region_to_sum, 1, rough_baseline))
-      area_basel <- rowSums(basel)
-      area <- area - area_basel
-    }
-    area
-  })
-  dplyr::bind_cols(nmr_meta_get(samples, "NMRExperiment"),
-                   areas)
-}
-
 rough_baseline <- function(x) {
   n <- length(x)
   basel <- signal::interp1(x = c(1, n),

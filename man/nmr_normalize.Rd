@@ -2,15 +2,11 @@
 % Please edit documentation in R/nmr_normalize.R
 \name{nmr_normalize}
 \alias{nmr_normalize}
-\alias{nmr_normalize.nmr_dataset}
 \alias{nmr_normalize.nmr_dataset_1D}
 \title{Normalize NMR samples}
 \usage{
 nmr_normalize(samples, method = c("area", "max", "value", "region",
   "pqn", "none"), values = NULL)
-
-\method{nmr_normalize}{nmr_dataset}(samples, method = c("area", "max",
-  "value", "region", "pqn", "none"), values = NULL)
 
 \method{nmr_normalize}{nmr_dataset_1D}(samples, method = c("area", "max",
   "value", "region", "pqn", "none"), values = NULL)

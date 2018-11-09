@@ -22,13 +22,3 @@ nmr_dataset_save <- function(nmr_dataset, file_name, ...) {
   saveRDS(nmr_dataset, file_name)
   return(nmr_dataset)
 }
-
-# This function can be removed once we know it is not needed by our users
-nmr_dataset_load_old_and_save <- function(old_file_name, new_file_name) {
-  nmr_dataset <- NULL
-  load(old_file_name)
-  if (is.null(nmr_dataset)) {
-    stop("This was not saved with the NIHSnmr version 1.0 or lower")
-  }
-  nmr_dataset_save(nmr_dataset, new_file_name)
-}
