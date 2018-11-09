@@ -23,6 +23,10 @@ interpolate1d_ppm_axis <- c(min = 0.2, max = 10, by = 8e-4)
 ### Fourth node: 
 exclude_regions <-  list(water = c(4.6, 5.0), methanol = c(3.33, 3.39))
 
+### Fifth node: First Outlier Detection
+
+# FIXME: Add Outlier detection to detect blatant outliers
+
 ### Fifth node: Filter samples
 samples_to_keep_conditions <- 'NMRExperiment != "40"'
 
