@@ -214,10 +214,12 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
   message("Starting alignment...")
   nmr_dataset <- nmr_align(nmr_dataset, peak_data,
-                           align_ref = NMRExp_ref,
+                           NMRExp_ref = NMRExp_ref,
                            maxShift = maxShift,
                            acceptLostPeak = acceptLostPeak)
+  
   message("Saving results...")
+  # FIXME: Prepare a plot
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
   nmr_export_metadata(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
@@ -227,3 +229,4 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   
   message("Peaks detected and spectra aligned")
 }
+
