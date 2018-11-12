@@ -188,7 +188,7 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
   sample_meta <- purrr::map(sample_meta,
                             function(x) {
                               x %>%
-                                dplyr::mutate(.data$NMRExperiment = nmr_experiment_col) %>%
+                                dplyr::mutate(NMRExperiment = nmr_experiment_col) %>%
                                 dplyr::select(.data$NMRExperiment, dplyr::everything())
                             })
   sample_meta[["external"]] = tibble::tibble(NMRExperiment = nmr_experiment_col)
