@@ -1,7 +1,7 @@
 #' Plot an nmr_dataset_1D
 #' @param x a [nmr_dataset_1D] object
 #' @inheritParams nmr_get_long_df
-#' @param sample_idx numeric vector with the sample indices to include. Use "all" to include all
+#' @param NMRExperiment A character vector with the NMRExperiments to include. Use "all" to include all experiments.
 #' @param quantile_plot If `TRUE` plot the 10\%, 50\%, 90\% percentiles of the spectra as reference.
 #'                      If two numbers between 0 and 1 are given then a custom percentile can be plotted
 #' @param quantile_colors A vector with the colors for each of the quantiles
@@ -9,7 +9,7 @@
 #' @param interactive if `TRUE` return an interactive plotly plot, otherwise return a ggplot one.
 #' @return The plot
 #' @export
-plot.nmr_dataset_1D <- function(x, sample_idx = NULL,
+plot.nmr_dataset_1D <- function(x, NMRExperiment = NULL,
                                 chemshift_range = NULL,
                                 interactive = FALSE,
                                 quantile_plot = NULL,
@@ -19,15 +19,17 @@ plot.nmr_dataset_1D <- function(x, sample_idx = NULL,
     chemshift_range <- range(x$axis)
   }
   
-  if (is.null(sample_idx)) {
+  if (is.null(NMRExperiment)) {
     if (x$num_samples > 20) {
-      sample_idx <- sample(1:x$num_samples, size = 10)
+      NMRExperiment <- sample(nmr_meta_get_column(x, "NMRExperiment"), size = 10)
     } else {
-      sample_idx <- 1:x$num_samples
+      NMRExperiment <- nmr_meta_get_column(x, "NMRExperiment")
     }
-  } else if (any(sample_idx == "all")) {
-    sample_idx <- 1:x$num_samples
+  } else if (identical(NMRExperiment, "all")) {
+    NMRExperiment <- nmr_meta_get_column(x, "NMRExperiment")
   }
+  sample_idx <- which(nmr_meta_get_column(x, "NMRExperiment") %in% NMRExperiment)
+  
   longdf <- nmr_get_long_df(nmr_data = x, sample_idx = sample_idx,
                             chemshift_range = chemshift_range)
   fixed_aes <- list(x = "chemshift", y = "intensity", group = "NMRExperiment")

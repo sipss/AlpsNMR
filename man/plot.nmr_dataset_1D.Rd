@@ -4,14 +4,14 @@
 \alias{plot.nmr_dataset_1D}
 \title{Plot an nmr_dataset_1D}
 \usage{
-\method{plot}{nmr_dataset_1D}(x, sample_idx = NULL,
+\method{plot}{nmr_dataset_1D}(x, NMRExperiment = NULL,
   chemshift_range = NULL, interactive = FALSE, quantile_plot = NULL,
   quantile_colors = NULL, ...)
 }
 \arguments{
 \item{x}{a \link{nmr_dataset_1D} object}
 
-\item{sample_idx}{numeric vector with the sample indices to include. Use "all" to include all}
+\item{NMRExperiment}{A character vector with the NMRExperiments to include. Use "all" to include all experiments.}
 
 \item{chemshift_range}{range of the chemical shifts to be included. Can be of length 3
 to include the resolution in the third element (e.g. \code{c(0.2, 0.8, 0.05)})}

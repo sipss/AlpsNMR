@@ -14,7 +14,7 @@ plot_webgl(nmr_dataset, html_filename, ...)
 \item{...}{Arguments passed on to \code{plot.nmr_dataset_1D}
 \describe{
   \item{x}{a \link{nmr_dataset_1D} object}
-  \item{sample_idx}{numeric vector with the sample indices to include. Use "all" to include all}
+  \item{NMRExperiment}{A character vector with the NMRExperiments to include. Use "all" to include all experiments.}
   \item{quantile_plot}{If \code{TRUE} plot the 10\%, 50\%, 90\% percentiles of the spectra as reference.
 If two numbers between 0 and 1 are given then a custom percentile can be plotted}
   \item{quantile_colors}{A vector with the colors for each of the quantiles}
