@@ -187,10 +187,9 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
   nmr_experiment_col <- sample_meta[["info"]][["info_NMRExperiment"]]
   sample_meta <- purrr::map(sample_meta,
                             function(x) {
-                              NMRExperiment <- NULL # make R CMD check happy
                               x %>%
-                                dplyr::mutate(NMRExperiment = nmr_experiment_col) %>%
-                                dplyr::select(NMRExperiment, dplyr::everything())
+                                dplyr::mutate(.data$NMRExperiment = nmr_experiment_col) %>%
+                                dplyr::select(.data$NMRExperiment, dplyr::everything())
                             })
   sample_meta[["external"]] = tibble::tibble(NMRExperiment = nmr_experiment_col)
   data_fields_full <- list()
@@ -242,8 +241,7 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
     }
     metadata$NMRExperiment <- NMRExperiments
   }
-  NMRExperiment <- NULL # make R CMD check happy
-  metadata <- dplyr::select(metadata, NMRExperiment, dplyr::everything())
+  metadata <- dplyr::select(metadata, .data$NMRExperiment, dplyr::everything())
   metadata_external = tibble::tibble(NMRExperiment = metadata$NMRExperiment)
   
   

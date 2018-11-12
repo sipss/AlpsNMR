@@ -256,6 +256,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
 #' @param peak_det_align_dir Output directory from [pipe_peakdet_align]
 #' @param peak_width_ppm A peak width in ppm
 #'
+#' @importFrom rlang .data
 #' @export
 #'
 pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_width_ppm, output_dir) {
@@ -276,8 +277,7 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   peak_data <- utils::read.csv(file = peak_data_fn)
   NMRExperimentRef <- readLines(NMRExp_ref_fn)
-  NMRExperiment <- NULL # make rcmdcheck happy
-  peak_data_integ <- dplyr::filter(peak_data, NMRExperiment == !!NMRExperimentRef)
+  peak_data_integ <- dplyr::filter(peak_data, .data$NMRExperiment == !!NMRExperimentRef)
   peak_table <- nmr_integrate_peak_positions(samples = nmr_dataset,
                                              peak_pos_ppm = peak_data_integ$ppm,
                                              peak_width_ppm = peak_width_ppm)

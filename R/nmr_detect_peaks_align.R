@@ -81,14 +81,14 @@ peakList_to_dataframe <- function(nmr_dataset, peakList) {
 #' @noRd 
 #' @param peak_data The peak list returned by [peakList_to_dataframe]
 #' @return a peakList
+#' @importFrom rlang .data
 #' @keywords internal
 peak_data_to_peakList <- function(nmr_dataset, peak_data) {
-  sample_idx <- pos <- NULL # make R CMD check happy
   peakList <- rep(list(numeric(0)), nmr_dataset$num_samples)
   sample_idx_peaks <- peak_data %>%
-    dplyr::arrange(sample_idx, pos) %>%
-    dplyr::group_by(sample_idx) %>%
-    dplyr::summarise(peak_pos = list(pos)) %>%
+    dplyr::arrange(.data$sample_idx, .data$pos) %>%
+    dplyr::group_by(.data$sample_idx) %>%
+    dplyr::summarise(peak_pos = list(.data$pos)) %>%
     dplyr::ungroup()
   peakList[sample_idx_peaks$sample_idx] <- sample_idx_peaks$peak_pos
   peakList
