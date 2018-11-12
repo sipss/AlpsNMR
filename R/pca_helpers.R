@@ -97,3 +97,107 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
     ggplot2::scale_x_reverse()
 }
 
+#' Compute PCA residuals and score distance for each sample
+#'
+#' @param nmr_dataset An [nmr_dataset_1D] object
+#' @param pca_model A pca model returned by [nmr_pca_build_model]
+#' @param ncomp Number of components to use. Use `NULL` for 90\% of the variance
+#' @param quantile_critical critical quantile
+#'
+#' @return 
+#' 
+#' A list with:
+#' 
+#'  - outlier_info: A data frame with the NMRExperiment, the Q residuals and T scores
+#'  - ncomp: Number of components used to compute Q and T
+#'  - Tscore_critical, QResidual_critical: Critical values, given a quantile, for both Q and T.
+#'  
+#' @export
+#'
+nmr_pca_outliers <- function(nmr_dataset, pca_model, ncomp = NULL, quantile_critical = 0.975) {
+  validate_nmr_dataset_1D(nmr_dataset)
+
+  if (is.null(ncomp)) {
+    cum_var_percent <- 100*cumsum(pca_model$sdev^2/pca_model$var.tot)
+    ncomp <- which(cum_var_percent > 90)[1]
+  }
+  
+  # T scores:
+  scores <- pca_model$variates$X[,seq_len(ncomp), drop = FALSE]
+  variances <- utils::head(pca_model$sdev^2, ncomp)
+  loadings <- pca_model$loadings$X[, seq_len(ncomp), drop = FALSE]
+  Tscore <- sqrt(apply(scores^2/rep(variances, each = nrow(scores)), 1, sum))
+  
+  # Q residuals
+  Xs <- scale(nmr_dataset$data_1r, center = pca_model$center, scale = pca_model$scale)
+  residuals <- Xs - scores %*% t(loadings)
+  Qres <- sqrt(apply(residuals^2, 1, sum))
+  
+  # compute critical values
+  Tscore_critical <- sqrt(stats::qchisq(quantile_critical, ncomp))
+  QResidual_critical <- (stats::median(Qres^(2/3)) + stats::mad(Qres^(2/3))*stats::qnorm(quantile_critical))^(3/2)
+  
+  outlier_info <- nmr_dataset %>%
+    nmr_meta_get(columns = "NMRExperiment") %>%
+    dplyr::mutate(Tscores = Tscore,
+                  QResiduals = Qres)
+  list(outlier_info = outlier_info,
+       ncomp = ncomp,
+       Tscore_critical = Tscore_critical,
+       QResidual_critical = QResidual_critical)
+}
+
+#' Plot for outlier detection diagnostic
+#'
+#' @param nmr_dataset An [nmr_dataset_1D] object
+#' @param pca_outliers The output from [nmr_pca_outliers()]
+#' @param ... Additional parameters passed on to [ggplot2::aes_string()]
+#'
+#' @return A plot for the outlier detection
+#' @export
+#'
+#' @importFrom rlang .data
+nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
+  outlier_info <- pca_outliers[["outlier_info"]]
+  tscore_crit <- pca_outliers[["Tscore_critical"]]
+  qres_crit <- pca_outliers[["QResidual_critical"]]
+  ncomp <- pca_outliers[["ncomp"]]
+  
+  pca_outliers_with_meta <- dplyr::left_join(
+    nmr_meta_get(nmr_dataset, groups = "external"),
+    outlier_info,
+    by = "NMRExperiment")
+  
+  pca_outliers_with_meta_only_out <- dplyr::filter(
+    pca_outliers_with_meta, 
+    .data$Tscores > tscore_crit | .data$QResiduals > qres_crit)
+  
+  ggplot2::ggplot(pca_outliers_with_meta,
+                  ggplot2::aes_string(x = "Tscores", y = "QResiduals", label = "NMRExperiment")) +
+    ggplot2::geom_point(ggplot2::aes_string(...)) +
+    ggrepel::geom_text_repel(data = pca_outliers_with_meta_only_out) +
+    ggplot2::geom_vline(xintercept = tscore_crit, colour = "red", linetype = "dashed") +
+    ggplot2::geom_hline(yintercept = qres_crit, colour = "red", linetype = "dashed") +
+    ggplot2::ggtitle(
+      glue::glue_data(list(ncomp = ncomp),
+                      "PCA Residuals and Score distance ({ncomp} components)"))
+}
+
+#' Exclude outliers
+#'
+#' @inheritParams nmr_pca_outliers_plot
+#'
+#' @return An [nmr_dataset_1D] without the detected outliers
+#' @export
+#'
+nmr_pca_outliers_filter <- function(nmr_dataset, pca_outliers) {
+  outlier_info <- pca_outliers[["outlier_info"]]
+  tscore_crit <- pca_outliers[["Tscore_critical"]]
+  qres_crit <- pca_outliers[["QResidual_critical"]]
+  
+  nmrexp_to_keep <- outlier_info %>%
+    dplyr::filter(.data$Tscores < tscore_crit & .data$QResiduals < qres_crit) %>%
+    dplyr::pull("NMRExperiment")
+  
+  dplyr::filter(nmr_dataset, .data$NMRExperiment %in% nmrexp_to_keep)
+}

@@ -56,6 +56,7 @@ Imports:
  rmarkdown (>= 1.10),
  speaq (>= 2.3.3),
  htmltools (>= 0.3.6),
+ ggrepel (>= 0.8.0),
  graphics
 Suggests:
  testthat (>= 2.0.0),

@@ -155,6 +155,54 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
 }
 
 
+#' Pipeline: Remove blatant outliers
+#'
+#' @inheritParams pipe_add_metadata
+#'
+#' @return This function saves the result to the output directory
+#' @export
+#'
+pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)  {
+  if (is.null(output_dir)) {
+    stop("An output directory must be specified")
+  }
+  
+  fs::dir_create(output_dir)
+  
+  metadata_fn <- file.path(output_dir, "metadata.xlsx")
+  full_spectra_matrix_fn <- file.path(output_dir, "full_spectra_matrix.csv")
+  nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
+  plot_outlier_html <- file.path(output_dir, "plot-outlier-samples.html")
+  plot_outlier_QT2 <- file.path(output_dir, "plot-Qresiduals_vs_Tscores.png")
+  
+  
+  nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+  pca_not_scaled <- nmr_pca_build_model(nmr_dataset, center = TRUE, scale = FALSE)
+  
+  pca_outliers <- nmr_pca_outliers(nmr_dataset, pca_not_scaled)
+  gplt <- nmr_pca_outliers_plot(nmr_dataset, pca_outliers)
+  
+  nmr_dataset_no_out <- nmr_pca_outliers_filter(nmr_dataset, pca_outliers)
+  nmr_exp_all <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
+  nmr_exp_noout <- nmr_meta_get_column(nmr_dataset_no_out, "NMRExperiment")
+  nmr_exp_out <- setdiff(nmr_exp_all, nmr_exp_noout)
+  
+  nmr_export_data_1r(nmr_dataset_no_out, full_spectra_matrix_fn)
+  nmr_meta_export(nmr_dataset_no_out, metadata_fn, groups = "external")
+  nmr_dataset_save(nmr_dataset_no_out, nmr_dataset_outfile)
+  ggplot2::ggsave(filename = plot_outlier_QT2, plot = gplt)
+  
+  if (length(nmr_exp_out) > 0) {
+    message("The following NMRExperiments have been flagged and excluded as outliers:\n",
+            glue::glue_collapse(nmr_exp_out, sep = ", ", width = 80, last = " and "))
+    plot_webgl(nmr_dataset, NMRExperiments = nmr_exp_out, 
+               quantile_plot = TRUE, html_filename = plot_outlier_html)
+  } else {
+    message("No outlier detected on a first unscaled PCA (further outliers may be detected later)")
+  }
+  
+}
+
 #' Pipeline: Filter samples according to metadata conditions
 #'
 #' @inheritParams pipe_add_metadata

@@ -24,14 +24,13 @@ interpolate1d_ppm_axis <- c(min = 0.2, max = 10, by = 8e-4)
 exclude_regions <-  list(water = c(4.6, 5.0), methanol = c(3.33, 3.39))
 
 ### Fifth node: First Outlier Detection
+# No parameters required :-O
 
-# FIXME: Add Outlier detection to detect blatant outliers
-
-### Fifth node: Filter samples
+### Sixth node: Filter samples
 samples_to_keep_conditions <- 'NMRExperiment != "40"'
 
 
-#### Sixth node: Peak detection and Alignment
+#### Seventh node: Peak detection and Alignment
 # To be determined
 
 
@@ -86,14 +85,21 @@ output_dir_exclude <- file.path(output_dir, "04-exclude-regions")
 pipe_exclude_regions(nmr_dataset_rds, exclude_regions, output_dir_exclude)
 
 
-#### Fifth node: Filter samples ################################################
+#### Fifth node: Outlier detection #############################################
+nmr_dataset_rds <- file.path(output_dir_exclude, "nmr_dataset.rds")
+output_dir_outlier1 <- file.path(output_dir, "05-outlier-detection")
+
+pipe_outlier_detection(nmr_dataset_rds, output_dir_outlier1)
+
+
+#### Sixth node: Filter samples ################################################
 
 # This node is useful to filter by cohort
-nmr_dataset_rds <- file.path(output_dir_exclude, "nmr_dataset.rds")
+nmr_dataset_rds <- file.path(output_dir_outlier1, "nmr_dataset.rds")
 output_dir_filter <- file.path(output_dir, "05-filter-samples")
 pipe_filter_samples(nmr_dataset_rds, samples_to_keep_conditions, output_dir_filter)
 
-#### Sixth node: Peak detection and Alignment ##################################
+#### Seventh node: Peak detection and Alignment ##################################
 
 nmr_dataset_rds <- file.path(output_dir_filter, "nmr_dataset.rds")
 output_dir_alignment <- file.path(output_dir, "06-alignment")
@@ -105,7 +111,7 @@ pipe_peakdet_align(nmr_dataset_rds,
                    output_dir = output_dir_alignment)
 
 
-#### Seventh node: Peak integration ############################################
+#### Eighth node: Peak integration ############################################
 
 nmr_dataset_rds <- file.path(output_dir_alignment, "nmr_dataset.rds")
 output_dir_integration <- file.path(output_dir, "07-peak-integration")
@@ -115,7 +121,7 @@ pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir = output_dir_alignment
                       peak_width_ppm = peak_width_ppm, output_dir_integration)
 
 
-#### Eighth node: PQN Normalization ############################################
+#### Ninth node: PQN Normalization ############################################
 nmr_dataset_rds <- file.path(output_dir_alignment, "nmr_dataset.rds")
 internal_calibrant <- c(6.002, 6.015) # Can be a ppm range or NULL
 output_dir_normalization <- file.path(output_dir, "08-normalization")
