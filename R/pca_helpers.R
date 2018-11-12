@@ -24,14 +24,13 @@ nmr_pca_build_model <- function(nmr_data, ncomp = NULL, center = TRUE, scale = F
 #' @export
 nmr_pca_build_model.nmr_dataset_1D <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
   data_1r <- nmr_data$data_1r
-  rownames(data_1r) <- nmr_meta_get(nmr_data, "NMRExperiment")$NMRExperiment
+  rownames(data_1r) <- nmr_meta_get_column(nmr_data, column = "NMRExperiment")
   pca_model <- mixOmics::pca(X = data_1r, ncomp = ncomp, center = center, scale = scale, ...)
   # These attributes are used by nmr_pca_loadingplot:
   attr(pca_model, "nmr_data_axis") <- nmr_data$axis
   attr(pca_model, "nmr_included") <- seq_along(nmr_data$axis)
   pca_model
 }
-
 
 #' Plotting functions for PCA
 #' 

@@ -136,7 +136,7 @@ format.nmr_dataset_1D <- function(x, ...) {
 nmr_export_data_1r <- function(nmr_dataset, filename) {
   assert_that(is.nmr_dataset_1D(nmr_dataset), msg = "An nmr_dataset_1D should be given")
   data_1r <- nmr_dataset$data_1r
-  rownames(data_1r) <- nmr_meta_get(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
+  rownames(data_1r) <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
   colnames(data_1r) <- nmr_dataset$axis
   utils::write.csv(data_1r, file = filename)
   nmr_dataset

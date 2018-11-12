@@ -63,7 +63,7 @@ nmr_detect_peaks <- function(nmr_dataset, nDivRange = 128, scales = seq(1, 16, 2
 #' @return A data frame with NMRExperiment, ppm and intensity, among other columns
 #' @keywords internal
 peakList_to_dataframe <- function(nmr_dataset, peakList) {
-  NMRExperiment <- nmr_meta_get(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
+  NMRExperiment <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
   purrr::imap_dfr(peakList, function(peak_idx, sample_idx, nmr_dataset, NMRExperiment) {
     num_of_peaks_in_sample <- length(peak_idx)
     spec <- as.numeric(nmr_dataset$data_1r[sample_idx,])
@@ -109,7 +109,7 @@ nmr_align <- function(nmr_dataset, peak_data, NMRExp_ref = NULL, maxShift = 3, a
   if (is.null(NMRExp_ref)) {
     NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
   }
-  NMRExp <- nmr_meta_get(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
+  NMRExp <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
   refInd <- which(NMRExp == NMRExp_ref)
   if (length(refInd) != 1) {
     stop("Wrong NMRExperiment as align_ref? Please check.")
@@ -137,7 +137,7 @@ nmr_align <- function(nmr_dataset, peak_data, NMRExp_ref = NULL, maxShift = 3, a
 nmr_align_find_ref <- function(nmr_dataset, peak_data) {
   peakList <- peak_data_to_peakList(nmr_dataset, peak_data)
   resFindRef <- speaq::findRef(peakList)
-  NMRExperiment <- nmr_meta_get(nmr_dataset, columns = "NMRExperiment")$NMRExperiment
+  NMRExperiment <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
   c(NMRExperiment = NMRExperiment[resFindRef$refInd])
 }
 
