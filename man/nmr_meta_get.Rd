@@ -22,3 +22,9 @@ a data frame with the injection metadata
 \description{
 Get metadata
 }
+\seealso{
+Other metadata functions: \code{\link{nmr_meta_add}},
+  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_meta_get_column}}
+}
+\concept{metadata functions}

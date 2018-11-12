@@ -48,3 +48,9 @@ nmr_dataset <- nmr_meta_add(nmr_dataset, SubjID_Age, by = "SubjectID")
 print(nmr_meta_get(nmr_dataset, groups = "external"))
 
 }
+\seealso{
+Other metadata functions: \code{\link{nmr_meta_export}},
+  \code{\link{nmr_meta_get_column}},
+  \code{\link{nmr_meta_get}}
+}
+\concept{metadata functions}

@@ -1,4 +1,6 @@
 #' Get metadata
+#' 
+#' @family metadata functions
 #' @param samples a [nmr_dataset] object
 #' @param columns Columns to get. By default gets all the columns.
 #' @param groups Groups to get. Groups are predefined of columns. Typically 
@@ -57,12 +59,23 @@ nmr_meta_get <- function(samples, columns = NULL, groups = NULL) {
   return(metadata)
 }
 
+#' Get a single metadata column
+#' 
+#' @family metadata functions
+#' @param samples a [nmr_dataset] object
+#' @param column A column to get
+#' @return A vector with the column
+#' @export
+nmr_meta_get_column <- function(samples, column = "NMRExperiment") {
+  nmr_meta_get(samples, columns = column)[[column]]
+}
 
 #' Add metadata to an nmr_dataset object
 #' 
 #' This is useful to add metadata to datasets that can be later used for
 #' plotting spectra or further analysis (PCA...).
 #' 
+#' @family metadata functions
 #' @param nmr_data an [nmr_dataset] object
 #' @param metadata A data frame with metadata to add
 #' @param by A column name of both the `nmr_dataset$metadata$external` and the metadata
@@ -120,6 +133,7 @@ nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
 
 #' Export Metadata to an Excel file
 #'
+#' @family metadata functions
 #' @param nmr_dataset An nmr_dataset object
 #' @param xlsx_file "The .xlsx excel file"
 #' @param groups A character vector. Use `"external"` for the external metadata or

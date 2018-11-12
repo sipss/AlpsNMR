@@ -21,3 +21,9 @@ The Excel file name
 \description{
 Export Metadata to an Excel file
 }
+\seealso{
+Other metadata functions: \code{\link{nmr_meta_add}},
+  \code{\link{nmr_meta_get_column}},
+  \code{\link{nmr_meta_get}}
+}
+\concept{metadata functions}
