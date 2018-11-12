@@ -63,5 +63,5 @@ Suggests:
  plotly (>= 4.7.1),
  ChemoSpec,
  NIHSrods
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
