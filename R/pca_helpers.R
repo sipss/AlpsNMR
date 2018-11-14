@@ -147,6 +147,90 @@ nmr_pca_outliers <- function(nmr_dataset, pca_model, ncomp = NULL, quantile_crit
        QResidual_critical = QResidual_critical)
 }
 
+
+
+
+
+#' Outlier detection through robust PCA
+#'
+#' @param nmr_dataset An nmr_dataset_1D object
+#' @param ncomp Number of rPCA components to use
+#' 
+#' We have observed that the statistical test used as a threshold for
+#' outlier detection usually flags as outliers too many samples, due possibly
+#' to a lack of gaussianity
+#' 
+#' As a workaround, a heuristic method has been implemented: We know that in the
+#' Q residuals vs T scores plot from [nmr_pca_outliers_plot()] outliers are
+#' on the right or on the top of the plot, and quite separated from non-outlier
+#' samples.
+#' 
+#' To determine the critical value, both for Q and T, we find the biggest gap
+#' between samples in the plot and use as critical value the center of the gap.
+#' 
+#' This approach seems to work well when there are outliers, but it fails when there
+#' isn't any outlier. For that case, the gap would be placed anywhere and that is
+#' not desirable as many samples would be incorrectly flagged. The
+#' second assumption that we use is that no more than 10\% of
+#' the samples may pass our critical value. If more than 10\% of the samples
+#' pass the critical value, then we assume that our heuristics are not reasonable
+#' and we don't set any critical limit.
+#' 
+#'
+#' @return A list similar to [nmr_pca_outliers]
+#' @export
+#'
+nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
+  validate_nmr_dataset_1D(nmr_dataset)
+  
+  Xprep_rob <- scale(nmr_dataset$data_1r,
+                     center = apply(nmr_dataset$data_1r, 2, function(x_col) stats::median(x_col, na.rm = TRUE)),
+                     scale = apply(nmr_dataset$data_1r, 2, function(x_col) stats::mad(x_col, na.rm = TRUE)))
+  
+  pca_model <- pcaPP::PCAgrid(Xprep_rob, k = ncomp, scale = NULL)
+
+  
+  # T scores:
+  scores <- pca_model$scores[,seq_len(ncomp), drop = FALSE]
+  variances <- utils::head(pca_model$sdev^2, ncomp)
+  loadings <- pca_model$loadings[, seq_len(ncomp), drop = FALSE]
+  Tscore <- sqrt(apply(scores^2/rep(variances, each = nrow(scores)), 1, sum))
+  
+  # Q residuals
+  residuals <- Xprep_rob - scores %*% t(loadings)
+  Qres <- sqrt(apply(residuals^2, 1, sum))
+  
+  # compute critical values
+  find_crit_thres <- function(x) {
+    if (length(x) == 0) {
+      return(numeric(0))
+    }
+    xsorted <- sort(x)
+    crit_thresh_ind <- which.max(diff(xsorted))
+    proposed_thresh <- (xsorted[crit_thresh_ind] + xsorted[crit_thresh_ind + 1])/2
+    outliers_detected <- sum(x > proposed_thresh)/length(x)
+    if (outliers_detected > 0.1) {
+      return(Inf)
+    } else {
+      return(proposed_thresh)
+    }
+  }
+  
+  Tscore_critical <-  find_crit_thres(Tscore)
+  QResidual_critical <- find_crit_thres(Qres)
+  
+  outlier_info <- nmr_dataset %>%
+    nmr_meta_get(columns = "NMRExperiment") %>%
+    dplyr::mutate(Tscores = Tscore,
+                  QResiduals = Qres)
+  
+  list(outlier_info = outlier_info,
+       ncomp = ncomp,
+       Tscore_critical = Tscore_critical,
+       QResidual_critical = QResidual_critical)
+}
+
+
 #' Plot for outlier detection diagnostic
 #'
 #' @param nmr_dataset An [nmr_dataset_1D] object

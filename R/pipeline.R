@@ -158,6 +158,8 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
 #' Pipeline: Remove blatant outliers
 #'
 #' @inheritParams pipe_add_metadata
+#' 
+#' Uses [nmr_pca_outliers_robust()]
 #'
 #' @return This function saves the result to the output directory
 #' @export
@@ -177,9 +179,8 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)  {
   
   
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
-  pca_not_scaled <- nmr_pca_build_model(nmr_dataset, center = TRUE, scale = FALSE)
-  
-  pca_outliers <- nmr_pca_outliers(nmr_dataset, pca_not_scaled)
+
+  pca_outliers <- nmr_pca_outliers_robust(nmr_dataset)
   gplt <- nmr_pca_outliers_plot(nmr_dataset, pca_outliers)
   
   nmr_dataset_no_out <- nmr_pca_outliers_filter(nmr_dataset, pca_outliers)
@@ -194,8 +195,8 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)  {
   
   if (length(nmr_exp_out) > 0) {
     message("The following NMRExperiments have been flagged and excluded as outliers:\n",
-            glue::glue_collapse(nmr_exp_out, sep = ", ", width = 80, last = " and "))
-    plot_webgl(nmr_dataset, NMRExperiments = nmr_exp_out, 
+            glue::glue_collapse(nmr_exp_out, sep = ", ", last = " and "))
+    plot_webgl(nmr_dataset, NMRExperiment = nmr_exp_out, 
                quantile_plot = TRUE, html_filename = plot_outlier_html)
   } else {
     message("No outlier detected on a first unscaled PCA (further outliers may be detected later)")
