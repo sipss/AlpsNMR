@@ -321,7 +321,7 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
   
   # Output files:
   metadata_fn <- file.path(output_dir, "metadata.xlsx")
-  peak_table <- file.path(output_dir, "peak_table_no_normalized.csv")
+  peak_table_fn <- file.path(output_dir, "peak_table_no_normalized.csv")
   
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   peak_data <- utils::read.csv(file = peak_data_fn)
@@ -397,7 +397,7 @@ pipe_peak_table_normalization <- function(nmr_dataset_rds, peak_table_no_norm_fn
   peak_table <- utils::read.csv(peak_table_no_norm_fn)
   peak_table_no_nmrexp <- as.matrix(peak_table[, 2:ncol(peak_table), drop = FALSE])
   peak_table_norm <- cbind(peak_table[, 1, drop = FALSE],
-                           norm_pqn(peak_table_no_nmrexp))
+                           norm_pqn(peak_table_no_nmrexp)$spectra)
   
   utils::write.csv(peak_table_norm, peak_table_norm_fn, row.names = FALSE)
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
