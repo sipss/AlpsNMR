@@ -291,7 +291,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   plot_webgl(nmr_dataset, html_filename = plot_html)
-  utils::write.csv(peak_data, peak_data_fn)
+  utils::write.csv(peak_data, peak_data_fn, row.names = FALSE)
   write(NMRExp_ref, NMRExp_ref_fn)
   
   message("Peaks detected and spectra aligned")
@@ -331,7 +331,7 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
                                              peak_width_ppm = peak_width_ppm)
   
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
-  utils::write.csv(peak_table, peak_table)
+  utils::write.csv(peak_table, peak_table_fn, row.names = FALSE)
   message("Peak table integrated")
 }
 
@@ -398,7 +398,7 @@ pipe_peak_table_normalization <- function(nmr_dataset_rds, peak_table_no_norm_fn
   peak_table_norm <- cbind(peak_table[, 1, drop = FALSE],
                            norm_pqn(peak_table_no_nmrexp))
   
-  utils::write.csv(peak_table_norm, peak_table_norm_fn)
+  utils::write.csv(peak_table_norm, peak_table_norm_fn, row.names = FALSE)
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   message("PQN Normalization of the peak table finished")
 }

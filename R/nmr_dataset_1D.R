@@ -138,6 +138,6 @@ nmr_export_data_1r <- function(nmr_dataset, filename) {
   data_1r <- nmr_dataset$data_1r
   rownames(data_1r) <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
   colnames(data_1r) <- nmr_dataset$axis
-  utils::write.csv(data_1r, file = filename)
+  utils::write.csv(data_1r, file = filename, row.names = FALSE)
   nmr_dataset
 }
