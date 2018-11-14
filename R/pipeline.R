@@ -157,9 +157,9 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
 
 #' Pipeline: Remove blatant outliers
 #'
-#' @inheritParams pipe_add_metadata
+#' Uses [nmr_pca_outliers_robust] to perform the detection of outliers
 #' 
-#' Uses [nmr_pca_outliers_robust()]
+#' @inheritParams pipe_add_metadata
 #'
 #' @return This function saves the result to the output directory
 #' @export

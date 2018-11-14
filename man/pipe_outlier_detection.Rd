@@ -15,5 +15,5 @@ pipe_outlier_detection(nmr_dataset_rds, output_dir)
 This function saves the result to the output directory
 }
 \description{
-Pipeline: Remove blatant outliers
+Uses \link{nmr_pca_outliers_robust} to perform the detection of outliers
 }
