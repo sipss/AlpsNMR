@@ -1,7 +1,7 @@
 #' PQN normalization
 #' @noRd
 #' @param spectra A matrix with one spectrum on each row
-#' @return A matrix with one spectrum on each row (normalized)
+#' @return A list with `spectra` (a matrix with one spectrum on each row) and `norm_factor`
 norm_pqn <- function(spectra) {
   num_samples <- nrow(spectra)
   if (num_samples < 10) {
