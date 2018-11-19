@@ -96,13 +96,13 @@ pipe_outlier_detection(nmr_dataset_rds, output_dir_outlier1)
 
 # This node is useful to filter by cohort
 nmr_dataset_rds <- file.path(output_dir_outlier1, "nmr_dataset.rds")
-output_dir_filter <- file.path(output_dir, "05-filter-samples")
+output_dir_filter <- file.path(output_dir, "06-filter-samples")
 pipe_filter_samples(nmr_dataset_rds, samples_to_keep_conditions, output_dir_filter)
 
 #### Seventh node: Peak detection and Alignment ##################################
 
 nmr_dataset_rds <- file.path(output_dir_filter, "nmr_dataset.rds")
-output_dir_alignment <- file.path(output_dir, "06-alignment")
+output_dir_alignment <- file.path(output_dir, "07-alignment")
 
 pipe_peakdet_align(nmr_dataset_rds,
                    nDivRange = 128, scales = seq(1, 16, 2),
@@ -111,26 +111,22 @@ pipe_peakdet_align(nmr_dataset_rds,
                    output_dir = output_dir_alignment)
 
 
-#### Eighth node: Peak integration ############################################
-
-nmr_dataset_rds <- file.path(output_dir_alignment, "nmr_dataset.rds")
-output_dir_integration <- file.path(output_dir, "07-peak-integration")
-
-peak_width_ppm <- 0.0023 # FIXME: Check me.
-pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir = output_dir_alignment,
-                      peak_width_ppm = peak_width_ppm, output_dir_integration)
-
-
-#### Ninth node: PQN Normalization ############################################
+#### Eighth node: PQN Normalization #######################
 nmr_dataset_rds <- file.path(output_dir_alignment, "nmr_dataset.rds")
 internal_calibrant <- c(6.002, 6.015) # Can be a ppm range or NULL
 output_dir_normalization <- file.path(output_dir, "08-normalization")
 
-peak_table_no_norm_fn <- file.path(output_dir_integration, "peak_table_no_normalized.csv")
+pipe_normalization(nmr_dataset_rds, internal_calibrant, output_dir_normalization)
 
-pipe_full_spectra_normalization(nmr_dataset_rds, internal_calibrant, output_dir_normalization)
-pipe_peak_table_normalization(nmr_dataset_rds, peak_table_no_norm_fn, output_dir)
 
+#### Ninth node: Peak integration ############################################
+
+nmr_dataset_rds <- file.path(output_dir_normalization, "nmr_dataset.rds")
+output_dir_integration <- file.path(output_dir, "09-peak-integration")
+
+peak_width_ppm <- 0.0023 # FIXME: Check me.
+pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir = output_dir_normalization,
+                      peak_width_ppm = peak_width_ppm, output_dir_integration)
 
 
 ########################################################################

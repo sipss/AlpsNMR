@@ -321,7 +321,7 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
   
   # Output files:
   metadata_fn <- file.path(output_dir, "metadata.xlsx")
-  peak_table_fn <- file.path(output_dir, "peak_table_no_normalized.csv")
+  peak_table_fn <- file.path(output_dir, "peak_table.csv")
   
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   peak_data <- utils::read.csv(file = peak_data_fn)
@@ -348,7 +348,7 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
 #' @param internal_calibrant A ppm range where the internal calibrant is, or `NULL`.
 #'
 #' @export
-pipe_full_spectra_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, output_dir = NULL) {
+pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, output_dir = NULL) {
   if (is.null(output_dir)) {
     stop("An output directory must be specified")
   }
@@ -372,35 +372,5 @@ pipe_full_spectra_normalization <- function(nmr_dataset_rds, internal_calibrant 
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   plot_webgl(nmr_dataset, html_filename = plot_html)
-  message("Full spectra normalization finished")
+  message("Normalization finished")
 }
-
-#' Pipe: Peak table PQN Normalization
-#'
-#' @inheritParams pipe_add_metadata
-#' @param peak_table_no_norm_fn Filename of the CSV file that results from the peak integration pipeline
-#'
-#' @export
-#'
-pipe_peak_table_normalization <- function(nmr_dataset_rds, peak_table_no_norm_fn, output_dir) {
-  if (is.null(output_dir)) {
-    stop("An output directory must be specified")
-  }
-  
-  fs::dir_create(output_dir)
-  
-  peak_table_norm_fn <- file.path(output_dir, "peak_table_normalized.csv")
-  metadata_fn <- file.path(output_dir, "metadata.xlsx")
-  
-  nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
-  
-  peak_table <- utils::read.csv(peak_table_no_norm_fn)
-  peak_table_no_nmrexp <- as.matrix(peak_table[, 2:ncol(peak_table), drop = FALSE])
-  peak_table_norm <- cbind(peak_table[, 1, drop = FALSE],
-                           norm_pqn(peak_table_no_nmrexp)$spectra)
-  
-  utils::write.csv(peak_table_norm, peak_table_norm_fn, row.names = FALSE)
-  nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
-  message("PQN Normalization of the peak table finished")
-}
-
