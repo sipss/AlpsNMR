@@ -15,6 +15,8 @@
 #'                   output_dir = "/dir/to/save/output")
 #' }
 pipe_load_samples <- function(samples_dir, glob = "*0", output_dir = NULL) {
+  message("Starting pipe_load_samples at ", Sys.time())
+  
   if (is.null(output_dir)) {
     stop("An output directory must be specified")
   }
@@ -26,6 +28,7 @@ pipe_load_samples <- function(samples_dir, glob = "*0", output_dir = NULL) {
   nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
   nmr_meta_export(nmr_dataset, fs::path(output_dir, "nmr_dataset_metadata.xlsx"))
   message(nmr_dataset$num_samples, " samples loaded.")
+  message("Ending pipe_load_samples at ", Sys.time())
 }
 
 
@@ -69,6 +72,8 @@ pipe_load_samples <- function(samples_dir, glob = "*0", output_dir = NULL) {
 #' # Check out: output_dir
 #' 
 pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
+  message("Starting pipe_add_metadata at ", Sys.time())
+
   if (is.null(output_dir)) {
     stop("An output directory must be specified")
   }
@@ -82,6 +87,7 @@ pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
   rmd_file <- system.file("pipeline-rmd", "add-metadata.Rmd", package = "NIHSnmr")
   rmarkdown::render(input = rmd_file, output_dir = output_dir, envir = env)
   message("Add metadata completed")
+  message("Ending pipe_add_metadata at ", Sys.time())
 }
 
 
@@ -94,6 +100,8 @@ pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
 #' @return This function saves the result to the output directory
 #' @export
 pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
+  message("Starting pipe_interpolate_1D at ", Sys.time())
+  
   if (is.null(output_dir)) {
     stop("An output directory must be specified")
   }
@@ -113,7 +121,7 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   plot_webgl(nmr_dataset, html_filename = plot_html)
   
-  message("Interpolation finished")
+  message("Ending pipe_interpolate_1D at ", Sys.time())
 }
 
 
@@ -131,6 +139,8 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
 pipe_exclude_regions <- function(nmr_dataset_rds,
                                  exclude,
                                  output_dir) {
+  message("Starting pipe_exclude_regions at ", Sys.time())
+
   if (is.null(output_dir)) {
     stop("An output directory must be specified")
   }
@@ -151,7 +161,7 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   plot_webgl(nmr_dataset, html_filename = plot_html)
   
-  message("Regions excluded")
+  message("Ending pipe_exclude_regions at ", Sys.time())
 }
 
 
@@ -165,6 +175,7 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
 #' @export
 #'
 pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)  {
+  message("Starting pipe_outlier_detection at ", Sys.time())
   if (is.null(output_dir)) {
     stop("An output directory must be specified")
   }
@@ -201,7 +212,8 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)  {
   } else {
     message("No outlier detected on a first unscaled PCA (further outliers may be detected later)")
   }
-  
+
+  message("Ending pipe_outlier_detection at ", Sys.time())
 }
 
 #' Pipeline: Filter samples according to metadata conditions
@@ -222,6 +234,8 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)  {
 #' @export
 #'
 pipe_filter_samples <- function(nmr_dataset_rds, conditions, output_dir) {
+  message("Starting pipe_filter_samples at ", Sys.time())
+  
   if (is.null(output_dir)) {
     stop("An output directory must be specified")
   }
@@ -244,6 +258,8 @@ pipe_filter_samples <- function(nmr_dataset_rds, conditions, output_dir) {
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   pasted_conditions <- glue::glue_collapse(conditions, sep = ", ", width = 80, last = ", ")
   message("Dataset filtered by: ", pasted_conditions)
+  
+  message("Ending pipe_filter_samples at ", Sys.time())
 }
 
 #' Pipeline: Peak detection and Alignment
@@ -258,6 +274,8 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
                          baselineThresh = 0.01, SNR.Th = -1,
                          maxShift = 3, acceptLostPeak = FALSE,
                          output_dir = NULL) {
+  message("Starting pipe_peakdet_align at ", Sys.time())
+  
   if (is.null(output_dir)) {
     stop("An output directory must be specified")
   }
@@ -295,7 +313,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   utils::write.csv(peak_data, peak_data_fn, row.names = FALSE)
   write(NMRExp_ref, NMRExp_ref_fn)
   
-  message("Peaks detected and spectra aligned")
+  message("Ending pipe_peakdet_align at ", Sys.time())
 }
 
 
@@ -309,6 +327,8 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
 #' @export
 #'
 pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_width_ppm, output_dir) {
+  message("Starting pipe_peak_integration at ", Sys.time())
+  
   if (is.null(output_dir)) {
     stop("An output directory must be specified")
   }
@@ -333,7 +353,7 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
   
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   utils::write.csv(peak_table, peak_table_fn, row.names = FALSE)
-  message("Peak table integrated")
+  message("Ending pipe_peak_integration at ", Sys.time())
 }
 
 
@@ -349,6 +369,8 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
 #'
 #' @export
 pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, output_dir = NULL) {
+  message("Starting pipe_normalization at ", Sys.time())
+  
   if (is.null(output_dir)) {
     stop("An output directory must be specified")
   }
@@ -372,5 +394,5 @@ pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, outpu
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
   plot_webgl(nmr_dataset, html_filename = plot_html)
-  message("Normalization finished")
+  message("Ending pipe_normalization at ", Sys.time())
 }
