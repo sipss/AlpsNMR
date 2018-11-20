@@ -489,8 +489,8 @@ nmr_read_samples_irods <- function(irods_search_results, ...) {
     }
   })
   message("Loading samples...")
-  dataset <- nmr_read_samples(sample_names = sample_names_local,
-                              overwrite_sample_names = full_irods_path, ...)
+  dataset <- nmr_read_samples_internal(sample_names = sample_names_local,
+                                       overwrite_sample_names = full_irods_path, ...)
   message("Appending irods metadata to nmr_dataset")
   colnames(irods_search_results) <- paste0("irods_", colnames(irods_search_results))
   dataset <- nmr_meta_add(

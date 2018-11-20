@@ -35,7 +35,6 @@ NULL
 #' @param pulse_sequence If it is set to a pulse sequence
 #'                       ("NOESY", "JRES", "CPMG"...) it will only load
 #'                       the samples that match that pulse sequence.
-#' @param overwrite_sample_names (Internal Use)
 #' @param ... Arguments passed to [read_bruker_sample()] for data loading
 #' @return a [nmr_dataset] object
 NULL
@@ -43,6 +42,18 @@ NULL
 #' @rdname nmr_read_samples
 #' @export
 nmr_read_samples_dir <- function(samples_dir, pulse_sequence = NULL,
+                                 metadata_only = FALSE,
+                                 ...) {
+  nmr_read_samples_dir_internal(samples_dir = samples_dir,
+                                pulse_sequence = pulse_sequence,
+                                metadata_only = metadata_only,
+                                ...)
+}
+
+#' @noRd
+#' @inheritParams nmr_read_samples_dir
+#' @inheritParams nmr_read_samples_internal
+nmr_read_samples_dir_internal <- function(samples_dir, pulse_sequence = NULL,
                                  metadata_only = FALSE,
                                  overwrite_sample_names = NULL,
                                  ...) {
@@ -52,12 +63,14 @@ nmr_read_samples_dir <- function(samples_dir, pulse_sequence = NULL,
   all_samples <- c(list.dirs(path = samples_dir, full.names = TRUE, recursive = FALSE),
                    list.files(path = samples_dir, full.names = TRUE, pattern = ".*zip$"),
                    list.files(path = samples_dir, full.names = TRUE, pattern = ".*jdx$"))
-
-  dataset <- nmr_read_samples(sample_names = all_samples,
-                              pulse_sequence = pulse_sequence,
-                              metadata_only = metadata_only,
-                              overwrite_sample_names = overwrite_sample_names,
-                              ...)
+  
+  dataset <- nmr_read_samples_internal(
+    sample_names = all_samples,
+    pulse_sequence = pulse_sequence,
+    metadata_only = metadata_only,
+    overwrite_sample_names = overwrite_sample_names,
+    ...
+  )
   return(dataset)
 }
 
@@ -65,8 +78,18 @@ nmr_read_samples_dir <- function(samples_dir, pulse_sequence = NULL,
 #' @rdname nmr_read_samples
 #' @export
 nmr_read_samples <- function(sample_names, pulse_sequence = NULL,
-                             metadata_only = FALSE,
-                             overwrite_sample_names = NULL, ...) {
+                             metadata_only = FALSE, ...) {
+  nmr_read_samples_internal(sample_names = sample_names,
+                            pulse_sequence = pulse_sequence,
+                            metadata_only = metadata_only, ...)
+}
+
+#' @noRd
+#' @inheritParams nmr_read_samples
+#' @inheritParams nmr_read_samples_bruker
+nmr_read_samples_internal <- function(sample_names, pulse_sequence = NULL,
+                                      metadata_only = FALSE,
+                                      overwrite_sample_names = NULL, ...) {
   # If all samples are directories or zips, use the bruker directory format:
   if (all(dir.exists(sample_names) | grepl('\\.zip$', sample_names))) {
     samples <- nmr_read_samples_bruker(sample_names = sample_names,
@@ -84,8 +107,9 @@ nmr_read_samples <- function(sample_names, pulse_sequence = NULL,
   return(samples)
 }
 
-#' @rdname nmr_read_samples
-#' @keywords internal
+#' @param overwrite_sample_names This is only is used internally when downloading a 
+#'  temporary file from irods. In that case we will want to replace the temporary
+#'  directory with the irods path if possible
 #' @noRd
 nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
                                     metadata_only = FALSE,

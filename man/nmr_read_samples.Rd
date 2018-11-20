@@ -6,10 +6,10 @@
 \title{Read NMR samples}
 \usage{
 nmr_read_samples_dir(samples_dir, pulse_sequence = NULL,
-  metadata_only = FALSE, overwrite_sample_names = NULL, ...)
+  metadata_only = FALSE, ...)
 
 nmr_read_samples(sample_names, pulse_sequence = NULL,
-  metadata_only = FALSE, overwrite_sample_names = NULL, ...)
+  metadata_only = FALSE, ...)
 }
 \arguments{
 \item{samples_dir}{A directory that contains multiple samples}
@@ -19,8 +19,6 @@ nmr_read_samples(sample_names, pulse_sequence = NULL,
 the samples that match that pulse sequence.}
 
 \item{metadata_only}{A logical, to load only metadata (default: \code{FALSE})}
-
-\item{overwrite_sample_names}{(Internal Use)}
 
 \item{...}{Arguments passed to \code{\link[=read_bruker_sample]{read_bruker_sample()}} for data loading}
 
