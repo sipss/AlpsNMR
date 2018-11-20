@@ -30,30 +30,30 @@ verify_axisn <- function(axisn, one_sample_axis) {
 
 #' Interpolate a set of 1D NMR Spectra
 #' @param samples An NMR dataset
-#' @param axis1 The desired ppm axis range and optionally the ppm step
+#' @param axis The ppm axis range and optionally the ppm step
 #' @export
-nmr_interpolate_1D <- function(samples, axis1 = c(min = 0.2, max = 10, by = 0.0008)) {
+nmr_interpolate_1D <- function(samples, axis = c(min = 0.2, max = 10, by = 0.0008)) {
   UseMethod("nmr_interpolate_1D")
 }
 
 #' @rdname nmr_interpolate_1D
 #' @export
-nmr_interpolate_1D.nmr_dataset <- function(samples, axis1 = c(min = 0.2, max = 10, by = 0.0008)) {
+nmr_interpolate_1D.nmr_dataset <- function(samples, axis = c(min = 0.2, max = 10, by = 0.0008)) {
   # Check if we can interpolate:
   verify_dimensionality(samples, valid_dimensions = 1)
   
   # 2. Check that we have the interpolation axis
-  axis1 <- verify_axisn(axis1, samples[["axis"]][[1]][[1]])
+  axis <- verify_axisn(axis, samples[["axis"]][[1]][[1]])
   
-  axis1_full <- seq(from = axis1["min"], to = axis1["max"], by = axis1["by"])
+  axis_full <- seq(from = axis["min"], to = axis["max"], by = axis["by"])
   if (show_progress_bar(samples$num_samples > 5)) {
     message("Interpolating data_1r...")
   }
   data_1r <- interpolate_1d(list_of_ppms = purrr::map(samples[["axis"]], 1),
                             list_of_1r = samples[["data_1r"]],
-                            ppm_axis = axis1_full)
+                            ppm_axis = axis_full)
 
-  new_nmr_dataset_1D(ppm_axis = axis1_full,
+  new_nmr_dataset_1D(ppm_axis = axis_full,
                      data_1r = data_1r,
                      metadata = samples$metadata)
 }

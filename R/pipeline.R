@@ -99,7 +99,7 @@ pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
 #'
 #' @return This function saves the result to the output directory
 #' @export
-pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
+pipe_interpolate_1D <- function(nmr_dataset_rds, axis, output_dir) {
   message("Starting pipe_interpolate_1D at ", Sys.time())
   
   if (is.null(output_dir)) {
@@ -114,7 +114,7 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis1, output_dir) {
   nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
   plot_html <- file.path(output_dir, "plot-samples.html")
   
-  nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis1 = axis1)
+  nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = axis)
   
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")

@@ -5,15 +5,15 @@
 \alias{nmr_interpolate_1D.nmr_dataset}
 \title{Interpolate a set of 1D NMR Spectra}
 \usage{
-nmr_interpolate_1D(samples, axis1 = c(min = 0.2, max = 10, by = 8e-04))
+nmr_interpolate_1D(samples, axis = c(min = 0.2, max = 10, by = 8e-04))
 
-\method{nmr_interpolate_1D}{nmr_dataset}(samples, axis1 = c(min = 0.2,
-  max = 10, by = 8e-04))
+\method{nmr_interpolate_1D}{nmr_dataset}(samples, axis = c(min = 0.2, max
+  = 10, by = 8e-04))
 }
 \arguments{
 \item{samples}{An NMR dataset}
 
-\item{axis1}{The desired ppm axis range and optionally the ppm step}
+\item{axis}{The ppm axis range and optionally the ppm step}
 }
 \description{
 Interpolate a set of 1D NMR Spectra
