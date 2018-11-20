@@ -17,9 +17,6 @@
 #' Typically `data_1r` is a matrix with one sample on each row and the chemical 
 #' shifts in the columns.
 #' 
-#' - `processing`: The processing steps performed on the object, such as
-#' interpolation, exclusion or normalization.
-#' 
 #' @name nmr_dataset
 NULL
 
@@ -338,27 +335,9 @@ filter.nmr_dataset_1D <- filter.nmr_dataset
   })
   data_fields <- names(output)[grepl(pattern = "^data_.*", x = names(output))]
 
-  if (!output[["processing"]][["interpolation"]]) {
-    # Without interpolation axis and data field contain a list, with the axis
-    # or the data field for each sample
-    output[["axis"]] <- output[["axis"]][i]
-    for (data_field in data_fields) {
-      output[[data_field]] <- output[[data_field]][i]
-    }
-  } else {
-    # With interpolation the axis is shared among all samples
-    # and the data_field is a matrix, with the first dimension of the matrix
-    # being the sample index.
-    for (data_field in data_fields) {
-      dimensionality <- length(dim(output[[data_field]]))
-      if (dimensionality == 2) {
-        output[[data_field]] <- output[[data_field]][i, , drop = FALSE]
-      } else if (dimensionality == 3) {
-        output[[data_field]] <- output[[data_field]][i, , drop = FALSE]
-      } else {
-        stop("[.nmr_dataset not implemented for dimensionality", dimensionality, ".")
-      }
-    }
+  output[["axis"]] <- output[["axis"]][i]
+  for (data_field in data_fields) {
+    output[[data_field]] <- output[[data_field]][i]
   }
   output$num_samples <- nrow(output$metadata[[1]])
   validate_nmr_dataset(output)
@@ -405,12 +384,7 @@ new_nmr_dataset <- function(metadata, data_fields, axis) {
   samples <- append(x = samples, values = data_fields)
   samples[["axis"]] <- axis
   samples[["num_samples"]] <- nrow(metadata[[1]])
-  samples[["processing"]] <- list(data_loaded = !is.null(axis),
-                                  interpolation = FALSE,
-                                  exclusion = FALSE,
-                                  normalization = FALSE)
   class(samples) <- c("nmr_dataset")
   validate_nmr_dataset(samples)
   samples
 }
-
