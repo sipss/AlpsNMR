@@ -48,6 +48,9 @@ nmr_integrate_regions <- function(samples, regions, fix_baseline = TRUE) {
 
 rough_baseline <- function(x) {
   n <- length(x)
+  if (n == 0) {
+    return(numeric(0L))
+  }
   basel <- signal::interp1(x = c(1, n),
                            y = x[c(1, n)],
                            xi = seq_len(n))
@@ -63,6 +66,9 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
   }
   areas <- purrr::map_dfc(regions, function(region) {
     to_sum <- samples$axis >= min(region) & samples$axis < max(region)
+    if (all(to_sum == FALSE)) {
+      return(NA*numeric(nrow(samples$data_1r)))
+    }
     region_to_sum <- samples$data_1r[, to_sum]
     area <- rowSums(region_to_sum)
     if (fix_baseline) {
