@@ -18,7 +18,6 @@ For 1D spectra it is a list with a numeric vector
 the sample, the rest of the indices match the length of each \code{axis}.
 Typically \code{data_1r} is a matrix with one sample on each row and the chemical
 shifts in the columns.
-\item \code{processing}: The processing steps performed on the object, such as
-interpolation, exclusion or normalization.
+\item \code{num_samples}: The number of samples in the dataset
 }
 }

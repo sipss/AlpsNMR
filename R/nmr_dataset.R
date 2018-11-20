@@ -17,6 +17,8 @@
 #' Typically `data_1r` is a matrix with one sample on each row and the chemical 
 #' shifts in the columns.
 #' 
+#' - `num_samples`: The number of samples in the dataset
+#' 
 #' @name nmr_dataset
 NULL
 
