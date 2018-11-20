@@ -367,10 +367,10 @@ read_pdata_title_file <- function(sample_path, pdata_path = "pdata/1") {
 #' Read processed Bruker NMR data
 #'
 #' @param pdata_file File name of the binary NMR data to load. Usually "1r".
-#'                   If it is null it is autodetected and all files are loaded.
+#'                   If `NULL`, it is autodetected based on the dimension
 #' @param sample_path A character path of the sample directory
 #' @param pdata_path Path from `sample_path` to the preprocessed data
-#' @param all_components If `FALSE` load only the real component. Otherwise load all of them
+#' @param all_components If `FALSE` load only the real component. Otherwise load the real and imaginary components
 #' @param read_pdata_title If `TRUE` also reads metadata from pdata title file.
 #' @return an NMR sample
 #' @keywords internal
