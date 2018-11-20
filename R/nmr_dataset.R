@@ -57,6 +57,7 @@ nmr_read_samples_dir_internal <- function(samples_dir, pulse_sequence = NULL,
                                  metadata_only = FALSE,
                                  overwrite_sample_names = NULL,
                                  ...) {
+  samples_dir <- as.character(samples_dir)
   if (!dir.exists(samples_dir)) {
     stop("Invalid directory: ", samples_dir)
   }
@@ -90,6 +91,7 @@ nmr_read_samples <- function(sample_names, pulse_sequence = NULL,
 nmr_read_samples_internal <- function(sample_names, pulse_sequence = NULL,
                                       metadata_only = FALSE,
                                       overwrite_sample_names = NULL, ...) {
+  sample_names <- as.character(sample_names)
   # If all samples are directories or zips, use the bruker directory format:
   if (all(dir.exists(sample_names) | grepl('\\.zip$', sample_names))) {
     samples <- nmr_read_samples_bruker(sample_names = sample_names,
