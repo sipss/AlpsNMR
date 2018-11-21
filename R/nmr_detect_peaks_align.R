@@ -16,7 +16,7 @@ nmr_detect_peaks <- function(nmr_dataset, nDivRange_ppm = 0.1,
   validate_nmr_dataset_1D(nmr_dataset)
   
   # Convert ppm to number of data points
-  ppm_resolution <- median(diff(nmr_dataset$axis))
+  ppm_resolution <- stats::median(diff(nmr_dataset$axis))
   nDivRange <- round(nDivRange_ppm/ppm_resolution)
   
   # A dependency of the speaq package uses partial matching of arguments.
