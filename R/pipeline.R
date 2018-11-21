@@ -270,8 +270,10 @@ pipe_filter_samples <- function(nmr_dataset_rds, conditions, output_dir) {
 #' @export
 #'
 pipe_peakdet_align <- function(nmr_dataset_rds,
-                         nDivRange = 128, scales = seq(1, 16, 2),
-                         baselineThresh = 0.01, SNR.Th = -1,
+                         nDivRange_ppm = 0.1,
+                         scales = seq(1, 16, 2),
+                         baselineThresh = 0.01,
+                         SNR.Th = -1,
                          maxShift = 3, acceptLostPeak = FALSE,
                          output_dir = NULL) {
   message("Starting pipe_peakdet_align at ", Sys.time())
@@ -292,7 +294,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   message("Detecting peaks...")
   peak_data <- nmr_detect_peaks(nmr_dataset,
-                                nDivRange = nDivRange,
+                                nDivRange_ppm = nDivRange_ppm,
                                 scales = scales,
                                 baselineThresh = baselineThresh,
                                 SNR.Th = SNR.Th)

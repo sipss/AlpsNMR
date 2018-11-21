@@ -4,14 +4,14 @@
 \alias{pipe_peakdet_align}
 \title{Pipeline: Peak detection and Alignment}
 \usage{
-pipe_peakdet_align(nmr_dataset_rds, nDivRange = 128, scales = seq(1,
-  16, 2), baselineThresh = 0.01, SNR.Th = -1, maxShift = 3,
-  acceptLostPeak = FALSE, output_dir = NULL)
+pipe_peakdet_align(nmr_dataset_rds, nDivRange_ppm = 0.1,
+  scales = seq(1, 16, 2), baselineThresh = 0.01, SNR.Th = -1,
+  maxShift = 3, acceptLostPeak = FALSE, output_dir = NULL)
 }
 \arguments{
 \item{nmr_dataset_rds}{The nmr_dataset.rds file name coming from previous nodes}
 
-\item{nDivRange}{The size of a single small segment after division of spectra}
+\item{nDivRange_ppm}{Segment size, in ppms, to divide the spectra and search for peaks.}
 
 \item{scales}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.}
 

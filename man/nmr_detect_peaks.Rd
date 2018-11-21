@@ -2,15 +2,15 @@
 % Please edit documentation in R/nmr_detect_peaks_align.R
 \name{nmr_detect_peaks}
 \alias{nmr_detect_peaks}
-\title{Peak detetion for NMR}
+\title{Peak detection for NMR}
 \usage{
-nmr_detect_peaks(nmr_dataset, nDivRange = 128, scales = seq(1, 16, 2),
-  baselineThresh = 0.01, SNR.Th = -1)
+nmr_detect_peaks(nmr_dataset, nDivRange_ppm = 0.1, scales = seq(1, 16,
+  2), baselineThresh = 0.01, SNR.Th = -1)
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D}.}
 
-\item{nDivRange}{The size of a single small segment after division of spectra}
+\item{nDivRange_ppm}{Segment size, in ppms, to divide the spectra and search for peaks.}
 
 \item{scales}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.}
 
@@ -22,5 +22,7 @@ nmr_detect_peaks(nmr_dataset, nDivRange = 128, scales = seq(1, 16, 2),
 A data frame with the NMRExperiment, the sample index, the position in ppm and index and the peak intensity
 }
 \description{
-Peak detetion for NMR
+Detects peaks on an \link{nmr_dataset_1D} object, using \link[speaq:detectSpecPeaks]{speaq::detectSpecPeaks}.
+\code{detectSpecPeaks} divides the whole spectra into smaller segments and uses
+\link[MassSpecWavelet:peakDetectionCWT]{MassSpecWavelet::peakDetectionCWT} for peak detection.
 }

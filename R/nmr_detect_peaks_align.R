@@ -1,14 +1,25 @@
-#' Peak detetion for NMR
+#' Peak detection for NMR
 #'
+#' Detects peaks on an [nmr_dataset_1D] object, using [speaq::detectSpecPeaks].
+#' `detectSpecPeaks` divides the whole spectra into smaller segments and uses
+#'  [MassSpecWavelet::peakDetectionCWT] for peak detection.
+#' 
 #' @param nmr_dataset An [nmr_dataset_1D].
+#' @param nDivRange_ppm Segment size, in ppms, to divide the spectra and search for peaks.
 #' @inheritParams speaq::detectSpecPeaks
 #' @return A data frame with the NMRExperiment, the sample index, the position in ppm and index and the peak intensity
 #' @export
 #'
-nmr_detect_peaks <- function(nmr_dataset, nDivRange = 128, scales = seq(1, 16, 2),
+nmr_detect_peaks <- function(nmr_dataset, nDivRange_ppm = 0.1,
+                             scales = seq(1, 16, 2),
                              baselineThresh = 0.01, SNR.Th = -1) {
   validate_nmr_dataset_1D(nmr_dataset)
-  # The speaq package uses partial matching of arguments.
+  
+  # Convert ppm to number of data points
+  ppm_resolution <- median(diff(nmr_dataset$axis))
+  nDivRange <- round(nDivRange_ppm/ppm_resolution)
+  
+  # A dependency of the speaq package uses partial matching of arguments.
   #
   # ## What is partial argument matching?
   # partial matching is an R feature that allows to call functions without
@@ -28,21 +39,28 @@ nmr_detect_peaks <- function(nmr_dataset, nDivRange = 128, scales = seq(1, 16, 2
   # ## Why am I reading this?
   #
   # If you enable warnPartialMatchArgs, you will get several warnings when
-  # calling speaq::detectSpecPeaks because speaq v.2.3.3 uses partial argument
-  # matching. :-(
+  # calling speaq::detectSpecPeaks() because MassSpecWavelet::cwt() (a dependency)
+  # uses partial argument matching by mistake on a seq() function call.
+  # Wrong:
+  #   MassSpecWavelet/R/cwt.R:   psi_xval <- seq(-8, 8, length = 1024)
+  # Right:
+  #   MassSpecWavelet/R/cwt.R:   psi_xval <- seq(-8, 8, length.out = 1024)
   #
-  # As we don't control the speaq code, we disable warnPartialMatchArgs
-  # in this function if you had it enabled and we restore it when this function finishes
+  # As we don't control the MassSpecWavelet code, we disable warnPartialMatchArgs
+  # in this function if you had it enabled, and we restore it when this function finishes
   # 
   warnPartialMatchArgs <- getOption("warnPartialMatchArgs")
   if (isTRUE(warnPartialMatchArgs)) {
     options(warnPartialMatchArgs = FALSE)
     on.exit({options(warnPartialMatchArgs = warnPartialMatchArgs)})
   }
-  # Also speaq::detectSpecPeaks can print a lot of messages to stdout, even
+
+  # Also speaq::detectSpecPeaks v.2.3.3 can print a lot of messages to stdout, even
   # when verbose = FALSE. This can lead to problems, especially with large
   # datasets in Rmd documents, so we wrap the detectSpecPeaks with capture.output
   # to prevent the output of the function to leak.
+  # This has been reported and fixed on speaq v2.4
+  # (TODO: Remove capture.output and this comment once speaq 2.4 is on CRAN and compiled)
   utils::capture.output({
     peakList <- speaq::detectSpecPeaks(
       nmr_dataset$data_1r,
