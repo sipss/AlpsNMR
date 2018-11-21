@@ -1,13 +1,13 @@
 
 #' Return the full spectra matrix
 #'
-#' @param dataset 
-#' @param ... 
+#' @param nmr_dataset The NMR object to get the raw data from
+#' @param ... Unused and left for future compatibility
 #'
 #' @return a matrix
 #' @export
 #'
-nmr_data <- function(dataset, ...) {
+nmr_data <- function(nmr_dataset, ...) {
   UseMethod("nmr_data")
 }
 

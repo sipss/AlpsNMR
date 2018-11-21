@@ -4,12 +4,12 @@
 \alias{nmr_data}
 \title{Return the full spectra matrix}
 \usage{
-nmr_data(dataset, ...)
+nmr_data(nmr_dataset, ...)
 }
 \arguments{
-\item{dataset}{}
+\item{nmr_dataset}{The NMR object to get the raw data from}
 
-\item{...}{}
+\item{...}{Unused and left for future compatibility}
 }
 \value{
 a matrix
