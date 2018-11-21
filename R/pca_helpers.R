@@ -187,6 +187,10 @@ nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
                      center = apply(nmr_dataset$data_1r, 2, function(x_col) stats::median(x_col, na.rm = TRUE)),
                      scale = apply(nmr_dataset$data_1r, 2, function(x_col) stats::mad(x_col, na.rm = TRUE)))
   
+  if (missing(ncomp) && nmr_dataset$num_samples <= ncomp) {
+    ncomp <- nmr_dataset$num_samples - 1
+  }
+  
   pca_model <- pcaPP::PCAgrid(Xprep_rob, k = ncomp, scale = NULL)
 
   
