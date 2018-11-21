@@ -287,6 +287,8 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   metadata_fn <- file.path(output_dir, "metadata.xlsx")
   raw_data_matrix_fn <- file.path(output_dir, "raw_data.csv")
   nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
+  plot_peak_detection_html <- file.path(output_dir, "peak-detection-diagnostic.html")
+  
   plot_html <- file.path(output_dir, "plot-samples.html")
   peak_data_fn <- file.path(output_dir, "peak_data.csv")
   NMRExp_ref_fn <- file.path(output_dir, "NMRExperiment_align_ref.txt")
@@ -307,7 +309,15 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
                            acceptLostPeak = acceptLostPeak)
   
   message("Saving alignment results...")
-  # FIXME: Prepare a plot
+
+  
+  gplt <- plot(nmr_dataset, NMRExperiment = NMRExp_ref) +
+    ggplot2::geom_vline(data = dplyr::filter(peak_data, NMRExperiment == !!NMRExp_ref),
+                        ggplot2::aes(xintercept = ppm), color = "black")
+  plotly::toWebGL(gplt) %>%
+    htmltools::as.tags(standalone = TRUE) %>%
+    htmltools::save_html(file = plot_peak_detection_html)
+  
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
