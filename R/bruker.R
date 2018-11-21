@@ -480,8 +480,6 @@ read_bruker_pdata <- function(sample_path,
 
   # Reorder submatrices (se XWinNMR-manual, chapter 17.5 (95.3))
   if (data_shapes$dimension == 2) {
-    # TODO: Generalize this for dimensions > 2
-
     SI1 = data_shapes$shape[1]
     #SI2 = data_shapes$shape[2]
     #XDIM1 = data_shapes$submatrix_shape[1]
