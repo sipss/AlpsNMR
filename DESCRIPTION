@@ -60,10 +60,12 @@ Imports:
  pcaPP (>= 1.9-73),
  graphics
 Suggests:
- testthat (>= 2.0.0),
- shiny (>= 1.0.5),
- plotly (>= 4.7.1),
- ChemoSpec,
- NIHSrods
+    testthat (>= 2.0.0),
+    shiny (>= 1.0.5),
+    plotly (>= 4.7.1),
+    ChemoSpec,
+    NIHSrods,
+    knitr
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr

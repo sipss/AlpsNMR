@@ -1,0 +1,223 @@
+---
+title: "Introduction to NIHSnmr"
+author: "Sergio Oller, Institute for Bioengineering of Catalonia"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Introduction to NIHSnmr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  fig.width = 7,
+  fig.height = 5,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The `NIHSnmr` package was written with two purposes in mind:
+
+- to help **data analysts and NMR scientists** to work with NMR samples.
+- to help **IT pipeline builders** implement automated methods for preprocessing.
+
+Functions from this package written for data analysts and NMR scientists are prefixed with
+`nmr_`, while higher level functions written for IT pipeline builders are prefixed
+with `pipe_`.
+
+This vignette is written for the first group. It assumes some prior basic knowledge of
+NMR and data analysis, as well as some basic R programming. In case you are interested in
+building pipelines with this package, better check [Building Pipelines with NIHSnmr](building-pipelines-with-nihsnmr.html).
+
+```{r}
+library(NIHSnmr)
+```
+
+
+# Data: The `MeOH_serum_extraction` dataset
+
+To explore the basics of the NIHSnmr package, we have included four NMR samples
+in Bruker format bundled with the package. The samples are (c) Nestlé Institute of Health Sciences
+and should not be redistributed without NIHS written consent, in case this package was ever published.
+
+If you have installed this package, you can obtain the directory where the four samples
+are with the command
+
+```{r}
+MeOH_serum_extraction_dir <- system.file("dataset-demo", package = "NIHSnmr")
+print(MeOH_serum_extraction_dir)
+```
+
+The demo directory includes four samples (zipped) and a dummy Excel metadata file.
+
+```{r}
+fs::dir_ls(MeOH_serum_extraction_dir)
+```
+
+Given the name of the dataset, one may guess that the dataset was used to
+check the Methanol extraction in serum samples. The dummy metadata consists of
+dummy information, just for the sake of showing how this package can integrate
+external metadata. The excel file consists of two tidy tables, in two sheets.
+
+```{r}
+MeOH_serum_extraction_xlsx <- file.path(MeOH_serum_extraction_dir, "dummy_metadata.xlsx")
+print(readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 1))
+print(readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 2))
+
+```
+
+
+# Loading samples
+
+The function to read samples is called `nmr_read_samples`. It expects a character
+vector with the samples to load that can be paths to directories of Bruker format
+samples or paths to JDX files.
+
+Additionally, this function can filter by pulse sequences (e.g. load only NOESY samples) or loading only metadata.
+
+```{r load-samples}
+zip_files <- fs::dir_ls(MeOH_serum_extraction_dir, glob = "*.zip")
+print(zip_files)
+dataset <- nmr_read_samples(sample_names = zip_files)
+print(dataset)
+```
+
+# Adding metadata
+
+Adding metadata is easy once we have the information in a dataset. The `nmr_meta_add`
+allows us to append a data frame, using a common column for merging.
+
+In this example we add the `SubjectID` and the `Age` columns. First we add the
+`SubjectID` using the `NMRExperiment` as key and then we add the `Age` column
+using the just added `SubjectID` column as key for merging.
+
+```{r adding-metadata}
+exp_subj_id <- readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 1)
+subj_id_age <- readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 2)
+
+dataset <- dataset %>%
+  nmr_meta_add(metadata = exp_subj_id, by = "NMRExperiment") %>%
+  nmr_meta_add(metadata = subj_id_age, by = "SubjectID")
+```
+
+We can retreive the table with the added metadata with:
+
+```{r}
+nmr_meta_get(dataset, groups = "external")
+```
+
+The dataset has several fields. You can check their definition with `?nmr_dataset`.
+
+```{r}
+print(names(dataset))
+```
+
+# Interpolation
+
+1D NMR samples can be interpolated together, in order arrange all the spectra in
+a matrix, with one row per sample. The main parameters we would need is the range
+of ppm values that we want to interpolate and the resolution.
+
+We can see the ppm resolution by looking at the ppm axis of one sample:
+
+```{r}
+ppm_res <- median(abs(diff(dataset$axis[[1]][[1]])))
+message("The ppm resolution is: ", format(ppm_res, digits = 2), " ppm")
+```
+
+We can interpolate the dataset, obtaining an `nmr_dataset_1D` object:
+
+```{r}
+dataset <- nmr_interpolate_1D(dataset, axis = c(min = 0.2, max = 10, by = 2.3E-4))
+```
+
+This operation changes the class of the object, as now the data is on a matrix. The
+dataset is now of class `nmr_dataset_1D`. The `axis` element is now a numeric vector
+and the `data_1r` element is a matrix.
+
+# Plotting samples
+
+The `NIHSnmr` package offers the possibility to plot `nmr_dataset_1D` objects.
+Plotting many spectra with so many points is quite expensive so it is possible
+to include only some regions of the spectra or plot only some samples.
+
+Use `?plot.nmr_dataset_1D` to check the parameters, among them: 
+
+- `NMRExperiment`: A character vector with the NMR experiments to plot
+- `chemshift_range`: A ppm range to plot only a small region, or to reduce the resolution
+- `interactive`: To make the plot interactive
+- `...`: Can be used to pass additional parameters such as `color = "SubjectID"` that are
+  passed as aesthetics to ggplot.
+
+```{r}
+plot(dataset, NMRExperiment = c("10", "30"), chemshift_range = c(2.2, 2.9))
+```
+
+
+# Exclude regions
+
+Some regions can easily be excluded from the spectra with `nmr_exclude_region`.
+Note that the regions are fully removed and not zeroed, as using zeros complicates
+a lot the implementation^[e.g. it can inadvertedly distort the PQN normalization results]
+and has little advantages.
+
+```{r}
+regions_to_exclude <- list(water = c(4.6, 5), methanol = c(3.33, 3.39))
+dataset <- nmr_exclude_region(dataset, exclude = regions_to_exclude)
+plot(dataset, chemshift_range = c(4.2, 5.5))
+```
+
+# Filter samples
+
+Sometimes we just want to analyze a subset of the data, e.g. just a cohort. We
+can filter some samples according to their metadata as follows:
+
+```{r}
+samples_10_20 <- filter(dataset, SubjectID == "Ana")
+nmr_meta_get(samples_10_20, groups = "external")
+```
+
+# Robust PCA for outlier detection
+
+The NIHSnmr package includes some robust PCA analysis for outlier detection.
+With such a small demo dataset, it is not practical to use, but check out the
+documentation of `nmr_pca_outliers_*` functions.
+
+```{r}
+pca_outliers_rob <- nmr_pca_outliers_robust(dataset, ncomp = 3)
+nmr_pca_outliers_plot(dataset, pca_outliers_rob)
+```
+
+# Peak detection
+
+FIXME: Finish me
+
+
+```{r}
+
+```
+
+# Spectra alignment
+
+# Normalization
+
+# Peak integration
+
+
+# Free experimentation
+
+You can extract the raw matrix and manipulate it at will. As long as you don't
+permute the rows, you can always replace the raw matrix of the `nmr_dataset_1D`
+object:
+
+```{r}
+full_spectra_matrix <- nmr_data(dataset)
+print(full_spectra_matrix[1:4, 1:6])
+dataset$data_1r <- full_spectra_matrix # Rewrite the matrix
+```
+
+
