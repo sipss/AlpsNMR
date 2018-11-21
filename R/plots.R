@@ -8,6 +8,7 @@
 #' @param ... arguments passed to [ggplot2::aes_string].
 #' @param interactive if `TRUE` return an interactive plotly plot, otherwise return a ggplot one.
 #' @return The plot
+#' @importFrom graphics plot
 #' @export
 plot.nmr_dataset_1D <- function(x, NMRExperiment = NULL,
                                 chemshift_range = NULL,
@@ -165,7 +166,7 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #' @export
 #'
 plot_webgl <- function(nmr_dataset, html_filename, ...) {
-  graphics::plot(nmr_dataset, ...) %>% 
+  plot(nmr_dataset, ...) %>% 
     plotly::toWebGL() %>%
     htmltools::as.tags(standalone = TRUE) %>%
     htmltools::save_html(file = html_filename)
