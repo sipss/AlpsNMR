@@ -196,7 +196,11 @@ nmr_pca_outliers_plot(dataset, pca_outliers_rob)
 
 
 ```{r}
-
+peak_table <- nmr_detect_peaks(dataset,
+                               nDivRange_ppm = 0.1,
+                               scales = seq(1, 16, 2),
+                               baselineThresh = 0, SNR.Th = 3)
+nmr_detect_peaks_plot(dataset, peak_table, NMRExperiment = "10", chemshift_range = c(3.5,3.8))
 ```
 
 # Spectra alignment

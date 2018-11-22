@@ -4,6 +4,7 @@
 #' `detectSpecPeaks` divides the whole spectra into smaller segments and uses
 #'  [MassSpecWavelet::peakDetectionCWT] for peak detection.
 #' 
+#' @family peak detection functions
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @param nDivRange_ppm Segment size, in ppms, to divide the spectra and search for peaks.
 #' @inheritParams speaq::detectSpecPeaks
@@ -12,7 +13,7 @@
 #'
 nmr_detect_peaks <- function(nmr_dataset, nDivRange_ppm = 0.1,
                              scales = seq(1, 16, 2),
-                             baselineThresh = 0.01, SNR.Th = -1) {
+                             baselineThresh = 0.00, SNR.Th = 3) {
   validate_nmr_dataset_1D(nmr_dataset)
   
   # Convert ppm to number of data points
@@ -72,6 +73,20 @@ nmr_detect_peaks <- function(nmr_dataset, nDivRange_ppm = 0.1,
     )})
   
   peakList_to_dataframe(nmr_dataset, peakList)
+}
+
+#' Plot peak detection results
+#' @family peak detection functions
+#' @param NMRExperiment a single NMR experiment to plot
+#' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
+#' @export
+nmr_detect_peaks_plot <- function(nmr_dataset, peak_data, NMRExperiment, ...) {
+  if (!rlang::is_scalar_character(NMRExperiment)) {
+    stop("NMRExperiment should be a string")
+  }
+  plot(nmr_dataset, NMRExperiment = NMRExperiment, ..., interactive = FALSE) +
+    ggplot2::geom_vline(data = dplyr::filter(peak_data, .data$NMRExperiment == !!NMRExperiment),
+                        ggplot2::aes_string(xintercept = "ppm"), color = "black")
 }
 
 #' Convert a speaq::detectSpecPeaks peak list to an interpretable data frame

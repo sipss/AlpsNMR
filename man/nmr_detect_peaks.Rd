@@ -5,7 +5,7 @@
 \title{Peak detection for NMR}
 \usage{
 nmr_detect_peaks(nmr_dataset, nDivRange_ppm = 0.1, scales = seq(1, 16,
-  2), baselineThresh = 0.01, SNR.Th = -1)
+  2), baselineThresh = 0, SNR.Th = 3)
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D}.}
@@ -26,3 +26,7 @@ Detects peaks on an \link{nmr_dataset_1D} object, using \link[speaq:detectSpecPe
 \code{detectSpecPeaks} divides the whole spectra into smaller segments and uses
 \link[MassSpecWavelet:peakDetectionCWT]{MassSpecWavelet::peakDetectionCWT} for peak detection.
 }
+\seealso{
+Other peak detection functions: \code{\link{nmr_detect_peaks_plot}}
+}
+\concept{peak detection functions}

@@ -311,9 +311,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   message("Saving alignment results...")
 
   
-  gplt <- plot(nmr_dataset, NMRExperiment = NMRExp_ref) +
-    ggplot2::geom_vline(data = dplyr::filter(peak_data, .data$NMRExperiment == !!NMRExp_ref),
-                        ggplot2::aes_string(xintercept = "ppm"), color = "black")
+  gplt <- nmr_detect_peaks_plot(nmr_dataset, peak_data, NMRExperiment = NMRExp_ref)
   plotly::toWebGL(gplt) %>%
     htmltools::as.tags(standalone = TRUE) %>%
     htmltools::save_html(html = plot_peak_detection_html)
