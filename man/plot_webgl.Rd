@@ -29,3 +29,8 @@ the html filename created
 \description{
 Uses WebGL for performance
 }
+\seealso{
+Other plotting nmr datasets: \code{\link{plot.nmr_dataset_1D}},
+  \code{\link{plot_interactive}}
+}
+\concept{plotting nmr datasets}

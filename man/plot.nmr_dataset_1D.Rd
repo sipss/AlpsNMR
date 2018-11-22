@@ -31,3 +31,8 @@ The plot
 \description{
 Plot an nmr_dataset_1D
 }
+\seealso{
+Other plotting nmr datasets: \code{\link{plot_interactive}},
+  \code{\link{plot_webgl}}
+}
+\concept{plotting nmr datasets}
