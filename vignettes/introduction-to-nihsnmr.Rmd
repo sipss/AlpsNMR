@@ -165,6 +165,24 @@ Use `?plot.nmr_dataset_1D` to check the parameters, among them:
 plot(dataset, NMRExperiment = c("10", "30"), chemshift_range = c(2.2, 2.9))
 ```
 
+## Creating interactive plots
+
+The option `interactive = TRUE` described above has some performance limitations.
+As high performance workaround, you can make many plots interactive with the
+function `plot_interactive`.
+
+This function will use WebGL technologies to create a webpage that, once opened,
+allows you to interact with the plot.
+
+Due to technical limitations, these plots need to be opened manually and can't
+be embedded in RMarkdown documents. Additionally, some old web browsers may
+not be able to display these interactive plots correctly.
+
+```
+plt <- plot(dataset, NMRExperiment = c("10", "30"), chemshift_range = c(2.2, 2.9))
+plot_interactive(plt, "plot_region.html")
+```
+
 
 # Exclude regions
 
