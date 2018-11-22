@@ -175,3 +175,32 @@ regions_from_peak_table <- function(peak_pos_ppm, peak_width_ppm) {
                c(ppm - peak_width/2, ppm + peak_width/2)
              })
 }
+
+
+#' Get the ppm resolution of the dataset
+#'
+#' @param nmr_dataset 
+#'
+#' @return A number (the ppm resolution, measured in ppms)
+#' @export
+nmr_ppm_resolution <- function(nmr_dataset) {
+  UseMethod("nmr_ppm_resolution")
+}
+
+#' @rdname nmr_ppm_resolution
+#' @export
+nmr_ppm_resolution.nmr_dataset <- function(nmr_dataset) {
+  # For each sample:
+  purrr::map(dataset$axis, function(axis_sample) {
+    # For each dimension of each sample:
+    purrr::map_dbl(axis_sample, function(axis_dimension) {
+      stats::median(abs(diff(axis_dimension)))
+    })
+  })
+}
+
+#' @rdname nmr_ppm_resolution
+#' @export
+nmr_ppm_resolution.nmr_dataset_1D <- function(nmr_dataset) {
+  median(abs(diff(dataset$axis)))
+}

@@ -125,7 +125,7 @@ of ppm values that we want to interpolate and the resolution.
 We can see the ppm resolution by looking at the ppm axis of one sample:
 
 ```{r}
-ppm_res <- median(abs(diff(dataset$axis[[1]][[1]])))
+ppm_res <- nmr_ppm_resolution(dataset)[[1]]
 message("The ppm resolution is: ", format(ppm_res, digits = 2), " ppm")
 ```
 
@@ -193,8 +193,6 @@ nmr_pca_outliers_plot(dataset, pca_outliers_rob)
 ```
 
 # Peak detection
-
-FIXME: Finish me
 
 
 ```{r}
