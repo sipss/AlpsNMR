@@ -131,14 +131,17 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #'
 #' @param nmr_dataset An [nmr_dataset_1D]
 #' @param peak_data The detected peak data given by [nmr_detect_peaks].
+#' @param maxShift_ppm The maximum shift allowed, in ppm
 #' @param NMRExp_ref NMRExperiment of the reference to use for alignment
 #' @inheritParams speaq::dohCluster
 #'
 #' @return An [nmr_dataset_1D], with the spectra aligned
 #' @export
 #'
-nmr_align <- function(nmr_dataset, peak_data, NMRExp_ref = NULL, maxShift = 3, acceptLostPeak = FALSE) {
+nmr_align <- function(nmr_dataset, peak_data, NMRExp_ref = NULL,
+                      maxShift_ppm = 0.0015, acceptLostPeak = FALSE) {
   validate_nmr_dataset_1D(nmr_dataset)
+  maxShift <- round(maxShift_ppm/nmr_ppm_resolution(dataset))
   if (is.null(NMRExp_ref)) {
     NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
   }

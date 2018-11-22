@@ -6,7 +6,7 @@
 \usage{
 pipe_peakdet_align(nmr_dataset_rds, nDivRange_ppm = 0.1,
   scales = seq(1, 16, 2), baselineThresh = 0.01, SNR.Th = -1,
-  maxShift = 3, acceptLostPeak = FALSE, output_dir = NULL)
+  maxShift_ppm = 0.0015, acceptLostPeak = FALSE, output_dir = NULL)
 }
 \arguments{
 \item{nmr_dataset_rds}{The nmr_dataset.rds file name coming from previous nodes}
@@ -19,7 +19,7 @@ pipe_peakdet_align(nmr_dataset_rds, nDivRange_ppm = 0.1,
 
 \item{SNR.Th}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.}
 
-\item{maxShift}{The maximum number of the points for a shift step.}
+\item{maxShift_ppm}{The maximum shift allowed, in ppm}
 
 \item{acceptLostPeak}{This is an option for users, TRUE is the default value. If the users believe that all the peaks in the peak list are true positive, change it to FALSE.}
 

@@ -274,7 +274,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
                          scales = seq(1, 16, 2),
                          baselineThresh = 0.01,
                          SNR.Th = -1,
-                         maxShift = 3, acceptLostPeak = FALSE,
+                         maxShift_ppm = 0.0015, acceptLostPeak = FALSE,
                          output_dir = NULL) {
   message("Starting pipe_peakdet_align at ", Sys.time())
   
@@ -305,7 +305,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
   message("Starting alignment...")
   nmr_dataset <- nmr_align(nmr_dataset, peak_data,
                            NMRExp_ref = NMRExp_ref,
-                           maxShift = maxShift,
+                           maxShift_ppm = maxShift_ppm,
                            acceptLostPeak = acceptLostPeak)
   
   message("Saving alignment results...")

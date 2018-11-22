@@ -4,8 +4,8 @@
 \alias{nmr_align}
 \title{Align NMR spectra}
 \usage{
-nmr_align(nmr_dataset, peak_data, NMRExp_ref = NULL, maxShift = 3,
-  acceptLostPeak = FALSE)
+nmr_align(nmr_dataset, peak_data, NMRExp_ref = NULL,
+  maxShift_ppm = 0.0015, acceptLostPeak = FALSE)
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D}}
@@ -14,7 +14,7 @@ nmr_align(nmr_dataset, peak_data, NMRExp_ref = NULL, maxShift = 3,
 
 \item{NMRExp_ref}{NMRExperiment of the reference to use for alignment}
 
-\item{maxShift}{The maximum number of the points for a shift step.}
+\item{maxShift_ppm}{The maximum shift allowed, in ppm}
 
 \item{acceptLostPeak}{This is an option for users, TRUE is the default value. If the users believe that all the peaks in the peak list are true positive, change it to FALSE.}
 }

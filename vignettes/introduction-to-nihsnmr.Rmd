@@ -205,6 +205,13 @@ nmr_detect_peaks_plot(dataset, peak_table, NMRExperiment = "10", chemshift_range
 
 # Spectra alignment
 
+```{r}
+nmr_exp_ref <- nmr_align_find_ref(dataset, peak_table)
+nmr_align(dataset, peak_table, nmr_exp_ref, maxShift_ppm = 0.0015, acceptLostPeak = FALSE)
+
+```
+
+
 # Normalization
 
 # Peak integration

@@ -107,7 +107,7 @@ output_dir_alignment <- file.path(output_dir, "07-alignment")
 pipe_peakdet_align(nmr_dataset_rds,
                    nDivRange_ppm = 0.1, scales = seq(1, 16, 2),
                    baselineThresh = 0.01, SNR.Th = -1,
-                   maxShift = 3, acceptLostPeak = FALSE,
+                   maxShift_ppm = 0.0015, acceptLostPeak = FALSE,
                    output_dir = output_dir_alignment)
 
 
