@@ -2,6 +2,7 @@
 
 S3method("[",nmr_dataset)
 S3method("[",nmr_dataset_1D)
+S3method("nmr_data<-",nmr_dataset_1D)
 S3method(filter,nmr_dataset)
 S3method(filter,nmr_dataset_1D)
 S3method(format,nmr_dataset)
