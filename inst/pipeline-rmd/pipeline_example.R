@@ -31,18 +31,30 @@ samples_to_keep_conditions <- 'NMRExperiment != "40"'
 
 
 #### Seventh node: Peak detection and Alignment
-# To be determined
 
 
+nDivRange_ppm <- 0.1
+baselineThresh <- 0
+SNR.Th <- 3
 
-#### Pipeline begins here ######################################################
+maxShift_ppm <- 0.0015
 
 
-library(NIHSnmr)
+#### Eighth node:  Normalization
+internal_calibrant <- c(6.002, 6.015) # Can be a ppm range or NULL
+
+#### Ninth node: Integration
+
+peak_width_ppm <- 0.0023
+
+
+#### Where the outputs of this example will be
 
 output_dir <- tempdir()
 message("Pipeline outputs will be written at: ", output_dir)
 
+#### Pipeline begins here ######################################################
+library(NIHSnmr)
 
 
 
@@ -105,15 +117,14 @@ nmr_dataset_rds <- file.path(output_dir_filter, "nmr_dataset.rds")
 output_dir_alignment <- file.path(output_dir, "07-alignment")
 
 pipe_peakdet_align(nmr_dataset_rds,
-                   nDivRange_ppm = 0.1, scales = seq(1, 16, 2),
-                   baselineThresh = 0.01, SNR.Th = -1,
-                   maxShift_ppm = 0.0015, acceptLostPeak = FALSE,
+                   nDivRange_ppm = nDivRange_ppm, scales = seq(1, 16, 2),
+                   baselineThresh = baselineThresh, SNR.Th = SNR.Th,
+                   maxShift_ppm = maxShift_ppm, acceptLostPeak = FALSE,
                    output_dir = output_dir_alignment)
 
 
 #### Eighth node: PQN Normalization #######################
 nmr_dataset_rds <- file.path(output_dir_alignment, "nmr_dataset.rds")
-internal_calibrant <- c(6.002, 6.015) # Can be a ppm range or NULL
 output_dir_normalization <- file.path(output_dir, "08-normalization")
 
 pipe_normalization(nmr_dataset_rds, internal_calibrant, output_dir_normalization)
@@ -124,7 +135,6 @@ pipe_normalization(nmr_dataset_rds, internal_calibrant, output_dir_normalization
 nmr_dataset_rds <- file.path(output_dir_normalization, "nmr_dataset.rds")
 output_dir_integration <- file.path(output_dir, "09-peak-integration")
 
-peak_width_ppm <- 0.0023 # FIXME: Check me.
 pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir = output_dir_normalization,
                       peak_width_ppm = peak_width_ppm, output_dir_integration)
 

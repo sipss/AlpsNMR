@@ -31,7 +31,14 @@ with `pipe_`.
 
 This vignette is written for the first group. It assumes some prior basic knowledge of
 NMR and data analysis, as well as some basic R programming. In case you are interested in
-building pipelines with this package, better check [Building Pipelines with NIHSnmr](building-pipelines-with-nihsnmr.html).
+building pipelines with this package, you may want to open the file saved in
+this directory (run it on your computer):
+
+```
+pipeline_example <- system.file("pipeline-rmd", "pipeline_example.R", package = "NIHSnmr")
+print(pipeline_example)
+```
+
 
 ```{r}
 library(NIHSnmr)
@@ -331,7 +338,8 @@ your_custom_nmr_dataset_1D <- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
                                                  data_1r = dummy_spectra_matrix,
                                                  metadata = metadata)
 print(your_custom_nmr_dataset_1D)
-plot(your_custom_nmr_dataset_1D)
+plot(your_custom_nmr_dataset_1D) +
+  ggtitle("Of course those random values don't make much sense...")
 ```
 
 
