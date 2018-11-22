@@ -1,7 +1,7 @@
 Package: NIHSnmr
 Type: Package
 Title: Import and preprocess Nuclear Magnetic Resonance data
-Version: 2.0.0
+Version: 2.0.0.9000
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -30,7 +30,7 @@ LazyData: TRUE
 Depends: R (>= 3.2.0)
 Imports:
  assertthat (>= 0.2.0),
- rlang (>= 0.2.1),
+ rlang (>= 0.3.0.1),
  utils (>= 3.2.0),
  signal (>= 0.7-6),
  stringr (>= 1.3.1),
@@ -40,11 +40,11 @@ Imports:
  dplyr (>= 0.7.5),
  tidyr (>= 0.8.1),
  readxl (>= 1.1.0),
- ggplot2 (>= 2.2.1),
+ ggplot2 (>= 3.1.0),
  purrr (>= 0.2.5),
  glue (>= 1.2.0),
  reshape2 (>= 1.4.3),
- scales (>= 0.5.0),
+ scales (>= 1.0.0),
  GGally (>= 1.4.0),
  mixOmics (>= 6.3.2),
  matrixStats (>= 0.54.0),
