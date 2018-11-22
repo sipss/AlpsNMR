@@ -5,10 +5,11 @@
 \alias{nmr_integrate_regions.nmr_dataset_1D}
 \title{Integrate regions}
 \usage{
-nmr_integrate_regions(samples, regions, fix_baseline = TRUE)
+nmr_integrate_regions(samples, regions, fix_baseline = TRUE,
+  excluded_regions_as_zero = FALSE)
 
 \method{nmr_integrate_regions}{nmr_dataset_1D}(samples, regions,
-  fix_baseline = TRUE)
+  fix_baseline = TRUE, excluded_regions_as_zero = FALSE)
 }
 \arguments{
 \item{samples}{A \link{nmr_dataset} object}
@@ -19,10 +20,12 @@ to integrate. The name of the region will be the name of the
 column}
 
 \item{fix_baseline}{A logical. If \code{TRUE} it removes the baseline. See details
-below
+below}
 
-The integration is very naïve and consists of the sum of the intensities
-in the given ppm range.
+\item{excluded_regions_as_zero}{A logical. It determines the behaviour of the
+integration when integrating regions that have been excluded. If \code{TRUE},
+it will treat those regions as zero. If \code{FALSE} (the default) it will return
+NA values.
 
 If \code{fix_baseline} is \code{TRUE}, then the region boundaries are used to estimate
 a baseline. The baseline is estimated "connecting the boundaries with a straight

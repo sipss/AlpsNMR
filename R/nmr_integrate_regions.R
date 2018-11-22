@@ -8,10 +8,11 @@
 #'                column
 #' @param fix_baseline A logical. If `TRUE` it removes the baseline. See details
 #'                below
+#' @param excluded_regions_as_zero A logical. It determines the behaviour of the
+#'  integration when integrating regions that have been excluded. If `TRUE`, 
+#'  it will treat those regions as zero. If `FALSE` (the default) it will return
+#'  NA values.
 #'
-#' The integration is very naïve and consists of the sum of the intensities
-#' in the given ppm range.
-#' 
 #' If `fix_baseline` is `TRUE`, then the region boundaries are used to estimate
 #' a baseline. The baseline is estimated "connecting the boundaries with a straight
 #' line". Only when the spectrum is above the baseline the area is integrated
@@ -42,7 +43,8 @@
 #'   scale_y_continuous(limits = c(5, 20))
 #' }
 #' @export
-nmr_integrate_regions <- function(samples, regions, fix_baseline = TRUE) {
+nmr_integrate_regions <- function(samples, regions, fix_baseline = TRUE,
+                                  excluded_regions_as_zero = FALSE) {
   UseMethod("nmr_integrate_regions")
 }
 
@@ -60,13 +62,23 @@ rough_baseline <- function(x) {
 
 #' @rdname nmr_integrate_regions
 #' @export
-nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline = TRUE) {
+nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline = TRUE,
+                                                 excluded_regions_as_zero = FALSE) {
   if (is.null(names(regions))) {
     names(regions) <- purrr::map_chr(regions, ~sprintf("ppm_%4.4f", mean(.)))
   }
+  ppm_res <- nmr_ppm_resolution(samples)
   areas <- purrr::map_dfc(regions, function(region) {
     to_sum <- samples$axis >= min(region) & samples$axis < max(region)
-    if (all(to_sum == FALSE)) {
+    # If there are no ppm to sum, or if we are integrating an excluded region,
+    # then return NA.
+    if (isTRUE(excluded_regions_as_zero)) {
+      integrating_allowed <- TRUE
+    } else {
+      # I don't care about 3*ppm_res or 2*ppm_res, but I leave some margin just in case:
+      integrating_allowed <- all(diff(samples$axis[to_sum]) < 3*ppm_res)
+    }
+    if (all(to_sum == FALSE) || !integrating_allowed) {
       return(NA*numeric(nrow(samples$data_1r)))
     }
     region_to_sum <- samples$data_1r[, to_sum]
@@ -76,7 +88,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
       area_basel <- rowSums(basel)
       area <- area - area_basel
     }
-    area
+    area*ppm_res
   })
   dplyr::bind_cols(nmr_meta_get(samples, "NMRExperiment"),
                    areas)
@@ -91,7 +103,12 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
 #'         for each peak position.
 #' @export
 #'
-nmr_integrate_peak_positions <- function(samples, peak_pos_ppm, peak_width_ppm, fix_baseline = TRUE) {
+nmr_integrate_peak_positions <- function(samples,
+                                         peak_pos_ppm,
+                                         peak_width_ppm,
+                                         fix_baseline = TRUE,
+                                         excluded_regions_as_zero = FALSE) {
   regions <- regions_from_peak_table(peak_pos_ppm, peak_width_ppm)
-  nmr_integrate_regions(samples, regions, fix_baseline = fix_baseline)
+  nmr_integrate_regions(samples, regions, fix_baseline = fix_baseline,
+                        excluded_regions_as_zero = excluded_regions_as_zero)
 }

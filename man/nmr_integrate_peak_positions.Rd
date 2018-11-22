@@ -5,7 +5,7 @@
 \title{Integrate peak positions}
 \usage{
 nmr_integrate_peak_positions(samples, peak_pos_ppm, peak_width_ppm,
-  fix_baseline = TRUE)
+  fix_baseline = TRUE, excluded_regions_as_zero = FALSE)
 }
 \arguments{
 \item{samples}{A \link{nmr_dataset} object}
@@ -15,10 +15,12 @@ nmr_integrate_peak_positions(samples, peak_pos_ppm, peak_width_ppm,
 \item{peak_width_ppm}{The peak widths (or a single peak width for all peaks)}
 
 \item{fix_baseline}{A logical. If \code{TRUE} it removes the baseline. See details
-below
+below}
 
-The integration is very naïve and consists of the sum of the intensities
-in the given ppm range.
+\item{excluded_regions_as_zero}{A logical. It determines the behaviour of the
+integration when integrating regions that have been excluded. If \code{TRUE},
+it will treat those regions as zero. If \code{FALSE} (the default) it will return
+NA values.
 
 If \code{fix_baseline} is \code{TRUE}, then the region boundaries are used to estimate
 a baseline. The baseline is estimated "connecting the boundaries with a straight
