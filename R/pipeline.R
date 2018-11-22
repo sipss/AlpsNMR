@@ -312,9 +312,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
 
   
   gplt <- nmr_detect_peaks_plot(nmr_dataset, peak_data, NMRExperiment = NMRExp_ref)
-  plotly::toWebGL(gplt) %>%
-    htmltools::as.tags(standalone = TRUE) %>%
-    htmltools::save_html(html = plot_peak_detection_html)
+  plot_interactive(gplt, plot_peak_detection_html)
   
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")

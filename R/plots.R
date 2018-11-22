@@ -1,4 +1,5 @@
 #' Plot an nmr_dataset_1D
+#' @family plotting nmr datasets
 #' @param x a [nmr_dataset_1D] object
 #' @inheritParams nmr_get_long_df
 #' @param NMRExperiment A character vector with the NMRExperiments to include. Use "all" to include all experiments.
@@ -158,6 +159,7 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #' 
 #' Uses WebGL for performance
 #'
+#' @family plotting nmr datasets
 #' @param nmr_dataset An [nmr_dataset_1D]
 #' @param html_filename The output HTML filename to be created
 #' @inheritDotParams plot.nmr_dataset_1D
@@ -166,7 +168,22 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #' @export
 #'
 plot_webgl <- function(nmr_dataset, html_filename, ...) {
-  plot(nmr_dataset, ...) %>% 
+  plt <- plot(nmr_dataset, ...)
+  plot_interactive(plt = plt, html_filename = html_filename)
+  html_filename
+}
+
+#' Plots in WebGL
+#'
+#' @family plotting nmr datasets
+#' @param plt A plot created with plotly or ggplot2
+#' @param html_filename The file name where the plot will be saved
+#'
+#' @return The html_filename
+#' @export
+#'
+plot_interactive <- function(plt, html_filename) {
+  plt %>%
     plotly::toWebGL() %>%
     htmltools::as.tags(standalone = TRUE) %>%
     htmltools::save_html(file = html_filename)
