@@ -17,3 +17,7 @@ The NMRExperiment of the reference sample
 \description{
 Find alignment reference
 }
+\seealso{
+Other alignment functions: \code{\link{nmr_align}}
+}
+\concept{alignment functions}

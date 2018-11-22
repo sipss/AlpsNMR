@@ -22,5 +22,9 @@ nmr_align(nmr_dataset, peak_data, NMRExp_ref = NULL,
 An \link{nmr_dataset_1D}, with the spectra aligned
 }
 \description{
-Align NMR spectra
+This function is based on \link[speaq:dohCluster]{speaq::dohCluster}.
 }
+\seealso{
+Other alignment functions: \code{\link{nmr_align_find_ref}}
+}
+\concept{alignment functions}

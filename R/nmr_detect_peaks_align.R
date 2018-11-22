@@ -84,9 +84,22 @@ nmr_detect_peaks_plot <- function(nmr_dataset, peak_data, NMRExperiment, ...) {
   if (!rlang::is_scalar_character(NMRExperiment)) {
     stop("NMRExperiment should be a string")
   }
+  # If we plot only a subset of the data, we also plot only the required 
+  # vertical lines:
+  dots <- list(...)
+  if ("chemshift_range" %in% names(dots)) {
+    chemshift_range <- dots[["chemshift_range"]]
+  } else {
+    chemshift_range <- range(peak_data$ppm)
+  }
+  peak_data_to_show <- dplyr::filter(
+    peak_data,
+    .data$NMRExperiment == !!NMRExperiment,
+    .data$ppm > chemshift_range[1] & .data$ppm < chemshift_range[2])
+  # Plot:
   plot(nmr_dataset, NMRExperiment = NMRExperiment, ..., interactive = FALSE) +
-    ggplot2::geom_vline(data = dplyr::filter(peak_data, .data$NMRExperiment == !!NMRExperiment),
-                        ggplot2::aes_string(xintercept = "ppm"), color = "black")
+    ggplot2::geom_vline(data = peak_data_to_show,
+                        ggplot2::aes_string(xintercept = "ppm"), color = "black", linetype = "dashed")
 }
 
 #' Convert a speaq::detectSpecPeaks peak list to an interpretable data frame
@@ -128,7 +141,10 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 }
 
 #' Align NMR spectra
-#'
+#' 
+#' This function is based on [speaq::dohCluster].
+#' 
+#' @family alignment functions
 #' @param nmr_dataset An [nmr_dataset_1D]
 #' @param peak_data The detected peak data given by [nmr_detect_peaks].
 #' @param maxShift_ppm The maximum shift allowed, in ppm
@@ -166,6 +182,7 @@ nmr_align <- function(nmr_dataset, peak_data, NMRExp_ref = NULL,
 #' Find alignment reference
 #'
 #' @inheritParams nmr_align
+#' @family alignment functions
 #'
 #' @return The NMRExperiment of the reference sample
 #' @export
