@@ -217,7 +217,7 @@ object:
 ```{r}
 full_spectra_matrix <- nmr_data(dataset)
 print(full_spectra_matrix[1:4, 1:6])
-dataset$data_1r <- full_spectra_matrix # Rewrite the matrix
+nmr_data(dataset) <- full_spectra_matrix # Rewrite the matrix
 ```
 
 
