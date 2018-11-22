@@ -7,6 +7,10 @@
 nmr_detect_peaks_plot(nmr_dataset, peak_data, NMRExperiment, ...)
 }
 \arguments{
+\item{nmr_dataset}{An \link{nmr_dataset_1D}.}
+
+\item{peak_data}{The peak table returned by \code{nmr_detect_peaks}}
+
 \item{NMRExperiment}{a single NMR experiment to plot}
 
 \item{...}{Arguments passed to \link{plot.nmr_dataset_1D} (\code{chemshift_range}, \code{...})}

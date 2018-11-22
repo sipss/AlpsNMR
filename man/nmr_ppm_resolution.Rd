@@ -13,7 +13,7 @@ nmr_ppm_resolution(nmr_dataset)
 \method{nmr_ppm_resolution}{nmr_dataset_1D}(nmr_dataset)
 }
 \arguments{
-\item{nmr_dataset}{}
+\item{nmr_dataset}{An object containing NMR samples}
 }
 \value{
 A number (the ppm resolution, measured in ppms)

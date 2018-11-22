@@ -77,6 +77,8 @@ nmr_detect_peaks <- function(nmr_dataset, nDivRange_ppm = 0.1,
 
 #' Plot peak detection results
 #' @family peak detection functions
+#' @inheritParams nmr_detect_peaks
+#' @param peak_data The peak table returned by `nmr_detect_peaks`
 #' @param NMRExperiment a single NMR experiment to plot
 #' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
 #' @export
@@ -157,7 +159,7 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 nmr_align <- function(nmr_dataset, peak_data, NMRExp_ref = NULL,
                       maxShift_ppm = 0.0015, acceptLostPeak = FALSE) {
   validate_nmr_dataset_1D(nmr_dataset)
-  maxShift <- round(maxShift_ppm/nmr_ppm_resolution(dataset))
+  maxShift <- round(maxShift_ppm/nmr_ppm_resolution(nmr_dataset))
   if (is.null(NMRExp_ref)) {
     NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
   }
@@ -214,7 +216,7 @@ regions_from_peak_table <- function(peak_pos_ppm, peak_width_ppm) {
 
 #' Get the ppm resolution of the dataset
 #'
-#' @param nmr_dataset 
+#' @param nmr_dataset An object containing NMR samples
 #'
 #' @return A number (the ppm resolution, measured in ppms)
 #' @export
@@ -226,7 +228,7 @@ nmr_ppm_resolution <- function(nmr_dataset) {
 #' @export
 nmr_ppm_resolution.nmr_dataset <- function(nmr_dataset) {
   # For each sample:
-  purrr::map(dataset$axis, function(axis_sample) {
+  purrr::map(nmr_dataset$axis, function(axis_sample) {
     # For each dimension of each sample:
     purrr::map_dbl(axis_sample, function(axis_dimension) {
       stats::median(abs(diff(axis_dimension)))
@@ -237,5 +239,5 @@ nmr_ppm_resolution.nmr_dataset <- function(nmr_dataset) {
 #' @rdname nmr_ppm_resolution
 #' @export
 nmr_ppm_resolution.nmr_dataset_1D <- function(nmr_dataset) {
-  median(abs(diff(dataset$axis)))
+  stats::median(abs(diff(nmr_dataset$axis)))
 }
