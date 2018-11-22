@@ -2,18 +2,28 @@
 % Please edit documentation in R/nmr_data.R
 \name{nmr_data}
 \alias{nmr_data}
-\title{Return the full spectra matrix}
+\alias{nmr_data<-}
+\alias{nmr_data<-.nmr_dataset_1D}
+\title{Set/Return the full spectra matrix}
 \usage{
 nmr_data(nmr_dataset, ...)
+
+nmr_data(nmr_dataset) <- value
+
+\method{nmr_data}{nmr_dataset_1D}(nmr_dataset) <- value
 }
 \arguments{
 \item{nmr_dataset}{The NMR object to get the raw data from}
 
 \item{...}{Unused and left for future compatibility}
+
+\item{value}{A matrix}
 }
 \value{
 a matrix
+
+The given nmr_dataset
 }
 \description{
-Return the full spectra matrix
+Set/Return the full spectra matrix
 }
