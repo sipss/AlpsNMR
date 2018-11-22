@@ -35,6 +35,7 @@ building pipelines with this package, better check [Building Pipelines with NIHS
 
 ```{r}
 library(NIHSnmr)
+library(ggplot2)
 ```
 
 
@@ -207,14 +208,68 @@ nmr_detect_peaks_plot(dataset, peak_table, NMRExperiment = "10", chemshift_range
 
 ```{r}
 nmr_exp_ref <- nmr_align_find_ref(dataset, peak_table)
-nmr_align(dataset, peak_table, nmr_exp_ref, maxShift_ppm = 0.0015, acceptLostPeak = FALSE)
+dataset_align <- nmr_align(dataset, peak_table, nmr_exp_ref, maxShift_ppm = 0.0015, acceptLostPeak = FALSE)
+```
 
+```{r}
+plot(dataset, chemshift_range = c(2.3, 2.5))
+plot(dataset_align, chemshift_range = c(2.3, 2.5))
+```
+
+```{r}
+maleic_acid_region <- c(4.15, 4.20)
+plot(dataset, chemshift_range = maleic_acid_region)
 ```
 
 
 # Normalization
 
+```{r}
+dataset_norm <- nmr_normalize(dataset_align, method = "pqn")
+```
+
+
+
 # Peak integration
+
+Imagine we want to integrate the four peaks corresponding to the pyroglutamic
+acid:
+
+```{r}
+pyroglutamic_acid_region <- c(4.15, 4.20)
+plot(dataset_norm, chemshift_range = pyroglutamic_acid_region) +
+  ggtitle("Pyroglutamic acid region")
+```
+
+We define the peak regions, and integrate them. Note how we can correct the
+baseline or not. If we correct the baseline, the limits of the integration will
+be connected with a straight line and that line will be used as the baseline,
+that will be substracted.
+
+```{r}
+pyroglutamic_acid <- list(pyroglutamic_acid1 = c(4.19, 4.195),
+                          pyroglutamic_acid2 = c(4.18, 4.186),
+                          pyroglutamic_acid3 = c(4.175, 4.18),
+                          pyroglutamic_acid4 = c(4.165, 4.172))
+regions_basel_corr <- nmr_integrate_regions(dataset_norm, pyroglutamic_acid, fix_baseline = TRUE)
+print(regions_basel_corr)
+regions_basel_not_corr <- nmr_integrate_regions(dataset_norm, pyroglutamic_acid, fix_baseline = FALSE)
+print(regions_basel_not_corr)
+```
+
+
+```{r}
+dplyr::bind_rows(
+  regions_basel_corr %>%
+    tidyr::gather("metabolite_peak", "area", -NMRExperiment) %>%
+    dplyr::mutate(BaselineCorrected = TRUE),
+  regions_basel_not_corr %>%
+    tidyr::gather("metabolite_peak", "area", -NMRExperiment) %>%
+    dplyr::mutate(BaselineCorrected = FALSE)
+) %>% ggplot() + geom_point(aes(x = NMRExperiment, y = area, color = metabolite_peak)) +
+  facet_wrap(~BaselineCorrected)
+
+```
 
 
 # Free experimentation
