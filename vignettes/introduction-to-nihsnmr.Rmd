@@ -195,6 +195,14 @@ nmr_pca_outliers_plot(dataset, pca_outliers_rob)
 
 # Peak detection
 
+The peak detection is performed on short spectra segments using a continuous
+wavelet transform. See `?nmr_detect_peaks` for more information.
+
+Our current approach relies on the use of the Signal to Noise Threshold (`SNR.Th`)
+to discriminate valid peaks from noise, however a global intensity threshold can
+also be used. The advantage of the `SNR.Th` method is that it estimates the noise
+level on each spectra region independently, so in practice it can be used as
+a dynamic baseline threshold level.
 
 ```{r}
 peak_table <- nmr_detect_peaks(dataset,
@@ -206,6 +214,11 @@ nmr_detect_peaks_plot(dataset, peak_table, NMRExperiment = "10", chemshift_range
 
 # Spectra alignment
 
+To align the sample, we use the `nmr_align` function, which in turn uses a hierarchical
+clustering method (see `?nmr_align` for further details).
+
+The `maxShift_ppm` limits the maximum shift allowed for the spectra.
+
 ```{r}
 nmr_exp_ref <- nmr_align_find_ref(dataset, peak_table)
 dataset_align <- nmr_align(dataset, peak_table, nmr_exp_ref, maxShift_ppm = 0.0015, acceptLostPeak = FALSE)
@@ -216,21 +229,22 @@ plot(dataset, chemshift_range = c(2.3, 2.5))
 plot(dataset_align, chemshift_range = c(2.3, 2.5))
 ```
 
-```{r}
-maleic_acid_region <- c(4.15, 4.20)
-plot(dataset, chemshift_range = maleic_acid_region)
-```
-
 
 # Normalization
+
+There are multiple normalization techniques available. The one providing the
+best result on our samples has been the `pqn` normalization, but it may not be
+fully reliable when the number of samples is very small, as it needs a reliable
+computation of the median spectra. Nevertheless, it is possible to compute it:
 
 ```{r}
 dataset_norm <- nmr_normalize(dataset_align, method = "pqn")
 ```
 
 
-
 # Peak integration
+
+## Integration based on peak boundaries
 
 Imagine we want to integrate the four peaks corresponding to the pyroglutamic
 acid:
@@ -271,17 +285,62 @@ dplyr::bind_rows(
 
 ```
 
+## Integration based on peak center and width
+
+If instead of ranges we have a peak position, we can also integrate with the
+peak position and some arbitrary width:
+
+```{r}
+nmr_integrate_peak_positions(dataset_norm,
+                             peak_pos_ppm = c(4.1925, 4.183, 4.1775, 4.17),
+                             peak_width_ppm = 0.03)
+```
+
+
 
 # Free experimentation
 
-You can extract the raw matrix and manipulate it at will. As long as you don't
+## Getting the spèctra and manipulating it manually
+
+Besides all those techniques, you can easily implement your own. You can extract
+the raw matrix and manipulate it at will. As long as you don't
 permute the rows, you can always replace the raw matrix of the `nmr_dataset_1D`
-object:
+object through the `nmr_data` function:
 
 ```{r}
 full_spectra_matrix <- nmr_data(dataset)
-print(full_spectra_matrix[1:4, 1:6])
+print(full_spectra_matrix[1:4, 1:6]) # change it as you wish
 nmr_data(dataset) <- full_spectra_matrix # Rewrite the matrix
 ```
+
+## Creating an `nmr_dataset_1D` object from a matrix
+
+You can also create an `nmr_dataset_1D` object from scratch with the
+`new_nmr_dataset_1D` function:
+
+```{r}
+nsamp <- 12
+npoints <- 20
+# Create a random spectra matrix
+dummy_ppm_axis <- seq(from = 0.2, to = 10, length.out = npoints)
+dummy_spectra_matrix <- matrix(runif(nsamp*npoints), nrow = nsamp, ncol = npoints)
+metadata <- list(external = data.frame(NMRExperiment = paste0("Sample", 1:12),
+                                       DummyClass = c("a", "b"),
+                                       stringsAsFactors = FALSE))
+your_custom_nmr_dataset_1D <- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
+                                                 data_1r = dummy_spectra_matrix,
+                                                 metadata = metadata)
+print(your_custom_nmr_dataset_1D)
+plot(your_custom_nmr_dataset_1D)
+```
+
+
+
+# Final thoughts
+
+This vignette shows many of the features of the package, some features have
+room for improvement, others are not fully described, and the reader will need
+to browse the documentation. Hopefully it is a good starting point for using the
+package.
 
 
