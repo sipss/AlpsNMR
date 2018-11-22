@@ -1,9 +1,7 @@
-# NIHSnmr 1.2.0.9000
+# NIHSnmr 2.0.0
 
-- Allow reversed ranges in `nmr_exclude_region`.
-- Fix bug in `nmr_pca_plot_variance` when `ncomp` was fixed when building the model
-- Add `nmr_zip_bruker_samples` to zip Bruker samples given their paths
-- `nmr_integrate_regions` removes a baseline by default. Use `fix_baseline = FALSE` to use previous behaviour.
+- Too many changes to be listed here. Check the vignette for a summary of all
+the features.
 
 # NIHSnmr 1.2.0
 
