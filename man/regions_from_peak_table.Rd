@@ -12,7 +12,7 @@ regions_from_peak_table(peak_pos_ppm, peak_width_ppm)
 \item{peak_width_ppm}{The peak widths (or a single peak width for all peaks)}
 }
 \value{
-A list of regions suitable for nmr_integrate_regions
+A list of regions suitable for \link{nmr_integrate_regions}
 }
 \description{
 Build list of regions for peak integration

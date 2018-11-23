@@ -28,8 +28,7 @@ line". Only when the spectrum is above the baseline the area is integrated
 (negative contributions due to the baseline estimation are ignored).}
 }
 \value{
-A data frame with the NMRExperiment column and one additional column
-for each peak position.
+An \link{nmr_dataset_peak_table} object
 }
 \description{
 Integrate peak positions

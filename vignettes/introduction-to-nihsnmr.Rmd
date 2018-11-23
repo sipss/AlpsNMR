@@ -290,19 +290,27 @@ pyroglutamic_acid <- list(pyroglutamic_acid1 = c(4.19, 4.195),
                           pyroglutamic_acid2 = c(4.18, 4.186),
                           pyroglutamic_acid3 = c(4.175, 4.18),
                           pyroglutamic_acid4 = c(4.165, 4.172))
-regions_basel_corr <- nmr_integrate_regions(dataset_norm, pyroglutamic_acid, fix_baseline = TRUE)
-print(regions_basel_corr)
-regions_basel_not_corr <- nmr_integrate_regions(dataset_norm, pyroglutamic_acid, fix_baseline = FALSE)
-print(regions_basel_not_corr)
+regions_basel_corr_ds <- nmr_integrate_regions(dataset_norm, pyroglutamic_acid, fix_baseline = TRUE)
+regions_basel_corr_matrix <- nmr_data(regions_basel_corr_ds)
+print(regions_basel_corr_matrix)
+
+
+regions_basel_not_corr_ds <- nmr_integrate_regions(dataset_norm, pyroglutamic_acid, fix_baseline = FALSE)
+regions_basel_not_corr_matrix <- nmr_data(regions_basel_not_corr_ds)
+print(regions_basel_not_corr_matrix)
 ```
 
 
 ```{r}
 dplyr::bind_rows(
-  regions_basel_corr %>%
+  regions_basel_corr_matrix %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column("NMRExperiment") %>%
     tidyr::gather("metabolite_peak", "area", -NMRExperiment) %>%
     dplyr::mutate(BaselineCorrected = TRUE),
-  regions_basel_not_corr %>%
+  regions_basel_not_corr_matrix %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column("NMRExperiment") %>%
     tidyr::gather("metabolite_peak", "area", -NMRExperiment) %>%
     dplyr::mutate(BaselineCorrected = FALSE)
 ) %>% ggplot() + geom_point(aes(x = NMRExperiment, y = area, color = metabolite_peak)) +
@@ -316,16 +324,17 @@ If instead of ranges we have a peak position, we can also integrate with the
 peak position and some arbitrary width:
 
 ```{r}
-nmr_integrate_peak_positions(dataset_norm,
+nmr_data(
+  nmr_integrate_peak_positions(dataset_norm,
                              peak_pos_ppm = c(4.1925, 4.183, 4.1775, 4.17),
                              peak_width_ppm = 0.03)
+)
 ```
-
 
 
 # Free experimentation
 
-## Getting the spèctra and manipulating it manually
+## Getting the spectra and manipulating it manually
 
 Besides all those techniques, you can easily implement your own. You can extract
 the raw matrix and manipulate it at will. As long as you don't

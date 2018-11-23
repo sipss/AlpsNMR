@@ -350,17 +350,20 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
   # Output files:
   metadata_fn <- file.path(output_dir, "metadata.xlsx")
   peak_table_fn <- file.path(output_dir, "peak_table.csv")
+  nmr_peak_table_rds <- file.path(output_dir, "nmr_peak_table.rds")
   
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   peak_data <- utils::read.csv(file = peak_data_fn)
   NMRExperimentRef <- readLines(NMRExp_ref_fn)
   peak_data_integ <- dplyr::filter(peak_data, .data$NMRExperiment == !!NMRExperimentRef)
-  peak_table <- nmr_integrate_peak_positions(samples = nmr_dataset,
-                                             peak_pos_ppm = peak_data_integ$ppm,
-                                             peak_width_ppm = peak_width_ppm)
+  nmr_peak_table <- nmr_integrate_peak_positions(
+    samples = nmr_dataset,
+    peak_pos_ppm = peak_data_integ$ppm,
+    peak_width_ppm = peak_width_ppm)
   
-  nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
-  utils::write.csv(peak_table, peak_table_fn, row.names = FALSE)
+  nmr_dataset_save(nmr_peak_table, nmr_peak_table_rds)
+  nmr_meta_export(nmr_peak_table, metadata_fn, groups = "external")
+  utils::write.csv(nmr_data(nmr_peak_table), peak_table_fn, row.names = FALSE)
   message("Ending pipe_peak_integration at ", Sys.time())
 }
 

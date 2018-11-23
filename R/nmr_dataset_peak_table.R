@@ -70,7 +70,7 @@ validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
 new_nmr_dataset_peak_table <- function(peak_table, metadata) {
   samples <- list()
   samples[["metadata"]] <- metadata
-  samples[["peak_table"]] <- peak_table
+  samples[["peak_table"]] <- as.matrix(peak_table)
   samples[["num_samples"]] <- nrow(peak_table)
   class(samples) <- "nmr_dataset_peak_table"
   validate_nmr_dataset_peak_table(samples)

@@ -18,9 +18,8 @@
 #' line". Only when the spectrum is above the baseline the area is integrated
 #' (negative contributions due to the baseline estimation are ignored).
 #' 
-#' @return A data frame with the NMRExperiment column and one additional column
-#'         for each given region.
-#'         
+#' @return An [nmr_dataset_peak_table] object
+#'
 #' @examples 
 #' \dontrun{
 #' # We integrate a region with two peaks and a valley. This is how the
@@ -90,8 +89,8 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
     }
     area*ppm_res
   })
-  dplyr::bind_cols(nmr_meta_get(samples, "NMRExperiment"),
-                   areas)
+  new_nmr_dataset_peak_table(peak_table = as.matrix(areas),
+                             metadata = samples$metadata)
 }
 
 #' Integrate peak positions
@@ -99,8 +98,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
 #' @inheritParams nmr_integrate_regions
 #' @inheritParams regions_from_peak_table
 #'
-#' @return A data frame with the NMRExperiment column and one additional column
-#'         for each peak position.
+#' @inherit nmr_integrate_regions return
 #' @export
 #'
 nmr_integrate_peak_positions <- function(samples,

@@ -20,6 +20,14 @@ nmr_data.nmr_dataset_1D <- function(nmr_dataset, ...) {
   data_1r
 }
 
+#' @noRd
+#' @export
+nmr_data.nmr_dataset_peak_table <- function(nmr_dataset, ...) {
+  peak_table <- nmr_dataset$peak_table
+  rownames(peak_table) <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
+  peak_table
+}
+
 
 #' @rdname nmr_data
 #' @param value A matrix

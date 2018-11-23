@@ -201,7 +201,7 @@ nmr_align_find_ref <- function(nmr_dataset, peak_data) {
 #' @param peak_pos_ppm The peak positions, in ppm
 #' @param peak_width_ppm The peak widths (or a single peak width for all peaks)
 #'
-#' @return A list of regions suitable for nmr_integrate_regions
+#' @return A list of regions suitable for [nmr_integrate_regions]
 #'
 regions_from_peak_table <- function(peak_pos_ppm, peak_width_ppm) {
   if (length(peak_width_ppm) == 1) {
