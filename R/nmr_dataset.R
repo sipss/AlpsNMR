@@ -30,6 +30,7 @@ NULL
 #' @name nmr_read_samples
 #' @param sample_names A character vector with file or directory names.
 #' @param samples_dir A directory that contains multiple samples
+#' @param format Either "bruker" or "jdx"
 #' @param metadata_only A logical, to load only metadata (default: `FALSE`)
 #' @param pulse_sequence If it is set to a pulse sequence
 #'                       ("NOESY", "JRES", "CPMG"...) it will only load
@@ -40,10 +41,13 @@ NULL
 
 #' @rdname nmr_read_samples
 #' @export
-nmr_read_samples_dir <- function(samples_dir, pulse_sequence = NULL,
+nmr_read_samples_dir <- function(samples_dir,
+                                 format = "bruker",
+                                 pulse_sequence = NULL,
                                  metadata_only = FALSE,
                                  ...) {
   nmr_read_samples_dir_internal(samples_dir = samples_dir,
+                                format = format,
                                 pulse_sequence = pulse_sequence,
                                 metadata_only = metadata_only,
                                 ...)
@@ -52,20 +56,28 @@ nmr_read_samples_dir <- function(samples_dir, pulse_sequence = NULL,
 #' @noRd
 #' @inheritParams nmr_read_samples_dir
 #' @inheritParams nmr_read_samples_internal
-nmr_read_samples_dir_internal <- function(samples_dir, pulse_sequence = NULL,
-                                 metadata_only = FALSE,
-                                 overwrite_sample_names = NULL,
-                                 ...) {
+nmr_read_samples_dir_internal <- function(samples_dir,
+                                          format = "bruker",
+                                          pulse_sequence = NULL,
+                                          metadata_only = FALSE,
+                                          overwrite_sample_names = NULL,
+                                          ...) {
   samples_dir <- as.character(samples_dir)
   if (!dir.exists(samples_dir)) {
     stop("Invalid directory: ", samples_dir)
   }
-  all_samples <- c(list.dirs(path = samples_dir, full.names = TRUE, recursive = FALSE),
-                   list.files(path = samples_dir, full.names = TRUE, pattern = ".*zip$"),
-                   list.files(path = samples_dir, full.names = TRUE, pattern = ".*jdx$"))
+  if (format == "bruker") {
+    all_samples <- c(list.dirs(path = samples_dir, full.names = TRUE, recursive = FALSE),
+                     list.files(path = samples_dir, full.names = TRUE, pattern = ".*zip$"))
+  } else if (format == "jdx") {
+    all_samples <- list.files(path = samples_dir, full.names = TRUE, pattern = ".*jdx$")
+  } else {
+    stop("Unsupported sample format: ", format)
+  }
   
   dataset <- nmr_read_samples_internal(
     sample_names = all_samples,
+    format = format,
     pulse_sequence = pulse_sequence,
     metadata_only = metadata_only,
     overwrite_sample_names = overwrite_sample_names,
@@ -77,9 +89,12 @@ nmr_read_samples_dir_internal <- function(samples_dir, pulse_sequence = NULL,
 
 #' @rdname nmr_read_samples
 #' @export
-nmr_read_samples <- function(sample_names, pulse_sequence = NULL,
+nmr_read_samples <- function(sample_names,
+                             format = "bruker",
+                             pulse_sequence = NULL,
                              metadata_only = FALSE, ...) {
   nmr_read_samples_internal(sample_names = sample_names,
+                            format = format,
                             pulse_sequence = pulse_sequence,
                             metadata_only = metadata_only, ...)
 }
@@ -87,23 +102,24 @@ nmr_read_samples <- function(sample_names, pulse_sequence = NULL,
 #' @noRd
 #' @inheritParams nmr_read_samples
 #' @inheritParams nmr_read_samples_bruker
-nmr_read_samples_internal <- function(sample_names, pulse_sequence = NULL,
+nmr_read_samples_internal <- function(sample_names,
+                                      format = "bruker",
+                                      pulse_sequence = NULL,
                                       metadata_only = FALSE,
                                       overwrite_sample_names = NULL, ...) {
   sample_names <- as.character(sample_names)
-  # If all samples are directories or zips, use the bruker directory format:
-  if (all(dir.exists(sample_names) | grepl('\\.zip$', sample_names))) {
+  if (format == "bruker") {
     samples <- nmr_read_samples_bruker(sample_names = sample_names,
                                        metadata_only = metadata_only,
                                        pulse_sequence = pulse_sequence,
                                        overwrite_sample_names = overwrite_sample_names,
                                        ...)
-  } else if (all(file.exists(sample_names))) {
+  } else if (format == "jdx") {
     # otherwise the jdx format
     samples <- nmr_read_samples_jdx(sample_names = sample_names,
                                     metadata_only = metadata_only)
   } else {
-    stop("Are all samples in the same format?")
+    stop("Unsupported format")
   }
   return(samples)
 }

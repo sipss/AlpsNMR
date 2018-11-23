@@ -5,14 +5,16 @@
 \alias{nmr_read_samples_dir}
 \title{Read NMR samples}
 \usage{
-nmr_read_samples_dir(samples_dir, pulse_sequence = NULL,
-  metadata_only = FALSE, ...)
+nmr_read_samples_dir(samples_dir, format = "bruker",
+  pulse_sequence = NULL, metadata_only = FALSE, ...)
 
-nmr_read_samples(sample_names, pulse_sequence = NULL,
-  metadata_only = FALSE, ...)
+nmr_read_samples(sample_names, format = "bruker",
+  pulse_sequence = NULL, metadata_only = FALSE, ...)
 }
 \arguments{
 \item{samples_dir}{A directory that contains multiple samples}
+
+\item{format}{Either "bruker" or "jdx"}
 
 \item{pulse_sequence}{If it is set to a pulse sequence
 ("NOESY", "JRES", "CPMG"...) it will only load
