@@ -56,21 +56,14 @@ nmr_detect_peaks <- function(nmr_dataset, nDivRange_ppm = 0.1,
     on.exit({options(warnPartialMatchArgs = warnPartialMatchArgs)})
   }
 
-  # Also speaq::detectSpecPeaks v.2.3.3 can print a lot of messages to stdout, even
-  # when verbose = FALSE. This can lead to problems, especially with large
-  # datasets in Rmd documents, so we wrap the detectSpecPeaks with capture.output
-  # to prevent the output of the function to leak.
-  # This has been reported and fixed on speaq v2.4
-  # (TODO: Remove capture.output and this comment once speaq 2.4 is on CRAN and compiled)
-  utils::capture.output({
-    peakList <- speaq::detectSpecPeaks(
-      nmr_dataset$data_1r,
-      nDivRange = nDivRange,
-      scales = scales,
-      baselineThresh = baselineThresh,
-      SNR.Th = SNR.Th,
-      verbose = FALSE
-    )})
+  peakList <- speaq::detectSpecPeaks(
+    nmr_dataset$data_1r,
+    nDivRange = nDivRange,
+    scales = scales,
+    baselineThresh = baselineThresh,
+    SNR.Th = SNR.Th,
+    verbose = FALSE
+  )
   
   peakList_to_dataframe(nmr_dataset, peakList)
 }

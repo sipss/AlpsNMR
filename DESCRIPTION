@@ -51,7 +51,7 @@ Imports:
  writexl (>= 1.0),
  fs (>= 1.2.6),
  rmarkdown (>= 1.10),
- speaq (>= 2.3.3),
+ speaq (>= 2.4.0),
  htmltools (>= 0.3.6),
  ggrepel (>= 0.8.0),
  pcaPP (>= 1.9-73),
