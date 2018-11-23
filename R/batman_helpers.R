@@ -9,13 +9,13 @@
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #' @param multiplet_table A data frame, like the [hmdb] dataset
 #' 
+#' @family batman functions
 #' @name nmr_batman
+#' @noRd
 #' 
 NULL
 
 #' The Human Metabolome DataBase multiplet table
-#' 
-#' Used by the batman helpers
 #'
 #' @name hmdb
 #' @docType data
@@ -55,7 +55,8 @@ NULL
 #' @param csFlag Specify chemical shift for each multiplet in each spectrum? (chemShiftperSpectra.csv file) 
 #'
 #' @return A batman_options object with the Batman Options
-#' @export
+#' @family batman functions
+#' @noRd
 nmr_batman_options <- function(ppmRange = matrix(c(3.0, 3.1,
                                                    3.6, 3.7,
                                                    3.9, 4.0,
@@ -112,7 +113,7 @@ nmr_batman_options <- function(ppmRange = matrix(c(3.0, 3.1,
 }
 
 #' @rdname nmr_batman
-#' @export
+#' @noRd
 nmr_batman_write_options <- function(bopts, batman_dir = "BatmanInput", filename = "batmanOptions.txt") {
   # ppmRange:
   full_filename <- batman_get_full_filename(batman_dir, filename)
@@ -203,18 +204,17 @@ batman_get_full_filename <- function(batman_dir, filename) {
 }
 
 #' @rdname nmr_batman
-#' @export
+#' @noRd
 nmr_batman_export_dataset <- function(nmr_dataset, batman_dir = "BatmanInput", filename = "NMRdata.txt") {
   full_filename <- batman_get_full_filename(batman_dir, filename)
-  nmrdata <- t(as.matrix(nmr_dataset[["data_1r"]]))
-  nmr_exp <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
-  colnames(nmrdata) <- paste0("NMRExperiment_", nmr_exp)
-  nmrdata <- cbind(ppm = nmr_dataset[["axis"]][[1]], nmrdata)
+  nmrdata <- t(nmr_data(nmr_dataset))
+  colnames(nmrdata) <- paste0("NMRExperiment_", colnames(nmrdata))
+  nmrdata <- cbind(ppm = as.numeric(rownames(nmrdata)), nmrdata)
   utils::write.table(nmrdata, full_filename, row.names = FALSE, sep = "\t")
 }
 
 #' @rdname nmr_batman
-#' @export
+#' @noRd
 nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput", filename = "multi_data_user.csv") {
   hmdb <- NULL
   utils::data("hmdb", package = "NIHSnmr", envir = environment())
@@ -223,7 +223,7 @@ nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput", filename
 }
 
 #' @rdname nmr_batman
-#' @export
+#' @noRd
 nmr_batman_multi_data_user <- function(multiplet_table, batman_dir = "BatmanInput", filename = "multi_data_user.csv") {
   full_filename <- batman_get_full_filename(batman_dir, filename)
   
@@ -252,7 +252,7 @@ nmr_batman_multi_data_user <- function(multiplet_table, batman_dir = "BatmanInpu
 }
 
 #' @rdname nmr_batman
-#' @export
+#' @noRd
 nmr_batman_metabolites_list <- function(metabolite_names,
                                         batman_dir = "BatmanInput",
                                         filename = "metabolitesList.csv") {
