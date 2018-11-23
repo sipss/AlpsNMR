@@ -13,7 +13,7 @@ nmr_zip_bruker_samples(path, workdir, overwrite = FALSE, ...)
 
 \item{overwrite}{Should existing zip files be overwritten?}
 
-\item{...}{Passed to \code{\link[utils]{zip}}}
+\item{...}{Passed to \link[utils:zip]{utils::zip}}
 }
 \value{
 A character vector of the same length as path, with the zip file names
@@ -21,3 +21,13 @@ A character vector of the same length as path, with the zip file names
 \description{
 Create one zip file for each brucker sample path
 }
+\seealso{
+Other import/export functions: \code{\link{load_and_save_functions}},
+  \code{\link{nmr_data}}, \code{\link{nmr_meta_add}},
+  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_read_bruker_fid}},
+  \code{\link{nmr_read_samples}},
+  \code{\link{pipe_load_samples}}, \code{\link{to_ASICS}},
+  \code{\link{to_ChemoSpec}}
+}
+\concept{import/export functions}

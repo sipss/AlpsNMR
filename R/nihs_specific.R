@@ -11,6 +11,8 @@
 #' @return a data frame with the slims information
 #'
 #' Key columns on the output data frame are "cntn_cf_fluidx_barcode" and "cntn_cf_subject_id" "cntn_cf_fk_masterSample"
+#' 
+#' @family NIHS specific infrastructure functions
 #'
 #' @export
 read_exported_slims <- function(file_name, sheet = NULL, all_character = FALSE) {
@@ -41,8 +43,10 @@ read_exported_slims <- function(file_name, sheet = NULL, all_character = FALSE) 
 
 
 #' Get metadata from an nmr_dataset for irods
-#' @param nmr_data The \code{\link{nmr_dataset}} object
-#' @return A data frame (tibble) with the columns used by NIHSrods
+#' @param nmr_data An [nmr_dataset_family] object
+#' @return A data frame (tibble) with the columns used by the NIHSrods package
+#' 
+#' @family NIHS specific infrastructure functions
 #' @export
 nmr_get_irods_meta <- function(nmr_data) {
   full_meta <- nmr_meta_get(nmr_data)
@@ -114,13 +118,14 @@ nmr_get_irods_meta <- function(nmr_data) {
 
 #' Create one zip file for each sample
 #'
-#' @param meta_irods Data frame given by \code{\link{nmr_get_irods_meta}}
+#' @param meta_irods Data frame given by [nmr_get_irods_meta]
 #' @param workdir Directory to store zip files
 #' @param overwrite Should existing zip files be overwritten?
-#' @param ... Passed to \code{\link[utils]{zip}}
-#' @return A meta_irods data frame with an additional \code{src_path} column
+#' @param ... Passed to [utils::zip]
+#' @return A meta_irods data frame with an additional `src_path` column
 #'         containing the zip file path location.
 #' @export
+#' @family NIHS specific infrastructure functions
 nmr_prepare_zip_files <- function(meta_irods, workdir, overwrite = FALSE, ...) {
   current_wd <- getwd()
   dir.create(workdir, recursive = TRUE)
@@ -226,6 +231,7 @@ nmr_push_one_to_irods <- function(element, dest_path, extra_columns = NULL) {
 #'                      used as attribute names.
 #' @return The meta_irods data frame with an additional column named \code{full_irods_path}.
 #' @export
+#' @family NIHS specific infrastructure functions
 #' @examples
 #' \dontrun{
 #'  nmrdata <- nmr_read_samples_dir("/dir/DUND-100713-Constitutive Thinness-plasma/",
@@ -352,6 +358,7 @@ nmr_push_to_irods <- function(meta_irods, dest_path, check_metadata_issues = TRU
 #'               Required for processed data, the author who did the processing.
 #' @param exclude_trash Exclude samples in \code{/NIHSData/trash} (Default: \code{TRUE})
 #' @return a data frame with the irods metadata that results from the search
+#' @family NIHS specific infrastructure functions
 #' @export
 nmr_irods_search <- function(project_NPDI_ID = NA, study_nickname = NA,
                              assay_ID = NA, master_sample_accession = NA,
@@ -461,6 +468,7 @@ nmr_irods_search <- function(project_NPDI_ID = NA, study_nickname = NA,
 #'                    assay_technique = "Nuclear Magnetic Resonance-1D-1H-NOESY")
 #' plasmadata <- nmr_read_samples_irods(irods_results)
 #' }
+#' @family NIHS specific infrastructure functions
 #' @export
 nmr_read_samples_irods <- function(irods_search_results, ...) {
   if (!requireNamespace("NIHSrods", quietly = TRUE)) {
@@ -507,6 +515,7 @@ nmr_read_samples_irods <- function(irods_search_results, ...) {
 #' Validate irods_meta
 #' @param irods_meta A data frame with irods metadata
 #' @return a logical. \code{TRUE} if checked columns are in the ontology, \code{FALSE} otherwise.
+#' @family NIHS specific infrastructure functions
 #' @export
 nmr_irods_validate_meta <- function(irods_meta) {
   file_types <- unique(irods_meta$file_type)

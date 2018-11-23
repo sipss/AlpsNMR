@@ -14,7 +14,7 @@
 \item{NMRExperiment}{A character vector with the NMRExperiments to include. Use "all" to include all experiments.}
 
 \item{chemshift_range}{range of the chemical shifts to be included. Can be of length 3
-to include the resolution in the third element (e.g. \code{c(0.2, 0.8, 0.05)})}
+to include the resolution in the third element (e.g. \code{c(0.2, 0.8, 0.005)})}
 
 \item{interactive}{if \code{TRUE} return an interactive plotly plot, otherwise return a ggplot one.}
 
@@ -32,7 +32,33 @@ The plot
 Plot an nmr_dataset_1D
 }
 \seealso{
-Other plotting nmr datasets: \code{\link{plot_interactive}},
-  \code{\link{plot_webgl}}
+Other plotting functions: \code{\link{plot_interactive}}
+
+Other nmr_dataset_1D functions: \code{\link{[.nmr_dataset_1D}},
+  \code{\link{is.nmr_dataset_1D}},
+  \code{\link{load_and_save_functions}},
+  \code{\link{new_nmr_dataset_1D}},
+  \code{\link{nmr_align_find_ref}},
+  \code{\link{nmr_align}},
+  \code{\link{nmr_detect_peaks_plot}},
+  \code{\link{nmr_detect_peaks}},
+  \code{\link{nmr_exclude_region}},
+  \code{\link{nmr_integrate_peak_positions}},
+  \code{\link{nmr_integrate_regions}},
+  \code{\link{nmr_interpolate_1D}},
+  \code{\link{nmr_meta_add}},
+  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_meta_get_column}},
+  \code{\link{nmr_meta_get}}, \code{\link{nmr_normalize}},
+  \code{\link{nmr_pca_build_model}},
+  \code{\link{nmr_pca_outliers_filter}},
+  \code{\link{nmr_pca_outliers_plot}},
+  \code{\link{nmr_pca_outliers_robust}},
+  \code{\link{nmr_pca_outliers}},
+  \code{\link{nmr_ppm_resolution}},
+  \code{\link{plot_webgl}}, \code{\link{to_ASICS}},
+  \code{\link{to_ChemoSpec}},
+  \code{\link{validate_nmr_dataset_1D}}
 }
-\concept{plotting nmr datasets}
+\concept{nmr_dataset_1D functions}
+\concept{plotting functions}

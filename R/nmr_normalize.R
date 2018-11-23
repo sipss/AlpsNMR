@@ -52,6 +52,7 @@ nmr_normalize <- function(samples,
 }
 
 #' @rdname nmr_normalize
+#' @family nmr_dataset_1D functions
 #' @export
 nmr_normalize.nmr_dataset_1D <- function(samples,
                                          method = c("area", "max", "value", "region", "pqn", "none"),

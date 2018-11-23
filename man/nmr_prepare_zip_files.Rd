@@ -7,13 +7,13 @@
 nmr_prepare_zip_files(meta_irods, workdir, overwrite = FALSE, ...)
 }
 \arguments{
-\item{meta_irods}{Data frame given by \code{\link{nmr_get_irods_meta}}}
+\item{meta_irods}{Data frame given by \link{nmr_get_irods_meta}}
 
 \item{workdir}{Directory to store zip files}
 
 \item{overwrite}{Should existing zip files be overwritten?}
 
-\item{...}{Passed to \code{\link[utils]{zip}}}
+\item{...}{Passed to \link[utils:zip]{utils::zip}}
 }
 \value{
 A meta_irods data frame with an additional \code{src_path} column
@@ -22,3 +22,12 @@ containing the zip file path location.
 \description{
 Create one zip file for each sample
 }
+\seealso{
+Other NIHS specific infrastructure functions: \code{\link{nmr_get_irods_meta}},
+  \code{\link{nmr_irods_search}},
+  \code{\link{nmr_irods_validate_meta}},
+  \code{\link{nmr_push_to_irods}},
+  \code{\link{nmr_read_samples_irods}},
+  \code{\link{read_exported_slims}}
+}
+\concept{NIHS specific infrastructure functions}

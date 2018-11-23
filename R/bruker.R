@@ -648,7 +648,6 @@ read_bruker_metadata <- function(sample_path, pdata_path = "pdata/1",
 #' @param pdata_path Path from `sample_path` to the preprocessed data
 #' @param all_components If `FALSE` load only the real component. Otherwise load all of them
 #' @return a list with all the bruker sample information
-#' @export
 read_bruker_sample <- function(sample_path,
                                pdata_file = NULL, pdata_path  = "pdata/1",
                                all_components = FALSE) {
@@ -680,8 +679,9 @@ bruker_merge_meta_pdata <- function(meta, pdata) {
 #' @param path Character vector with sample directories
 #' @param workdir Directory to store zip files
 #' @param overwrite Should existing zip files be overwritten?
-#' @param ... Passed to \code{\link[utils]{zip}}
+#' @param ... Passed to [utils::zip]
 #' @return A character vector of the same length as path, with the zip file names
+#' @family import/export functions
 #' @export
 nmr_zip_bruker_samples <- function(path, workdir, overwrite = FALSE, ...) {
   current_wd <- getwd()
@@ -737,6 +737,7 @@ nmr_zip_bruker_samples <- function(path, workdir, overwrite = FALSE, ...) {
 #' @param endian Endianness of the fid file ("little" by default, use "big" if acqus$BYTORDA == 1)
 #' @return A numeric vector with the free induction decay values
 #' @export
+#' @family import/export functions
 nmr_read_bruker_fid <- function(sample_name, endian = "little") {
   fid_file <- file.path(sample_name, "fid")
   num_numbers <- file.size(fid_file)/8

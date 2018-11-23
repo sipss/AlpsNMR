@@ -27,3 +27,14 @@ Only samples fullfilling all the given conditions are kept in further analysis.}
 \description{
 Pipeline: Filter samples according to metadata conditions
 }
+\seealso{
+Other pipeline functions: \code{\link{pipe_add_metadata}},
+  \code{\link{pipe_exclude_regions}},
+  \code{\link{pipe_interpolate_1D}},
+  \code{\link{pipe_load_samples}},
+  \code{\link{pipe_normalization}},
+  \code{\link{pipe_outlier_detection}},
+  \code{\link{pipe_peak_integration}},
+  \code{\link{pipe_peakdet_align}}
+}
+\concept{pipeline functions}

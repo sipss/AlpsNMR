@@ -17,3 +17,13 @@ A numeric vector with the free induction decay values
 \description{
 Reads an FID file. This is a very simple function.
 }
+\seealso{
+Other import/export functions: \code{\link{load_and_save_functions}},
+  \code{\link{nmr_data}}, \code{\link{nmr_meta_add}},
+  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_read_samples}},
+  \code{\link{nmr_zip_bruker_samples}},
+  \code{\link{pipe_load_samples}}, \code{\link{to_ASICS}},
+  \code{\link{to_ChemoSpec}}
+}
+\concept{import/export functions}

@@ -9,14 +9,14 @@
 \usage{
 nmr_pca_plot_variance(pca_model)
 
-nmr_pca_scoreplot(nmr_data, pca_model, comp = 1:2, ...)
+nmr_pca_scoreplot(nmr_dataset, pca_model, comp = 1:2, ...)
 
 nmr_pca_loadingplot(pca_model, comp)
 }
 \arguments{
 \item{pca_model}{A PCA model trained with \link{nmr_pca_build_model}}
 
-\item{nmr_data}{a \code{\link{nmr_dataset}} object}
+\item{nmr_dataset}{an \link{nmr_dataset_1D} object}
 
 \item{comp}{Components to represent}
 
@@ -25,3 +25,11 @@ nmr_pca_loadingplot(pca_model, comp)
 \description{
 Plotting functions for PCA
 }
+\seealso{
+Other PCA related functions: \code{\link{nmr_pca_build_model}},
+  \code{\link{nmr_pca_outliers_filter}},
+  \code{\link{nmr_pca_outliers_plot}},
+  \code{\link{nmr_pca_outliers_robust}},
+  \code{\link{nmr_pca_outliers}}
+}
+\concept{PCA related functions}

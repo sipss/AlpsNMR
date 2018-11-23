@@ -18,6 +18,8 @@ NULL
 #' 
 #' This function is useful for its side-effects: Stopping in case of error
 #' 
+#' @family nmr_dataset_peak_table functions
+#' @family class helper functions
 #' @export
 validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
   assert_that(inherits(nmr_dataset_peak_table, "nmr_dataset_peak_table"),
@@ -66,6 +68,8 @@ validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
 #' 
 #' @importFrom assertthat assert_that
 #' @importFrom glue glue
+#' @family nmr_dataset_peak_table functions
+#' @family class helper functions
 #' @export
 new_nmr_dataset_peak_table <- function(peak_table, metadata) {
   samples <- list()
@@ -81,15 +85,21 @@ new_nmr_dataset_peak_table <- function(peak_table, metadata) {
 #' @param x An object
 #' @return `TRUE` if the object is an `nmr_dataset_peak_table`, `FALSE` otherwise
 #' @export
+#' @family nmr_dataset_peak_table functions
+#' @family class helper functions
 is.nmr_dataset_peak_table <- function(x) inherits(x, "nmr_dataset_peak_table")
 
 #' @export
+#' @family nmr_dataset_peak_table functions
+#' @family class helper functions
 print.nmr_dataset_peak_table <- function(x, ...) {
   cat(format(x, ...), "\n")
   invisible(x)
 }
 
 #' @export
+#' @family nmr_dataset_peak_table functions
+#' @family class helper functions
 format.nmr_dataset_peak_table <- function(x, ...) {
   paste0("An nmr_dataset_peak_table (", x$num_samples, " samples, and ", ncol(x$peak_table), " peaks)")
 }
@@ -98,6 +108,8 @@ format.nmr_dataset_peak_table <- function(x, ...) {
 #' @param x an [nmr_dataset_peak_table] object
 #' @param i indices of the samples to keep
 #' @return an nmr_dataset_peak_table with the extracted samples
+#' @family subsetting functions
+#' @family nmr_dataset_peak_table functions
 #' @export
 `[.nmr_dataset_peak_table` <- function(x, i) {
   output <- x

@@ -13,7 +13,7 @@ nmr_data(nmr_dataset) <- value
 \method{nmr_data}{nmr_dataset_1D}(nmr_dataset) <- value
 }
 \arguments{
-\item{nmr_dataset}{The NMR object to get the raw data from}
+\item{nmr_dataset}{An object from the \link{nmr_dataset_family} to get the raw data from}
 
 \item{...}{Unused and left for future compatibility}
 
@@ -27,3 +27,14 @@ The given nmr_dataset
 \description{
 Set/Return the full spectra matrix
 }
+\seealso{
+Other import/export functions: \code{\link{load_and_save_functions}},
+  \code{\link{nmr_meta_add}},
+  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_read_bruker_fid}},
+  \code{\link{nmr_read_samples}},
+  \code{\link{nmr_zip_bruker_samples}},
+  \code{\link{pipe_load_samples}}, \code{\link{to_ASICS}},
+  \code{\link{to_ChemoSpec}}
+}
+\concept{import/export functions}

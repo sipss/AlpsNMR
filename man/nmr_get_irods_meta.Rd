@@ -7,11 +7,20 @@
 nmr_get_irods_meta(nmr_data)
 }
 \arguments{
-\item{nmr_data}{The \code{\link{nmr_dataset}} object}
+\item{nmr_data}{An \link{nmr_dataset_family} object}
 }
 \value{
-A data frame (tibble) with the columns used by NIHSrods
+A data frame (tibble) with the columns used by the NIHSrods package
 }
 \description{
 Get metadata from an nmr_dataset for irods
 }
+\seealso{
+Other NIHS specific infrastructure functions: \code{\link{nmr_irods_search}},
+  \code{\link{nmr_irods_validate_meta}},
+  \code{\link{nmr_prepare_zip_files}},
+  \code{\link{nmr_push_to_irods}},
+  \code{\link{nmr_read_samples_irods}},
+  \code{\link{read_exported_slims}}
+}
+\concept{NIHS specific infrastructure functions}

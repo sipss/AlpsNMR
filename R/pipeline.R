@@ -1,6 +1,7 @@
 #' Pipeline: Load NMR samples
 #'
 #' @family pipeline functions
+#' @family import/export functions
 #' @param samples_dir The directory where the samples are
 #' @param output_dir Directory where the nmr_dataset and the excel files will be saved
 #' @inheritParams fs::dir_ls
@@ -35,6 +36,7 @@ pipe_load_samples <- function(samples_dir, glob = "*0", output_dir = NULL) {
 #' Pipeline: Add Metadata
 #'
 #' @family pipeline functions
+#' @family metadata functions
 #' @param nmr_dataset_rds The nmr_dataset.rds file name coming from previous nodes
 #' @param excel_file An excel file name. See details for the requirements
 #' 
@@ -170,6 +172,8 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
 #' Uses [nmr_pca_outliers_robust] to perform the detection of outliers
 #' 
 #' @inheritParams pipe_add_metadata
+#' @family outlier detection functions
+#' @family pipeline functions
 #'
 #' @return This function saves the result to the output directory
 #' @export
@@ -232,7 +236,7 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)  {
 #' Only samples fullfilling all the given conditions are kept in further analysis.
 #' 
 #' @export
-#'
+#' @family pipeline functions
 pipe_filter_samples <- function(nmr_dataset_rds, conditions, output_dir) {
   message("Starting pipe_filter_samples at ", Sys.time())
   
@@ -268,7 +272,9 @@ pipe_filter_samples <- function(nmr_dataset_rds, conditions, output_dir) {
 #' @inheritParams nmr_align
 #'
 #' @export
-#'
+#' @family pipeline functions
+#' @family peak detection functions
+#' @family alignment functions
 pipe_peakdet_align <- function(nmr_dataset_rds,
                          nDivRange_ppm = 0.1,
                          scales = seq(1, 16, 2),
@@ -333,6 +339,8 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
 #'
 #' @importFrom rlang .data
 #' @export
+#' @family pipeline functions
+#' @family peak integration functions
 #'
 pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_width_ppm, output_dir) {
   message("Starting pipe_peak_integration at ", Sys.time())
@@ -378,6 +386,7 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
 #' @inheritParams pipe_add_metadata
 #' @param internal_calibrant A ppm range where the internal calibrant is, or `NULL`.
 #'
+#' @family pipeline functions
 #' @export
 pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, output_dir = NULL) {
   message("Starting pipe_normalization at ", Sys.time())

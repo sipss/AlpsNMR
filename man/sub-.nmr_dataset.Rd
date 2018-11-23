@@ -23,3 +23,22 @@ data <- nm_read_samples_dir("your_dir")
 data2 <- data[1:3] # get the first 3 samples
 }
 }
+\seealso{
+Other subsetting functions: \code{\link{[.nmr_dataset_1D}},
+  \code{\link{[.nmr_dataset_peak_table}},
+  \code{\link{filter.nmr_dataset}},
+  \code{\link{nmr_pca_outliers_filter}}
+
+Other nmr_dataset functions: \code{\link{load_and_save_functions}},
+  \code{\link{new_nmr_dataset}},
+  \code{\link{nmr_interpolate_1D}},
+  \code{\link{nmr_meta_add}},
+  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_meta_get_column}},
+  \code{\link{nmr_meta_get}},
+  \code{\link{nmr_ppm_resolution}},
+  \code{\link{nmr_read_samples}},
+  \code{\link{validate_nmr_dataset}}
+}
+\concept{nmr_dataset functions}
+\concept{subsetting functions}

@@ -30,3 +30,12 @@ irods_results <-
 plasmadata <- nmr_read_samples_irods(irods_results)
 }
 }
+\seealso{
+Other NIHS specific infrastructure functions: \code{\link{nmr_get_irods_meta}},
+  \code{\link{nmr_irods_search}},
+  \code{\link{nmr_irods_validate_meta}},
+  \code{\link{nmr_prepare_zip_files}},
+  \code{\link{nmr_push_to_irods}},
+  \code{\link{read_exported_slims}}
+}
+\concept{NIHS specific infrastructure functions}

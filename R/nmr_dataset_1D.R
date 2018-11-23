@@ -16,6 +16,7 @@
 #' 
 #' 
 #' @name nmr_dataset_1D
+#' @family NIHSnmr dataset objects
 NULL
 
 #' Validate 1D nmr datasets
@@ -24,6 +25,8 @@ NULL
 #' 
 #' This function is useful for its side-effects. Stopping in case of error
 #' 
+#' @family class helper functions
+#' @family nmr_dataset_1D functions
 #' @export
 validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
   assert_that(inherits(nmr_dataset_1D, "nmr_dataset_1D"),
@@ -80,6 +83,8 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
 #' 
 #' @importFrom assertthat assert_that
 #' @importFrom glue glue
+#' @family class helper functions
+#' @family nmr_dataset_1D functions
 #' @export
 new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
   samples <- list()
@@ -94,16 +99,22 @@ new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
 
 #' Object is of [nmr_dataset_1D] class
 #' @param x An object
-#' @return `TRUE` if the object is an `nmr_dataset_1D`, `FALSE` otherwise
+#' @return `TRUE` if the object is an [nmr_dataset_1D], `FALSE` otherwise
 #' @export
+#' @family class helper functions
+#' @family nmr_dataset_1D functions
 is.nmr_dataset_1D <- function(x) inherits(x, "nmr_dataset_1D")
 
+#' @family class helper functions
+#' @family nmr_dataset_1D functions
 #' @export
 print.nmr_dataset_1D <- function(x, ...) {
   cat(format(x, ...), "\n")
   invisible(x)
 }
 
+#' @family class helper functions
+#' @family nmr_dataset_1D functions
 #' @export
 format.nmr_dataset_1D <- function(x, ...) {
   paste0("An nmr_dataset_1D (", x$num_samples, " samples)")
@@ -113,6 +124,8 @@ format.nmr_dataset_1D <- function(x, ...) {
 #' @param x an [nmr_dataset_1D] object
 #' @param i indices of the samples to keep
 #' @return an nmr_dataset_1D with the extracted samples
+#' @family subsetting functions
+#' @family nmr_dataset_1D functions
 #' @export
 `[.nmr_dataset_1D` <- function(x, i) {
   output <- x
@@ -134,6 +147,7 @@ format.nmr_dataset_1D <- function(x, ...) {
 #' @export
 #'
 nmr_export_data_1r <- function(nmr_dataset, filename) {
+  # FIXME: remove me (nmr_data() covers for this)
   assert_that(is.nmr_dataset_1D(nmr_dataset), msg = "An nmr_dataset_1D should be given")
   data_1r <- nmr_data(nmr_dataset)
   utils::write.csv(data_1r, file = filename, row.names = FALSE)

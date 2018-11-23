@@ -5,6 +5,8 @@
 #'  [MassSpecWavelet::peakDetectionCWT] for peak detection.
 #' 
 #' @family peak detection functions
+#' @family nmr_dataset_1D functions
+#' @seealso [nmr_align] for peak alignment with the detected peak table
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @param nDivRange_ppm Segment size, in ppms, to divide the spectra and search for peaks.
 #' @inheritParams speaq::detectSpecPeaks
@@ -69,12 +71,15 @@ nmr_detect_peaks <- function(nmr_dataset, nDivRange_ppm = 0.1,
 }
 
 #' Plot peak detection results
+#' 
 #' @family peak detection functions
 #' @inheritParams nmr_detect_peaks
-#' @param peak_data The peak table returned by `nmr_detect_peaks`
+#' @param peak_data The peak table returned by [nmr_detect_peaks]
 #' @param NMRExperiment a single NMR experiment to plot
 #' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
 #' @export
+#' @family peak detection functions
+#' @family nmr_dataset_1D functions
 nmr_detect_peaks_plot <- function(nmr_dataset, peak_data, NMRExperiment, ...) {
   if (!rlang::is_scalar_character(NMRExperiment)) {
     stop("NMRExperiment should be a string")
@@ -148,7 +153,8 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #'
 #' @return An [nmr_dataset_1D], with the spectra aligned
 #' @export
-#'
+#' @family peak alignment functions
+#' @family nmr_dataset_1D functions
 nmr_align <- function(nmr_dataset, peak_data, NMRExp_ref = NULL,
                       maxShift_ppm = 0.0015, acceptLostPeak = FALSE) {
   validate_nmr_dataset_1D(nmr_dataset)
@@ -182,6 +188,8 @@ nmr_align <- function(nmr_dataset, peak_data, NMRExp_ref = NULL,
 #' @return The NMRExperiment of the reference sample
 #' @export
 #'
+#' @family peak alignment functions
+#' @family nmr_dataset_1D functions
 nmr_align_find_ref <- function(nmr_dataset, peak_data) {
   peakList <- peak_data_to_peakList(nmr_dataset, peak_data)
   resFindRef <- speaq::findRef(peakList)
@@ -196,6 +204,7 @@ nmr_align_find_ref <- function(nmr_dataset, peak_data) {
 #'
 #' @return A list of regions suitable for [nmr_integrate_regions]
 #'
+#' @family peak detection functions
 regions_from_peak_table <- function(peak_pos_ppm, peak_width_ppm) {
   if (length(peak_width_ppm) == 1) {
     peak_width_ppm <- rep(peak_width_ppm, length(peak_pos_ppm))
@@ -218,6 +227,7 @@ nmr_ppm_resolution <- function(nmr_dataset) {
 }
 
 #' @rdname nmr_ppm_resolution
+#' @family nmr_dataset functions
 #' @export
 nmr_ppm_resolution.nmr_dataset <- function(nmr_dataset) {
   # For each sample:
@@ -230,6 +240,7 @@ nmr_ppm_resolution.nmr_dataset <- function(nmr_dataset) {
 }
 
 #' @rdname nmr_ppm_resolution
+#' @family nmr_dataset_1D functions
 #' @export
 nmr_ppm_resolution.nmr_dataset_1D <- function(nmr_dataset) {
   stats::median(abs(diff(nmr_dataset$axis)))

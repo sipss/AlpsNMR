@@ -5,7 +5,7 @@
 \alias{hmdb}
 \title{The Human Metabolome DataBase multiplet table}
 \description{
-Used by the batman helpers
+The Human Metabolome DataBase multiplet table
 }
 \references{
 \url{hmdb.ca}

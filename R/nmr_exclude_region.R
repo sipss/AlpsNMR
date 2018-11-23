@@ -1,7 +1,8 @@
 #' Exclude region from samples
 #'
 #' Excludes a given region (for instance to remove the water peak)
-#' @param samples A [nmr_dataset] or [nmr_dataset_1D] object
+#' 
+#' @param samples An object
 #' @param exclude A list with regions to be removed Typically:
 #'                `exclude = list(water = c(4.7, 5.0))`
 #' @return The same object, with the regions excluded
@@ -11,6 +12,7 @@ nmr_exclude_region <- function(samples, exclude = list(water = c(4.7, 5.0))) {
 }
 
 #' @rdname nmr_exclude_region
+#' @family nmr_dataset_1D functions
 #' @export
 nmr_exclude_region.nmr_dataset_1D <- function(samples, exclude = list(water = c(4.7, 5.0))) {
   if (is.null(exclude) || length(exclude) == 0) {

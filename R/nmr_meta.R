@@ -9,6 +9,10 @@
 #' Both `groups` and `columns` can't be given simultaneously.
 #' 
 #' @return a data frame with the injection metadata
+#' @family metadata management functions
+#' @family nmr_dataset functions
+#' @family nmr_dataset_1D functions
+#' @family nmr_dataset_peak_table functions
 #' @export
 nmr_meta_get <- function(samples, columns = NULL, groups = NULL) {
   metadata_list <- samples[["metadata"]]
@@ -65,6 +69,10 @@ nmr_meta_get <- function(samples, columns = NULL, groups = NULL) {
 #' @param samples a [nmr_dataset] object
 #' @param column A column to get
 #' @return A vector with the column
+#' @family metadata management functions
+#' @family nmr_dataset functions
+#' @family nmr_dataset_1D functions
+#' @family nmr_dataset_peak_table functions
 #' @export
 nmr_meta_get_column <- function(samples, column = "NMRExperiment") {
   nmr_meta_get(samples, columns = column)[[column]]
@@ -110,6 +118,11 @@ nmr_meta_get_column <- function(samples, column = "NMRExperiment") {
 #' # The final loaded metadata:
 #' print(nmr_meta_get(nmr_dataset, groups = "external"))
 #' 
+#' @family metadata management functions
+#' @family nmr_dataset functions
+#' @family nmr_dataset_1D functions
+#' @family nmr_dataset_peak_table functions
+#' @family import/export functions
 nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
   nmr_meta <- nmr_meta_get(nmr_data, groups = "external")
   by_left <- ifelse(is.null(names(by)), by, names(by))
@@ -140,7 +153,11 @@ nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
 #'  the default for a more generic solution
 #' @return The Excel file name
 #' @export
-#'
+#' @family metadata management functions
+#' @family nmr_dataset functions
+#' @family nmr_dataset_1D functions
+#' @family nmr_dataset_peak_table functions
+#' @family import/export functions
 nmr_meta_export <- function(nmr_dataset, 
                             xlsx_file,
                             groups = c("info", "orig", "title", "external")) {

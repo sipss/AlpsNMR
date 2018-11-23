@@ -73,3 +73,12 @@ Search for NMR samples inside irods.
 This function is slow because NIHSrods::imeta_ls does not accept multiple files
 at once.
 }
+\seealso{
+Other NIHS specific infrastructure functions: \code{\link{nmr_get_irods_meta}},
+  \code{\link{nmr_irods_validate_meta}},
+  \code{\link{nmr_prepare_zip_files}},
+  \code{\link{nmr_push_to_irods}},
+  \code{\link{nmr_read_samples_irods}},
+  \code{\link{read_exported_slims}}
+}
+\concept{NIHS specific infrastructure functions}

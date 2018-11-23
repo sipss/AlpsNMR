@@ -17,3 +17,20 @@ an nmr_dataset_peak_table with the extracted samples
 \description{
 Extract parts of an nmr_dataset_peak_table
 }
+\seealso{
+Other subsetting functions: \code{\link{[.nmr_dataset_1D}},
+  \code{\link{[.nmr_dataset}},
+  \code{\link{filter.nmr_dataset}},
+  \code{\link{nmr_pca_outliers_filter}}
+
+Other nmr_dataset_peak_table functions: \code{\link{is.nmr_dataset_peak_table}},
+  \code{\link{load_and_save_functions}},
+  \code{\link{new_nmr_dataset_peak_table}},
+  \code{\link{nmr_meta_add}},
+  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_meta_get_column}},
+  \code{\link{nmr_meta_get}},
+  \code{\link{validate_nmr_dataset_peak_table}}
+}
+\concept{nmr_dataset_peak_table functions}
+\concept{subsetting functions}

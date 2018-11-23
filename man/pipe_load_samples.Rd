@@ -29,6 +29,20 @@ pipe_load_samples("/dir/with/nmr/samples/",
 \seealso{
 Other pipeline functions: \code{\link{pipe_add_metadata}},
   \code{\link{pipe_exclude_regions}},
-  \code{\link{pipe_interpolate_1D}}
+  \code{\link{pipe_filter_samples}},
+  \code{\link{pipe_interpolate_1D}},
+  \code{\link{pipe_normalization}},
+  \code{\link{pipe_outlier_detection}},
+  \code{\link{pipe_peak_integration}},
+  \code{\link{pipe_peakdet_align}}
+
+Other import/export functions: \code{\link{load_and_save_functions}},
+  \code{\link{nmr_data}}, \code{\link{nmr_meta_add}},
+  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_read_bruker_fid}},
+  \code{\link{nmr_read_samples}},
+  \code{\link{nmr_zip_bruker_samples}},
+  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}}
 }
+\concept{import/export functions}
 \concept{pipeline functions}

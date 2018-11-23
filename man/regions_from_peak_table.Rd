@@ -17,3 +17,10 @@ A list of regions suitable for \link{nmr_integrate_regions}
 \description{
 Build list of regions for peak integration
 }
+\seealso{
+Other peak detection functions: \code{\link{nmr_detect_peaks_plot}},
+  \code{\link{nmr_detect_peaks}},
+  \code{\link{nmr_integrate_regions}},
+  \code{\link{pipe_peakdet_align}}
+}
+\concept{peak detection functions}

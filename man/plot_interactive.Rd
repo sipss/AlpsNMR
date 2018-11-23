@@ -18,7 +18,6 @@ The html_filename
 Plots in WebGL
 }
 \seealso{
-Other plotting nmr datasets: \code{\link{plot.nmr_dataset_1D}},
-  \code{\link{plot_webgl}}
+Other plotting functions: \code{\link{plot.nmr_dataset_1D}}
 }
-\concept{plotting nmr datasets}
+\concept{plotting functions}

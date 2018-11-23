@@ -1,3 +1,13 @@
+#' nmr_dataset like objects (S3 classes)
+#' 
+#' The NIHSnmr package defines and uses several objects to manage NMR Data.
+#' 
+#' @name nmr_dataset_family
+#' @family NIHSnmr dataset objects
+#' @seealso [Functions to save and load these objects][load_and_save_functions]
+NULL
+
+
 #' nmr_dataset (S3 class)
 #'
 #' An `nmr_dataset` represents a set of NMR samples.
@@ -20,6 +30,8 @@
 #' - `num_samples`: The number of samples in the dataset
 #' 
 #' @name nmr_dataset
+#' @family NIHSnmr dataset objects
+#' @seealso [Functions to save and load these objects][load_and_save_functions]
 NULL
 
 
@@ -40,6 +52,8 @@ NULL
 NULL
 
 #' @rdname nmr_read_samples
+#' @family nmr_dataset functions
+#' @family import/export functions
 #' @export
 nmr_read_samples_dir <- function(samples_dir,
                                  format = "bruker",
@@ -350,6 +364,8 @@ filter.nmr_dataset_peak_table <- filter.nmr_dataset
 #' data <- nm_read_samples_dir("your_dir")
 #' data2 <- data[1:3] # get the first 3 samples
 #' }
+#' @family subsetting functions
+#' @family nmr_dataset functions
 #' @export
 `[.nmr_dataset` <- function(x, i) {
   output <- x
@@ -368,17 +384,26 @@ filter.nmr_dataset_peak_table <- filter.nmr_dataset
 }
 
 
+#' @family class helper functions
+#' @family nmr_dataset functions
 #' @export
 print.nmr_dataset <- function(x, ...) {
   cat(format(x, ...), "\n")
   invisible(x)
 }
 
+#' @family class helper functions
+#' @family nmr_dataset functions
 #' @export
 format.nmr_dataset <- function(x, ...) {
   paste0("An nmr_dataset (", x$num_samples, " samples)")
 }
 
+#' Validate nmr_dataset objects
+#' @param samples An nmr_dataset object
+#' @family class helper functions
+#' @family nmr_dataset functions
+#' @export
 validate_nmr_dataset <- function(samples) {
   assert_that(inherits(samples, "nmr_dataset"),
               msg = "Not an nmr_dataset object")
@@ -401,6 +426,30 @@ validate_nmr_dataset <- function(samples) {
   samples
 }
 
+#' Create an nmr_dataset object
+#' @param metadata A named list of data frames
+#' @param data_fields A named list. Check the examples
+#' @param axis A list. Check the examples
+#' @family class helper functions
+#' @family nmr_dataset functions
+#' @export
+#' @examples 
+#' #
+#' metadata_1D <- list(external = data.frame(NMRExperiment = c("10", "20")))
+#' # Sample 10 and Sample 20 can have different lengths (due to different setups)
+#' data_fields_1D <- list(data_1r = list(runif(16), runif(32)))
+#' # Each sample has its own axis list, with one element (because this example is 1D)
+#' axis_1D <- list(list(1:16), list(1:32))
+#' my_1D_data <- new_nmr_dataset(metadata_1D, data_fields_1D, axis_1D)
+#' 
+#' # Example for 2D samples
+#' metadata_2D <- list(external = data.frame(NMRExperiment = c("11", "21")))
+#' data_fields_2D <- list(data_2rr = list(matrix(runif(16*3), nrow=16, ncol=3),
+#'                                               runif(32*3), nrow=32, ncol=3))
+#' # Each sample has its own axis list, with one element (because this example is 1D)
+#' axis_2D <- list(list(1:16, 1:3), list(1:32, 1:3))
+#' my_2D_data <- new_nmr_dataset(metadata_2D, data_fields_2D, axis_2D)
+#' 
 new_nmr_dataset <- function(metadata, data_fields, axis) {
   samples <- list()
   samples[["metadata"]] <- metadata

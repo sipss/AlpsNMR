@@ -42,6 +42,8 @@
 #'   scale_y_continuous(limits = c(5, 20))
 #' }
 #' @export
+#' @family peak detection functions
+#' @family peak integration functions
 nmr_integrate_regions <- function(samples, regions, fix_baseline = TRUE,
                                   excluded_regions_as_zero = FALSE) {
   UseMethod("nmr_integrate_regions")
@@ -60,6 +62,7 @@ rough_baseline <- function(x) {
 }
 
 #' @rdname nmr_integrate_regions
+#' @family nmr_dataset_1D functions
 #' @export
 nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline = TRUE,
                                                  excluded_regions_as_zero = FALSE) {
@@ -101,6 +104,8 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
 #' @inherit nmr_integrate_regions return
 #' @export
 #'
+#' @family peak integration functions
+#' @family nmr_dataset_1D functions
 nmr_integrate_peak_positions <- function(samples,
                                          peak_pos_ppm,
                                          peak_width_ppm,

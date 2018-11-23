@@ -19,3 +19,18 @@ pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir, peak_width_ppm,
 \description{
 Pipeline: Peak integration
 }
+\seealso{
+Other pipeline functions: \code{\link{pipe_add_metadata}},
+  \code{\link{pipe_exclude_regions}},
+  \code{\link{pipe_filter_samples}},
+  \code{\link{pipe_interpolate_1D}},
+  \code{\link{pipe_load_samples}},
+  \code{\link{pipe_normalization}},
+  \code{\link{pipe_outlier_detection}},
+  \code{\link{pipe_peakdet_align}}
+
+Other peak integration functions: \code{\link{nmr_integrate_peak_positions}},
+  \code{\link{nmr_integrate_regions}}
+}
+\concept{peak integration functions}
+\concept{pipeline functions}

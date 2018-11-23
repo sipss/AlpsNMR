@@ -5,14 +5,14 @@
 \alias{nmr_pca_build_model.nmr_dataset_1D}
 \title{Build a PCA on for an nmr_dataset}
 \usage{
-nmr_pca_build_model(nmr_data, ncomp = NULL, center = TRUE,
+nmr_pca_build_model(nmr_dataset, ncomp = NULL, center = TRUE,
   scale = FALSE, ...)
 
-\method{nmr_pca_build_model}{nmr_dataset_1D}(nmr_data, ncomp = NULL,
+\method{nmr_pca_build_model}{nmr_dataset_1D}(nmr_dataset, ncomp = NULL,
   center = TRUE, scale = FALSE, ...)
 }
 \arguments{
-\item{nmr_data}{a \code{\link{nmr_dataset}} object}
+\item{nmr_dataset}{a \link{nmr_dataset_1D} object}
 
 \item{ncomp}{integer, if data is complete \code{ncomp} decides the number of components and associated
     eigenvalues to display from the \code{pcasvd} algorithm and if the data has missing values, 
@@ -43,3 +43,38 @@ This function builds a PCA model with all the NMR spectra. Regions with
 zero values (excluded regions) or near-zero variance regions are automatically
 excluded from the analysis.
 }
+\seealso{
+Other PCA related functions: \code{\link{nmr_pca_outliers_filter}},
+  \code{\link{nmr_pca_outliers_plot}},
+  \code{\link{nmr_pca_outliers_robust}},
+  \code{\link{nmr_pca_outliers}},
+  \code{\link{nmr_pca_plots}}
+
+Other nmr_dataset_1D functions: \code{\link{[.nmr_dataset_1D}},
+  \code{\link{is.nmr_dataset_1D}},
+  \code{\link{load_and_save_functions}},
+  \code{\link{new_nmr_dataset_1D}},
+  \code{\link{nmr_align_find_ref}},
+  \code{\link{nmr_align}},
+  \code{\link{nmr_detect_peaks_plot}},
+  \code{\link{nmr_detect_peaks}},
+  \code{\link{nmr_exclude_region}},
+  \code{\link{nmr_integrate_peak_positions}},
+  \code{\link{nmr_integrate_regions}},
+  \code{\link{nmr_interpolate_1D}},
+  \code{\link{nmr_meta_add}},
+  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_meta_get_column}},
+  \code{\link{nmr_meta_get}}, \code{\link{nmr_normalize}},
+  \code{\link{nmr_pca_outliers_filter}},
+  \code{\link{nmr_pca_outliers_plot}},
+  \code{\link{nmr_pca_outliers_robust}},
+  \code{\link{nmr_pca_outliers}},
+  \code{\link{nmr_ppm_resolution}},
+  \code{\link{plot.nmr_dataset_1D}},
+  \code{\link{plot_webgl}}, \code{\link{to_ASICS}},
+  \code{\link{to_ChemoSpec}},
+  \code{\link{validate_nmr_dataset_1D}}
+}
+\concept{PCA related functions}
+\concept{nmr_dataset_1D functions}

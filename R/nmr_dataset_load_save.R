@@ -1,22 +1,22 @@
-#' Load a [nmr_dataset] from a file
-#'
-#' Loads a [nmr_dataset] saved with [nmr_dataset_save()]
-#'
-#' @param file_name The file name with the [nmr_dataset]
-#' @return the [nmr_dataset] object stored in `file_name`
+#' Functions to load and save nmr_dataset objects
+#' 
+#' @name load_and_save_functions
+#' @param file_name The file name to load or save to
+#' @param nmr_dataset An object from the [nmr_dataset_family]
+#' @param ... Additional arguments passed to [saveRDS].
+#' @family nmr_dataset functions
+#' @family nmr_dataset_1D functions
+#' @family nmr_dataset_peak_table functions
+#' @family import/export functions
+NULL
+
+#' @rdname load_and_save_functions
 #' @export
 nmr_dataset_load <- function(file_name) {
   return(readRDS(file_name))
 }
 
-#' Save an [nmr_dataset] object
-#'
-#' Wraps `save` to save the [nmr_dataset] object in `.RDS` format
-#'
-#' @param nmr_dataset The [nmr_dataset] object to save
-#' @param file_name The output file name.
-#' @param ... Optional arguments passed to [saveRDS].
-#' @return the passed [nmr_dataset] object
+#' @rdname load_and_save_functions
 #' @export
 nmr_dataset_save <- function(nmr_dataset, file_name, ...) {
   saveRDS(nmr_dataset, file_name)

@@ -21,3 +21,12 @@ Key columns on the output data frame are "cntn_cf_fluidx_barcode" and "cntn_cf_s
 \description{
 This function reads an xlsx slims spreadsheet and converts it into a data frame
 }
+\seealso{
+Other NIHS specific infrastructure functions: \code{\link{nmr_get_irods_meta}},
+  \code{\link{nmr_irods_search}},
+  \code{\link{nmr_irods_validate_meta}},
+  \code{\link{nmr_prepare_zip_files}},
+  \code{\link{nmr_push_to_irods}},
+  \code{\link{nmr_read_samples_irods}}
+}
+\concept{NIHS specific infrastructure functions}

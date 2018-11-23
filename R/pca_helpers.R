@@ -4,10 +4,10 @@
 #' zero values (excluded regions) or near-zero variance regions are automatically
 #' excluded from the analysis.
 #' 
-#' @param nmr_data a \code{\link{nmr_dataset}} object
+#' @param nmr_dataset a [nmr_dataset_1D] object
 #' @inheritParams mixOmics::pca
 #' @param ... Additional arguments passed on to [mixOmics::pca]
-#' 
+#' @family PCA related functions
 #' @return
 #' A PCA model as given by [mixOmics::pca] with two additional attributes:
 #'  - `nmr_data_axis` containing the full ppm axis
@@ -15,30 +15,32 @@
 #' These attributes are used internally by NIHSnmr to create loading plots
 #' 
 #' @export
-nmr_pca_build_model <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
+nmr_pca_build_model <- function(nmr_dataset, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
   UseMethod("nmr_pca_build_model")
 }
 
 
 #' @rdname nmr_pca_build_model
+#' @family nmr_dataset_1D functions
 #' @export
-nmr_pca_build_model.nmr_dataset_1D <- function(nmr_data, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
-  data_1r <- nmr_data$data_1r
-  rownames(data_1r) <- nmr_meta_get_column(nmr_data, column = "NMRExperiment")
+nmr_pca_build_model.nmr_dataset_1D <- function(nmr_dataset, ncomp = NULL, center = TRUE, scale = FALSE, ...) {
+  data_1r <- nmr_dataset$data_1r
+  rownames(data_1r) <- nmr_meta_get_column(nmr_dataset, column = "NMRExperiment")
   pca_model <- mixOmics::pca(X = data_1r, ncomp = ncomp, center = center, scale = scale, ...)
   # These attributes are used by nmr_pca_loadingplot:
-  attr(pca_model, "nmr_data_axis") <- nmr_data$axis
-  attr(pca_model, "nmr_included") <- seq_along(nmr_data$axis)
+  attr(pca_model, "nmr_data_axis") <- nmr_dataset$axis
+  attr(pca_model, "nmr_included") <- seq_along(nmr_dataset$axis)
   pca_model
 }
 
 #' Plotting functions for PCA
 #' 
-#' @param nmr_data a \code{\link{nmr_dataset}} object
+#' @param nmr_dataset an [nmr_dataset_1D] object
 #' @param pca_model A PCA model trained with [nmr_pca_build_model]
 #' @param comp Components to represent
 #' @param ... Additional aesthetics passed on to [ggplot2::aes] (use bare unquoted names)
 #' 
+#' @family PCA related functions
 #' @name nmr_pca_plots
 #' 
 NULL
@@ -54,8 +56,8 @@ nmr_pca_plot_variance <- function(pca_model) {
 
 #' @rdname nmr_pca_plots
 #' @export
-nmr_pca_scoreplot <- function(nmr_data, pca_model, comp = 1:2, ...) {
-  nmr_metadata <- nmr_meta_get(nmr_data)
+nmr_pca_scoreplot <- function(nmr_dataset, pca_model, comp = 1:2, ...) {
+  nmr_metadata <- nmr_meta_get(nmr_dataset)
   scores <- tibble::as_tibble(pca_model$x, rownames = "NMRExperiment") %>%
     dplyr::left_join(nmr_metadata, by = "NMRExperiment")
   var_percent <- 100*pca_model$sdev^2/pca_model$var.tot
@@ -104,6 +106,9 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
 #' @param ncomp Number of components to use. Use `NULL` for 90\% of the variance
 #' @param quantile_critical critical quantile
 #'
+#' @family PCA related functions
+#' @family outlier detection functions
+#' @family nmr_dataset_1D functions
 #' @return 
 #' 
 #' A list with:
@@ -179,6 +184,9 @@ nmr_pca_outliers <- function(nmr_dataset, pca_model, ncomp = NULL, quantile_crit
 #'
 #' @return A list similar to [nmr_pca_outliers]
 #' @export
+#' @family PCA related functions
+#' @family outlier detection functions
+#' @family nmr_dataset_1D functions
 #'
 nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
   validate_nmr_dataset_1D(nmr_dataset)
@@ -244,6 +252,9 @@ nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
 #' @return A plot for the outlier detection
 #' @export
 #'
+#' @family PCA related functions
+#' @family outlier detection functions
+#' @family nmr_dataset_1D functions
 #' @importFrom rlang .data
 nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
   outlier_info <- pca_outliers[["outlier_info"]]
@@ -277,6 +288,10 @@ nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
 #'
 #' @return An [nmr_dataset_1D] without the detected outliers
 #' @export
+#' @family PCA related functions
+#' @family outlier detection functions
+#' @family nmr_dataset_1D functions
+#' @family subsetting functions
 #'
 nmr_pca_outliers_filter <- function(nmr_dataset, pca_outliers) {
   outlier_info <- pca_outliers[["outlier_info"]]

@@ -1,7 +1,9 @@
 #' Plot an nmr_dataset_1D
-#' @family plotting nmr datasets
+#' @family plotting functions
+#' @family nmr_dataset_1D functions
 #' @param x a [nmr_dataset_1D] object
-#' @inheritParams nmr_get_long_df
+#' @param chemshift_range range of the chemical shifts to be included. Can be of length 3
+#'        to include the resolution in the third element (e.g. `c(0.2, 0.8, 0.005)`)
 #' @param NMRExperiment A character vector with the NMRExperiments to include. Use "all" to include all experiments.
 #' @param quantile_plot If `TRUE` plot the 10\%, 50\%, 90\% percentiles of the spectra as reference.
 #'                      If two numbers between 0 and 1 are given then a custom percentile can be plotted
@@ -105,9 +107,8 @@ plot.nmr_dataset_1D <- function(x, NMRExperiment = NULL,
 #'
 #' @param nmr_data a \code{\link{nmr_dataset}} object
 #' @param sample_idx numeric vector with the sample indices to include
-#' @param chemshift_range range of the chemical shifts to be included. Can be of length 3
-#'        to include the resolution in the third element (e.g. \code{c(0.2, 0.8, 0.05)})
-#' @export
+#' @inheritParams plot.nmr_dataset_1D chemshift_range 
+#' @noRd
 nmr_get_long_df <- function(nmr_data, sample_idx = NULL, chemshift_range = NULL) {
   if (is.null(sample_idx)) {
     sample_idx <- seq_len(nmr_data$num_samples)
@@ -160,6 +161,7 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #' Uses WebGL for performance
 #'
 #' @family plotting nmr datasets
+#' @family nmr_dataset_1D functions
 #' @param nmr_dataset An [nmr_dataset_1D]
 #' @param html_filename The output HTML filename to be created
 #' @inheritDotParams plot.nmr_dataset_1D
@@ -175,7 +177,7 @@ plot_webgl <- function(nmr_dataset, html_filename, ...) {
 
 #' Plots in WebGL
 #'
-#' @family plotting nmr datasets
+#' @family plotting functions
 #' @param plt A plot created with plotly or ggplot2
 #' @param html_filename The file name where the plot will be saved
 #'
@@ -183,9 +185,10 @@ plot_webgl <- function(nmr_dataset, html_filename, ...) {
 #' @export
 #'
 plot_interactive <- function(plt, html_filename) {
-  plt %>%
-    plotly::toWebGL() %>%
-    htmltools::as.tags(standalone = TRUE) %>%
-    htmltools::save_html(file = html_filename)
+  htmltools::save_html(
+    html = htmltools::as.tags(
+      x = plotly::toWebGL(plt),
+      standalone = TRUE),
+    file = html_filename)
   html_filename
 }
