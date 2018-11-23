@@ -17,3 +17,8 @@ a given area (acquisition parameters, preprocessing parameters, general sample i
 shifts in the columns.
 }
 }
+\seealso{
+Other NIHSnmr dataset objects: \code{\link{nmr_dataset_family}},
+  \code{\link{nmr_dataset}}
+}
+\concept{NIHSnmr dataset objects}

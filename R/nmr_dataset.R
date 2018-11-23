@@ -322,37 +322,9 @@ nmr_read_samples_jdx <- function(sample_names, metadata_only = FALSE) {
 #' Object is of [nmr_dataset] class
 #' @param x An object
 #' @return `TRUE` if the object is an [nmr_dataset], `FALSE` otherwise
+#' @family nmr_dataset manipulation functions
 #' @export
 is.nmr_dataset <- function(x) inherits(x, "nmr_dataset")
-
-# Needed for filter.nmr_dataset:
-#' @importFrom dplyr filter
-#' @export
-dplyr::filter
-
-#' Extract samples from the [nmr_dataset] based on metadata column criteria
-#'
-#' @param .data An [nmr_dataset] object
-#' @param ... conditions, as in [dplyr]
-#' @return The same object, with the matching rows
-#' @importFrom dplyr filter
-#' @export
-filter.nmr_dataset <- function(.data, ...) {
-  dots <- rlang::quos(...)
-  meta <- nmr_meta_get(.data)
-  meta$tmp_row_idx <- seq_len(nrow(meta))
-  indices_to_keep <- dplyr::filter(meta, !!! dots)$tmp_row_idx
-  return(.data[indices_to_keep])
-}
-
-#' @rdname filter.nmr_dataset
-#' @export
-filter.nmr_dataset_1D <- filter.nmr_dataset
-
-#' @rdname filter.nmr_dataset
-#' @export
-filter.nmr_dataset_peak_table <- filter.nmr_dataset
-
 
 
 #' Extract parts of an nmr_dataset
