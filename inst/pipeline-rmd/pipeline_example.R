@@ -17,8 +17,8 @@ add_metadata_excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", pa
 
 
 ### Third Node: Interpolate 1D
-# The range with optionally the ppm axis resolution. Typically c(0.2, 10)
-interpolate1d_ppm_axis <- c(min = 0.2, max = 10, by = 8e-4)
+# The range with optionally the ppm axis resolution. Typically c(0.2, 10, 2.3E-4)
+interpolate1d_ppm_axis <- c(min = 0.2, max = 10, by = 2.3e-4)
 
 ### Fourth node: 
 exclude_regions <-  list(water = c(4.6, 5.0), methanol = c(3.33, 3.39))
@@ -32,7 +32,7 @@ samples_to_keep_conditions <- 'NMRExperiment != "40"'
 
 #### Seventh node: Peak detection and Alignment
 
-
+# Leave those as recommended for plasma.
 nDivRange_ppm <- 0.1
 baselineThresh <- 0
 SNR.Th <- 3
@@ -135,7 +135,7 @@ pipe_normalization(nmr_dataset_rds, internal_calibrant, output_dir_normalization
 nmr_dataset_rds <- file.path(output_dir_normalization, "nmr_dataset.rds")
 output_dir_integration <- file.path(output_dir, "09-peak-integration")
 
-pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir = output_dir_normalization,
+pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir = output_dir_alignment,
                       peak_width_ppm = peak_width_ppm, output_dir_integration)
 
 
