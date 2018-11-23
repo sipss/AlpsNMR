@@ -60,6 +60,7 @@ Suggests:
     testthat (>= 2.0.0),
     plotly (>= 4.7.1),
     ChemoSpec,
+    ASICS,
     NIHSrods,
     knitr
 RoxygenNote: 6.1.1

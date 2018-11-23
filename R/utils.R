@@ -172,16 +172,21 @@ show_progress_bar <- function(...) {
   all(...) && interactive() && is.null(getOption("knitr.in.progress"))
 }
 
-# Minimal conversion from nmr_dataset to ChemoSpec Spectra:
-# Not exposed externally, but ready if we need it.
-as.Spectra.nmr_dataset <- function(nmr_dataset, desc = "A nmr_dataset") {
+#' Convert to ChemoSpec Spectra class
+#' @param nmr_dataset An [nmr_dataset_1D] object
+#' @param desc a description for the dataset
+#' @return A Spectra object from the ChemoSpec package
+#' @export
+#' @family import/export functions
+#' @family nmr_dataset_1D functions
+to_ChemoSpec <- function(nmr_dataset, desc = "A nmr_dataset") {
   if (!requireNamespace("ChemoSpec", quietly = TRUE)) {
     stop("ChemoSpec needed for this function to work. Please install it.",
          call. = FALSE)
   }
   # Now build the Spectra object
   Spectra <- vector("list", 9)
-  Spectra[[1]] <- nmr_dataset$axis[[1]]
+  Spectra[[1]] <- nmr_dataset$axis
   Spectra[[2]] <- nmr_dataset$data_1r
   Spectra[[3]] <- nmr_dataset$metadata$NMRExperiment
   Spectra[[4]] <- as.factor(rep(NA_character_, nmr_dataset$num_samples)) # groups
@@ -197,4 +202,20 @@ as.Spectra.nmr_dataset <- function(nmr_dataset, desc = "A nmr_dataset") {
   names(Spectra) <- c("freq", "data", "names", "groups", "colors", "sym", "alt.sym", "units", "desc")
   ChemoSpec::chkSpectra(Spectra)
   return(Spectra)
+}
+
+#' Convert to Spectra class from the ASICS package
+#' @param nmr_dataset An [nmr_dataset_1D] object
+#' @return A Spectra object from the ASICS package
+#' @family import/export functions
+#' @family nmr_dataset_1D functions
+#' @export
+to_ASICS <- function(nmr_dataset) {
+  if (!requireNamespace("ASICS", quietly = TRUE)) {
+    stop("ASICS needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  data <- nmr_data(nmr_dataset)
+  data_for_asics <- as.data.frame(t(data))
+  ASICS::createSpectra(data_for_asics)
 }
