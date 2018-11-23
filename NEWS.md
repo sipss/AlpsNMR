@@ -1,7 +1,12 @@
+# NIHSnmr 2.1.0
+
+- Documentation improvements
+- nmr_dataset_peak_table object for peak detection results
+
 # NIHSnmr 2.0.0
 
 - Too many changes to be listed here. Check the vignette for a summary of all
-the features.
+the features. Use `browseVignettes("NIHSnmr")`.
 
 # NIHSnmr 1.2.0
 
