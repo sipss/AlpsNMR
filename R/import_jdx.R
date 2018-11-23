@@ -202,11 +202,11 @@ process_block <- function(lines, metadata_only = FALSE) {
 #' @noRd
 read_jdx <- function(file_names, metadata_only = FALSE) {
   if (show_progress_bar(length(file_names) > 5)) {
-    prog <- TRUE
+    prog <- "text"
   } else {
-    prog <- FALSE
+    prog <- "none"
   }
-  output <- furrr::future_map(
+  output <- plyr::llply(
     file_names,
     function(file_name) {
       lines <- readLines(file_name)

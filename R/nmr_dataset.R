@@ -143,13 +143,13 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
     # We overwrite with the same name:
     overwrite_sample_names <- sample_names
   }
-  if (show_progress_bar()) {
-    prgrs <- TRUE
+  if (show_progress_bar(length(sample_names) > 5)) {
+    prgrs <- "text"
   } else {
-    prgrs <- FALSE
+    prgrs <- "none"
   }
   list_of_samples <-
-    furrr::future_map(seq_along(sample_names),
+    plyr::llply(seq_along(sample_names),
                 function(sampl_idx, ...) {
                   sampl <- sample_names[sampl_idx]
                   overwr <- overwrite_sample_names[sampl_idx]
