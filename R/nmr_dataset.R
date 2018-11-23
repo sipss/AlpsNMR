@@ -335,6 +335,11 @@ filter.nmr_dataset <- function(.data, ...) {
 #' @export
 filter.nmr_dataset_1D <- filter.nmr_dataset
 
+#' @rdname filter.nmr_dataset
+#' @export
+filter.nmr_dataset_peak_table <- filter.nmr_dataset
+
+
 
 #' Extract parts of an nmr_dataset
 #' @param x an [nmr_dataset] object
