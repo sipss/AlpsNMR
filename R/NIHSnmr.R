@@ -1,8 +1,6 @@
 #' NIHSnmr: Routines for importing and processing NMR data
 #'
-#' NIHSnmr allows you to import NMR samples into R and applying basic data
-#' processing to them. See an interactive example with
-#' [NIHSnmr_interactive()]
+#' NIHSnmr allows you to import NMR samples into R and process them.
 #'
 #' The following functions can be combined with the pipe. They
 #' create or modify the [nmr_dataset] object.

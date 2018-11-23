@@ -6,9 +6,7 @@
 \alias{NIHSnmr-package}
 \title{NIHSnmr: Routines for importing and processing NMR data}
 \description{
-NIHSnmr allows you to import NMR samples into R and applying basic data
-processing to them. See an interactive example with
-\code{\link[=NIHSnmr_interactive]{NIHSnmr_interactive()}}
+NIHSnmr allows you to import NMR samples into R and process them.
 }
 \details{
 The following functions can be combined with the pipe. They
