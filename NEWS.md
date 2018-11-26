@@ -1,3 +1,8 @@
+# NIHSnmr 2.1.0.9000
+
+- Improve installation instructions
+- Clarify Add metadata vignette
+
 # NIHSnmr 2.1.0
 
 - Documentation improvements

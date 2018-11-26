@@ -73,8 +73,10 @@ external metadata. The excel file consists of two tidy tables, in two sheets.
 
 ```{r}
 MeOH_serum_extraction_xlsx <- file.path(MeOH_serum_extraction_dir, "dummy_metadata.xlsx")
-print(readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 1))
-print(readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 2))
+exp_subj_id <- readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 1)
+subj_id_age <- readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 2)
+print(exp_subj_id)
+print(subj_id_age)
 
 ```
 
@@ -94,35 +96,41 @@ dataset <- nmr_read_samples(sample_names = zip_files)
 print(dataset)
 ```
 
-# Adding metadata
-
-Adding metadata is easy once we have the information in a dataset. The `nmr_meta_add`
-allows us to append a data frame, using a common column for merging.
-
-In this example we add the `SubjectID` and the `Age` columns. First we add the
-`SubjectID` using the `NMRExperiment` as key and then we add the `Age` column
-using the just added `SubjectID` column as key for merging.
-
-```{r adding-metadata}
-exp_subj_id <- readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 1)
-subj_id_age <- readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 2)
-
-dataset <- dataset %>%
-  nmr_meta_add(metadata = exp_subj_id, by = "NMRExperiment") %>%
-  nmr_meta_add(metadata = subj_id_age, by = "SubjectID")
-```
-
-We can retreive the table with the added metadata with:
+As we have not added any metadata to this dataset, the only column we see is
+the `NMRExperiment`:
 
 ```{r}
 nmr_meta_get(dataset, groups = "external")
 ```
 
-The dataset has several fields. You can check their definition with `?nmr_dataset`.
+# Adding metadata
+
+Initally our dataset only has the `NMRExperiment` column:
 
 ```{r}
-print(names(dataset))
+nmr_meta_get(dataset, groups = "external")
 ```
+
+The `exp_subj_id` table we loaded links the `NMRExperiment` to the `SubjectID`.
+
+As we already have the `NMRExperiment` column, we can use it as the merging column:
+
+```{r}
+dataset <- nmr_meta_add(dataset, metadata = exp_subj_id, by = "NMRExperiment")
+nmr_meta_get(dataset, groups = "external")
+```
+
+Now we have the `SubjectID` information so we can add the table that adds
+the `SubjectID` to the `Age`.
+
+```{r}
+dataset <- nmr_meta_add(dataset, metadata = subj_id_age, by = "SubjectID")
+nmr_meta_get(dataset, groups = "external")
+```
+
+Now we have our metadata integrated in the dataset and we can make use of it
+in further data analysis steps.
+
 
 # Interpolation
 
