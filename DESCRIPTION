@@ -55,6 +55,7 @@ Imports:
  htmltools (>= 0.3.6),
  ggrepel (>= 0.8.0),
  pcaPP (>= 1.9-73),
+ furrr (>= 0.1.0),
  graphics
 Suggests:
     testthat (>= 2.0.0),
