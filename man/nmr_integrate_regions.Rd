@@ -5,11 +5,11 @@
 \alias{nmr_integrate_regions.nmr_dataset_1D}
 \title{Integrate regions}
 \usage{
-nmr_integrate_regions(samples, regions, fix_baseline = TRUE,
-  excluded_regions_as_zero = FALSE)
+nmr_integrate_regions(samples, regions, ...)
 
 \method{nmr_integrate_regions}{nmr_dataset_1D}(samples, regions,
-  fix_baseline = TRUE, excluded_regions_as_zero = FALSE)
+  fix_baseline = TRUE, excluded_regions_as_zero = FALSE,
+  set_negative_areas_to_zero = FALSE, ...)
 }
 \arguments{
 \item{samples}{A \link{nmr_dataset} object}
@@ -18,6 +18,8 @@ nmr_integrate_regions(samples, regions, fix_baseline = TRUE,
 given as a named numeric vector of length two with the range
 to integrate. The name of the region will be the name of the
 column}
+
+\item{...}{Keep for compatibility}
 
 \item{fix_baseline}{A logical. If \code{TRUE} it removes the baseline. See details
 below}
@@ -31,6 +33,9 @@ If \code{fix_baseline} is \code{TRUE}, then the region boundaries are used to es
 a baseline. The baseline is estimated "connecting the boundaries with a straight
 line". Only when the spectrum is above the baseline the area is integrated
 (negative contributions due to the baseline estimation are ignored).}
+
+\item{set_negative_areas_to_zero}{A logical. Ignored if \code{fix_baseline} is \code{FALSE}.
+When set to \code{TRUE} negative areas are set to zero.}
 }
 \value{
 An \link{nmr_dataset_peak_table} object

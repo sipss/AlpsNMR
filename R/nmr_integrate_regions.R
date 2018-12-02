@@ -6,17 +6,6 @@
 #'                given as a named numeric vector of length two with the range
 #'                to integrate. The name of the region will be the name of the
 #'                column
-#' @param fix_baseline A logical. If `TRUE` it removes the baseline. See details
-#'                below
-#' @param excluded_regions_as_zero A logical. It determines the behaviour of the
-#'  integration when integrating regions that have been excluded. If `TRUE`, 
-#'  it will treat those regions as zero. If `FALSE` (the default) it will return
-#'  NA values.
-#'
-#' If `fix_baseline` is `TRUE`, then the region boundaries are used to estimate
-#' a baseline. The baseline is estimated "connecting the boundaries with a straight
-#' line". Only when the spectrum is above the baseline the area is integrated
-#' (negative contributions due to the baseline estimation are ignored).
 #' 
 #' @return An [nmr_dataset_peak_table] object
 #'
@@ -44,12 +33,11 @@
 #' @export
 #' @family peak detection functions
 #' @family peak integration functions
-nmr_integrate_regions <- function(samples, regions, fix_baseline = TRUE,
-                                  excluded_regions_as_zero = FALSE) {
+nmr_integrate_regions <- function(samples, regions, ...) {
   UseMethod("nmr_integrate_regions")
 }
 
-rough_baseline <- function(x) {
+rough_baseline <- function(x, allow_baseline_above_signal = TRUE) {
   n <- length(x)
   if (n == 0) {
     return(numeric(0L))
@@ -57,15 +45,36 @@ rough_baseline <- function(x) {
   basel <- signal::interp1(x = c(1, n),
                            y = x[c(1, n)],
                            xi = seq_len(n))
-  basel <- ifelse(basel > x, x, basel)
+  if (!allow_baseline_above_signal) {
+    basel <- ifelse(basel > x, x, basel)
+  }
   basel
 }
 
 #' @rdname nmr_integrate_regions
 #' @family nmr_dataset_1D functions
+#' @param fix_baseline A logical. If `TRUE` it removes the baseline. See details
+#'                below
+#' @param excluded_regions_as_zero A logical. It determines the behaviour of the
+#'  integration when integrating regions that have been excluded. If `TRUE`, 
+#'  it will treat those regions as zero. If `FALSE` (the default) it will return
+#'  NA values.
+#'
+#'  If `fix_baseline` is `TRUE`, then the region boundaries are used to estimate
+#'  a baseline. The baseline is estimated "connecting the boundaries with a straight
+#'  line". Only when the spectrum is above the baseline the area is integrated
+#'  (negative contributions due to the baseline estimation are ignored).
+#' 
+#' @param set_negative_areas_to_zero A logical. Ignored if `fix_baseline` is `FALSE`.
+#'   When set to `TRUE` negative areas are set to zero.
+#'
+#' @param ... Keep for compatibility
 #' @export
-nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline = TRUE,
-                                                 excluded_regions_as_zero = FALSE) {
+nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions,
+                                                 fix_baseline = TRUE,
+                                                 excluded_regions_as_zero = FALSE,
+                                                 set_negative_areas_to_zero = FALSE,
+                                                 ...) {
   if (is.null(names(regions))) {
     names(regions) <- purrr::map_chr(regions, ~sprintf("ppm_%4.4f", mean(.)))
   }
@@ -86,7 +95,9 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
     region_to_sum <- samples$data_1r[, to_sum]
     area <- rowSums(region_to_sum)
     if (fix_baseline) {
-      basel <- t(apply(region_to_sum, 1, rough_baseline))
+      basel <- t(apply(region_to_sum, 1, 
+                       rough_baseline,
+                       allow_baseline_above_signal = !set_negative_areas_to_zero))
       area_basel <- rowSums(basel)
       area <- area - area_basel
     }
@@ -98,8 +109,9 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
 
 #' Integrate peak positions
 #'
-#' @inheritParams nmr_integrate_regions
+#' @param samples A [nmr_dataset] object
 #' @inheritParams regions_from_peak_table
+#' @inheritDotParams nmr_integrate_regions
 #'
 #' @inherit nmr_integrate_regions return
 #' @export
@@ -109,9 +121,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions, fix_baseline 
 nmr_integrate_peak_positions <- function(samples,
                                          peak_pos_ppm,
                                          peak_width_ppm,
-                                         fix_baseline = TRUE,
-                                         excluded_regions_as_zero = FALSE) {
+                                         ...) {
   regions <- regions_from_peak_table(peak_pos_ppm, peak_width_ppm)
-  nmr_integrate_regions(samples, regions, fix_baseline = fix_baseline,
-                        excluded_regions_as_zero = excluded_regions_as_zero)
+  nmr_integrate_regions(samples, regions, ...)
 }

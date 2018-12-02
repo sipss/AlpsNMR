@@ -4,8 +4,7 @@
 \alias{nmr_integrate_peak_positions}
 \title{Integrate peak positions}
 \usage{
-nmr_integrate_peak_positions(samples, peak_pos_ppm, peak_width_ppm,
-  fix_baseline = TRUE, excluded_regions_as_zero = FALSE)
+nmr_integrate_peak_positions(samples, peak_pos_ppm, peak_width_ppm, ...)
 }
 \arguments{
 \item{samples}{A \link{nmr_dataset} object}
@@ -14,18 +13,14 @@ nmr_integrate_peak_positions(samples, peak_pos_ppm, peak_width_ppm,
 
 \item{peak_width_ppm}{The peak widths (or a single peak width for all peaks)}
 
-\item{fix_baseline}{A logical. If \code{TRUE} it removes the baseline. See details
-below}
-
-\item{excluded_regions_as_zero}{A logical. It determines the behaviour of the
-integration when integrating regions that have been excluded. If \code{TRUE},
-it will treat those regions as zero. If \code{FALSE} (the default) it will return
-NA values.
-
-If \code{fix_baseline} is \code{TRUE}, then the region boundaries are used to estimate
-a baseline. The baseline is estimated "connecting the boundaries with a straight
-line". Only when the spectrum is above the baseline the area is integrated
-(negative contributions due to the baseline estimation are ignored).}
+\item{...}{Arguments passed on to \code{nmr_integrate_regions}
+\describe{
+  \item{samples}{A \link{nmr_dataset} object}
+  \item{regions}{A named list. Each element of the list is a region,
+given as a named numeric vector of length two with the range
+to integrate. The name of the region will be the name of the
+column}
+}}
 }
 \value{
 An \link{nmr_dataset_peak_table} object
