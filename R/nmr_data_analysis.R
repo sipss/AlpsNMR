@@ -221,7 +221,12 @@ split_build_perform <- function(train_test_subset,
 #' @noRd
 do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
                   train_test_subsets, train_evaluate_model_args_iter = NULL, ...) {
-  furrr::future_pmap(
+  if (show_progress_bar(length(train_test_subsets) > 5)) {
+    prgrs <- TRUE
+  } else {
+    prgrs <- FALSE
+  }
+  output <- furrr::future_pmap(
     c(list(train_test_subset = train_test_subsets),
       train_evaluate_model_args_iter),
     split_build_perform,
@@ -230,7 +235,11 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
     identity_column = identity_column,
     train_evaluate_model = train_evaluate_model,
     ...,
-    .progress = TRUE)
+    .progress = prgrs,
+    .options = furrr::future_options(globals = character(0),
+                                     packages = character(0)))
+  names(output) <- names(train_test_subsets)
+  output
 }
 
 
@@ -378,6 +387,3 @@ new_nmr_data_analysis_method <- function(train_evaluate_model,
   class(out) <- "nmr_data_analysis_method"
   out
 }
-
-
-

@@ -158,12 +158,12 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
     overwrite_sample_names <- sample_names
   }
   if (show_progress_bar(length(sample_names) > 5)) {
-    prgrs <- "text"
+    prgrs <- TRUE
   } else {
-    prgrs <- "none"
+    prgrs <- FALSE
   }
   list_of_samples <-
-    plyr::llply(seq_along(sample_names),
+    furrr::future_map(seq_along(sample_names),
                 function(sampl_idx, ...) {
                   sampl <- sample_names[sampl_idx]
                   overwr <- overwrite_sample_names[sampl_idx]
@@ -213,7 +213,9 @@ nmr_read_samples_bruker <- function(sample_names, pulse_sequence = NULL,
                   return(loaded_sample)
                 },
                 ...,
-                .progress = prgrs)
+                .progress = prgrs,
+                .options = furrr::future_options(globals = character(0),
+                                                 packages = character(0)))
 
   # Remove samples that could not be loaded:
   any_error <- vapply(X = list_of_samples, FUN = is.null, FUN.VALUE = logical(1))
