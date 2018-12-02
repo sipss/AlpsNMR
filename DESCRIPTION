@@ -56,6 +56,7 @@ Imports:
  ggrepel (>= 0.8.0),
  pcaPP (>= 1.9-73),
  furrr (>= 0.1.0),
+ future (>= 1.10.0),
  DT
 Suggests:
     testthat (>= 2.0.0),

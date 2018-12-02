@@ -45,6 +45,17 @@ library(NIHSnmr)
 library(ggplot2)
 ```
 
+# Enable parallellization
+
+This package is able to parallellize several functions through the use of the
+`future` and `furrr` packages. Whether to parallelize or not is left to the user
+that can control the parallellization by setting "plans".
+
+```{r}
+#plan(sequential()) # disable parallellization (default)
+plan(multiprocess(workers = 4)) # enable parallellization with 4 workers
+```
+
 
 # Data: The `MeOH_serum_extraction` dataset
 
