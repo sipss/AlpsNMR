@@ -1,7 +1,15 @@
-# NIHSnmr 2.1.0.9000
+# NIHSnmr 2.2.0
 
 - Improve installation instructions
 - Clarify Add metadata vignette
+- Add normalization diagnostics
+- Add some data analysis helpers
+- Enable parallellization for sample loading, peak detection and data analysis helpers
+- Do not set negative area values to zero, to avoid biasing variances
+- Add metadata from a single tidy excel function
+- Add nmr_diagnose to get and set diagnostic information
+- Add nmr_diagnose support to nmr_normalize
+- Minor bug fixes
 
 # NIHSnmr 2.1.0
 
