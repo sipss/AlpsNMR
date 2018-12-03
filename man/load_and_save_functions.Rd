@@ -68,7 +68,6 @@ Other nmr_dataset_peak_table functions: \code{\link{[.nmr_dataset_peak_table}},
   \code{\link{validate_nmr_dataset_peak_table}}
 
 Other import/export functions: \code{\link{nmr_data}},
-  \code{\link{nmr_meta_add}},
   \code{\link{nmr_meta_export}},
   \code{\link{nmr_read_bruker_fid}},
   \code{\link{nmr_read_samples}},

@@ -47,9 +47,8 @@ if (!exists("nmr_dataset_outfile")) {
 These are the input metadata tables that will be integrated:
 
 ```{r add-metadata-read-input}
-excel_dfs <- excel_file %>% 
-  readxl::excel_sheets() %>%
-  purrr::map(~readxl::read_excel(path = excel_file, sheet = .))
+excel_sheets <- readxl::excel_sheets(excel_file)
+excel_dfs <- purrr::map(excel_sheets, ~readxl::read_excel(path = excel_file, sheet = .))
 ```
 
 
@@ -63,28 +62,7 @@ excel_dfs %>%
 ## The added and linked metadata
 
 ```{r add-metadata-integrate-metadata}
-for (excel_df in excel_dfs) {
-  # If the sheet is empty, skip
-  if (nrow(excel_df) == 0 || ncol(excel_df) == 0) {
-    # Empty sheet
-    next
-  }
-  # Check that the key column is already in the metadata:
-  key_column <- colnames(excel_df)[1]
-  avail_columns <- colnames(nmr_meta_get(nmr_dataset, groups = "external"))
-  if (!key_column %in% avail_columns) {
-    stop(glue::glue("Key Column {key_column} is not present in the metadata.",
-                    "Can't add metadata.\n Available columns:",
-                    glue::glue_collapse(avail_columns, sep = ", ", last = " and ")))
-  }
-  # The NMRExperiment column should of type character, although Excel may use numeric
-  # because usually all the identifiers are numeric. We convert it manually:
-  if ("NMRExperiment" %in% colnames(excel_df)) {
-    excel_df$NMRExperiment <- as.character(excel_df$NMRExperiment)
-  }
-  # Add the metadata
-  nmr_dataset <- nmr_meta_add(nmr_dataset, metadata = excel_df, by = key_column)
-}
+nmr_dataset <- nmr_meta_add_tidy_excel(nmr_dataset, excel_file)
 ```
 
 ```{r add-metadata-print-output}

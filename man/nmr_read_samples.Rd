@@ -45,8 +45,7 @@ Other nmr_dataset functions: \code{\link{[.nmr_dataset}},
   \code{\link{validate_nmr_dataset}}
 
 Other import/export functions: \code{\link{load_and_save_functions}},
-  \code{\link{nmr_data}}, \code{\link{nmr_meta_add}},
-  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_data}}, \code{\link{nmr_meta_export}},
   \code{\link{nmr_read_bruker_fid}},
   \code{\link{nmr_zip_bruker_samples}},
   \code{\link{pipe_load_samples}}, \code{\link{to_ASICS}},

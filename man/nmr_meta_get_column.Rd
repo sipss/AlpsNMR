@@ -23,9 +23,6 @@ Other metadata functions: \code{\link{nmr_meta_add}},
   \code{\link{nmr_meta_get}},
   \code{\link{pipe_add_metadata}}
 
-Other metadata management functions: \code{\link{nmr_meta_add}},
-  \code{\link{nmr_meta_export}}, \code{\link{nmr_meta_get}}
-
 Other nmr_dataset functions: \code{\link{[.nmr_dataset}},
   \code{\link{load_and_save_functions}},
   \code{\link{new_nmr_dataset}},
@@ -73,7 +70,6 @@ Other nmr_dataset_peak_table functions: \code{\link{[.nmr_dataset_peak_table}},
   \code{\link{validate_nmr_dataset_peak_table}}
 }
 \concept{metadata functions}
-\concept{metadata management functions}
 \concept{nmr_dataset functions}
 \concept{nmr_dataset_1D functions}
 \concept{nmr_dataset_peak_table functions}

@@ -29,7 +29,6 @@ Set/Return the full spectra matrix
 }
 \seealso{
 Other import/export functions: \code{\link{load_and_save_functions}},
-  \code{\link{nmr_meta_add}},
   \code{\link{nmr_meta_export}},
   \code{\link{nmr_read_bruker_fid}},
   \code{\link{nmr_read_samples}},

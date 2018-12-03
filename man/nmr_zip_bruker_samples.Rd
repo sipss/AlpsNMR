@@ -23,8 +23,7 @@ Create one zip file for each brucker sample path
 }
 \seealso{
 Other import/export functions: \code{\link{load_and_save_functions}},
-  \code{\link{nmr_data}}, \code{\link{nmr_meta_add}},
-  \code{\link{nmr_meta_export}},
+  \code{\link{nmr_data}}, \code{\link{nmr_meta_export}},
   \code{\link{nmr_read_bruker_fid}},
   \code{\link{nmr_read_samples}},
   \code{\link{pipe_load_samples}}, \code{\link{to_ASICS}},

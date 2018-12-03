@@ -2,9 +2,12 @@
 % Please edit documentation in R/nmr_meta.R
 \name{nmr_meta_add}
 \alias{nmr_meta_add}
+\alias{nmr_meta_add_tidy_excel}
 \title{Add metadata to an nmr_dataset object}
 \usage{
 nmr_meta_add(nmr_data, metadata, by = "NMRExperiment")
+
+nmr_meta_add_tidy_excel(nmr_data, excel_file)
 }
 \arguments{
 \item{nmr_data}{an \link{nmr_dataset} object}
@@ -16,6 +19,16 @@ data.frame. If you want to merge two columns with different headers you can
 use a named character vector \code{c("NMRExperiment" = "ExperimentNMR")} where
 the left side is the column name of the \code{nmr_dataset$metadata$external} and the right side is
 the column name of the metadata data frame.}
+
+\item{excel_file}{Path to a tidy Excel file name. The Excel can consist
+of multiple sheets, that are added sequentially. The first column of the first
+sheet MUST be named as one of the metadata already present in the dataset,
+typically will be "NMRExperiment". The rest of the columns of the first sheet
+can be named at will. Similary, the first column of the second sheet must be
+named as one of the metadata already present in the dataset, typically
+"NMRExperiment" or any of the columns of the first sheet. The rest of the columns
+of the second sheet can be named at will. See the package vignette for an
+example.}
 }
 \value{
 The nmr_dataset object with the added metadata
@@ -47,16 +60,25 @@ nmr_dataset <- nmr_meta_add(nmr_dataset, SubjID_Age, by = "SubjectID")
 # The final loaded metadata:
 print(nmr_meta_get(nmr_dataset, groups = "external"))
 
+# Read a tidy excel file:
+
+dataset <- system.file("dataset-demo", package = "NIHSnmr")
+nmr_dataset <- nmr_read_samples_dir(dataset)
+
+# At first we just have the NMRExperiment column
+print(nmr_meta_get(nmr_dataset, groups = "external"))
+# Get a table with NMRExperiment -> SubjectID
+dummy_metadata <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "NIHSnmr")
+
+nmr_dataset <-nmr_meta_add_tidy_excel(nmr_dataset, dummy_metadata)
+# Updated Metadata:
+print(nmr_meta_get(nmr_dataset, groups = "external"))
 }
 \seealso{
 Other metadata functions: \code{\link{nmr_meta_export}},
   \code{\link{nmr_meta_get_column}},
   \code{\link{nmr_meta_get}},
   \code{\link{pipe_add_metadata}}
-
-Other metadata management functions: \code{\link{nmr_meta_export}},
-  \code{\link{nmr_meta_get_column}},
-  \code{\link{nmr_meta_get}}
 
 Other nmr_dataset functions: \code{\link{[.nmr_dataset}},
   \code{\link{load_and_save_functions}},
@@ -103,18 +125,8 @@ Other nmr_dataset_peak_table functions: \code{\link{[.nmr_dataset_peak_table}},
   \code{\link{nmr_meta_get_column}},
   \code{\link{nmr_meta_get}},
   \code{\link{validate_nmr_dataset_peak_table}}
-
-Other import/export functions: \code{\link{load_and_save_functions}},
-  \code{\link{nmr_data}}, \code{\link{nmr_meta_export}},
-  \code{\link{nmr_read_bruker_fid}},
-  \code{\link{nmr_read_samples}},
-  \code{\link{nmr_zip_bruker_samples}},
-  \code{\link{pipe_load_samples}}, \code{\link{to_ASICS}},
-  \code{\link{to_ChemoSpec}}
 }
-\concept{import/export functions}
 \concept{metadata functions}
-\concept{metadata management functions}
 \concept{nmr_dataset functions}
 \concept{nmr_dataset_1D functions}
 \concept{nmr_dataset_peak_table functions}
