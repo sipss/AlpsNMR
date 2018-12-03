@@ -51,6 +51,7 @@ nmr_normalize <- function(samples,
                           method = c("area", "max", "value", "region", "pqn", "none"),
                           values = NULL, ...) {
   validate_nmr_dataset_1D(samples)
+  nmr_diagnose(samples) <- NULL
   
   method <- tolower(method[1])
   if (!(method %in% c("area", "max", "value", "region", "pqn", "none"))) {

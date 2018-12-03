@@ -406,6 +406,7 @@ pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, outpu
   full_spectra_matrix_fn <- file.path(output_dir, "full_spectra_matrix.csv")
   nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
   plot_norm_factor_ic <- file.path(output_dir, "normalization_factor_ic.png")
+  plot_norm_factor_pqn <- file.path(output_dir, "normalization_factor_pqn.png")
   plot_html <- file.path(output_dir, "plot-samples.html")
   
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
@@ -430,6 +431,9 @@ pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, outpu
     nmr_dataset <- nmr_dataset_norm_ic
   }
   nmr_dataset <- nmr_normalize(nmr_dataset, method = "pqn")
+  diag <- nmr_diagnose(nmr_dataset)
+  ggplot2::ggsave(filename = plot_norm_factor_pqn, plot = diag$plot, width = 7, height = 5, unit = "cm")
+  
   
   message("Saving pipe_normalization results at ", Sys.time())
   nmr_export_data_1r(nmr_dataset, full_spectra_matrix_fn)
