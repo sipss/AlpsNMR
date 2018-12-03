@@ -49,7 +49,7 @@ norm_pqn <- function(spectra) {
 #' @export
 nmr_normalize <- function(samples, 
                           method = c("area", "max", "value", "region", "pqn", "none"),
-                          values = NULL, ...) {
+                          ...) {
   validate_nmr_dataset_1D(samples)
   nmr_diagnose(samples) <- NULL
   
@@ -95,6 +95,7 @@ nmr_normalize_diagnostics <- function(samples, norm_factor) {
   
   norm_factor_df$norm_factor_norm <- norm_factor_df$norm_factor/stats::median(norm_factor_df$norm_factor)
   
+  # This plot should have the y axis in log2 scale
   gplt <- ggplot2::ggplot(norm_factor_df) +
     ggplot2::geom_col(ggplot2::aes(x = .data$NMRExperiment, y = .data$norm_factor_norm)) +
     ggplot2::scale_x_discrete(name = "NMRExperiment", limits = rev(sort(norm_factor_df$NMRExperiment))) +

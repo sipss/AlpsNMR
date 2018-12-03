@@ -5,7 +5,7 @@
 \title{Normalize nmr_dataset_1D samples}
 \usage{
 nmr_normalize(samples, method = c("area", "max", "value", "region",
-  "pqn", "none"), values = NULL, ...)
+  "pqn", "none"), ...)
 }
 \arguments{
 \item{samples}{A \link{nmr_dataset_1D} object}
