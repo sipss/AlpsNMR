@@ -33,30 +33,25 @@ norm_pqn <- function(spectra) {
 }
 
 
-#' Normalize NMR samples
+#' Normalize nmr_dataset_1D samples
 #'
-#' @param samples A [nmr_dataset] object
+#' @param samples A [nmr_dataset_1D] object
+#'               
 #' @param method The criteria to be used for normalization
-#' @param values If `method == "value"` then values is a list
-#'               with the normalization values. The list must be named as the
-#'               data fields to normalize. Typically would be something like:
-#'               `values = list(data_1r = c(val1, val2, val3))`.
-#'               If `method == "region"` then values is the chemical shift
-#'               region to integrate.
-#' @return The [nmr_dataset] object, with the samples normalized
-#' @export
-nmr_normalize <- function(samples,
-                          method = c("area", "max", "value", "region", "pqn", "none"),
-                          values = NULL) {
-  UseMethod("nmr_normalize")
-}
-
-#' @rdname nmr_normalize
+#' @param ... Method dependent arguments:
+#'   - `method == "value"`:
+#'       - `value`: A numeric vector with the normalization values to use
+#'   - `method == "region"`:
+#'       - `ppm_range`: A chemical shift region to integrate
+#'       - `...`: Other arguments passed on to [nmr_integrate_regions]
+#' @return The [nmr_dataset_1D] object, with the samples normalized
 #' @family nmr_dataset_1D functions
 #' @export
-nmr_normalize.nmr_dataset_1D <- function(samples,
-                                         method = c("area", "max", "value", "region", "pqn", "none"),
-                                         values = NULL) {
+nmr_normalize <- function(samples, 
+                          method = c("area", "max", "value", "region", "pqn", "none"),
+                          values = NULL, ...) {
+  validate_nmr_dataset_1D(samples)
+  
   method <- tolower(method[1])
   if (!(method %in% c("area", "max", "value", "region", "pqn", "none"))) {
     stop("Unknown method: ", method)
@@ -64,22 +59,23 @@ nmr_normalize.nmr_dataset_1D <- function(samples,
   if (method == "none") {
     return(samples)
   }
+  dots <- list(...)
   
   if (method == "area") {
     norm_factor <- rowSums(samples[["data_1r"]])
   } else if (method == "max") {
     norm_factor <- apply(samples[["data_1r"]], 1, max)
   } else if (method == "value") {
-    norm_factor <- values
+    norm_factor <- dots[["values"]]
   } else if (method == "region") {
-    region_range <- samples[["axis"]] >= min(values) & samples[["axis"]] <= max(values)
-    norm_factor <- rowSums(samples[["data_1r"]][,region_range])
+    ppm_range <- dots[["ppm_range"]]
+    norm_factor <- nmr_integrate_regions(samples, regions = list(ic = ppm_range), ...)
+    norm_factor <- norm_factor$peak_table[, "ic"]
   } else if (method == "pqn") {
     norm_result <- norm_pqn(samples[["data_1r"]])
     samples[["data_1r"]] <- norm_result$spectra
     norm_factor <- norm_result$norm_factor
-    nmr_diagnose(samples) <- list(name = "Normalization",
-                                  norm_factor = norm_factor)
+    nmr_diagnose(samples) <- nmr_normalize_diagnostics(samples, norm_factor)
     return(samples)
   } else {
     stop("Unimplemented method: ", method)
@@ -88,7 +84,23 @@ nmr_normalize.nmr_dataset_1D <- function(samples,
                                 MARGIN = 1,
                                 STATS = norm_factor,
                                 FUN = "/")
-  nmr_diagnose(samples) <- list(name = "Normalization",
-                                norm_factor = norm_factor)
+  nmr_diagnose(samples) <- nmr_normalize_diagnostics(samples, norm_factor)
   return(samples)
+}
+
+nmr_normalize_diagnostics <- function(samples, norm_factor) {
+  norm_factor_df <- cbind(nmr_meta_get(samples, columns = "NMRExperiment"),
+                          norm_factor = norm_factor)
+  
+  norm_factor_df$norm_factor_norm <- norm_factor_df$norm_factor/stats::median(norm_factor_df$norm_factor)
+  
+  gplt <- ggplot2::ggplot(norm_factor_df) +
+    ggplot2::geom_col(ggplot2::aes(x = .data$NMRExperiment, y = .data$norm_factor_norm)) +
+    ggplot2::scale_x_discrete(name = "NMRExperiment", limits = rev(sort(norm_factor_df$NMRExperiment))) +
+    ggplot2::geom_hline(yintercept = 1, color = "red") +
+    ggplot2::scale_y_continuous(name = "Normalization factors (normalized to the median)") +
+    ggplot2::coord_flip()
+  list(name = "Normalization",
+       norm_factor = norm_factor_df,
+       plot = gplt)
 }

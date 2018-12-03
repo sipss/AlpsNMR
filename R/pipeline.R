@@ -209,7 +209,7 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)  {
   nmr_export_data_1r(nmr_dataset_no_out, full_spectra_matrix_fn)
   nmr_meta_export(nmr_dataset_no_out, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset_no_out, nmr_dataset_outfile)
-  ggplot2::ggsave(filename = plot_outlier_QT2, plot = gplt)
+  ggplot2::ggsave(filename = plot_outlier_QT2, plot = gplt, width = 7, height = 5, units = "cm")
   
   if (length(nmr_exp_out) > 0) {
     message("The following NMRExperiments have been flagged and excluded as outliers:\n",
@@ -405,13 +405,29 @@ pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, outpu
   metadata_fn <- file.path(output_dir, "metadata.xlsx")
   full_spectra_matrix_fn <- file.path(output_dir, "full_spectra_matrix.csv")
   nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
+  plot_norm_factor_ic <- file.path(output_dir, "normalization_factor_ic.png")
   plot_html <- file.path(output_dir, "plot-samples.html")
   
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   if (!is.null(internal_calibrant)) {
-    nmr_dataset <- nmr_dataset %>%
-      nmr_normalize(method = "region", values = internal_calibrant) %>%
-      nmr_exclude_region(exclude = list(ic = internal_calibrant))
+    nmr_dataset_norm_ic <- nmr_normalize(nmr_dataset, method = "region", ppm_range = internal_calibrant)
+    diag <- nmr_diagnose(nmr_dataset_norm_ic)
+    ggplot2::ggsave(filename = plot_norm_factor_ic, plot = diag$plot, width = 7, height = 5, unit = "cm")
+    nfactor <- diag$norm_factor
+    nfactor_extreme <- dplyr::filter(
+      nfactor,
+      .data$norm_factor_norm > 4 | .data$norm_factor_norm < 1/4)
+    
+    if (nrow(nfactor_extreme) > 0) {
+      nmr_experiments_weird <- glue::glue_collapse(nfactor_extreme$NMRExperiment,
+                                                   sep = ", ", last = " and ")
+      
+      warning("Samples with NMRExperiment ", nmr_experiments_weird, " have >4x or <0.25x values in the internal calibrant.")
+    }
+    
+    nmr_dataset_norm_ic <- nmr_exclude_region(nmr_dataset_norm_ic, exclude = list(ic = internal_calibrant))
+    # Use the normalized samples for PQN
+    nmr_dataset <- nmr_dataset_norm_ic
   }
   nmr_dataset <- nmr_normalize(nmr_dataset, method = "pqn")
   

@@ -50,13 +50,15 @@ peak_width_ppm <- 0.0023
 
 #### Where the outputs of this example will be
 
-output_dir <- tempdir()
+output_dir <- tempfile(pattern = "pipeline_output_")
 message("Pipeline outputs will be written at: ", output_dir)
+
+#### Number of cores to use
+
+num_workers <- 4
 
 #### Pipeline begins here ######################################################
 library(NIHSnmr)
-
-
 
 
 #### First node: Load samples ##################################################
@@ -65,11 +67,13 @@ library(NIHSnmr)
 # Output directory:
 output_dir_load <- file.path(output_dir, "01-load-samples")
 
+plan(multiprocess, workers = num_workers)
 # Load all samples ending in "0":
 pipe_load_samples(samples_dir = load_samples_input_dir,
                   glob = load_samples_glob,
                   output_dir = output_dir_load)
 
+plan(sequential)
 
 #### Second node: Append metadata ##############################################
 
@@ -116,12 +120,13 @@ pipe_filter_samples(nmr_dataset_rds, samples_to_keep_conditions, output_dir_filt
 nmr_dataset_rds <- file.path(output_dir_filter, "nmr_dataset.rds")
 output_dir_alignment <- file.path(output_dir, "07-alignment")
 
+plan(multiprocess, workers = num_workers)
 pipe_peakdet_align(nmr_dataset_rds,
                    nDivRange_ppm = nDivRange_ppm, scales = seq(1, 16, 2),
                    baselineThresh = baselineThresh, SNR.Th = SNR.Th,
                    maxShift_ppm = maxShift_ppm, acceptLostPeak = FALSE,
                    output_dir = output_dir_alignment)
-
+plan(sequential)
 
 #### Eighth node: PQN Normalization #######################
 nmr_dataset_rds <- file.path(output_dir_alignment, "nmr_dataset.rds")

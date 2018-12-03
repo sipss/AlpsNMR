@@ -2,32 +2,34 @@
 % Please edit documentation in R/nmr_normalize.R
 \name{nmr_normalize}
 \alias{nmr_normalize}
-\alias{nmr_normalize.nmr_dataset_1D}
-\title{Normalize NMR samples}
+\title{Normalize nmr_dataset_1D samples}
 \usage{
 nmr_normalize(samples, method = c("area", "max", "value", "region",
-  "pqn", "none"), values = NULL)
-
-\method{nmr_normalize}{nmr_dataset_1D}(samples, method = c("area", "max",
-  "value", "region", "pqn", "none"), values = NULL)
+  "pqn", "none"), values = NULL, ...)
 }
 \arguments{
-\item{samples}{A \link{nmr_dataset} object}
+\item{samples}{A \link{nmr_dataset_1D} object}
 
 \item{method}{The criteria to be used for normalization}
 
-\item{values}{If \code{method == "value"} then values is a list
-with the normalization values. The list must be named as the
-data fields to normalize. Typically would be something like:
-\code{values = list(data_1r = c(val1, val2, val3))}.
-If \code{method == "region"} then values is the chemical shift
-region to integrate.}
+\item{...}{Method dependent arguments:
+\itemize{
+\item \code{method == "value"}:
+\itemize{
+\item \code{value}: A numeric vector with the normalization values to use
+}
+\item \code{method == "region"}:
+\itemize{
+\item \code{ppm_range}: A chemical shift region to integrate
+\item \code{...}: Other arguments passed on to \link{nmr_integrate_regions}
+}
+}}
 }
 \value{
-The \link{nmr_dataset} object, with the samples normalized
+The \link{nmr_dataset_1D} object, with the samples normalized
 }
 \description{
-Normalize NMR samples
+Normalize nmr_dataset_1D samples
 }
 \seealso{
 Other nmr_dataset_1D functions: \code{\link{[.nmr_dataset_1D}},
