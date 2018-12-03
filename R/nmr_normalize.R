@@ -78,6 +78,8 @@ nmr_normalize.nmr_dataset_1D <- function(samples,
     norm_result <- norm_pqn(samples[["data_1r"]])
     samples[["data_1r"]] <- norm_result$spectra
     norm_factor <- norm_result$norm_factor
+    nmr_diagnose(samples) <- list(name = "Normalization",
+                                  norm_factor = norm_factor)
     return(samples)
   } else {
     stop("Unimplemented method: ", method)
@@ -86,5 +88,7 @@ nmr_normalize.nmr_dataset_1D <- function(samples,
                                 MARGIN = 1,
                                 STATS = norm_factor,
                                 FUN = "/")
+  nmr_diagnose(samples) <- list(name = "Normalization",
+                                norm_factor = norm_factor)
   return(samples)
 }

@@ -19,6 +19,7 @@ nmr_dataset_load <- function(file_name) {
 #' @rdname load_and_save_functions
 #' @export
 nmr_dataset_save <- function(nmr_dataset, file_name, ...) {
+  nmr_diagnose(nmr_dataset) <- NULL
   saveRDS(nmr_dataset, file_name)
   return(nmr_dataset)
 }
