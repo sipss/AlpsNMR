@@ -285,6 +285,16 @@ computation of the median spectra. Nevertheless, it is possible to compute it:
 dataset_norm <- nmr_normalize(dataset_align, method = "pqn")
 ```
 
+The `NIHSnmr` package offers the possibility to extract additional diagnostic
+information with `nmr_diagnose(dataset)`. This feature is only used for now
+on the normalization, to explore the normalization factors applied to each sample:
+
+```{r}
+diagnostic <- nmr_diagnose(dataset_norm)
+print(diagnostic$norm_factor)
+print(diagnostic$plot)
+```
+
 
 # Peak integration
 
