@@ -209,7 +209,7 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)  {
   nmr_export_data_1r(nmr_dataset_no_out, full_spectra_matrix_fn)
   nmr_meta_export(nmr_dataset_no_out, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset_no_out, nmr_dataset_outfile)
-  ggplot2::ggsave(filename = plot_outlier_QT2, plot = gplt, width = 7, height = 5, units = "cm")
+  ggplot2::ggsave(filename = plot_outlier_QT2, plot = gplt, width = 14, height = 8, units = "cm", dpi = 300)
   
   if (length(nmr_exp_out) > 0) {
     message("The following NMRExperiments have been flagged and excluded as outliers:\n",
@@ -413,7 +413,7 @@ pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, outpu
   if (!is.null(internal_calibrant)) {
     nmr_dataset_norm_ic <- nmr_normalize(nmr_dataset, method = "region", ppm_range = internal_calibrant)
     diag <- nmr_diagnose(nmr_dataset_norm_ic)
-    ggplot2::ggsave(filename = plot_norm_factor_ic, plot = diag$plot, width = 7, height = 5, unit = "cm")
+    ggplot2::ggsave(filename = plot_norm_factor_ic, plot = diag$plot, width = 14, height = 8, unit = "cm", dpi = 300)
     nfactor <- diag$norm_factor
     nfactor_extreme <- dplyr::filter(
       nfactor,
@@ -432,7 +432,7 @@ pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, outpu
   }
   nmr_dataset <- nmr_normalize(nmr_dataset, method = "pqn")
   diag <- nmr_diagnose(nmr_dataset)
-  ggplot2::ggsave(filename = plot_norm_factor_pqn, plot = diag$plot, width = 7, height = 5, unit = "cm")
+  ggplot2::ggsave(filename = plot_norm_factor_pqn, plot = diag$plot, width = 14, height = 8, unit = "cm", dpi = 300)
   
   
   message("Saving pipe_normalization results at ", Sys.time())
