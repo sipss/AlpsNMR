@@ -25,7 +25,7 @@ pipe_load_samples <- function(samples_dir, glob = "*0", output_dir = NULL) {
   fs::dir_create(output_dir)
   NMRExperiments <- as.character(fs::dir_ls(samples_dir, glob = glob))
   nmr_dataset <- nmr_read_samples(NMRExperiments)
-  message("Saving pipe_load_samples results...")
+  message("Saving pipe_load_samples results at ", Sys.time())
   nmr_dataset_rds <- fs::path(output_dir, "nmr_dataset.rds")
   nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
   nmr_meta_export(nmr_dataset, fs::path(output_dir, "nmr_dataset_metadata.xlsx"))
@@ -89,7 +89,6 @@ pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
   env$nmr_dataset_outfile <- as.character(fs::path(output_dir, "nmr_dataset.rds"))
   rmd_file <- system.file("pipeline-rmd", "add-metadata.Rmd", package = "NIHSnmr")
   rmarkdown::render(input = rmd_file, output_dir = output_dir, envir = env)
-  message("Add metadata completed")
   message("Ending pipe_add_metadata at ", Sys.time())
 }
 
@@ -119,6 +118,7 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis, output_dir) {
   
   nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = axis)
   
+  message("Saving pipe_interpolate_1D at ", Sys.time())
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
@@ -159,6 +159,7 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   nmr_dataset <- nmr_exclude_region(nmr_dataset, exclude = exclude)
   
+  message("Saving pipe_exclude_regions at ", Sys.time())
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
@@ -204,6 +205,7 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)  {
   nmr_exp_noout <- nmr_meta_get_column(nmr_dataset_no_out, "NMRExperiment")
   nmr_exp_out <- setdiff(nmr_exp_all, nmr_exp_noout)
   
+  message("Saving pipe_outlier_detection at ", Sys.time())
   nmr_export_data_1r(nmr_dataset_no_out, full_spectra_matrix_fn)
   nmr_meta_export(nmr_dataset_no_out, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset_no_out, nmr_dataset_outfile)
@@ -257,7 +259,8 @@ pipe_filter_samples <- function(nmr_dataset_rds, conditions, output_dir) {
   
   nmr_dataset <- NIHSnmr::filter(nmr_dataset, !!!conditions_expr)
   
-  message("Saving results...")
+  
+  message("Saving pipe_filter_samples at ", Sys.time())
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
@@ -315,10 +318,9 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
                            maxShift_ppm = maxShift_ppm,
                            acceptLostPeak = acceptLostPeak)
   
-  message("Saving alignment results...")
-
-  
   gplt <- nmr_detect_peaks_plot(nmr_dataset, peak_data, NMRExperiment = NMRExp_ref)
+  
+  message("Saving pipe_peakdet_align at ", Sys.time())
   plot_interactive(gplt, plot_peak_detection_html)
   
   nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
@@ -370,6 +372,8 @@ pipe_peak_integration <- function(nmr_dataset_rds, peak_det_align_dir, peak_widt
     peak_pos_ppm = peak_data_integ$ppm,
     peak_width_ppm = peak_width_ppm)
   
+  
+  message("Saving pipe_peak_integration at ", Sys.time())
   nmr_dataset_save(nmr_peak_table, nmr_peak_table_rds)
   nmr_meta_export(nmr_peak_table, metadata_fn, groups = "external")
   utils::write.csv(nmr_data(nmr_peak_table), peak_table_fn, row.names = FALSE)
@@ -411,6 +415,7 @@ pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, outpu
   }
   nmr_dataset <- nmr_normalize(nmr_dataset, method = "pqn")
   
+  message("Saving pipe_normalization results at ", Sys.time())
   nmr_export_data_1r(nmr_dataset, full_spectra_matrix_fn)
   nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
   nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
