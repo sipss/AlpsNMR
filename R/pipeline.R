@@ -25,6 +25,7 @@ pipe_load_samples <- function(samples_dir, glob = "*0", output_dir = NULL) {
   fs::dir_create(output_dir)
   NMRExperiments <- as.character(fs::dir_ls(samples_dir, glob = glob))
   nmr_dataset <- nmr_read_samples(NMRExperiments)
+  message("Saving pipe_load_samples results...")
   nmr_dataset_rds <- fs::path(output_dir, "nmr_dataset.rds")
   nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
   nmr_meta_export(nmr_dataset, fs::path(output_dir, "nmr_dataset_metadata.xlsx"))
