@@ -7,7 +7,7 @@
 nmr_meta_get_column(samples, column = "NMRExperiment")
 }
 \arguments{
-\item{samples}{a \link{nmr_dataset} object}
+\item{samples}{a \link{nmr_dataset_family} object}
 
 \item{column}{A column to get}
 }

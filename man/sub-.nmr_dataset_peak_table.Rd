@@ -20,7 +20,7 @@ Extract parts of an nmr_dataset_peak_table
 \seealso{
 Other subsetting functions: \code{\link{[.nmr_dataset_1D}},
   \code{\link{[.nmr_dataset}},
-  \code{\link{filter.nmr_dataset}},
+  \code{\link{filter.nmr_dataset_family}},
   \code{\link{nmr_pca_outliers_filter}}
 
 Other nmr_dataset_peak_table functions: \code{\link{is.nmr_dataset_peak_table}},

@@ -15,7 +15,4 @@ is.nmr_dataset(x)
 \description{
 Object is of \link{nmr_dataset} class
 }
-\seealso{
-Other nmr_dataset manipulation functions: \code{\link{filter.nmr_dataset}}
-}
 \concept{nmr_dataset manipulation functions}

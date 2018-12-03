@@ -22,11 +22,10 @@ NULL
 #' @family class helper functions
 #' @export
 validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
+  validate_nmr_dataset_family(nmr_dataset_peak_table)
   assert_that(inherits(nmr_dataset_peak_table, "nmr_dataset_peak_table"),
               msg = "Not an nmr_dataset_peak_table")
-  assert_that(is.list(nmr_dataset_peak_table),
-              msg = "nmr_dataset_peak_table objects are list-like. This object is not")
-  
+
   assert_that("peak_table" %in% names(nmr_dataset_peak_table),
               msg = "nmr_dataset_peak_table must have a peak_table matrix")
   
@@ -40,24 +39,7 @@ validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
               msg = "The num_samples value does not match nrow(peak_table)")
   
   
-  assert_that("metadata" %in% names(nmr_dataset_peak_table), msg = "Missing acquisition and parameter metadata")
-  metadata <- nmr_dataset_peak_table[["metadata"]]
-  assert_that(is.vector(metadata) & is.list(metadata), msg = "metadata should be a list")
-  assert_that("external" %in% names(metadata),
-              msg = "$metadata$external should be a data frame")
-  assert_that(all(purrr::map_lgl(metadata, is.data.frame)), msg = "all metadata elements should be data frames")
-  for (metad_idx in seq_along(metadata)) {
-    metad_name <- names(metadata)[metad_idx]
-    metad <- metadata[[metad_idx]]
-    assert_that(nrow(metad) == num_samples,
-                msg = glue::glue("The number of rows of {metad_name} does not match the number of samples"))
-    assert_that("NMRExperiment" %in% colnames(metad),
-                msg = glue::glue_data(
-                  list(metad_name = metad_name),
-                  "metadata '{metad_name}' does not include the NMRExperiment column"))
-    assert_that(all(metad[["NMRExperiment"]] == metadata[[1]][["NMRExperiment"]]),
-                msg = glue::glue("The NMRExperiment column in {metad_name} is not equal the same column in {names(metadata)[1]}"))
-  }
+
   nmr_dataset_peak_table
 }
 
@@ -76,7 +58,7 @@ new_nmr_dataset_peak_table <- function(peak_table, metadata) {
   samples[["metadata"]] <- metadata
   samples[["peak_table"]] <- as.matrix(peak_table)
   samples[["num_samples"]] <- nrow(peak_table)
-  class(samples) <- "nmr_dataset_peak_table"
+  class(samples) <- c("nmr_dataset_peak_table", "nmr_dataset_family")
   validate_nmr_dataset_peak_table(samples)
   samples
 }

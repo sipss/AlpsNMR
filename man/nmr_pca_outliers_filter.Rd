@@ -58,7 +58,7 @@ Other nmr_dataset_1D functions: \code{\link{[.nmr_dataset_1D}},
 Other subsetting functions: \code{\link{[.nmr_dataset_1D}},
   \code{\link{[.nmr_dataset_peak_table}},
   \code{\link{[.nmr_dataset}},
-  \code{\link{filter.nmr_dataset}}
+  \code{\link{filter.nmr_dataset_family}}
 }
 \concept{PCA related functions}
 \concept{nmr_dataset_1D functions}

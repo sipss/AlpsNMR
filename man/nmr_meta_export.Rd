@@ -8,7 +8,7 @@ nmr_meta_export(nmr_dataset, xlsx_file, groups = c("info", "orig",
   "title", "external"))
 }
 \arguments{
-\item{nmr_dataset}{An nmr_dataset object}
+\item{nmr_dataset}{An \link{nmr_dataset_family} object}
 
 \item{xlsx_file}{"The .xlsx excel file"}
 

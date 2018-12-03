@@ -7,7 +7,7 @@
 nmr_meta_get(samples, columns = NULL, groups = NULL)
 }
 \arguments{
-\item{samples}{a \link{nmr_dataset} object}
+\item{samples}{a \link{nmr_dataset_family} object}
 
 \item{columns}{Columns to get. By default gets all the columns.}
 

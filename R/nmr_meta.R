@@ -1,6 +1,6 @@
 #' Get metadata
 #' 
-#' @param samples a [nmr_dataset] object
+#' @param samples a [nmr_dataset_family] object
 #' @param columns Columns to get. By default gets all the columns.
 #' @param groups Groups to get. Groups are predefined of columns. Typically 
 #' `"external"` for metadata added with [nmr_meta_add].
@@ -81,16 +81,16 @@ nmr_meta_get_column <- function(samples, column = "NMRExperiment") {
 #' This is useful to add metadata to datasets that can be later used for
 #' plotting spectra or further analysis (PCA...).
 #' 
-#' @param nmr_data an [nmr_dataset] object
+#' @param nmr_data an [nmr_dataset_family] object
 #' @param metadata A data frame with metadata to add
-#' @param by A column name of both the `nmr_dataset$metadata$external` and the metadata
+#' @param by A column name of both the `nmr_data$metadata$external` and the metadata
 #' data.frame. If you want to merge two columns with different headers you can
 #' use a named character vector `c("NMRExperiment" = "ExperimentNMR")` where
-#' the left side is the column name of the `nmr_dataset$metadata$external` and the right side is
+#' the left side is the column name of the `nmr_data$metadata$external` and the right side is
 #' the column name of the metadata data frame.
 #' 
 #' @return
-#' The nmr_dataset object with the added metadata
+#' The nmr_dataset_family object with the added metadata
 #' @export
 #' @examples 
 #' # Load a demo dataset with four samples:
@@ -198,7 +198,7 @@ nmr_meta_add_tidy_excel <- function(nmr_data, excel_file) {
 
 #' Export Metadata to an Excel file
 #'
-#' @param nmr_dataset An nmr_dataset object
+#' @param nmr_dataset An [nmr_dataset_family] object
 #' @param xlsx_file "The .xlsx excel file"
 #' @param groups A character vector. Use `"external"` for the external metadata or
 #'  the default for a more generic solution

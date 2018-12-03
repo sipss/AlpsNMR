@@ -1,13 +1,3 @@
-#' nmr_dataset like objects (S3 classes)
-#' 
-#' The NIHSnmr package defines and uses several objects to manage NMR Data.
-#' 
-#' @name nmr_dataset_family
-#' @family NIHSnmr dataset objects
-#' @seealso [Functions to save and load these objects][load_and_save_functions]
-NULL
-
-
 #' nmr_dataset (S3 class)
 #'
 #' An `nmr_dataset` represents a set of NMR samples.
@@ -379,24 +369,9 @@ format.nmr_dataset <- function(x, ...) {
 #' @family nmr_dataset functions
 #' @export
 validate_nmr_dataset <- function(samples) {
+  validate_nmr_dataset_family(samples)
   assert_that(inherits(samples, "nmr_dataset"),
               msg = "Not an nmr_dataset object")
-  assert_that(is.list(samples),
-              msg = "nmr_dataset objects are list-like. This object is not")
-  
-  assert_that("metadata" %in% names(samples),
-              msg = "Missing the metadata list in the nmr_dataset object")
-  metadata_list <- samples$metadata
-  assert_that("external" %in% names(metadata_list),
-              msg = "Missing 'external' data frame in the metadata list")
-  for (i in seq_along(metadata_list)) {
-    metad <- metadata_list[[i]]
-    metad_name <- names(metadata_list)[i]
-    assert_that(is.data.frame(metad),
-                msg = paste0("'", metad_name, "' metadata should be a data frame"))
-    assert_that("NMRExperiment" %in% colnames(metad),
-                msg = paste0("NMRExperiment should be a column of the '", metad_name, "' metadata data frame"))
-  }
   samples
 }
 
@@ -430,7 +405,7 @@ new_nmr_dataset <- function(metadata, data_fields, axis) {
   samples <- append(x = samples, values = data_fields)
   samples[["axis"]] <- axis
   samples[["num_samples"]] <- nrow(metadata[[1]])
-  class(samples) <- c("nmr_dataset")
+  class(samples) <- c("nmr_dataset", "nmr_dataset_family")
   validate_nmr_dataset(samples)
   samples
 }

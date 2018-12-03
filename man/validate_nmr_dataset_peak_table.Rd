@@ -33,6 +33,7 @@ Other class helper functions: \code{\link{is.nmr_dataset_1D}},
   \code{\link{new_nmr_dataset_peak_table}},
   \code{\link{new_nmr_dataset}},
   \code{\link{validate_nmr_dataset_1D}},
+  \code{\link{validate_nmr_dataset_family}},
   \code{\link{validate_nmr_dataset}}
 }
 \concept{class helper functions}

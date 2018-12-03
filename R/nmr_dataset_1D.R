@@ -29,11 +29,10 @@ NULL
 #' @family nmr_dataset_1D functions
 #' @export
 validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
+  validate_nmr_dataset_family(nmr_dataset_1D)
   assert_that(inherits(nmr_dataset_1D, "nmr_dataset_1D"),
               msg = "Not an nmr_dataset_1D")
-  assert_that(is.list(nmr_dataset_1D),
-              msg = "nmr_dataset_1D objects are list-like. This object is not")
-  
+
   assert_that("axis" %in% names(nmr_dataset_1D),
               msg = "nmr_dataset_1D must have a ppm axis")
   assert_that("data_1r" %in% names(nmr_dataset_1D),
@@ -52,26 +51,7 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
   
   assert_that(num_samples == nmr_dataset_1D[["num_samples"]],
               msg = "The num_samples value does not match nrow(data_1r)")
-  
-  
-  assert_that("metadata" %in% names(nmr_dataset_1D), msg = "Missing acquisition and parameter metadata")
-  metadata <- nmr_dataset_1D[["metadata"]]
-  assert_that(is.vector(metadata) & is.list(metadata), msg = "metadata should be a list")
-  assert_that("external" %in% names(metadata),
-              msg = "$metadata$external should be a data frame")
-  assert_that(all(purrr::map_lgl(metadata, is.data.frame)), msg = "all metadata elements should be data frames")
-  for (metad_idx in seq_along(metadata)) {
-    metad_name <- names(metadata)[metad_idx]
-    metad <- metadata[[metad_idx]]
-    assert_that(nrow(metad) == num_samples,
-                msg = glue::glue("The number of rows of {metad_name} does not match the number of samples"))
-    assert_that("NMRExperiment" %in% colnames(metad),
-                msg = glue::glue_data(
-                  list(metad_name = metad_name),
-                  "metadata '{metad_name}' does not include the NMRExperiment column"))
-    assert_that(all(metad[["NMRExperiment"]] == metadata[[1]][["NMRExperiment"]]),
-                msg = glue::glue("The NMRExperiment column in {metad_name} is not equal the same column in {names(metadata)[1]}"))
-  }
+
   nmr_dataset_1D
 }
 
@@ -92,7 +72,7 @@ new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
   samples[["data_1r"]] <- data_1r
   samples[["axis"]] <- ppm_axis
   samples[["num_samples"]] <- nrow(data_1r)
-  class(samples) <- "nmr_dataset_1D"
+  class(samples) <- c("nmr_dataset_1D", "nmr_dataset_family")
   validate_nmr_dataset_1D(samples)
   samples
 }

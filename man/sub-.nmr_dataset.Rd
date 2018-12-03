@@ -26,7 +26,7 @@ data2 <- data[1:3] # get the first 3 samples
 \seealso{
 Other subsetting functions: \code{\link{[.nmr_dataset_1D}},
   \code{\link{[.nmr_dataset_peak_table}},
-  \code{\link{filter.nmr_dataset}},
+  \code{\link{filter.nmr_dataset_family}},
   \code{\link{nmr_pca_outliers_filter}}
 
 Other nmr_dataset functions: \code{\link{load_and_save_functions}},

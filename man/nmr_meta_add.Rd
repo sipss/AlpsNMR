@@ -10,14 +10,14 @@ nmr_meta_add(nmr_data, metadata, by = "NMRExperiment")
 nmr_meta_add_tidy_excel(nmr_data, excel_file)
 }
 \arguments{
-\item{nmr_data}{an \link{nmr_dataset} object}
+\item{nmr_data}{an \link{nmr_dataset_family} object}
 
 \item{metadata}{A data frame with metadata to add}
 
-\item{by}{A column name of both the \code{nmr_dataset$metadata$external} and the metadata
+\item{by}{A column name of both the \code{nmr_data$metadata$external} and the metadata
 data.frame. If you want to merge two columns with different headers you can
 use a named character vector \code{c("NMRExperiment" = "ExperimentNMR")} where
-the left side is the column name of the \code{nmr_dataset$metadata$external} and the right side is
+the left side is the column name of the \code{nmr_data$metadata$external} and the right side is
 the column name of the metadata data frame.}
 
 \item{excel_file}{Path to a tidy Excel file name. The Excel can consist
@@ -31,7 +31,7 @@ of the second sheet can be named at will. See the package vignette for an
 example.}
 }
 \value{
-The nmr_dataset object with the added metadata
+The nmr_dataset_family object with the added metadata
 }
 \description{
 This is useful to add metadata to datasets that can be later used for
