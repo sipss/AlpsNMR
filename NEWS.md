@@ -1,4 +1,8 @@
-# NIHSnmr 2.2.0.9000
+# NIHSnmr 2.3.0
+
+- Improve installation instructions under R<3.5
+- nmr_peak_detection_tune_snr function added.
+- Minor bug fixes
 
 # NIHSnmr 2.2.0
 

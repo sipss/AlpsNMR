@@ -21,10 +21,18 @@ We can install those packages through the `BiocManager` package:
     install.packages("BiocManager")
     BiocManager::install(c("impute", "MassSpecWavelet"), version = "3.8")
 
+In case you are on R<3.5, the installation of the speaq 2.4 package may fail due to
+an update of the `Rfast` package dependency. This issue can be solved by installing
+an older version of `Rfast` with the command:
+
+    if (getRversion() < "3.5") {
+      remotes::install_version("Rfast", "1.8.9")
+    }
+
 Then we can use the `remotes` package to install the rest of the required
 dependencies and then build and install our package:
 
-    remotes::install_local("NIHSnmr_2.1.0.tar.gz")
+    remotes::install_local("NIHSnmr_2.3.0.tar.gz")
 
 Quick start
 =============

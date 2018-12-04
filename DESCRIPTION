@@ -1,7 +1,7 @@
 Package: NIHSnmr
 Type: Package
 Title: Import and preprocess Nuclear Magnetic Resonance data
-Version: 2.2.0.9000
+Version: 2.3.0
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
