@@ -162,6 +162,101 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
   peakList
 }
 
+#' Diagnose SNR threshold in peak detection
+#' 
+#' @section Parallelization:
+#'
+#' This function accepts parallellization with future strategies. 
+#' You can use `plan(multiprocess)` or `plan(sequential)` before calling this function to determine
+#' if it should be parallellized or not.
+#' 
+#' @param ds An [nmr_dataset_1D] dataset
+#' @param NMRExperiment A string with the single NMRExperiment used explore the SNR thresholds. If not given, use the first one.
+#' @param SNR_thresholds A numeric vector with the SNR thresholds to explore
+#'
+#' @return A list with the following elements:
+#'  - `peaks_detected`: A data frame with the columns from the [nmr_detect_peaks] output and an additional column
+#'                    `SNR_threshold` with the threshold used on each row.
+#'  - `num_peaks_per_region`: A summary of the `peaks_detected` table, with the number of peaks detected on
+#'                            each chemical shift region
+#'  - `plot_num_peaks_per_region`: A visual representation of `num_peaks_per_region`
+#'  - `plot_spectrum_and_detections`: A visual representation of the spectrum and the peaks detected with each
+#'     SNR threshold. Use [plotly::ggplotly] or [plot_interactive] on this to zoom and explore the results.
+#' @family peak detection functions
+#' @family nmr_dataset_1D functions
+#' @export
+nmr_detect_peaks_tune_snr <- function(ds, NMRExperiment = NULL, SNR_thresholds = seq(from = 2, to = 6, by = 0.1)) {
+  
+  if (is.null(NMRExperiment)) {
+    NMRExperiment <- utils::head(nmr_meta_get_column(ds, column = "NMRExperiment"), n = 1)
+  }
+  ds1 <- filter(ds, NMRExperiment == !!NMRExperiment)
+  names(SNR_thresholds) <- SNR_thresholds
+  
+  peaks_detected <- furrr::future_map_dfr(
+    SNR_thresholds,
+    ~nmr_detect_peaks(ds1,
+                      nDivRange_ppm = 0.03, 
+                      scales = seq(1, 16, 2),
+                      baselineThresh = 0, SNR.Th = .),
+    .id = "SNR_threshold",
+    .options = furrr::future_options(globals = character(), packages = character())
+  )
+  
+  peaks_detected$SNR_threshold <- as.numeric(peaks_detected$SNR_threshold)
+  peaks_per_region <- peaks_detected %>%
+    dplyr::mutate(ppm_region = plyr::round_any(.data$ppm, 0.5)) %>%
+    dplyr::group_by(.data$SNR_threshold, .data$ppm_region) %>%
+    dplyr::summarize(num_peaks = dplyr::n()) %>%
+    dplyr::ungroup()
+  
+  
+  gplt <- ggplot2::ggplot(peaks_per_region) + 
+    ggplot2::geom_tile(ggplot2::aes(x = .data$ppm_region, y = .data$SNR_threshold, fill = .data$num_peaks)) +
+    ggplot2::scale_x_reverse(name = "ppm region", limits = rev(range(ds1$axis))) +
+    ggplot2::scale_y_continuous(name = "Signal to Noise Ratio Threshold") +
+    ggplot2::scale_fill_viridis_c(name = "Number of peaks detected") +
+    ggplot2::ggtitle("Number of peaks detected on each ppm region for several SNR thresholds",
+                     "Too low SNR thresholds may have false peaks, too high may miss actual peaks")
+  
+  df1 <- data.frame(
+    ppm = ds1$axis,
+    intensity = as.numeric(ds1$data_1r[1,])
+  )
+  
+  ord_thresh <- sort(unique(peaks_detected$SNR_threshold))
+  num_thresholds <- length(ord_thresh)
+  
+  peak_tuning_plt <- peaks_detected %>%
+    dplyr::mutate(intensity_scaled = .data$intensity*(match(.data$SNR_threshold, ord_thresh) - 1)/num_thresholds)
+  
+  gplt2 <- ggplot2::ggplot() + 
+    ggplot2::geom_line(
+      data = df1,
+      mapping = ggplot2::aes(x = .data$ppm, y = .data$intensity), color = "red"
+    ) +
+    ggplot2::geom_segment(
+      data = peak_tuning_plt, 
+      mapping = ggplot2::aes(
+        x = .data$ppm, xend = .data$ppm,
+        y = .data$intensity_scaled,
+        yend = .data$intensity_scaled + .data$intensity/num_thresholds,
+        color = .data$SNR_threshold)
+    ) +
+    ggplot2::scale_x_reverse(name = "Chemical shift (ppm)") +
+    ggplot2::scale_y_continuous("Intensity (a.u.)") +
+    ggplot2::scale_color_continuous(name = "SNR thresholds") +
+    ggplot2::ggtitle(
+      "Peak detection for several SNR thresholds",
+      "Zoom onto a peak to see the SNR thresholds were it is detected"
+    )
+  
+  list(peaks_detected = peaks_detected,
+       num_peaks_per_region = peaks_per_region,
+       plot_num_peaks_per_region = gplt,
+       plot_spectrum_and_detections = gplt2)
+}
+
 #' Align NMR spectra
 #' 
 #' This function is based on [speaq::dohCluster].

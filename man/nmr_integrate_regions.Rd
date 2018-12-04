@@ -67,6 +67,7 @@ ggplot(mapping = aes(x = x, y = y)) +
 }
 \seealso{
 Other peak detection functions: \code{\link{nmr_detect_peaks_plot}},
+  \code{\link{nmr_detect_peaks_tune_snr}},
   \code{\link{nmr_detect_peaks}},
   \code{\link{pipe_peakdet_align}},
   \code{\link{regions_from_peak_table}}
@@ -81,6 +82,7 @@ Other nmr_dataset_1D functions: \code{\link{[.nmr_dataset_1D}},
   \code{\link{nmr_align_find_ref}},
   \code{\link{nmr_align}},
   \code{\link{nmr_detect_peaks_plot}},
+  \code{\link{nmr_detect_peaks_tune_snr}},
   \code{\link{nmr_detect_peaks}},
   \code{\link{nmr_exclude_region}},
   \code{\link{nmr_integrate_peak_positions}},

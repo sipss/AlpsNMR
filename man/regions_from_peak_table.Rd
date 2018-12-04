@@ -19,6 +19,7 @@ Build list of regions for peak integration
 }
 \seealso{
 Other peak detection functions: \code{\link{nmr_detect_peaks_plot}},
+  \code{\link{nmr_detect_peaks_tune_snr}},
   \code{\link{nmr_detect_peaks}},
   \code{\link{nmr_integrate_regions}},
   \code{\link{pipe_peakdet_align}}

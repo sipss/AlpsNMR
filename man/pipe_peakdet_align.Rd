@@ -39,6 +39,7 @@ Other pipeline functions: \code{\link{pipe_add_metadata}},
   \code{\link{pipe_peak_integration}}
 
 Other peak detection functions: \code{\link{nmr_detect_peaks_plot}},
+  \code{\link{nmr_detect_peaks_tune_snr}},
   \code{\link{nmr_detect_peaks}},
   \code{\link{nmr_integrate_regions}},
   \code{\link{regions_from_peak_table}}
