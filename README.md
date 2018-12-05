@@ -32,7 +32,7 @@ We can install those packages through the `BiocManager` package:
 
 ### CRAN dependencies
 
-#### If R > 3.5
+#### If R < 3.5
 
 In case you are on R<3.5, the installation of the speaq 2.4 package may fail due to
 an update of the `Rfast` package dependency. This issue can be solved by installing
