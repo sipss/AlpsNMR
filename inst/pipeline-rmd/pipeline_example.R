@@ -35,7 +35,7 @@ samples_to_keep_conditions <- 'NMRExperiment != "40"'
 # Leave those as recommended for plasma.
 nDivRange_ppm <- 0.1
 baselineThresh <- 0
-SNR.Th <- 3
+SNR.Th <- 4
 
 maxShift_ppm <- 0.0015
 

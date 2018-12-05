@@ -1,3 +1,7 @@
+# NIHSnmr 2.3.0.9000
+
+- Change SNR.Th value from 3 to 4 in pipeline_example.R
+
 # NIHSnmr 2.3.0
 
 - Improve installation instructions under R<3.5
