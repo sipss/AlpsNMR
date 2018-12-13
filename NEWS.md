@@ -1,7 +1,8 @@
-# NIHSnmr 2.3.0.9000
+# NIHSnmr 2.3.1
 
 - Change SNR.Th value from 3 to 4 in pipeline_example.R
 - Update installation instructions
+- Last version form Sergio (changes not significant since 2.3.0)
 
 # NIHSnmr 2.3.0
 
