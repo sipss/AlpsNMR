@@ -20,7 +20,7 @@
 #' - `num_samples`: The number of samples in the dataset
 #' 
 #' @name nmr_dataset
-#' @family NIHSnmr dataset objects
+#' @family AlpsNMR dataset objects
 #' @seealso [Functions to save and load these objects][load_and_save_functions]
 NULL
 

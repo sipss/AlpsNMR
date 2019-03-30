@@ -1,12 +1,12 @@
 ---
-title: "Introduction to NIHSnmr"
+title: "Introduction to AlpsNMR"
 author: "Sergio Oller, Institute for Bioengineering of Catalonia"
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     toc: true
 vignette: >
-  %\VignetteIndexEntry{Introduction to NIHSnmr}
+  %\VignetteIndexEntry{Introduction to AlpsNMR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The `NIHSnmr` package was written with two purposes in mind:
+The `AlpsNMR` package was written with two purposes in mind:
 
 - to help **data analysts and NMR scientists** to work with NMR samples.
 - to help **IT pipeline builders** implement automated methods for preprocessing.
@@ -35,13 +35,13 @@ building pipelines with this package, you may want to open the file saved in
 this directory (run it on your computer):
 
 ```
-pipeline_example <- system.file("pipeline-rmd", "pipeline_example.R", package = "NIHSnmr")
+pipeline_example <- system.file("pipeline-rmd", "pipeline_example.R", package = "AlpsNMR")
 print(pipeline_example)
 ```
 
 
 ```{r}
-library(NIHSnmr)
+library(AlpsNMR)
 library(ggplot2)
 ```
 
@@ -59,7 +59,7 @@ plan(multiprocess(workers = 4)) # enable parallellization with 4 workers
 
 # Data: The `MeOH_serum_extraction` dataset
 
-To explore the basics of the NIHSnmr package, we have included four NMR samples
+To explore the basics of the AlpsNMR package, we have included four NMR samples
 in Bruker format bundled with the package. The samples are (c) Nestlé Institute of Health Sciences
 and should not be redistributed without NIHS written consent, in case this package was ever published.
 
@@ -67,7 +67,7 @@ If you have installed this package, you can obtain the directory where the four 
 are with the command
 
 ```{r}
-MeOH_serum_extraction_dir <- system.file("dataset-demo", package = "NIHSnmr")
+MeOH_serum_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
 print(MeOH_serum_extraction_dir)
 ```
 
@@ -168,7 +168,7 @@ and the `data_1r` element is a matrix.
 
 # Plotting samples
 
-The `NIHSnmr` package offers the possibility to plot `nmr_dataset_1D` objects.
+The `AlpsNMR` package offers the possibility to plot `nmr_dataset_1D` objects.
 Plotting many spectra with so many points is quite expensive so it is possible
 to include only some regions of the spectra or plot only some samples.
 
@@ -228,7 +228,7 @@ nmr_meta_get(samples_10_20, groups = "external")
 
 # Robust PCA for outlier detection
 
-The NIHSnmr package includes some robust PCA analysis for outlier detection.
+The AlpsNMR package includes some robust PCA analysis for outlier detection.
 With such a small demo dataset, it is not practical to use, but check out the
 documentation of `nmr_pca_outliers_*` functions.
 
@@ -285,7 +285,7 @@ computation of the median spectra. Nevertheless, it is possible to compute it:
 dataset_norm <- nmr_normalize(dataset_align, method = "pqn")
 ```
 
-The `NIHSnmr` package offers the possibility to extract additional diagnostic
+The `AlpsNMR` package offers the possibility to extract additional diagnostic
 information with `nmr_diagnose(dataset)`. This feature is only used for now
 on the normalization, to explore the normalization factors applied to each sample:
 

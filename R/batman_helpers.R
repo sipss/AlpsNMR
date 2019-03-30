@@ -217,7 +217,7 @@ nmr_batman_export_dataset <- function(nmr_dataset, batman_dir = "BatmanInput", f
 #' @noRd
 nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput", filename = "multi_data_user.csv") {
   hmdb <- NULL
-  utils::data("hmdb", package = "NIHSnmr", envir = environment())
+  utils::data("hmdb", package = "AlpsNMR", envir = environment())
   hmdb <- nmr_batman_multi_data_user(multiplet_table = hmdb, batman_dir = batman_dir, filename = filename)
   hmdb
 }

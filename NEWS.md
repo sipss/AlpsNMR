@@ -1,3 +1,7 @@
+# AlpsNMR 2.3.1.9000
+
+- Rename package from NIHSnmr to AlpsNMR
+
 # NIHSnmr 2.3.1
 
 - Change SNR.Th value from 3 to 4 in pipeline_example.R

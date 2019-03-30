@@ -21,7 +21,7 @@
 #'                      xi = x)
 #' 
 #' xb <- c(which.min(abs(x - 3)), which.min(abs(x - 9)))
-#' basel <- NIHSnmr:::rough_baseline(y[xb[1]:xb[2]])
+#' basel <- AlpsNMR:::rough_baseline(y[xb[1]:xb[2]])
 #' 
 #' ggplot(mapping = aes(x = x, y = y)) +
 #'   geom_line(data = data.frame(x = x, y = y)) + 

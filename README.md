@@ -1,7 +1,7 @@
-# NIHSnmr
+# AlpsNMR
 
 
-`NIHSnmr` is an R package that can load Bruker and JDX samples as well as
+`AlpsNMR` is an R package that can load Bruker and JDX samples as well as
 preprocess them.
 
 It includes functions for region exclusion, normalization, peak detection & integration and
@@ -11,7 +11,7 @@ outlier detection among others. See the package vignette for details.
 ## Installation
 
 
-NIHSnmr uses the [speaq](https://cran.r-project.org/web/packages/speaq/index.html) package
+AlpsNMR uses the [speaq](https://cran.r-project.org/web/packages/speaq/index.html) package
 that depends on the [MassSpecWavelet](http://www.bioconductor.org/packages/release/bioc/html/MassSpecWavelet.html)
 and [impute](http://www.bioconductor.org/packages/release/bioc/html/impute.html) bioconductor
 packages.
@@ -43,17 +43,17 @@ an older version of `Rfast` with the command:
       remotes::install_version("Rfast", "1.8.9")
     }
 
-### NIHSnmr installation
+### AlpsNMR installation
 
 Then we can use the `remotes` package to install the rest of the required
 dependencies and then build and install our package:
 
-    remotes::install_local("NIHSnmr_2.3.0.tar.gz")
+    remotes::install_local("AlpsNMR_2.3.0.tar.gz")
 
 Quick start
 =============
 
 The best way to start is by running:
 
-    browseVignettes("NIHSnmr")
+    browseVignettes("AlpsNMR")
 

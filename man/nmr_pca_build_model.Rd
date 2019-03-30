@@ -35,7 +35,7 @@ A PCA model as given by \link[mixOmics:pca]{mixOmics::pca} with two additional a
 \itemize{
 \item \code{nmr_data_axis} containing the full ppm axis
 \item \code{nmr_included} with the data points included in the model
-These attributes are used internally by NIHSnmr to create loading plots
+These attributes are used internally by AlpsNMR to create loading plots
 }
 }
 \description{

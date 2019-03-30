@@ -1,4 +1,4 @@
-Package: NIHSnmr
+Package: AlpsNMR
 Type: Package
 Title: Import and preprocess Nuclear Magnetic Resonance data
 Version: 2.3.1

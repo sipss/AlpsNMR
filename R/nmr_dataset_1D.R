@@ -16,7 +16,7 @@
 #' 
 #' 
 #' @name nmr_dataset_1D
-#' @family NIHSnmr dataset objects
+#' @family AlpsNMR dataset objects
 NULL
 
 #' Validate 1D nmr datasets

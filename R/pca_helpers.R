@@ -12,7 +12,7 @@
 #' A PCA model as given by [mixOmics::pca] with two additional attributes:
 #'  - `nmr_data_axis` containing the full ppm axis
 #'  - `nmr_included` with the data points included in the model
-#' These attributes are used internally by NIHSnmr to create loading plots
+#' These attributes are used internally by AlpsNMR to create loading plots
 #' 
 #' @export
 nmr_pca_build_model <- function(nmr_dataset, ncomp = NULL, center = TRUE, scale = FALSE, ...) {

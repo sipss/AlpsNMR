@@ -6,14 +6,14 @@
 ### First node: Load Samples 
 
 # This directory contains a sample dataset: (e.g. "/dir/subdir/dir_with_samples")
-load_samples_input_dir <- system.file("dataset-demo", package = "NIHSnmr")
+load_samples_input_dir <- system.file("dataset-demo", package = "AlpsNMR")
 # A sample filtering wildcard (globbing pattern) (e.g. "*0", "*0.zip")
 load_samples_glob <- "*0.zip"
 
 
 ### Second Node: Append metadata
 # Excel file with metadata to merge:
-add_metadata_excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "NIHSnmr")
+add_metadata_excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 
 
 ### Third Node: Interpolate 1D
@@ -58,7 +58,7 @@ message("Pipeline outputs will be written at: ", output_dir)
 num_workers <- 4
 
 #### Pipeline begins here ######################################################
-library(NIHSnmr)
+library(AlpsNMR)
 
 
 #### First node: Load samples ##################################################

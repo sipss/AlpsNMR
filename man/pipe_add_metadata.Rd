@@ -37,8 +37,8 @@ This function saves the result to the output directory
 Pipeline: Add Metadata
 }
 \examples{
-dataset <- system.file("dataset-demo", package = "NIHSnmr")
-excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "NIHSnmr")
+dataset <- system.file("dataset-demo", package = "AlpsNMR")
+excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 nmr_dataset <- nmr_read_samples_dir(dataset)
 nmr_dataset_rds <- tempfile(fileext = ".rds")
 nmr_dataset_save(nmr_dataset, nmr_dataset_rds)

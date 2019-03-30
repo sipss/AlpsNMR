@@ -64,8 +64,8 @@ pipe_load_samples <- function(samples_dir, glob = "*0", output_dir = NULL) {
 #' @export
 #'
 #' @examples
-#' dataset <- system.file("dataset-demo", package = "NIHSnmr")
-#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "NIHSnmr")
+#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
 #' nmr_dataset_rds <- tempfile(fileext = ".rds")
 #' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
@@ -87,7 +87,7 @@ pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
   env$excel_file <- excel_file
   env$xlsx_file <- as.character(fs::path(output_dir, "nmr_metadata_added.xlsx"))
   env$nmr_dataset_outfile <- as.character(fs::path(output_dir, "nmr_dataset.rds"))
-  rmd_file <- system.file("pipeline-rmd", "add-metadata.Rmd", package = "NIHSnmr")
+  rmd_file <- system.file("pipeline-rmd", "add-metadata.Rmd", package = "AlpsNMR")
   rmarkdown::render(input = rmd_file, output_dir = output_dir, envir = env)
   message("Ending pipe_add_metadata at ", Sys.time())
 }
@@ -257,7 +257,7 @@ pipe_filter_samples <- function(nmr_dataset_rds, conditions, output_dir) {
 
   conditions_expr <- rlang::parse_exprs(conditions)
   
-  nmr_dataset <- NIHSnmr::filter(nmr_dataset, !!!conditions_expr)
+  nmr_dataset <- AlpsNMR::filter(nmr_dataset, !!!conditions_expr)
   
   
   message("Saving pipe_filter_samples at ", Sys.time())

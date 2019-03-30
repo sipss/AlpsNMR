@@ -1,6 +1,6 @@
-#' NIHSnmr: Routines for importing and processing NMR data
+#' AlpsNMR: Routines for importing and processing NMR data
 #'
-#' NIHSnmr allows you to import NMR samples into R and process them.
+#' AlpsNMR allows you to import NMR samples into R and process them.
 #'
 #' The following functions can be combined with the pipe. They
 #' create or modify the [nmr_dataset] object.
@@ -19,7 +19,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' library(NIHSnmr)
+#' library(AlpsNMR)
 #' sample_names <- c("dataset/10/", "dataset/20/", "dataset/30/")
 #' my_nmr_dataset <- nmr_read_samples(sample_names) %>%
 #'   nmr_interpolate_1D(axis = c(0.4, 10)) %>%
@@ -28,7 +28,7 @@
 #'   plot
 #' }
 #' \dontrun{
-#' library(NIHSnmr)
+#' library(AlpsNMR)
 #' sample_names <- c("dataset/10/", "dataset/20/", "dataset/30/")
 #' nmrdata <- nmr_read_samples(sample_names, metadata_only = TRUE)
 #' irods_metadata <- nmr_get_irods_meta(nmrdata)

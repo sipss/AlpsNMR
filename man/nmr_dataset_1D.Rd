@@ -18,7 +18,7 @@ shifts in the columns.
 }
 }
 \seealso{
-Other NIHSnmr dataset objects: \code{\link{nmr_dataset_family}},
+Other AlpsNMR dataset objects: \code{\link{nmr_dataset_family}},
   \code{\link{nmr_dataset}}
 }
-\concept{NIHSnmr dataset objects}
+\concept{AlpsNMR dataset objects}

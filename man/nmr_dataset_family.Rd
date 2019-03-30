@@ -4,7 +4,7 @@
 \alias{nmr_dataset_family}
 \title{nmr_dataset like objects (S3 classes)}
 \description{
-The NIHSnmr package defines and uses several objects to manage NMR Data.
+The AlpsNMR package defines and uses several objects to manage NMR Data.
 }
 \details{
 These objects share some structure and functions, so it makes sense to have
@@ -13,7 +13,7 @@ an abstract class to ensure that the shared structures are compatible
 \seealso{
 \link[=load_and_save_functions]{Functions to save and load these objects}
 
-Other NIHSnmr dataset objects: \code{\link{nmr_dataset_1D}},
+Other AlpsNMR dataset objects: \code{\link{nmr_dataset_1D}},
   \code{\link{nmr_dataset}}
 }
-\concept{NIHSnmr dataset objects}
+\concept{AlpsNMR dataset objects}

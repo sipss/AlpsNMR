@@ -94,13 +94,13 @@ nmr_meta_get_column <- function(samples, column = "NMRExperiment") {
 #' @export
 #' @examples 
 #' # Load a demo dataset with four samples:
-#' dataset <- system.file("dataset-demo", package = "NIHSnmr")
+#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
 #' 
 #' # At first we just have the NMRExperiment column
 #' print(nmr_meta_get(nmr_dataset, groups = "external"))
 #' # Get a table with NMRExperiment -> SubjectID
-#' dummy_metadata <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "NIHSnmr")
+#' dummy_metadata <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 #' NMRExp_SubjID <- readxl::read_excel(dummy_metadata, sheet = 1)
 #' 
 #' print(NMRExp_SubjID)
@@ -156,13 +156,13 @@ nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
 #' @examples 
 #' # Read a tidy excel file:
 #' 
-#' dataset <- system.file("dataset-demo", package = "NIHSnmr")
+#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
 #' 
 #' # At first we just have the NMRExperiment column
 #' print(nmr_meta_get(nmr_dataset, groups = "external"))
 #' # Get a table with NMRExperiment -> SubjectID
-#' dummy_metadata <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "NIHSnmr")
+#' dummy_metadata <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 #' 
 #' nmr_dataset <-nmr_meta_add_tidy_excel(nmr_dataset, dummy_metadata)
 #' # Updated Metadata:
