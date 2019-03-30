@@ -1,7 +1,7 @@
 Package: AlpsNMR
 Type: Package
 Title: Import and preprocess Nuclear Magnetic Resonance data
-Version: 2.3.1
+Version: 2.3.1.9000
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -11,7 +11,8 @@ Authors@R: c(
     person(given = "Sergio",
            family = "Oller Moreno",
            email = "soller@ibecbarcelona.eu",
-           role = c("aut", "cre")),
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-8994-1549")),
     person(given = "Nestlé Institute of Health Sciences",
            role = "cph"),
     person(given = "Institute for Bioengineering of Catalonia",
