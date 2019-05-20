@@ -33,7 +33,7 @@ samples_to_keep_conditions <- 'NMRExperiment != "40"'
 #### Seventh node: Peak detection and Alignment
 
 # Leave those as recommended for plasma.
-nDivRange_ppm <- 0.1
+nDivRange_ppm <- NULL
 baselineThresh <- 0
 SNR.Th <- 4
 
