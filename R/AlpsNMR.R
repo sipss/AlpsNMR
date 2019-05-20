@@ -1,6 +1,6 @@
-#' AlpsNMR: Routines for importing and processing NMR data
+#' AlpsNMR: Automated spectraL Processing System for NMR
 #'
-#' AlpsNMR allows you to import NMR samples into R and process them.
+#' AlpsNMR allows you to import NMR spectra into R and provides automated and efficient signal processing for untargeted NMR metabolomics.
 #'
 #' The following functions can be combined with the pipe. They
 #' create or modify the [nmr_dataset] object.

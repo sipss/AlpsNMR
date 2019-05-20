@@ -95,9 +95,9 @@ files_to_rDolphin = function (nmr_dataset){
   meta_rDolphin$type=as.numeric(as.factor(meta_rDolphin$type))
   
   NMR_spectra = nmr_data(nmr_dataset)
-  
+  Parameters_blood = NULL
   utils::data("Parameters_blood", package = "AlpsNMR", envir = environment())
-  
+  ROI_blood = NULL
   utils::data("ROI_blood", package = "AlpsNMR", envir = environment())
   
   files_rDolphin=list(Parameters_blood, meta_rDolphin, NMR_spectra, ROI_blood)

@@ -23,6 +23,7 @@ nmr_identify_regions_blood <- function(vector, ...) {
 }
 
 nmr_identify_regions_blood <- function(ppm_to_assign, num_proposed_compounds = 3){
+  HMDB_blood <- NULL
   utils::data("HMDB_blood", package = "AlpsNMR", envir = environment())
   output_assignation_list=HMDB_blood[NULL,]
   
@@ -39,10 +40,10 @@ nmr_identify_regions_blood <- function(ppm_to_assign, num_proposed_compounds = 3
   }
   output_assignation_list$ppm_to_assign <- rep(ppm_to_assign,each=num_proposed_compounds)
   
-  counts=output_assignation_list %>% dplyr::count(Metabolite) %>% dplyr::arrange(dplyr::desc(n))
-  colnames(counts) <- c("Metabolite", "Counts")
-  output_assignation_list <- merge(output_assignation_list,counts, by = "Metabolite")
-  output_assignation_list <- output_assignation_list[order(output_assignation_list$ppm_to_assign,-output_assignation_list$Blood_concentration, -output_assignation_list$n_reported_in_Blood, -output_assignation_list$Counts),]
+  # counts=output_assignation_list %>% dplyr::count(Metabolite) %>% dplyr::arrange(dplyr::desc(n))
+  # colnames(counts) <- c("Metabolite", "Counts")
+  # output_assignation_list <- merge(output_assignation_list,counts, by = "Metabolite")
+  output_assignation_list <- output_assignation_list[order(output_assignation_list$ppm_to_assign,-output_assignation_list$Blood_concentration, -output_assignation_list$n_reported_in_Blood),]
   return(output_assignation_list)
 }
 NULL
@@ -78,6 +79,7 @@ nmr_identify_regions_urine <- function(vector, ...) {
   UseMethod("nmr_identify_regions_urine")
 }
 nmr_identify_regions_urine <- function(ppm_to_assign, num_proposed_compounds = 5){
+  HMDB_urine <- NULL
   utils::data("HMDB_urine", package = "AlpsNMR", envir = environment())
   output_assignation_list=HMDB_urine[NULL,]
   
