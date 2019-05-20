@@ -29,7 +29,11 @@ Other pipeline functions: \code{\link{pipe_add_metadata}},
   \code{\link{pipe_outlier_detection}},
   \code{\link{pipe_peakdet_align}}
 
-Other peak integration functions: \code{\link{nmr_integrate_peak_positions}},
+Other peak integration functions: \code{\link{computes_peak_width_ppm}},
+  \code{\link{get_integration_with_metadata}},
+  \code{\link{nmr_identify_regions_blood}},
+  \code{\link{nmr_identify_regions_urine}},
+  \code{\link{nmr_integrate_peak_positions}},
   \code{\link{nmr_integrate_regions}}
 }
 \concept{peak integration functions}

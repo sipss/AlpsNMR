@@ -9,18 +9,25 @@
 #' @seealso [nmr_align] for peak alignment with the detected peak table
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @param nDivRange_ppm Segment size, in ppms, to divide the spectra and search for peaks.
+#' @param baselineThresh  It will remove all peaks under an intensity set by baselineThresh. If you set it to 'NULL', nmr_detect_peaks will automatically compute an aproximate value
 #' @inheritParams speaq::detectSpecPeaks
 #' @return A data frame with the NMRExperiment, the sample index, the position in ppm and index and the peak intensity
 #' @export
 #'
 nmr_detect_peaks <- function(nmr_dataset, nDivRange_ppm = 0.1,
                              scales = seq(1, 16, 2),
-                             baselineThresh = 0.00, SNR.Th = 3) {
+                             baselineThresh = NULL, SNR.Th = 3) {
   validate_nmr_dataset_1D(nmr_dataset)
   
   # Convert ppm to number of data points
   ppm_resolution <- stats::median(diff(nmr_dataset$axis))
   nDivRange <- round(nDivRange_ppm/ppm_resolution)
+  
+  # Computes the Baseline Threshold ###NEW###
+  if(is.null(baselineThresh)){
+    baselineThresh <- nmr_baseline_threshold(nmr_dataset)
+  }
+  
   
   # A dependency of the speaq package uses partial matching of arguments.
   #
@@ -198,7 +205,7 @@ nmr_detect_peaks_tune_snr <- function(ds, NMRExperiment = NULL, SNR_thresholds =
     ~nmr_detect_peaks(ds1,
                       nDivRange_ppm = 0.03, 
                       scales = seq(1, 16, 2),
-                      baselineThresh = 0, SNR.Th = .),
+                      baselineThresh = NULL, SNR.Th = .), #baselineThresh = 0 antes
     .id = "SNR_threshold",
     .options = furrr::future_options(globals = character(), packages = character())
   )

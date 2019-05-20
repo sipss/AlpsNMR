@@ -18,9 +18,12 @@ A list of regions suitable for \link{nmr_integrate_regions}
 Build list of regions for peak integration
 }
 \seealso{
-Other peak detection functions: \code{\link{nmr_detect_peaks_plot}},
+Other peak detection functions: \code{\link{nmr_baseline_threshold}},
+  \code{\link{nmr_detect_peaks_plot}},
   \code{\link{nmr_detect_peaks_tune_snr}},
   \code{\link{nmr_detect_peaks}},
+  \code{\link{nmr_identify_regions_blood}},
+  \code{\link{nmr_identify_regions_urine}},
   \code{\link{nmr_integrate_regions}},
   \code{\link{pipe_peakdet_align}}
 }

@@ -66,21 +66,34 @@ ggplot(mapping = aes(x = x, y = y)) +
 }
 }
 \seealso{
-Other peak detection functions: \code{\link{nmr_detect_peaks_plot}},
+Other peak detection functions: \code{\link{nmr_baseline_threshold}},
+  \code{\link{nmr_detect_peaks_plot}},
   \code{\link{nmr_detect_peaks_tune_snr}},
   \code{\link{nmr_detect_peaks}},
+  \code{\link{nmr_identify_regions_blood}},
+  \code{\link{nmr_identify_regions_urine}},
   \code{\link{pipe_peakdet_align}},
   \code{\link{regions_from_peak_table}}
 
-Other peak integration functions: \code{\link{nmr_integrate_peak_positions}},
+Other peak integration functions: \code{\link{computes_peak_width_ppm}},
+  \code{\link{get_integration_with_metadata}},
+  \code{\link{nmr_identify_regions_blood}},
+  \code{\link{nmr_identify_regions_urine}},
+  \code{\link{nmr_integrate_peak_positions}},
   \code{\link{pipe_peak_integration}}
 
-Other nmr_dataset_1D functions: \code{\link{[.nmr_dataset_1D}},
+Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
+  \code{\link{[.nmr_dataset_1D}},
+  \code{\link{computes_peak_width_ppm}},
+  \code{\link{files_to_rDolphin}},
+  \code{\link{get_integration_with_metadata}},
   \code{\link{is.nmr_dataset_1D}},
   \code{\link{load_and_save_functions}},
   \code{\link{new_nmr_dataset_1D}},
   \code{\link{nmr_align_find_ref}},
   \code{\link{nmr_align}},
+  \code{\link{nmr_baseline_removal}},
+  \code{\link{nmr_baseline_threshold}},
   \code{\link{nmr_detect_peaks_plot}},
   \code{\link{nmr_detect_peaks_tune_snr}},
   \code{\link{nmr_detect_peaks}},
@@ -98,8 +111,10 @@ Other nmr_dataset_1D functions: \code{\link{[.nmr_dataset_1D}},
   \code{\link{nmr_pca_outliers}},
   \code{\link{nmr_ppm_resolution}},
   \code{\link{plot.nmr_dataset_1D}},
-  \code{\link{plot_webgl}}, \code{\link{to_ASICS}},
-  \code{\link{to_ChemoSpec}},
+  \code{\link{plot_webgl}}, \code{\link{rdCV_PLS_RF}},
+  \code{\link{save_files_to_rDolphin}},
+  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}},
+  \code{\link{to_rDolphin}},
   \code{\link{validate_nmr_dataset_1D}}
 }
 \concept{nmr_dataset_1D functions}

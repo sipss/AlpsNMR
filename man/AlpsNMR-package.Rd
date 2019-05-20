@@ -49,7 +49,7 @@ nmr_push_to_irods(irods_metadata, "/NIHSData/DUND-XXXXXX/study/Metabolomics")
 }
 }
 \author{
-\strong{Maintainer}: Sergio Oller Moreno \email{soller@ibecbarcelona.eu}
+\strong{Maintainer}: Sergio Oller Moreno \email{soller@ibecbarcelona.eu} (0000-0002-8994-1549)
 
 Authors:
 \itemize{

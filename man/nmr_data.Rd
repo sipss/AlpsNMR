@@ -28,12 +28,17 @@ The given nmr_dataset
 Set/Return the full spectra matrix
 }
 \seealso{
-Other import/export functions: \code{\link{load_and_save_functions}},
+Other import/export functions: \code{\link{Automatic_targeted_profiling}},
+  \code{\link{files_to_rDolphin}},
+  \code{\link{load_and_save_functions}},
   \code{\link{nmr_meta_export}},
   \code{\link{nmr_read_bruker_fid}},
   \code{\link{nmr_read_samples}},
   \code{\link{nmr_zip_bruker_samples}},
-  \code{\link{pipe_load_samples}}, \code{\link{to_ASICS}},
-  \code{\link{to_ChemoSpec}}
+  \code{\link{pipe_load_samples}},
+  \code{\link{save_files_to_rDolphin}},
+  \code{\link{save_profiling_output}},
+  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}},
+  \code{\link{to_rDolphin}}
 }
 \concept{import/export functions}

@@ -15,7 +15,7 @@ pipe_peakdet_align(nmr_dataset_rds, nDivRange_ppm = 0.1,
 
 \item{scales}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.}
 
-\item{baselineThresh}{It will remove all peaks under an intensity set by baselineThresh.}
+\item{baselineThresh}{It will remove all peaks under an intensity set by baselineThresh. If you set it to 'NULL', nmr_detect_peaks will automatically compute an aproximate value}
 
 \item{SNR.Th}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.}
 
@@ -38,9 +38,12 @@ Other pipeline functions: \code{\link{pipe_add_metadata}},
   \code{\link{pipe_outlier_detection}},
   \code{\link{pipe_peak_integration}}
 
-Other peak detection functions: \code{\link{nmr_detect_peaks_plot}},
+Other peak detection functions: \code{\link{nmr_baseline_threshold}},
+  \code{\link{nmr_detect_peaks_plot}},
   \code{\link{nmr_detect_peaks_tune_snr}},
   \code{\link{nmr_detect_peaks}},
+  \code{\link{nmr_identify_regions_blood}},
+  \code{\link{nmr_identify_regions_urine}},
   \code{\link{nmr_integrate_regions}},
   \code{\link{regions_from_peak_table}}
 
