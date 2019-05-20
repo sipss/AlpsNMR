@@ -1,7 +1,7 @@
 Package: AlpsNMR
 Type: Package
 Title: Import and preprocess Nuclear Magnetic Resonance data
-Version: 2.3.1.9000
+Version: 2.3.3
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -59,7 +59,12 @@ Imports:
  pcaPP (>= 1.9-73),
  furrr (>= 0.1.0),
  future (>= 1.10.0),
- DT
+ DT (>= 0.5),
+ rDolphin (>= 0.3.0),
+ baseline (>= 1.2-1),
+ MUVR (>= 0.0.972),
+ doParallel (>= 1.0.14),
+ data.table (>= 1.11.8)
 Suggests:
     testthat (>= 2.0.0),
     plotly (>= 4.7.1),

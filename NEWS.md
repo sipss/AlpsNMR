@@ -1,3 +1,26 @@
+# AlpsNMR 2.3.3
+
+- Change of `nmr_identify_regions_blood` function
+- Add `nmr_identify_regions_urine` function
+- Add documentation of `HMDB_urine`
+- Add `computes_peak_width_ppm`function for `nmr_integrate_peak_positions`
+- New `get_integration_with_metadata`
+- Vignettes updated
+- New functions to apply machine learning to proccessed datasets
+
+
+
+# AlpsNMR 2.3.2
+
+- Inclusion of baseline removal using assymetric least squares
+- Change the baselineThresh to NULL so it is autodetected
+- Vignettes updated including baseline removal
+- Bug correction in nmr_baseline_threshold
+- Elimination of package vignettes (there is an error to be solved there)
+- New `nmr_identify_regions` function
+- Add documentation of `HMDB_blood`
+- New `files_to_rDolphin` function
+
 # AlpsNMR 2.3.1.9000
 
 - Rename package from NIHSnmr to AlpsNMR
