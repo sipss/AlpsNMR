@@ -74,9 +74,9 @@ Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
   \code{\link{nmr_pca_outliers}},
   \code{\link{nmr_ppm_resolution}},
   \code{\link{plot.nmr_dataset_1D}},
-  \code{\link{plot_webgl}}, \code{\link{rdCV_PLS_RF}},
-  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}},
-  \code{\link{to_rDolphin}},
+  \code{\link{plot_webgl}}, \code{\link{rdCV_PLS_RF_ML}},
+  \code{\link{rdCV_PLS_RF}}, \code{\link{to_ASICS}},
+  \code{\link{to_ChemoSpec}}, \code{\link{to_rDolphin}},
   \code{\link{validate_nmr_dataset_1D}}
 
 Other to_rDolphin_blood functions: \code{\link{files_to_rDolphin}},

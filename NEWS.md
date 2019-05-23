@@ -8,8 +8,6 @@
 - Vignettes updated
 - New functions to apply machine learning to proccessed datasets
 
-
-
 # AlpsNMR 2.3.2
 
 - Inclusion of baseline removal using assymetric least squares

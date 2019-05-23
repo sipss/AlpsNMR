@@ -45,6 +45,7 @@ library(AlpsNMR)
 library(ggplot2)
 ```
 
+
 # Enable parallellization
 
 This package is able to parallellize several functions through the use of the
@@ -114,6 +115,7 @@ the `NMRExperiment`:
 nmr_meta_get(dataset, groups = "external")
 ```
 
+
 # Adding metadata
 
 Initally our dataset only has the `NMRExperiment` column:
@@ -169,6 +171,7 @@ This operation changes the class of the object, as now the data is on a matrix. 
 dataset is now of class `nmr_dataset_1D`. The `axis` element is now a numeric vector
 and the `data_1r` element is a matrix.
 
+
 # Plotting samples
 
 The `AlpsNMR` package offers the possibility to plot `nmr_dataset_1D` objects.
@@ -186,6 +189,7 @@ Use `?plot.nmr_dataset_1D` to check the parameters, among them:
 ```{r}
 plot(dataset, NMRExperiment = c("10", "30"), chemshift_range = c(2.2, 2.8))
 ```
+
 
 ## Creating interactive plots
 
@@ -220,6 +224,7 @@ dataset <- nmr_exclude_region(dataset, exclude = regions_to_exclude)
 plot(dataset, chemshift_range = c(4.2, 5.5))
 ```
 
+
 # Filter samples
 
 Maybe we just want to analyze a subset of the data, e.g., only a class group or
@@ -231,6 +236,7 @@ samples_10_20 <- filter(dataset, SubjectID == "Ana")
 nmr_meta_get(samples_10_20, groups = "external")
 ```
 
+
 # Robust PCA for outlier detection
 
 The AlpsNMR package includes robust PCA analysis for outlier detection.
@@ -241,6 +247,8 @@ documentation of `nmr_pca_outliers_*` functions.
 pca_outliers_rob <- nmr_pca_outliers_robust(dataset, ncomp = 3)
 nmr_pca_outliers_plot(dataset, pca_outliers_rob)
 ```
+
+
 # Baseline removal
 
 Spectra may display an unstable baseline, specially when processing blood/fecal 
@@ -288,6 +296,7 @@ message("Your reference is NMRExperiment ", NMRExp_ref)
 nmr_detect_peaks_plot(dataset, peak_table, NMRExperiment = "20", chemshift_range = c(3.5,3.8))
 ```
 
+
 # Spectra alignment
 
 To align the sample, we use the `nmr_align` function, which in turn uses a hierarchical
@@ -305,10 +314,6 @@ plot(dataset, chemshift_range = c(3.025, 3.063))
 plot(dataset_align, chemshift_range = c(3.025, 3.063))
 ```
 
-```{r}
-
-
-```
 
 # Normalization
 
@@ -414,6 +419,7 @@ dplyr::bind_rows(
 
 ```
 
+
 # Identification
 
 After applying any feature selection or machine learning, Alps allows the 
@@ -425,7 +431,6 @@ The function gives 3 posibilities sorted by the most probable metabolite
 ppm_to_assign <- c(4.060960203, 3.048970634,2.405935596,0.990616851,0.986520147, 1.044258467)
 identification <- nmr_identify_regions_blood (ppm_to_assign)
 ```
-
 
 
 # Free experimentation
@@ -442,6 +447,7 @@ full_spectra_matrix <- nmr_data(dataset)
 print(full_spectra_matrix[1:4, 1:6]) # change it as you wish
 nmr_data(dataset) <- full_spectra_matrix # Rewrite the matrix
 ```
+
 
 ## Creating an `nmr_dataset_1D` object from a matrix
 
