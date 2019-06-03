@@ -12,6 +12,8 @@ rdCV_PLS_RF_ML(nmr_peak_table, label, scale = TRUE, nRep = 10,
 \arguments{
 \item{nmr_peak_table}{an AlpsNMR integration object (2 classes)}
 
+\item{label}{the name of the variable to test (e.g. "Timepoint")}
+
 \item{scale}{If TRUE, the predictor variable matrix is scaled to unit variance for PLS modelling.}
 
 \item{nRep}{Number of repetitions of double CV. (Defaults to 5)}
@@ -48,11 +50,12 @@ selection (MUVR) from the \code{MUVR} package. The function
 \code{rdCV_PLS_RF_ML} allows the multilevel comparison,
 especially useful in crossover or longitudinal studies
 (2 timepoints) considering the same individual (it
-requires the same number of samples in each class).
+requires 2 samples of the same observation).
 }
 \examples{
 \dontrun{
-model = rdCV_PLS_RF_ML(nmr_peak_table, label = "Timepoint", ML = TRUE),
+model = rdCV_PLS_RF_ML(nmr_peak_table, label = "Timepoint", ML = TRUE)
+MUVR_model_plot(model)
 }
 }
 \references{

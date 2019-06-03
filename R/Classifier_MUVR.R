@@ -156,10 +156,11 @@ confusion_matrix = function(MVObj, model = "mid"){
 #' `rdCV_PLS_RF_ML` allows the multilevel comparison, 
 #' especially useful in crossover or longitudinal studies 
 #' (2 timepoints) considering the same individual (it 
-#' requires the same number of samples in each class).
+#' requires 2 samples of the same observation).
 #' 
 #' @family nmr_dataset_1D functions
 #' @param nmr_peak_table an AlpsNMR integration object (2 classes)
+#' @param label the name of the variable to test (e.g. "Timepoint")
 #' @inheritParams MUVR::MUVR
 #'
 #' @export
@@ -177,20 +178,21 @@ rdCV_PLS_RF_ML = function (nmr_peak_table, label, scale = TRUE, nRep = 10, nOute
                         logg = FALSE, parallel = TRUE)
 {
   ordered = AlpsNMR::get_integration_with_metadata(nmr_peak_table)
-  ordered = ordered[order(ordered[label],ordered$NMRExperiment),]
-  levelAB = levels(as.factor(ordered$Timepoint))
-  A = ordered[ordered$Timepoint==levelAB[1],]
-  B = ordered[ordered$Timepoint==levelAB[2],]
+  ordered = ordered[order(ordered[[label]],ordered$NMRExperiment),]
+  levelAB = levels(as.factor(ordered[[label]]))
+  A = ordered[ordered[[label]]==levelAB[1],]
+  B = ordered[ordered[[label]]==levelAB[2],]
   
   coln = colnames(nmr_peak_table[["metadata"]][["external"]])
   a = A %>% dplyr::select(-coln)
   b = B %>% dplyr::select(-coln)
-  X = a[1:ncol(a),] - b[1:ncol(a),]
+  X = a[1:nrow(a),] - b[1:nrow(a),]
+  X = X[, colSums(is.na(X)) != nrow(X)]
   X = na.omit(X)
   
   cl=parallel::makeCluster(parallel::detectCores()-1)
   doParallel::registerDoParallel(cl)
-  model = MUVR::MUVR(na.omit(X),  ML = TRUE)
+  model = MUVR::MUVR(X,  ML = TRUE)
   parallel::stopCluster(cl)# Stop parallel processing
   return(model)
 }
