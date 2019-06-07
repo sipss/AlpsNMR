@@ -25,6 +25,7 @@ peak_table_integration = get_integration_with_metadata(peak_table_integration)
 \seealso{
 Other peak integration functions: \code{\link{computes_peak_width_ppm}},
   \code{\link{nmr_identify_regions_blood}},
+  \code{\link{nmr_identify_regions_cell}},
   \code{\link{nmr_identify_regions_urine}},
   \code{\link{nmr_integrate_peak_positions}},
   \code{\link{nmr_integrate_regions}},

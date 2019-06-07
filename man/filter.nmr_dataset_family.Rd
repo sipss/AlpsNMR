@@ -18,12 +18,13 @@ The same object, with the matching rows
 Keep samples based on metadata column criteria
 }
 \examples{
+\dontrun{
 ## example 1
 placebo_samples <- filter(nmr_dataset, Group == "placebo")
 
 ## example 2
 test_samples <- nmr_dataset \%>\% filter(nmr_peak_table$metadata$external$Group == "placebo")
-
+}
 }
 \seealso{
 Other subsetting functions: \code{\link{[.nmr_dataset_1D}},

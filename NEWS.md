@@ -1,3 +1,10 @@
+# AlpsNMR 2.3.3.9001
+
+- Add `nmr_identify_regions_cell` function
+- Add documentation of `HMDB_cell`
+- Vignettes updated
+- New functions to apply multilevel statistics
+
 # AlpsNMR 2.3.3
 
 - Change of `nmr_identify_regions_blood` function

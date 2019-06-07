@@ -188,7 +188,7 @@ rdCV_PLS_RF_ML = function (nmr_peak_table, label, scale = TRUE, nRep = 10, nOute
   b = B %>% dplyr::select(-coln)
   X = a[1:nrow(a),] - b[1:nrow(a),]
   X = X[, colSums(is.na(X)) != nrow(X)]
-  X = na.omit(X)
+  X = stats::na.omit(X)
   
   cl=parallel::makeCluster(parallel::detectCores()-1)
   doParallel::registerDoParallel(cl)

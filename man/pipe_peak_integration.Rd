@@ -32,6 +32,7 @@ Other pipeline functions: \code{\link{pipe_add_metadata}},
 Other peak integration functions: \code{\link{computes_peak_width_ppm}},
   \code{\link{get_integration_with_metadata}},
   \code{\link{nmr_identify_regions_blood}},
+  \code{\link{nmr_identify_regions_cell}},
   \code{\link{nmr_identify_regions_urine}},
   \code{\link{nmr_integrate_peak_positions}},
   \code{\link{nmr_integrate_regions}}

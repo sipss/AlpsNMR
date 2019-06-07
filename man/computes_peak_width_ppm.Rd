@@ -20,6 +20,7 @@ of a peak from alanine doublet is considered.
 \seealso{
 Other peak integration functions: \code{\link{get_integration_with_metadata}},
   \code{\link{nmr_identify_regions_blood}},
+  \code{\link{nmr_identify_regions_cell}},
   \code{\link{nmr_identify_regions_urine}},
   \code{\link{nmr_integrate_peak_positions}},
   \code{\link{nmr_integrate_regions}},
