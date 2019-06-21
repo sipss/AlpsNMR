@@ -11,7 +11,7 @@ save_files_to_rDolphin(files_rDolphin, output_directory)
 \itemize{
 \item \code{meta_rDolphin}: metadata in rDolphin format,
 \item \code{NMR_spectra}: spectra matrix
-\item \code{ROI_blood}: ROI template
+\item \code{ROI}: ROI template
 \item \code{Parameters_blood}: parameters file
 }}
 
@@ -26,14 +26,16 @@ The function saves the CSV files required by \link{to_rDolphin} and \link{Automa
 \examples{
 \dontrun{
 ## library(AlpsNMR)
-files_rDolphin = files_to_rDolphin(nmr_dataset)
+files_rDolphin = files_to_rDolphin_blood(nmr_dataset)
 output_directory = "C:/directory..."
 save_files_to_rDolphin(files_rDolphin, output_directory)
 }
 }
 \seealso{
 Other import/export functions: \code{\link{Automatic_targeted_profiling}},
-  \code{\link{files_to_rDolphin}},
+  \code{\link{files_to_rDolphin_blood}},
+  \code{\link{files_to_rDolphin_cell}},
+  \code{\link{files_to_rDolphin_urine}},
   \code{\link{load_and_save_functions}},
   \code{\link{nmr_data}}, \code{\link{nmr_meta_export}},
   \code{\link{nmr_read_bruker_fid}},
@@ -47,7 +49,9 @@ Other import/export functions: \code{\link{Automatic_targeted_profiling}},
 Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
   \code{\link{[.nmr_dataset_1D}},
   \code{\link{computes_peak_width_ppm}},
-  \code{\link{files_to_rDolphin}},
+  \code{\link{files_to_rDolphin_blood}},
+  \code{\link{files_to_rDolphin_cell}},
+  \code{\link{files_to_rDolphin_urine}},
   \code{\link{get_integration_with_metadata}},
   \code{\link{is.nmr_dataset_1D}},
   \code{\link{load_and_save_functions}},
@@ -79,7 +83,7 @@ Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
   \code{\link{to_ChemoSpec}}, \code{\link{to_rDolphin}},
   \code{\link{validate_nmr_dataset_1D}}
 
-Other to_rDolphin_blood functions: \code{\link{files_to_rDolphin}},
+Other to_rDolphin_blood functions: \code{\link{files_to_rDolphin_blood}},
   \code{\link{save_profiling_output}}
 }
 \concept{import/export functions}

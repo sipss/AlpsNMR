@@ -3,9 +3,9 @@
 \docType{data}
 \name{ROI_blood}
 \alias{ROI_blood}
-\title{The template ROI_blood contains the targeted list of metabolites to be quantified}
+\title{The template ROI_blood contains the targeted list of metabolites to be quantified (blood samples)}
 \description{
-The template ROI_blood contains the targeted list of metabolites to be quantified
+The template ROI_blood contains the targeted list of metabolites to be quantified (blood samples)
 }
 \references{
 \url{github.com/danielcanueto/rDolphin}

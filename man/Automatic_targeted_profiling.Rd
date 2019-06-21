@@ -34,7 +34,9 @@ save_profiling_output(targeted_profiling, output_directory)
 }
 }
 \seealso{
-Other import/export functions: \code{\link{files_to_rDolphin}},
+Other import/export functions: \code{\link{files_to_rDolphin_blood}},
+  \code{\link{files_to_rDolphin_cell}},
+  \code{\link{files_to_rDolphin_urine}},
   \code{\link{load_and_save_functions}},
   \code{\link{nmr_data}}, \code{\link{nmr_meta_export}},
   \code{\link{nmr_read_bruker_fid}},
@@ -48,7 +50,9 @@ Other import/export functions: \code{\link{files_to_rDolphin}},
 
 Other nmr_dataset_1D functions: \code{\link{[.nmr_dataset_1D}},
   \code{\link{computes_peak_width_ppm}},
-  \code{\link{files_to_rDolphin}},
+  \code{\link{files_to_rDolphin_blood}},
+  \code{\link{files_to_rDolphin_cell}},
+  \code{\link{files_to_rDolphin_urine}},
   \code{\link{get_integration_with_metadata}},
   \code{\link{is.nmr_dataset_1D}},
   \code{\link{load_and_save_functions}},

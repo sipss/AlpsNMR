@@ -50,25 +50,27 @@ Automatic_targeted_profiling <- function(...) {
 UseMethod("Automatic_targeted_profiling")
 }
 Automatic_targeted_profiling= function (imported_data, ROI=imported_data$ROI, optimization = TRUE, spectra_to_profile = NULL){
-  rDolphin::automatic_profiling(imported_data, ROI=imported_data$ROI,optimization = TRUE, spectra_to_profile = NULL)
+  rDolphin::automatic_profiling(imported_data, ROI=imported_data$ROI, optimization = TRUE, spectra_to_profile = NULL)
 }
 
 NULL
 #' The template `Parameters_blood` contains the chosen normalization approach (by default, PQN), the Spectometer Frequency (by default, 600.04MHz),
-#' alignment (by default, against glucose), bucket resolution (by default, 0.00023)
+#' alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)
 #' @name Parameters_blood
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
 NULL
-#' The template ROI_blood contains the targeted list of metabolites to be quantified
+
+#' The template ROI_blood contains the targeted list of metabolites to be quantified (blood samples)
 #'
 #' @name ROI_blood
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
+
 NULL
-#' Files to rDoplhin
+#' Files to rDoplhin (blood)
 #'
 #' The function generates the files required by [to_rDolphin] function.
 #' @param nmr_dataset An [nmr_dataset] object
@@ -83,11 +85,11 @@ NULL
 #' @examples 
 #' \dontrun{
 #' ## library(AlpsNMR)
-#' files_to_rDolphin(nmr_dataset)
+#' files_to_rDolphin_blood(nmr_dataset)
 #' }
 #' @export
-files_to_rDolphin = function (nmr_dataset){
-
+files_to_rDolphin_blood = function (nmr_dataset){
+  message("you can edit obtained files for better performance in rDolphin")
   meta_D_3col= c("NMRExperiment", "SubjectID", "Group")
   meta_rDolphin= AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
   newcolnames=c("sample", "individual", "type")
@@ -101,18 +103,131 @@ files_to_rDolphin = function (nmr_dataset){
   utils::data("ROI_blood", package = "AlpsNMR", envir = environment())
   
   files_rDolphin=list(Parameters_blood, meta_rDolphin, NMR_spectra, ROI_blood)
-  names(files_rDolphin)=c("Parameters_blood", "meta_rDolphin", "NMR_spectra", "ROI_blood")
+  names(files_rDolphin)=c("Parameters", "meta_rDolphin", "NMR_spectra", "ROI")
   return(files_rDolphin)
   
 }
 NULL
+
+#' Files to rDoplhin (cell)
+#'
+#' The function generates the files required by [to_rDolphin] function.
+#' @param nmr_dataset An [nmr_dataset] object
+#' @return a list containing: 
+#'  - `meta_rDolphin`: metadata in rDolphin format, 
+#'  - `NMR_spectra`: spectra matrix
+#'  - `ROI_cell`: ROI template
+#'  - `Parameters_cell`: parameters file
+#' @family import/export functions
+#' @family nmr_dataset_1D functions
+#' @family to_rDolphin_cell functions
+#' @examples 
+#' \dontrun{
+#' ## library(AlpsNMR)
+#' files_to_rDolphin_cell(nmr_dataset)
+#' }
+#' @export
+files_to_rDolphin_cell = function (nmr_dataset){
+  message("you can edit obtained files for better performance in rDolphin")
+  meta_D_3col= c("NMRExperiment", "SubjectID", "Group")
+  meta_rDolphin= AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
+  newcolnames=c("sample", "individual", "type")
+  colnames(meta_rDolphin)=newcolnames
+  meta_rDolphin$type=as.numeric(as.factor(meta_rDolphin$type))
+  
+  NMR_spectra = nmr_data(nmr_dataset)
+  Parameters_cell = NULL
+  utils::data("Parameters_cell", package = "AlpsNMR", envir = environment())
+  ROI_cell = NULL
+  utils::data("ROI_cell", package = "AlpsNMR", envir = environment())
+  
+  files_rDolphin=list(Parameters_cell, meta_rDolphin, NMR_spectra, ROI_cell)
+  names(files_rDolphin)=c("Parameters", "meta_rDolphin", "NMR_spectra", "ROI")
+  return(files_rDolphin)
+  
+}
+NULL
+
+#' The template ROI_cell contains the targeted list of metabolites to be quantified (cell samples)
+#'
+#' @name ROI_cell
+#' @docType data
+#' @references \url{github.com/danielcanueto/rDolphin}
+#' @keywords data
+
+NULL
+
+#' The template `Parameters_cell` contains the chosen normalization approach (by default, PQN), the Spectometer Frequency (by default, 600.04MHz),
+#' alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)
+#' @name Parameters_cell
+#' @docType data
+#' @references \url{github.com/danielcanueto/rDolphin}
+#' @keywords data
+NULL
+
+NULL
+
+#' Files to rDoplhin (urine)
+#'
+#' The function generates the files required by [to_rDolphin] function.
+#' @param nmr_dataset An [nmr_dataset] object
+#' @return a list containing: 
+#'  - `meta_rDolphin`: metadata in rDolphin format, 
+#'  - `NMR_spectra`: spectra matrix
+#'  - `URINE_cell`: ROI template
+#'  - `Parameters_cell`: parameters file
+#' @family import/export functions
+#' @family nmr_dataset_1D functions
+#' @family to_rDolphin_cell functions
+#' @examples 
+#' \dontrun{
+#' ## library(AlpsNMR)
+#' files_to_rDolphin_urine(nmr_dataset)
+#' }
+#' @export
+files_to_rDolphin_urine = function (nmr_dataset){
+  message("you can edit obtained files for better performance in rDolphin")
+  meta_D_3col= c("NMRExperiment", "SubjectID", "Group")
+  meta_rDolphin= AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
+  newcolnames=c("sample", "individual", "type")
+  colnames(meta_rDolphin)=newcolnames
+  meta_rDolphin$type=as.numeric(as.factor(meta_rDolphin$type))
+  
+  NMR_spectra = nmr_data(nmr_dataset)
+  Parameters_cell = NULL
+  utils::data("Parameters_cell", package = "AlpsNMR", envir = environment())
+  ROI_urine = NULL
+  utils::data("ROI_urine", package = "AlpsNMR", envir = environment())
+  
+  files_rDolphin=list(Parameters_cell, meta_rDolphin, NMR_spectra, ROI_urine)
+  names(files_rDolphin)=c("Parameters", "meta_rDolphin", "NMR_spectra", "ROI")
+  return(files_rDolphin)
+  
+}
+NULL
+
+#' The template ROI_urine contains the targeted list of metabolites to be quantified (urine samples)
+#'
+#' @name ROI_urine
+#' @docType data
+#' @references \url{github.com/danielcanueto/rDolphin}
+#' @keywords data
+NULL
+#' The template `Parameters_urine` contains the chosen normalization approach (by default, PQN), the Spectometer Frequency (by default, 600.04MHz),
+#' alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)
+#' @name Parameters_urine
+#' @docType data
+#' @references \url{github.com/danielcanueto/rDolphin}
+#' @keywords data
+NULL
+
 #' Save files to rDoplhin
 #'
 #' The function saves the CSV files required by [to_rDolphin] and [Automatic_targeted_profiling] functions for metabolite profiling.
 #' @param files_rDolphin a list containing 4 elements from `files_to_rDolphin`
 #'  - `meta_rDolphin`: metadata in rDolphin format, 
 #'  - `NMR_spectra`: spectra matrix
-#'  - `ROI_blood`: ROI template
+#'  - `ROI`: ROI template
 #'  - `Parameters_blood`: parameters file
 #' @param output_directory a directory in which the CSV files are saved
 #' @family import/export functions
@@ -122,7 +237,7 @@ NULL
 #' @examples 
 #' \dontrun{
 #' ## library(AlpsNMR)
-#' files_rDolphin = files_to_rDolphin(nmr_dataset)
+#' files_rDolphin = files_to_rDolphin_blood(nmr_dataset)
 #' output_directory = "C:/directory..."
 #' save_files_to_rDolphin(files_rDolphin, output_directory)
 #' }
@@ -132,15 +247,15 @@ save_files_to_rDolphin = function (files_rDolphin, output_directory){
   output_dir_10_rDolphin <- file.path(output_directory)
   fs::dir_create(output_dir_10_rDolphin)
   
-  Parameters_blood <- file.path(output_dir_10_rDolphin, "Parameters_blood.csv")
+  Parameters <- file.path(output_dir_10_rDolphin, "Parameters.csv")
   meta_rDolphin <- file.path(output_dir_10_rDolphin, "meta_rDolphin.csv")
   NMR_spectra <- file.path(output_dir_10_rDolphin, "NMR_spectra.csv")
-  ROI_blood <- file.path(output_dir_10_rDolphin, "ROI_blood.csv")
+  ROI <- file.path(output_dir_10_rDolphin, "ROI.csv")
   
-  utils::write.csv(files_rDolphin$Parameters_blood, Parameters_blood, row.names = FALSE)
+  utils::write.csv(files_rDolphin$Parameters, Parameters, row.names = FALSE)
   utils::write.csv(files_rDolphin$meta_rDolphin, meta_rDolphin, row.names = FALSE)
   utils::write.csv(files_rDolphin$NMR_spectra, NMR_spectra, row.names = FALSE)
-  utils::write.csv(files_rDolphin$ROI_blood, ROI_blood, row.names = FALSE)
+  utils::write.csv(files_rDolphin$ROI, ROI, row.names = FALSE)
   
 }
 
