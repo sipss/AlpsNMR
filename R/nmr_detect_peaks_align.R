@@ -369,3 +369,5 @@ nmr_ppm_resolution.nmr_dataset <- function(nmr_dataset) {
 nmr_ppm_resolution.nmr_dataset_1D <- function(nmr_dataset) {
   stats::median(abs(diff(nmr_dataset$axis)))
 }
+
+

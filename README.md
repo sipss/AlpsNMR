@@ -43,12 +43,21 @@ an older version of `Rfast` with the command:
       remotes::install_version("Rfast", "1.8.9")
     }
 
+### GitLab dependencies
+
+MUVR package can be installed with this comand:
+
+    library(devtools)
+    install_git("https://gitlab.com/CarlBrunius/MUVR.git")
+
+
+
 ### AlpsNMR installation
 
 Then we can use the `remotes` package to install the rest of the required
 dependencies and then build and install our package:
 
-    remotes::install_local("AlpsNMR_2.3.0.tar.gz")
+    remotes::install_local("AlpsNMR_2.3.4.tar.gz")
 
 Quick start
 =============
