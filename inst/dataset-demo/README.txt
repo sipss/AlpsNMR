@@ -1,4 +1,4 @@
-This is the MeOH_serum_extraction dataset.
+This is the MeOH_plasma_extraction dataset.
 
 (c) Nestlé Institute of Health Sciences
 All rights reserved

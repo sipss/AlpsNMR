@@ -58,24 +58,25 @@ plan(multiprocess(workers = 4)) # enable parallellization with 4 workers
 ```
 
 
-# Data: The `MeOH_serum_extraction` dataset
+# Data: The `MeOH_plasma_extraction` dataset
 
 To explore the basics of the AlpsNMR package, we have included four NMR samples
-in Bruker format bundled with the package. The samples are (c) Nestlé Institute of Health Sciences
-and should not be redistributed without NIHS written consent, in case this package was ever published.
+acquired in a 600 MHz Bruker instrument bundled with the package. The samples
+are pooled quality control plasma samples, that were extracted with methanol,
+and therefore only contain small molecules.
 
 If you have installed this package, you can obtain the directory where the four samples
 are with the command
 
 ```{r}
-MeOH_serum_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
-print(MeOH_serum_extraction_dir)
+MeOH_plasma_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
+print(MeOH_plasma_extraction_dir)
 ```
 
 The demo directory includes four samples (zipped) and a dummy Excel metadata file.
 
 ```{r}
-fs::dir_ls(MeOH_serum_extraction_dir)
+fs::dir_ls(MeOH_plasma_extraction_dir)
 ```
 
 Given the name of the dataset, one may guess that the dataset was used to
@@ -84,9 +85,9 @@ dummy information, just for the sake of showing how this package can integrate
 external metadata. The excel file consists of two tidy tables, in two sheets.
 
 ```{r}
-MeOH_serum_extraction_xlsx <- file.path(MeOH_serum_extraction_dir, "dummy_metadata.xlsx")
-exp_subj_id <- readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 1)
-subj_id_age <- readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 2)
+MeOH_plasma_extraction_xlsx <- file.path(MeOH_plasma_extraction_dir, "dummy_metadata.xlsx")
+exp_subj_id <- readxl::read_excel(MeOH_plasma_extraction_xlsx, sheet = 1)
+subj_id_age <- readxl::read_excel(MeOH_plasma_extraction_xlsx, sheet = 2)
 print(exp_subj_id)
 print(subj_id_age)
 
@@ -102,7 +103,7 @@ samples or paths to JDX files.
 Additionally, this function can filter by pulse sequences (e.g. load only NOESY samples) or loading only metadata.
 
 ```{r load-samples}
-zip_files <- fs::dir_ls(MeOH_serum_extraction_dir, glob = "*.zip")
+zip_files <- fs::dir_ls(MeOH_plasma_extraction_dir, glob = "*.zip")
 print(zip_files)
 dataset <- nmr_read_samples(sample_names = zip_files)
 print(dataset)

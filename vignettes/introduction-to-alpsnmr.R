@@ -15,22 +15,22 @@ library(ggplot2)
 plan(multiprocess(workers = 4)) # enable parallellization with 4 workers
 
 ## ------------------------------------------------------------------------
-MeOH_serum_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
-print(MeOH_serum_extraction_dir)
+MeOH_plasma_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
+print(MeOH_plasma_extraction_dir)
 
 ## ------------------------------------------------------------------------
-fs::dir_ls(MeOH_serum_extraction_dir)
+fs::dir_ls(MeOH_plasma_extraction_dir)
 
 ## ------------------------------------------------------------------------
-MeOH_serum_extraction_xlsx <- file.path(MeOH_serum_extraction_dir, "dummy_metadata.xlsx")
-exp_subj_id <- readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 1)
-subj_id_age <- readxl::read_excel(MeOH_serum_extraction_xlsx, sheet = 2)
+MeOH_plasma_extraction_xlsx <- file.path(MeOH_plasma_extraction_dir, "dummy_metadata.xlsx")
+exp_subj_id <- readxl::read_excel(MeOH_plasma_extraction_xlsx, sheet = 1)
+subj_id_age <- readxl::read_excel(MeOH_plasma_extraction_xlsx, sheet = 2)
 print(exp_subj_id)
 print(subj_id_age)
 
 
 ## ----load-samples--------------------------------------------------------
-zip_files <- fs::dir_ls(MeOH_serum_extraction_dir, glob = "*.zip")
+zip_files <- fs::dir_ls(MeOH_plasma_extraction_dir, glob = "*.zip")
 print(zip_files)
 dataset <- nmr_read_samples(sample_names = zip_files)
 print(dataset)
