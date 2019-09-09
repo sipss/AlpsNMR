@@ -11,12 +11,22 @@ Authors@R: c(
     person(given = "Sergio",
            family = "Oller Moreno",
            email = "soller@ibecbarcelona.eu",
-           role = c("aut", "cre"),
+           role = c("aut"),
            comment = c(ORCID = "0000-0002-8994-1549")),
     person(given = "Nestlé Institute of Health Sciences",
            role = "cph"),
     person(given = "Institute for Bioengineering of Catalonia",
-           role = "cph")
+           role = "cph"),
+    person(given = "Francisco",
+           family = "Madrid Gambin",
+           email = "fmadrid@ibecbarcelona.eu",
+           role = c("aut"),
+           comment = c(ORCID = "0000-0001-9333-0014")),
+    person(given = "Luis",
+           family = "Fernandez",
+           email = "lfernandez@ibecbarcelona.eu",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-9790-6287"))
     )
 Description: Reads Bruker NMR data directories both zipped and unzipped.
  It provides automated and efficient signal processing for untargeted 

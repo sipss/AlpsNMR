@@ -49,11 +49,13 @@ nmr_push_to_irods(irods_metadata, "/NIHSData/DUND-XXXXXX/study/Metabolomics")
 }
 }
 \author{
-\strong{Maintainer}: Sergio Oller Moreno \email{soller@ibecbarcelona.eu} (0000-0002-8994-1549)
+\strong{Maintainer}: Luis Fernandez \email{lfernandez@ibecbarcelona.eu} (0000-0001-9790-6287)
 
 Authors:
 \itemize{
   \item Ivan Montoliu Roura \email{Ivan.MontoliuRoura@rd.nestle.com}
+  \item Sergio Oller Moreno \email{soller@ibecbarcelona.eu} (0000-0002-8994-1549)
+  \item Francisco Madrid Gambin \email{fmadrid@ibecbarcelona.eu} (0000-0001-9333-0014)
 }
 
 Other contributors:
