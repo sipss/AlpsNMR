@@ -11,6 +11,9 @@ outlier detection among others. See the package vignette for details.
 ## Installation
 
 
+If the installation failed, the reason is probably a missing dependency. If so,
+please check the console for warning messages and install these dependecies
+manually.
 AlpsNMR uses the [speaq](https://cran.r-project.org/web/packages/speaq/index.html) package
 that depends on the [MassSpecWavelet](http://www.bioconductor.org/packages/release/bioc/html/MassSpecWavelet.html)
 and [impute](http://www.bioconductor.org/packages/release/bioc/html/impute.html) bioconductor
@@ -24,6 +27,9 @@ We can install those packages through the `BiocManager` package:
 
     install.packages("BiocManager")
     BiocManager::install(c("impute", "MassSpecWavelet"), version = "3.8")
+    BiocManager::install("mixOmics")
+
+
 
 #### On older R versions
 
@@ -50,6 +56,12 @@ MUVR package can be installed with this comand:
     library(devtools)
     install_git("https://gitlab.com/CarlBrunius/MUVR.git")
 
+
+### Github dependencies
+
+rDolphin package can be installed with this comand:
+
+    devtools::install_github("danielcanueto/rDolphin")
 
 
 ### AlpsNMR installation

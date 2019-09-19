@@ -4,6 +4,7 @@
 - Add documentation of `HMDB_cell`
 - Vignettes updated
 - New functions to apply multilevel statistics
+- Update of README file
 
 # AlpsNMR 2.3.3
 

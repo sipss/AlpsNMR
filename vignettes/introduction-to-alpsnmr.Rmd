@@ -27,7 +27,7 @@ The `AlpsNMR` package was written with two purposes in mind:
 
 Functions from this package written for data analysts and NMR scientists are prefixed with
 `nmr_`, while higher level functions written for IT pipeline builders are prefixed
-with `pipe_`.
+with `pipe_`. The main reason why all exported functions have a prefix is to make it easy for the user to discover the functions from the package. By typing nmr_ RStudio will return the list of exported functions. In the R terminal, nmr_ followed by the tab key (⇥) twice will have the same effect. Other popular packages, follow similar approaches (e.g: `forcats`: `fct_*`, `stringr`: `str_*`).
 
 This vignette is written for the first group. It assumes some prior basic knowledge of
 NMR and data analysis, as well as some basic R programming. In case you are interested in

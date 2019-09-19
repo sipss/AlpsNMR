@@ -24,7 +24,7 @@ rdCV_PLS_RF_ML(nmr_peak_table, label, scale = TRUE, nRep = 10,
 
 \item{varRatio}{Ratio of variables to include in subsequent inner loop iteration. (Defaults to 0.75)}
 
-\item{DA}{Boolean for Classification (discriminant analysis) (Defaults do FALSE, i.e. regression). PLS is limited to two-class problems (see `Y` above).}
+\item{DA}{Boolean for Classification (discriminant analysis) (By default, if Y is numeric -> DA=FALSE. If Y is factor (or character) -> DA=TRUE)}
 
 \item{fitness}{Fitness function for model tuning (choose either 'AUROC' or 'MISS' (default) for classification; or 'RMSEP' (default) for regression.)}
 
@@ -32,7 +32,7 @@ rdCV_PLS_RF_ML(nmr_peak_table, label, scale = TRUE, nRep = 10,
 
 \item{ML}{Boolean for multilevel analysis (defaults to FALSE)}
 
-\item{modReturn}{Boolean for returning outer segment models (defaults to FALSE)}
+\item{modReturn}{Boolean for returning outer segment models (defaults to FALSE). Setting modReturn=TRUE is required for making MUVR predictions using predMV().}
 
 \item{logg}{Boolean for whether to sink model progressions to `log.txt`}
 
