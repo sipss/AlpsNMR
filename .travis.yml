@@ -1,0 +1,59 @@
+language: r
+cache: packages
+sudo: false
+
+before_install:
+ - Rscript -e 'install.packages("remotes")'
+ - Rscript -e 'remotes::install_github("danielcanueto/rDolphin")'
+ - Rscript -e 'remotes::install_git("https://gitlab.com/CarlBrunius/MUVR.git")'
+ - Rscript -e 'remotes::install_cran("pkgdown")'
+
+r_github_packages:
+  - jimhester/covr
+
+jobs:
+  include:
+  - r: release
+    after_success:
+    - Rscript -e 'covr::codecov()'
+    deploy:
+      provider: script
+      script: Rscript -e 'pkgdown::deploy_site_github(verbose = TRUE)'
+      skip_cleanup: true
+
+env:
+  global:
+  - _R_CHECK_FORCE_SUGGESTS_=false
+
+# This is used just to speed up the travis build:
+addons:
+  apt:
+    packages:
+    - r-bioc-impute
+    - r-bioc-massspecwavelet
+    - r-bioc-mixomics
+    - r-cran-apcluster
+    - r-cran-biocmanager
+    - r-cran-boruta
+    - r-cran-caret
+    - r-cran-dendextend
+    - r-cran-dotcall64
+    - r-cran-dplyr
+    - r-cran-dt
+    - r-cran-elasticnet
+    - r-cran-fields
+    - r-cran-fnn
+    - r-cran-ggplot2
+    - r-cran-lars
+    - r-cran-lubridate
+    - r-cran-plotly
+    - r-cran-proc
+    - r-cran-qap
+    - r-cran-rcppziggurat
+    - r-cran-rfast
+    - r-cran-seriation
+    - r-cran-shinyjs
+    - r-cran-speaq
+    - r-cran-stringr
+    - r-cran-tsp
+

@@ -125,7 +125,9 @@ nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
   existing_vars <- base::setdiff(colnames(nmr_meta), by_left)
   conflict <- base::intersect(existing_vars, colnames(metadata))
   # We must ensure metadata[[by]] is unique:
-  metadata <- dplyr::distinct(metadata, !!!rlang::syms(by), .keep_all = TRUE)
+  metadata <- do.call(dplyr::distinct, c(list(.data = metadata),
+                                         rlang::syms(by),
+                                         list(.keep_all = TRUE)))
   nmr_meta_new <- dplyr::left_join(nmr_meta, metadata, by = by, suffix = c("", "__REMOVE__"))
   are_identical <- purrr::map_lgl(conflict, function(col) {
     col1 <- col
