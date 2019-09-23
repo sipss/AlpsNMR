@@ -2,6 +2,9 @@ language: r
 cache: packages
 sudo: false
 
+before_install:
+ - Rscript -e 'install.packages("pkgdown")'
+
 r_github_packages:
   - jimhester/covr
 
@@ -50,7 +53,6 @@ addons:
     - r-cran-speaq
     - r-cran-stringr
     - r-cran-tsp
-    - r-cran-pkgdown
     - r-cran-rmarkdown
     - r-cran-sparsem
 
