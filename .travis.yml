@@ -55,5 +55,6 @@ addons:
     - r-cran-tsp
     - r-cran-rmarkdown
     - r-cran-sparsem
-
-
+    - r-cran-rgl
+    - r-cran-nloptr
+ 
