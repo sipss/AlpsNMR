@@ -11,12 +11,10 @@ outlier detection among others. See the package vignette for details.
 
 ## Installation
 
-AlpsNMR installation requires at least R 3.5, and some packages not yet published on CRAN or BioConductor:
+AlpsNMR can be installed with the `remotes` package. Note that it uses packages from
+CRAN, from BioConductor and from git repositories:
 
-    install.packages(c("BiocManager", "remotes"))
-    BiocManager::install(c("impute", "MassSpecWavelet", "mixOmics"))
-    remotes::install_git("https://gitlab.com/CarlBrunius/MUVR.git")
-    remotes::install_github("danielcanueto/rDolphin")
+    install.packages("remotes")
     remotes::install_github("sipss/AlpsNMR")
 
 Quick start
