@@ -25,21 +25,35 @@ env:
   global:
   - _R_CHECK_FORCE_SUGGESTS_=false
 
+# This is used just to speed up the travis build:
 addons:
   apt:
     packages:
+    - r-bioc-impute
+    - r-bioc-massspecwavelet
+    - r-bioc-mixomics
+    - r-cran-apcluster
+    - r-cran-biocmanager
+    - r-cran-boruta
+    - r-cran-caret
+    - r-cran-dendextend
+    - r-cran-dotcall64
+    - r-cran-dplyr
+    - r-cran-dt
+    - r-cran-elasticnet
+    - r-cran-fields
+    - r-cran-fnn
+    - r-cran-ggplot2
+    - r-cran-lars
+    - r-cran-lubridate
+    - r-cran-plotly
+    - r-cran-proc
+    - r-cran-qap
     - r-cran-rcppziggurat
     - r-cran-rfast
-    - r-cran-ggplot2
-    - r-cran-dplyr
-    - r-cran-stringr
-    - r-cran-speaq
-    - r-cran-biocmanager
-    - r-bioc-massspecwavelet
-    - r-bioc-impute
-    - r-bioc-mixomics
-    - r-cran-lubridate
-    - r-cran-caret
+    - r-cran-seriation
     - r-cran-shinyjs
-    - r-cran-dt
-    - r-cran-plotly
+    - r-cran-speaq
+    - r-cran-stringr
+    - r-cran-tsp
+
