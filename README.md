@@ -14,13 +14,13 @@ outlier detection among others. See the package vignette for details.
 AlpsNMR can be installed with the `remotes` package. Note that it uses packages from
 CRAN, from BioConductor and from git repositories:
 
-    install.packages("remotes")
-    remotes::install_github("sipss/AlpsNMR")
+```r
+install.packages("remotes")
+remotes::install_github("sipss/AlpsNMR")
+```
 
 Quick start
 =============
 
-The best way to start is by running:
-
-    browseVignettes("AlpsNMR")
+Checkout the [Introduction to AlpsNMR](https://sipss.github.io/AlpsNMR/articles/introduction-to-alpsnmr.html) vignette that shows how to import data and preprocess it using AlpsNMR.
 
