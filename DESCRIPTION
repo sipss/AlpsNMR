@@ -77,7 +77,8 @@ Imports:
  baseline (>= 1.2-1),
  MUVR (>= 0.0.972),
  doParallel (>= 1.0.14),
- data.table (>= 1.11.8)
+ data.table (>= 1.11.8),
+ tidyselect (>= 0.2.5)
 Suggests:
     testthat (>= 2.0.0),
     plotly (>= 4.7.1),
