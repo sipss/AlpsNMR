@@ -3,10 +3,7 @@ cache: packages
 sudo: false
 
 before_install:
- - Rscript -e 'install.packages("remotes")'
- - Rscript -e 'remotes::install_github("danielcanueto/rDolphin")'
- - Rscript -e 'remotes::install_git("https://gitlab.com/CarlBrunius/MUVR.git")'
- - Rscript -e 'remotes::install_cran("pkgdown")'
+ - Rscript -e 'install.packages("pkgdown")'
 
 r_github_packages:
   - jimhester/covr
@@ -56,4 +53,8 @@ addons:
     - r-cran-speaq
     - r-cran-stringr
     - r-cran-tsp
-
+    - r-cran-rmarkdown
+    - r-cran-sparsem
+    - r-cran-rgl
+    - r-cran-nloptr
+ 

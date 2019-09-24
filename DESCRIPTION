@@ -85,6 +85,10 @@ Suggests:
     ASICS,
     NIHSrods,
     knitr
+biocViews:
+Remotes:
+  gitlab::CarlBrunius/MUVR,
+  github::danielcanueto/rDolphin
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
