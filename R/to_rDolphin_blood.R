@@ -54,6 +54,8 @@ Automatic_targeted_profiling= function (imported_data, ROI=imported_data$ROI, op
 }
 
 NULL
+#' Parameters for blood (plasma/serum) samples profiling
+#' 
 #' The template `Parameters_blood` contains the chosen normalization approach (by default, PQN), the Spectometer Frequency (by default, 600.04MHz),
 #' alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)
 #' @name Parameters_blood
@@ -62,6 +64,8 @@ NULL
 #' @keywords data
 NULL
 
+#' ROIs for blood (plasma/serum) samples
+#' 
 #' The template ROI_blood contains the targeted list of metabolites to be quantified (blood samples)
 #'
 #' @name ROI_blood
@@ -148,6 +152,8 @@ files_to_rDolphin_cell = function (nmr_dataset){
 }
 NULL
 
+#' ROIs for cell samples
+#' 
 #' The template ROI_cell contains the targeted list of metabolites to be quantified (cell samples)
 #'
 #' @name ROI_cell
@@ -157,6 +163,8 @@ NULL
 
 NULL
 
+#' Parameters for cell samples profiling
+#' 
 #' The template `Parameters_cell` contains the chosen normalization approach (by default, PQN), the Spectometer Frequency (by default, 600.04MHz),
 #' alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)
 #' @name Parameters_cell
@@ -206,6 +214,8 @@ files_to_rDolphin_urine = function (nmr_dataset){
 }
 NULL
 
+#' ROIs for urine samples
+#' 
 #' The template ROI_urine contains the targeted list of metabolites to be quantified (urine samples)
 #'
 #' @name ROI_urine
@@ -213,6 +223,9 @@ NULL
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
 NULL
+
+#' Parameters for urine samples profiling
+#' 
 #' The template `Parameters_urine` contains the chosen normalization approach (by default, PQN), the Spectometer Frequency (by default, 600.04MHz),
 #' alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)
 #' @name Parameters_urine
