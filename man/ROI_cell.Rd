@@ -3,7 +3,7 @@
 \docType{data}
 \name{ROI_cell}
 \alias{ROI_cell}
-\title{The template ROI_cell contains the targeted list of metabolites to be quantified (cell samples)}
+\title{ROIs for cell samples}
 \description{
 The template ROI_cell contains the targeted list of metabolites to be quantified (cell samples)
 }

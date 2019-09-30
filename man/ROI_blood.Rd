@@ -3,7 +3,7 @@
 \docType{data}
 \name{ROI_blood}
 \alias{ROI_blood}
-\title{The template ROI_blood contains the targeted list of metabolites to be quantified (blood samples)}
+\title{ROIs for blood (plasma/serum) samples}
 \description{
 The template ROI_blood contains the targeted list of metabolites to be quantified (blood samples)
 }

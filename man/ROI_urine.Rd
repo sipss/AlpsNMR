@@ -3,7 +3,7 @@
 \docType{data}
 \name{ROI_urine}
 \alias{ROI_urine}
-\title{The template ROI_urine contains the targeted list of metabolites to be quantified (urine samples)}
+\title{ROIs for urine samples}
 \description{
 The template ROI_urine contains the targeted list of metabolites to be quantified (urine samples)
 }

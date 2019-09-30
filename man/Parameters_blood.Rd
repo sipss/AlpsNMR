@@ -3,8 +3,7 @@
 \docType{data}
 \name{Parameters_blood}
 \alias{Parameters_blood}
-\title{The template \code{Parameters_blood} contains the chosen normalization approach (by default, PQN), the Spectometer Frequency (by default, 600.04MHz),
-alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)}
+\title{Parameters for blood (plasma/serum) samples profiling}
 \description{
 The template \code{Parameters_blood} contains the chosen normalization approach (by default, PQN), the Spectometer Frequency (by default, 600.04MHz),
 alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)
