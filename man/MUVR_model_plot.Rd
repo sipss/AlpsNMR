@@ -22,7 +22,10 @@ MUVR_model_plot(MVObj, model = "mid", factCols, sampLabels,
 A plot with the model performance
 }
 \description{
-Plot the model obtained from \code{rdCV_PLS_RF} function (a \code{MUVR} object)
+Plot the model (a \code{MUVR} object) obtained from \code{rdCV_PLS_RF} function. For
+more information about the multivariate modelling with minimally biased
+variable selection (MUVR) from the \code{MUVR} package, see Shi et al., 2018 (DOI:
+10.1093/bioinformatics/bty710).
 }
 \examples{
 \dontrun{

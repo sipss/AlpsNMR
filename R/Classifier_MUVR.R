@@ -65,7 +65,10 @@ return (permMatrix)
 
 #' Model plot
 #' 
-#' Plot the model obtained from `rdCV_PLS_RF` function (a `MUVR` object)
+#' Plot the model (a `MUVR` object) obtained from `rdCV_PLS_RF` function. For
+#' more information about the multivariate modelling with minimally biased
+#' variable selection (MUVR) from the `MUVR` package, see Shi et al., 2018 (DOI:
+#' 10.1093/bioinformatics/bty710).
 #'
 #' @inheritParams MUVR::plotMV
 #'
@@ -85,10 +88,85 @@ return (permMatrix)
 #' MUVR_model_plot(model)
 #' }
 #' 
-MUVR_model_plot = function (MVObj, model = "mid", factCols, sampLabels, ylim = NULL)
+MUVR_model_plot = function (MVObj, model = "mid", factCols, sampLabels, ylim = NULL) 
 {
-  MUVR::plotMV(MVObj, model, factCols, sampLabels, ylim)
+  if (!any(class(MVObj) == "MVObject")) {
+    cat("\nWrong object class: Return NULL")
+    return(NULL)
+  }
+  modNum = ifelse(model == "min", 1, ifelse(model == "mid", 
+                                            2, 3))
+  Y = MVObj$inData$Y
+  nSamp = length(Y)
+  if (missing(sampLabels)) 
+    sampLabels = Y
+  if (length(sampLabels) != nSamp) {
+    warning("Length of sampLabels not equal to number of samples in Y. \n   Autonumbers used instead.")
+    sampLabels = 1:nSamp
+  }
+  if (class(MVObj)[3] == "Regression") {
+    YP = MVObj$yPred[, modNum]
+    YPR = MVObj$yPredPerRep[[modNum]]
+    if (is.null(ylim)) 
+      ylim <- range(YPR)
+    graphics::matplot(Y, YPR, pch = 20, xlab = "Original Y", ylab = "Predicted Y", 
+            col = "grey", bty = "l", cex = 0.5, ylim = ylim)
+    graphics::points(Y, YP, pch = 20)
+    reg = stats::lm(YP ~ Y)
+    graphics::abline(reg)
+    graphics::legend("topleft", legend = c(paste("Model R2 =", signif(MVObj$fitMetric$R2[modNum], 
+                                                            3)), paste("Model Q2 =", signif(MVObj$fitMetric$Q2[modNum], 
+                                                                                            3))), bty = "n")
+  }
+  else if (class(MVObj)[3] == "Classification") {
+    YP = MVObj$yPred[[modNum]]
+    YPR = MVObj$yPredPerRep[[modNum]]
+    if (is.null(ylim)) 
+      ylim <- range(YPR)
+    classes = 1:length(levels(Y))
+    if (missing(factCols)) 
+      factCols = classes + 1
+    if (length(factCols) != length(classes)) {
+      warning("Length of factCols not equal to number of levels in Y. \n   Autocolors used instead.")
+      factCols = classes + 1
+    }
+    classNudge = 0.2 * ((classes - mean(classes))/(mean(classes) - 
+                                                     1))
+    plot(1:nSamp, Y, type = "n", ylim = ylim, xlab = "", 
+         ylab = "Class prediction score", xaxt = "n")
+    graphics::axis(1, at = 1:length(Y), labels = sampLabels, las = 3)
+    for (cl in classes) {
+      graphics::matpoints((1:nSamp) + classNudge[cl], YPR[, cl, 
+                                                ], pch = 20, col = factCols[cl], cex = 0.5)
+      graphics::points((1:nSamp) + classNudge[cl], YP[, cl], pch = 20, 
+             col = factCols[cl])
+    }
+    for (li in 1:(nSamp + 1)) {
+      graphics::abline(v = li - 0.5, lty = 3, col = "grey")
+    }
+    yClass = MVObj$yClass[, modNum]
+    whichWrong = which(yClass != Y)
+    wrongClass = as.numeric(Y[whichWrong])
+    for (w in 1:length(wrongClass)) {
+      graphics::points(whichWrong[w] + classNudge[wrongClass[w]], 
+             YP[whichWrong[w], wrongClass[w]], cex = 2)
+    }
+    graphics::legend("topleft", legend = c(levels(Y), "misclassified"), 
+           pch = c(rep(16, length(classes)), 1), col = c(factCols, 
+                                                         1), cex = 0.8, pt.cex = c(rep(0.5, length(classes)), 
+                                                                                   2), bty = "n")
+  }
+  else {
+    YP = MVObj$yPred[, modNum]
+    YPR = MVObj$yPredPerRep[[modNum]]
+    graphics::matplot(YPR, 1:nSamp, pch = 20, col = "grey", cex = 0.5, 
+            ylim = c(nSamp, 1), ylab = "Sample number", xlab = "Predicted Y")
+    graphics::points(YP, 1:nSamp, pch = 20, col = "black")
+    graphics::abline(h = nSamp/2 + 0.5, lty = 2)
+    graphics::abline(v = 0, lty = 2)
+  }
 }
+
 
 #' Permutation test plot
 #' 
