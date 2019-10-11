@@ -16,3 +16,12 @@ test_that("AlpsNMR filter works", {
   dataset <- filter(dataset, NMRExperiment == "10")
   expect_equal(dataset[["num_samples"]], 1)
 })
+
+test_that("AlpsNMR filter works", {
+  dataset <- new_nmr_dataset_1D(ppm_axis = c(1,2,3),
+                                data_1r = matrix(c(1,2,1,1,2,1), nrow = 2),
+                                metadata = list(external = data.frame(NMRExperiment = c("10", "20"))))
+  dataset <- filter(dataset, NMRExperiment == "10")
+  meta <- nmr_meta_get(dataset, groups = "external")
+  expect_error(meta[["NMRExperiment"]][[2]], "subscript out of bounds")
+})
