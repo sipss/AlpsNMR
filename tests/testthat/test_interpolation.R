@@ -9,18 +9,12 @@ test_that("nmr_ppm_resolution works", {
 })
 
 
-test_that("nmr_interpolate_1D works before interpolation", {
-  dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-  dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-  expect_true(is.list(dataset[["axis"]]))
-})
-
-
 test_that("nmr_interpolate_1D works", {
   dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
   dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-  dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.1, max = 1, by = 0.02))
-  expect_true(is.numeric(dataset[["axis"]]))
+  dataset_interpolated <- nmr_interpolate_1D(dataset, axis = c(min = -0.1, max = 1, by = 0.02))
+  expect_true(is.list(dataset[["axis"]]))
+  expect_true(is.numeric(dataset_interpolated[["axis"]]))
 })
 
 
