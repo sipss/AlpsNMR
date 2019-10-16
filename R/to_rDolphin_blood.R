@@ -344,3 +344,39 @@ NULL
 rDolphin_plot = function (rDolphin_object){
 rDolphin::exemplars_plot(rDolphin_object)
 }
+
+NULL
+
+#' Save rDolphin output and profiling plots
+#' 
+#' The function writes the plots of the adjusted compounds.
+#' 
+#' @inheritParams rDolphin::write_plots
+#'
+#' @return Plots of the fitted compounds in pdf files
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' ## library(AlpsNMR)
+#' rDolphin_object = to_rDolphin(parameters)
+#' targeted_profiling = Automatic_targeted_profiling(rDolphin_object)
+#' write_plots(dir_10_rDolphin, targeted_profiling$final_output,
+#' targeted_profiling$reproducibility_data)
+#' }
+#' 
+save_profiling_plots = function(...){
+rDolphin::write_plots(...)
+}
+
+
+
+
+
+
+
+
+
+
+
+
