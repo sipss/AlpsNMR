@@ -1,21 +1,19 @@
-context("test-MUVR")
-
-test_that("rdCV_PLS_RF & permutation_test_model work", {
-  dataset <- new_nmr_dataset_1D(ppm_axis = 1:10,
-                                data_1r = matrix(sample(0:99,replace = TRUE), nrow = 10),
-                                metadata = list(external = data.frame(NMRExperiment = c("10", "20", "30", "40", "50", "60", "70", "80", "90", "100"))))
-  dataset[["metadata"]][["external"]][["NMRExperiment"]] = as.character(dataset[["metadata"]][["external"]][["NMRExperiment"]])
-
-  dataset[["metadata"]][["external"]][["group"]] = c("A", "A", "A", "A", "A", "B", "B", "B", "B", "B")
-  meta <- nmr_meta_get(dataset, groups = "external")
-  model <- rdCV_PLS_RF(nmr_data(dataset),Y = meta$group)
-  plot <- MUVR_model_plot(model)
-  permutations = permutation_test_model(model, nPerm = 2)
-  VIPs= model_VIP(model)
-  expect_true(is.numeric(model[["calcMins"]]))
-  expect_true(is.list(plot))
-  expect_true(is.matrix(permutations))
-  expect_true(is.data.frame(VIPs))
-})
-
-
+# context("test-MUVR")
+# 
+# test_that("rdCV_PLS_RF & permutation_test_model work", {
+#   dataset <- new_nmr_dataset_1D(ppm_axis = 1:10,
+#                                 data_1r = matrix(sample(0:99,replace = TRUE), nrow = 10),
+#                                 metadata = list(external = data.frame(NMRExperiment = c("10", "20", "30", "40", "50", "60", "70", "80", "90", "100"))))
+#   dataset[["metadata"]][["external"]][["NMRExperiment"]] = as.character(dataset[["metadata"]][["external"]][["NMRExperiment"]])
+# 
+#   dataset[["metadata"]][["external"]][["group"]] = c("A", "A", "A", "A", "A", "B", "B", "B", "B", "B")
+#   meta <- nmr_meta_get(dataset, groups = "external")
+#   model <- rdCV_PLS_RF(nmr_data(dataset),Y = meta$group, nOuter = 3, nInner = 2, nRep = 1, parallel = FALSE)
+#   permutations = permutation_test_model(model, nPerm = 2)
+#   VIPs= model_VIP(model)
+#   expect_true(is.numeric(model[["calcMins"]]))
+#   expect_true(is.matrix(permutations))
+#   expect_true(is.data.frame(VIPs))
+# })
+# 
+# 
