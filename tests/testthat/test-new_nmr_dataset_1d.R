@@ -8,3 +8,6 @@ test_that("new_nmr_dataset_1D", {
   expect_equal(ds[["num_samples"]], 1)
 })
 
+test_that("nmr_read_samples_dir", {
+  expect_error( nmr_read_samples_dir ("XXX"))
+})
