@@ -182,10 +182,15 @@ MUVR_model_plot = function (MVObj, model = "mid", factCols, sampLabels, ylim = N
 #' permutation_test_plot (model, P)
 #' }
 #' 
-permutation_test_plot = function (MVObj, permMatrix, model = "mid")
+permutation_test_plot = function (MVObj, permMatrix, model = "mid", type = type,
+                                 pos, xlab = NULL, xlim,
+                                  ylim = NULL, breaks = "Sturges", main = NULL)
 {
-MUVR::permutationPlot(MVObj, permMatrix, model)
+MUVR::permutationPlot(MVObj, permMatrix, model, type = type,
+                      pos = pos, xlab = xlab, xlim = xlim,
+                      ylim = NULL, breaks = breaks, main = NULL)
 }
+
 
 #' model VIP values
 #' 
@@ -205,6 +210,31 @@ model_VIP = function(MVObj, model = "mid"){
   MUVR::getVIP(MVObj, model)
 }
 
+
+#' p-Value from permutation test
+#' 
+#' The fucntion calculates the cumulative (1-tailed) probability of 'actual'
+#' belonging to 'h0' (`permutation_object` from the `permutation_test_model` function).
+#'
+#' @param model_actual The actual model performance  (e.g. misclassifications or Q2)
+#' @param permutation_object Null hypothesis distribution from permutation test
+#'   from `permutation_test_model` function
+#'
+#' @return The p-value indicating if there is significant differences between
+#'   the model performance and the null hypothesis distribution from permutation
+#'   test test
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' P = permutation_test_model(model)
+#' p.value = p_value_perm(model$miss[[2]], P[,2])
+#' }
+#' 
+#' 
+p_value_perm = function (model_actual, permutation_object){
+  MUVR::pPerm(actual = model_actual, h0 = permutation_object)
+}
 
 #' Confusion matrix of the MUVR model
 #' 

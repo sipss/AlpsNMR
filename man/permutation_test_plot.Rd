@@ -4,7 +4,9 @@
 \alias{permutation_test_plot}
 \title{Permutation test plot}
 \usage{
-permutation_test_plot(MVObj, permMatrix, model = "mid")
+permutation_test_plot(MVObj, permMatrix, model = "mid", type = type,
+  pos, xlab = NULL, xlim, ylim = NULL, breaks = "Sturges",
+  main = NULL)
 }
 \arguments{
 \item{MVObj}{A MUVR object}
@@ -12,6 +14,20 @@ permutation_test_plot(MVObj, permMatrix, model = "mid")
 \item{permMatrix}{A permutation fitness outcome from MUVR::permutations()}
 
 \item{model}{'Min', 'Mid', or 'Max'}
+
+\item{type}{'t' (default; for Student's t) or 'non' for "non-parametric" (i.e. rank) studen'ts}
+
+\item{pos}{which side of actual to put p-value on}
+
+\item{xlab}{optional xlabel}
+
+\item{xlim}{optional x-range}
+
+\item{ylim}{otional y-range}
+
+\item{breaks}{optional custom histogram breaks (defaults to 'sturges')}
+
+\item{main}{optional plot title (or TRUE for autoname)}
 }
 \value{
 A plot with the comparison between the actual model versus the permuted models
