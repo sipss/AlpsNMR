@@ -4,7 +4,17 @@
 \alias{save_profiling_plots}
 \title{Save rDolphin output and profiling plots}
 \usage{
-save_profiling_plots(...)
+save_profiling_plots(export_path, final_output, reproducibility_data,
+  signals_to_plot = NA)
+}
+\arguments{
+\item{export_path}{Path where plots are stored inside a created 'plots' folder}
+
+\item{final_output}{List with quantifications and indicators of quality of quantification.}
+
+\item{reproducibility_data}{List with necessary information to load quantifications on the Shiny GUI.}
+
+\item{signals_to_plot}{Vector of indexes of signals in ROI data to plot. By default, NA and all figures are outputted.}
 }
 \value{
 Plots of the fitted compounds in pdf files

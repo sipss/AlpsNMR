@@ -365,8 +365,10 @@ NULL
 #' targeted_profiling$reproducibility_data)
 #' }
 #' 
-save_profiling_plots = function(...){
-rDolphin::write_plots(...)
+save_profiling_plots = function(export_path, final_output, reproducibility_data,
+                                signals_to_plot = NA){
+rDolphin::write_plots(export_path, final_output, reproducibility_data,
+                      signals_to_plot = signals_to_plot)
 }
 
 
