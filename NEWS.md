@@ -1,3 +1,12 @@
+# AlpsNMR 2.3.3.9002
+
+- NIHS_specific removed
+- Tests coverage up to 30%
+- Update of `save_profiling_plots`
+- Add tutorial
+- Remotes installation
+
+
 # AlpsNMR 2.3.3.9001
 
 - Add `nmr_identify_regions_cell` function

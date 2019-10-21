@@ -24,3 +24,5 @@ Quick start
 
 Checkout the [Introduction to AlpsNMR](https://sipss.github.io/AlpsNMR/articles/introduction-to-alpsnmr.html) vignette that shows how to import data and preprocess it using AlpsNMR.
 
+
+[Tutorial](https://sipss.github.io/AlpsNMR/articles/tutorial.pdf)
