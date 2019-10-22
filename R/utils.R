@@ -187,7 +187,7 @@ to_ChemoSpec <- function(nmr_dataset, desc = "A nmr_dataset") {
   Spectra <- vector("list", 9)
   Spectra[[1]] <- nmr_dataset$axis
   Spectra[[2]] <- nmr_dataset$data_1r
-  Spectra[[3]] <- nmr_dataset$metadata$NMRExperiment
+  Spectra[[3]] <- nmr_dataset$metadata$external$NMRExperiment
   Spectra[[4]] <- as.factor(rep(NA_character_, nmr_dataset$num_samples)) # groups
   Spectra[[5]] <- rep("black", nmr_dataset$num_samples) # colors
   Spectra[[6]] <- rep(1L, nmr_dataset$num_samples) # sym
