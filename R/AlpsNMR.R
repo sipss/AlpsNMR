@@ -27,16 +27,4 @@
 #'   nmr_normalize(method = "pqn") %>%
 #'   plot
 #' }
-#' \dontrun{
-#' library(AlpsNMR)
-#' sample_names <- c("dataset/10/", "dataset/20/", "dataset/30/")
-#' nmrdata <- nmr_read_samples(sample_names, metadata_only = TRUE)
-#' irods_metadata <- nmr_get_irods_meta(nmrdata)
-#' # explore and confirm everything is in irods_metadata
-#' # Now, let's compress the samples to zip files for irods
-#' irods_metadata <- nmr_prepare_zip_files(meta_irods = irods_metadata,
-#'                                         workdir = 'my_dataset_zip_files')
-#' # Finally push the data to the irods directory
-#' nmr_push_to_irods(irods_metadata, "/NIHSData/DUND-XXXXXX/study/Metabolomics")
-#' }
 "_PACKAGE"
