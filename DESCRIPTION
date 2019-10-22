@@ -35,8 +35,6 @@ Description: Reads Bruker NMR data directories both zipped and unzipped.
  normalize, detect peaks, align the spectra, integrate peaks, manage metadata and
  visualize the spectra.
  After spectra proccessing, it can apply multivariate analysis on extracted data.
- The package also provides NIHS irods integration, by extracting sample metadata,
- compressing sample directories in zip files and pushing them to iRods.
  Efficient plotting with 1-D data is also available.
  Basic reading of 1D ACD/Labs exported JDX samples is also available.
 License: MIT + file LICENSE
