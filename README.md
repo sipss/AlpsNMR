@@ -24,4 +24,4 @@ Quick start
 
 Checkout the [Introduction to AlpsNMR](https://sipss.github.io/AlpsNMR/articles/introduction-to-alpsnmr.html) vignette that shows how to import data and preprocess it using AlpsNMR.
 
-Also the [tutorial](https://github.com/sipss/AlpsNMR/blob/master/vignettes/tutorial.pdf)
+See also the [tutorial](https://github.com/sipss/AlpsNMR/blob/master/vignettes/tutorial.pdf) with a real dataset from beginning to end, including all the steps of an untargeted metabolomics analysis. 
