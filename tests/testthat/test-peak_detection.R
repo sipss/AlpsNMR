@@ -15,7 +15,8 @@ test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_pea
                        maxShift_ppm = 0.0015, 
                        acceptLostPeak = FALSE)
 
-    
+  plot = nmr_detect_peaks_plot (dataset,peak_table,NMRExp_ref)
+  
   peak_table_integration = nmr_integrate_peak_positions(
   samples = dataset,
   peak_pos_ppm = list(c(2,3,4)),
@@ -23,6 +24,7 @@ test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_pea
   expect_true(is.numeric(peak_table_integration[["peak_table"]][[1]]))
   expect_true(is.integer(dim(peak_table)))
   expect_true(is.character(NMRExp_ref))
+  expect_true(is.list(plot[1]))
   expect_true(is.matrix(dataset[["data_1r"]]))
   expect_true(is.numeric(dataset[["data_1r"]][[1]]))
 })
