@@ -1,4 +1,4 @@
-context("test-peak_detection")
+context("test-peak_detection_align_integration")
 
 test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_peak_position works", {
   dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -6,6 +6,7 @@ test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_pea
   data2 <- dataset[1:3]
   dataset <- nmr_interpolate_1D(dataset, axis = c(min = 1, max = 2, by = 0.002))
   Ch = to_ChemoSpec(dataset)
+  
   
   peak_table <- nmr_detect_peaks(dataset,
                                  nDivRange_ppm = 0.1,
