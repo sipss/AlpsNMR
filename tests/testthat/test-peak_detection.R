@@ -3,6 +3,7 @@ context("test-peak_detection")
 test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_peak_position works", {
   dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
   dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+  data2 <- dataset[1:3]
   dataset <- nmr_interpolate_1D(dataset, axis = c(min = 1, max = 2, by = 0.002))
   peak_table <- nmr_detect_peaks(dataset,
                                  nDivRange_ppm = 0.1,
@@ -21,6 +22,7 @@ test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_pea
   samples = dataset,
   peak_pos_ppm = list(c(2,3,4)),
   peak_width_ppm = NULL)
+  expect_true(is.list(data2[["data_1r"]]))
   expect_true(is.numeric(peak_table_integration[["peak_table"]][[1]]))
   expect_true(is.integer(dim(peak_table)))
   expect_true(is.character(NMRExp_ref))
