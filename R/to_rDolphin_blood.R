@@ -10,11 +10,37 @@
 #' @examples 
 #' \dontrun{
 #' ## After running AlpsNMR and get aligned spectra along with the corresponding metadata we run:
-#' library(AlpsNMR)
-#' setwd("your_directory_with_parameters.csv")
-#' rDolphin_object = to_rDolphin(parameters.csv)
+#' ## library(AlpsNMR)
+#' Set the directory in which rDolphin files will be saved
+#' output_dir_10_rDolphin <- file.path(your_path, "10-rDolphin")
+#' fs::dir_create(output_dir_10_rDolphin)
+#' 
+#' # Generate the files (for plasma/serum)
+#' files_rDolphin = files_to_rDolphin_blood(nmr_dataset_0_10_ppm)
+#' 
+#' # Save the files
+#' save_files_to_rDolphin(files_rDolphin, output_dir_10_rDolphin)
+#' 
+#' # Build the rDolphin object. Do not forget to set the directory
+#' setwd(output_dir_10_rDolphin) 
+#' rDolphin_object = to_rDolphin("Parameters.csv")
+#' 
+#' # Visualize your spectra
+#' rDolphin_plot(rDolphin_object)
+#' 
+#' # Run the main profiling function (it takes a while)
 #' targeted_profiling = Automatic_targeted_profiling(rDolphin_object)
-#' save_profiling_output(targeted_profiling, output_directory)
+#' 
+#' # Save results
+#' save_profiling_output(targeted_profiling, output_dir_10_rDolphin)
+#' 
+#' save_profiling_plots(output_dir_10_rDolphin, targeted_profiling$final_output,
+#' targeted_profiling$reproducibility_data)
+#' 
+#' #Additionally, you can run some stats
+#' intensities = targeted_profiling$final_output$intensity
+#' group = as.factor(rDolphin_object$Metadata$type)
+#' model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 #' }
 #' @export
 to_rDolphin <- function(...) {
@@ -41,9 +67,39 @@ NULL
 #' @examples 
 #' \dontrun{
 #' ## Run after apply [to_rDolphin] and get an rDolphin spectra object:
-#' rDolphin_object = to_rDolphin(parameters)
+#' \dontrun{
+#' ## library(AlpsNMR)
+#' Set the directory in which rDolphin files will be saved
+#' output_dir_10_rDolphin <- file.path(your_path, "10-rDolphin")
+#' fs::dir_create(output_dir_10_rDolphin)
+#' 
+#' # Generate the files (for plasma/serum)
+#' files_rDolphin = files_to_rDolphin_blood(nmr_dataset_0_10_ppm)
+#' 
+#' # Save the files
+#' save_files_to_rDolphin(files_rDolphin, output_dir_10_rDolphin)
+#' 
+#' # Build the rDolphin object. Do not forget to set the directory
+#' setwd(output_dir_10_rDolphin) 
+#' rDolphin_object = to_rDolphin("Parameters.csv")
+#' 
+#' # Visualize your spectra
+#' rDolphin_plot(rDolphin_object)
+#' 
+#' # Run the main profiling function (it takes a while)
 #' targeted_profiling = Automatic_targeted_profiling(rDolphin_object)
-#' save_profiling_output(targeted_profiling, output_directory)
+#' 
+#' # Save results
+#' save_profiling_output(targeted_profiling, output_dir_10_rDolphin)
+#' 
+#' save_profiling_plots(output_dir_10_rDolphin, targeted_profiling$final_output,
+#' targeted_profiling$reproducibility_data)
+#' 
+#' #Additionally, you can run some stats
+#' intensities = targeted_profiling$final_output$intensity
+#' group = as.factor(rDolphin_object$Metadata$type)
+#' model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
+#' }
 #' }
 #' @export
 Automatic_targeted_profiling <- function(...) {
@@ -76,7 +132,13 @@ NULL
 NULL
 #' Files to rDoplhin (blood)
 #'
-#' The function generates the files required by [to_rDolphin] function.
+#' The rDolphin family functions are introduced to perform automatic targeted
+#' metabolite profiling. Therefore, ensure that you interpolated from -0.1 ppm
+#' in order to consider the TSP/DSS signal at 0.0 ppm. The function generates a
+#' list with the files required by `to_rDolphin` function. Then, it is required
+#' to save them with the `save_files_to_rDolphin`. `to_rDolphin` function will
+#' read the generated [parameters.csv] file.
+#' function.
 #' @param nmr_dataset An [nmr_dataset] object
 #' @return a list containing: 
 #'  - `meta_rDolphin`: metadata in rDolphin format, 
@@ -89,7 +151,36 @@ NULL
 #' @examples 
 #' \dontrun{
 #' ## library(AlpsNMR)
-#' files_to_rDolphin_blood(nmr_dataset)
+#' Set the directory in which rDolphin files will be saved
+#' output_dir_10_rDolphin <- file.path(your_path, "10-rDolphin")
+#' fs::dir_create(output_dir_10_rDolphin)
+#' 
+#' # Generate the files (for plasma/serum)
+#' files_rDolphin = files_to_rDolphin_blood(nmr_dataset_0_10_ppm)
+#' 
+#' # Save the files
+#' save_files_to_rDolphin(files_rDolphin, output_dir_10_rDolphin)
+#' 
+#' # Build the rDolphin object. Do not forget to set the directory
+#' setwd(output_dir_10_rDolphin) 
+#' rDolphin_object = to_rDolphin("Parameters.csv")
+#' 
+#' # Visualize your spectra
+#' rDolphin_plot(rDolphin_object)
+#' 
+#' # Run the main profiling function (it takes a while)
+#' targeted_profiling = Automatic_targeted_profiling(rDolphin_object)
+#' 
+#' # Save results
+#' save_profiling_output(targeted_profiling, output_dir_10_rDolphin)
+#' 
+#' save_profiling_plots(output_dir_10_rDolphin, targeted_profiling$final_output,
+#' targeted_profiling$reproducibility_data)
+#' 
+#' #Additionally, you can run some stats
+#' intensities = targeted_profiling$final_output$intensity
+#' group = as.factor(rDolphin_object$Metadata$type)
+#' model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 #' }
 #' @export
 files_to_rDolphin_blood = function (nmr_dataset){
@@ -128,7 +219,36 @@ NULL
 #' @examples 
 #' \dontrun{
 #' ## library(AlpsNMR)
-#' files_to_rDolphin_cell(nmr_dataset)
+#' Set the directory in which rDolphin files will be saved
+#' output_dir_10_rDolphin <- file.path(your_path, "10-rDolphin")
+#' fs::dir_create(output_dir_10_rDolphin)
+#' 
+#' # Generate the files (for cell)
+#' files_rDolphin = files_to_rDolphin_cell(nmr_dataset_0_10_ppm)
+#' 
+#' # Save the files
+#' save_files_to_rDolphin(files_rDolphin, output_dir_10_rDolphin)
+#' 
+#' # Build the rDolphin object. Do not forget to set the directory
+#' setwd(output_dir_10_rDolphin) 
+#' rDolphin_object = to_rDolphin("Parameters.csv")
+#' 
+#' # Visualize your spectra
+#' rDolphin_plot(rDolphin_object)
+#' 
+#' # Run the main profiling function (it takes a while)
+#' targeted_profiling = Automatic_targeted_profiling(rDolphin_object)
+#' 
+#' # Save results
+#' save_profiling_output(targeted_profiling, output_dir_10_rDolphin)
+#' 
+#' save_profiling_plots(output_dir_10_rDolphin, targeted_profiling$final_output,
+#' targeted_profiling$reproducibility_data)
+#' 
+#' #Additionally, you can run some stats
+#' intensities = targeted_profiling$final_output$intensity
+#' group = as.factor(rDolphin_object$Metadata$type)
+#' model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 #' }
 #' @export
 files_to_rDolphin_cell = function (nmr_dataset){
@@ -190,7 +310,36 @@ NULL
 #' @examples 
 #' \dontrun{
 #' ## library(AlpsNMR)
-#' files_to_rDolphin_urine(nmr_dataset)
+#' Set the directory in which rDolphin files will be saved
+#' output_dir_10_rDolphin <- file.path(your_path, "10-rDolphin")
+#' fs::dir_create(output_dir_10_rDolphin)
+#' 
+#' # Generate the files (for urine)
+#' files_rDolphin = files_to_rDolphin_urine(nmr_dataset_0_10_ppm)
+#' 
+#' # Save the files
+#' save_files_to_rDolphin(files_rDolphin, output_dir_10_rDolphin)
+#' 
+#' # Build the rDolphin object. Do not forget to set the directory
+#' setwd(output_dir_10_rDolphin) 
+#' rDolphin_object = to_rDolphin("Parameters.csv")
+#' 
+#' # Visualize your spectra
+#' rDolphin_plot(rDolphin_object)
+#' 
+#' # Run the main profiling function (it takes a while)
+#' targeted_profiling = Automatic_targeted_profiling(rDolphin_object)
+#' 
+#' # Save results
+#' save_profiling_output(targeted_profiling, output_dir_10_rDolphin)
+#' 
+#' save_profiling_plots(output_dir_10_rDolphin, targeted_profiling$final_output,
+#' targeted_profiling$reproducibility_data)
+#' 
+#' #Additionally, you can run some stats
+#' intensities = targeted_profiling$final_output$intensity
+#' group = as.factor(rDolphin_object$Metadata$type)
+#' model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 #' }
 #' @export
 files_to_rDolphin_urine = function (nmr_dataset){
@@ -269,7 +418,6 @@ save_files_to_rDolphin = function (files_rDolphin, output_directory){
   utils::write.csv(files_rDolphin$meta_rDolphin, meta_rDolphin, row.names = FALSE)
   utils::write.csv(files_rDolphin$NMR_spectra, NMR_spectra, row.names = FALSE)
   utils::write.csv(files_rDolphin$ROI, ROI, row.names = FALSE)
-  
 }
 
 NULL
@@ -359,10 +507,38 @@ NULL
 #' @examples
 #' \dontrun{
 #' ## library(AlpsNMR)
-#' rDolphin_object = to_rDolphin(parameters)
+#' \dontrun{
+#' ## library(AlpsNMR)
+#' Set the directory in which rDolphin files will be saved
+#' output_dir_10_rDolphin <- file.path(your_path, "10-rDolphin")
+#' fs::dir_create(output_dir_10_rDolphin)
+#' 
+#' # Generate the files (for plasma/serum)
+#' files_rDolphin = files_to_rDolphin_blood(nmr_dataset_0_10_ppm)
+#' 
+#' # Save the files
+#' save_files_to_rDolphin(files_rDolphin, output_dir_10_rDolphin)
+#' 
+#' # Build the rDolphin object. Do not forget to set the directory
+#' setwd(output_dir_10_rDolphin) 
+#' rDolphin_object = to_rDolphin("Parameters.csv")
+#' 
+#' # Visualize your spectra
+#' rDolphin_plot(rDolphin_object)
+#' 
+#' # Run the main profiling function (it takes a while)
 #' targeted_profiling = Automatic_targeted_profiling(rDolphin_object)
-#' write_plots(dir_10_rDolphin, targeted_profiling$final_output,
+#' 
+#' # Save results
+#' save_profiling_output(targeted_profiling, output_dir_10_rDolphin)
+#' 
+#' save_profiling_plots(output_dir_10_rDolphin, targeted_profiling$final_output,
 #' targeted_profiling$reproducibility_data)
+#' 
+#' #Additionally, you can run some stats
+#' intensities = targeted_profiling$final_output$intensity
+#' group = as.factor(rDolphin_object$Metadata$type)
+#' model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 #' }
 #' 
 save_profiling_plots = function(export_path, final_output, reproducibility_data,

@@ -22,13 +22,3 @@ Plots of the fitted compounds in pdf files
 \description{
 The function writes the plots of the adjusted compounds.
 }
-\examples{
-\dontrun{
-## library(AlpsNMR)
-rDolphin_object = to_rDolphin(parameters)
-targeted_profiling = Automatic_targeted_profiling(rDolphin_object)
-write_plots(dir_10_rDolphin, targeted_profiling$final_output,
-targeted_profiling$reproducibility_data)
-}
-
-}

@@ -47,6 +47,11 @@ norm_pqn <- function(spectra) {
 #' @return The [nmr_dataset_1D] object, with the samples normalized
 #' @family nmr_dataset_1D functions
 #' @export
+#' @examples
+#' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
+#' nmr_dataset <- nmr_normalize(nmr_dataset, method = "area")
+#' nmr_diagnose(nmr_dataset)
+
 nmr_normalize <- function(samples, 
                           method = c("area", "max", "value", "region", "pqn", "none"),
                           ...) {

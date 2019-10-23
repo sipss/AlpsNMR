@@ -19,13 +19,11 @@ Identify given regions and return a data frame with plausible assignations
 in cell samples.
 }
 \examples{
-\dontrun{
 # We identify regions from from the corresponding ppm storaged in a vector.
 library(AlpsNMR)
 ppm_to_assign <- c(4.060960203, 3.048970634,2.405935596,
 3.24146865,0.990616851,1.002075066,0.955325548)
 identification <- nmr_identify_regions_cell (ppm_to_assign, num_proposed_compounds = 3)
-}
 }
 \seealso{
 Other peak detection functions: \code{\link{nmr_baseline_threshold}},

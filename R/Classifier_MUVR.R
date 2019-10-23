@@ -227,8 +227,8 @@ model_VIP = function(MVObj, model = "mid"){
 #'
 #' @examples
 #' \dontrun{
-#' P = permutation_test_model(model)
-#' p.value = p_value_perm(model$miss[[2]], P[,2])
+#' P = permutation_test_model(MVObj)
+#' p.value = p_value_perm(MVObj$miss[[2]], P[,2])
 #' }
 #' 
 #' 
@@ -247,6 +247,11 @@ p_value_perm = function (model_actual, permutation_object){
 #'
 #' @examples
 #' \dontrun{
+#' # Build a model with the X data from your nmr object and your class
+#' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+#' Y = nmr_peak_table_completed$Timepoint)
+#' 
+#' # Model performance
 #' confusion_matrix(MVObj)
 #' }
 #' 
@@ -274,7 +279,10 @@ confusion_matrix = function(MVObj, model = "mid"){
 #' @export
 #' @examples 
 #' \dontrun{
+#' # Creating the model
 #' model = rdCV_PLS_RF_ML(nmr_peak_table, label = "Timepoint", ML = TRUE)
+#' 
+#' # Model performance
 #' MUVR_model_plot(model)
 #' }
 #' @return a MUVR model containing selection parameters, validation and fitness
@@ -304,23 +312,3 @@ rdCV_PLS_RF_ML = function (nmr_peak_table, label, scale = TRUE, nRep = 10, nOute
   parallel::stopCluster(cl)# Stop parallel processing
   return(model)
 }
-
-
-
-#' #' Machine learning (delete if everything works properly, kept as example)
-#' #'
-#' #' Machine learning on a integration object `nmr_peak_table`
-#' #' @param nmr_peak_table a dataset with integration values
-#' #' @param groups a vector with the class groups
-#' #' @inheritParams MUVR::MUVR
-#' #' @return a MUVR model
-#' #'
-#' machine_learning = function (nmr_peak_table, groups, scale = T){
-#'   cl=parallel::makeCluster(2)
-#'   doParallel::registerDoParallel(cl)
-#'   model=MUVR::MUVR(nmr_data(nmr_peak_table), groups, ML=F, 
-#'                    method ="PLS", fitness = "MISS", nRep=10, 
-#'                    nOuter=5, varRatio=0.8, scale = T)
-#'   parallel::stopCluster(cl)# Stop parallel processing
-#'   return(model)
-#' }

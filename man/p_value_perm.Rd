@@ -23,8 +23,8 @@ belonging to 'h0' (\code{permutation_object} from the \code{permutation_test_mod
 }
 \examples{
 \dontrun{
-P = permutation_test_model(model)
-p.value = p_value_perm(model$miss[[2]], P[,2])
+P = permutation_test_model(MVObj)
+p.value = p_value_perm(MVObj$miss[[2]], P[,2])
 }
 
 

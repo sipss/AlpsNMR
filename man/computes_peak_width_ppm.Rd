@@ -17,6 +17,11 @@ Estimates the peak width (ppm width) to perform peak integration using
 \code{nmr_integrate_peak_positions}. for this purpose, the full width at half maximum
 of a peak from alanine doublet is considered.
 }
+\examples{
+\dontrun{
+computes_peak_width_ppm(nmr_dataset)
+}
+}
 \seealso{
 Other peak integration functions: \code{\link{get_integration_with_metadata}},
   \code{\link{nmr_identify_regions_blood}},

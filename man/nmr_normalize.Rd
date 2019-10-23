@@ -31,6 +31,11 @@ The \link{nmr_dataset_1D} object, with the samples normalized
 \description{
 Normalize nmr_dataset_1D samples
 }
+\examples{
+nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
+nmr_dataset <- nmr_normalize(nmr_dataset, method = "area")
+nmr_diagnose(nmr_dataset)
+}
 \seealso{
 Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
   \code{\link{[.nmr_dataset_1D}},

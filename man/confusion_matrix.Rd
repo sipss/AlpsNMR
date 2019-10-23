@@ -19,6 +19,11 @@ The function makes a confusion matrix from a MUVR model
 }
 \examples{
 \dontrun{
+# Build a model with the X data from your nmr object and your class
+MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+Y = nmr_peak_table_completed$Timepoint)
+
+# Model performance
 confusion_matrix(MVObj)
 }
 

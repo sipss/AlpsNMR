@@ -54,7 +54,10 @@ requires 2 samples of the same observation).
 }
 \examples{
 \dontrun{
+# Creating the model
 model = rdCV_PLS_RF_ML(nmr_peak_table, label = "Timepoint", ML = TRUE)
+
+# Model performance
 MUVR_model_plot(model)
 }
 }
