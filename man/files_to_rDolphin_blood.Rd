@@ -24,7 +24,7 @@ metabolite profiling. Therefore, ensure that you interpolated from -0.1 ppm
 in order to consider the TSP/DSS signal at 0.0 ppm. The function generates a
 list with the files required by \code{to_rDolphin} function. Then, it is required
 to save them with the \code{save_files_to_rDolphin}. \code{to_rDolphin} function will
-read the generated \link{parameters.csv} file.
+read the generated "parameters.csv" file.
 function.
 }
 \examples{

@@ -28,8 +28,6 @@ Automatic quantification of metabolites for all experiments using the informatio
 \examples{
 \dontrun{
 ## Run after apply [to_rDolphin] and get an rDolphin spectra object:
-\dontrun{
-## library(AlpsNMR)
 Set the directory in which rDolphin files will be saved
 output_dir_10_rDolphin <- file.path(your_path, "10-rDolphin")
 fs::dir_create(output_dir_10_rDolphin)
@@ -60,7 +58,6 @@ targeted_profiling$reproducibility_data)
 intensities = targeted_profiling$final_output$intensity
 group = as.factor(rDolphin_object$Metadata$type)
 model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
-}
 }
 }
 \seealso{

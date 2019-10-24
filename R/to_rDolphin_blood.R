@@ -134,7 +134,7 @@ NULL
 #' in order to consider the TSP/DSS signal at 0.0 ppm. The function generates a
 #' list with the files required by `to_rDolphin` function. Then, it is required
 #' to save them with the `save_files_to_rDolphin`. `to_rDolphin` function will
-#' read the generated [parameters.csv] file.
+#' read the generated "parameters.csv" file.
 #' function.
 #' @param nmr_dataset An [nmr_dataset] object
 #' @return a list containing: 
