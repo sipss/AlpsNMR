@@ -1,10 +1,13 @@
 #' Feature selection and validation in multivariate analysis
 #'
-#' Statistical analysis and feature selection in a repeated double 
-#' cross-validation frame based on the partial least squares
-#' (PLS) or random forest (RF) analyses using an algorithm 
-#' for multivariate modelling with minimally biased variable 
-#' selection (MUVR) from the `MUVR` package.
+#' Statistical analysis and feature selection in a repeated double
+#' cross-validation frame based on the partial least squares (PLS) or random
+#' forest (RF) analyses using an algorithm for multivariate modelling with
+#' minimally biased variable selection (MUVR) from the `MUVR` package. If your
+#' work with a `nmr_peak_table` object from AlpsNMR, first you need to extract
+#' the X data from the main nmr_dataset object (e.g. your peak table) with the
+#' `nmr_data` function, otherwise you would try to set a list on the X. You also
+#' need to set the class from this object, or just set it from another Y vector.
 #' 
 #' @family nmr_dataset_1D functions
 #' @inheritParams MUVR::MUVR
@@ -12,14 +15,30 @@
 #' @export
 #' @examples 
 #' \dontrun{
-#' model = rdCV_PLS_RF(X = nmr_data(nmr_peak_table),
+#' 
+#' # 1.Build a model with the X data from your nmr object and your class (Y):
+#' MVObj = rdCV_PLS_RF(X = nmr_data(nmr_peak_table),
 #'                     Y = nmr_meta_get(nmr_peak_table, groups = "external")$Timepoint,
-#'                     ML = F, method = "PLS", 
-#'                     fitness = "AUROC", 
-#'                     nRep = 12, 
-#'                     nOuter = 4, 
-#'                     varRatio = 0.8,
-#'                     scale = T)
+#'                     ML = F, method = "PLS")
+#'
+#' # 2.Model performance
+#' confusion_matrix(MVObj)
+#' 
+#' # 3.Plotting the model
+#' MUVR_model_plot(MVObj)
+#' 
+#' # 4.Permutation test
+#' permutations <- permutation_test_model(MVObj, nPerm = 50)
+#' 
+#' # 5.Plotting permutation test results
+#' permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+#' 
+#' # 6.p-Value
+#' p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+#' 
+#' # 7.Significant variables
+#' VIPs <- model_VIP(MVObj)
+#'  
 #' }
 #' @return a MUVR model containing selection parameters, validation and fitness
 #' @references Shi,L. et al. (2018) Variable selection and validation in multivariate modelling. Bioinformatics.
@@ -76,16 +95,30 @@ return (permMatrix)
 #' @export
 #' @examples 
 #' \dontrun{
-#' model = rdCV_PLS_RF(X = nmr_data(nmr_peak_table),
-#'                     Y = nmr_meta_get(nmr_peak_table, groups = "external")$Timepoint,
-#'                     ML = F, method = "PLS", 
-#'                     fitness = "AUROC", 
-#'                     nRep = 12, 
-#'                     nOuter = 4, 
-#'                     varRatio = 0.8,
-#'                     scale = T)
-#'
-#' MUVR_model_plot(model)
+#' 
+#' # 1.Build a model with the X data from your nmr object and your class:
+#' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+#' Y = nmr_peak_table_completed$Timepoint)
+#' 
+#' 
+#' # 2.Model performance
+#' confusion_matrix(MVObj)
+#' 
+#' # 3.Plotting the model
+#' MUVR_model_plot(MVObj)
+#' 
+#' # 4.Permutation test
+#' permutations <- permutation_test_model(MVObj, nPerm = 50)
+#' 
+#' # 5.Plotting permutation test results
+#' permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+#' 
+#' # 6.p-Value
+#' p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+#' 
+#' # 7.Significant variables
+#' VIPs <- model_VIP(MVObj)
+#'  
 #' }
 #' 
 MUVR_model_plot = function (MVObj, model = "mid", factCols, sampLabels, ylim = NULL) 
@@ -178,8 +211,30 @@ MUVR_model_plot = function (MVObj, model = "mid", factCols, sampLabels, ylim = N
 #' @export
 #' @examples
 #' \dontrun{
-#' P = permutation_test_model(model)
-#' permutation_test_plot (model, P)
+#' 
+#' # 1.Build a model with the X data from your nmr object and your class:
+#' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+#' Y = nmr_peak_table_completed$Timepoint)
+#' 
+#' 
+#' # 2.Model performance
+#' confusion_matrix(MVObj)
+#' 
+#' # 3.Plotting the model
+#' MUVR_model_plot(MVObj)
+#' 
+#' # 4.Permutation test
+#' permutations <- permutation_test_model(MVObj, nPerm = 50)
+#' 
+#' # 5.Plotting permutation test results
+#' permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+#' 
+#' # 6.p-Value
+#' p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+#' 
+#' # 7.Significant variables
+#' VIPs <- model_VIP(MVObj)
+#'  
 #' }
 #' 
 permutation_test_plot = function (MVObj, permMatrix, model = "mid", type = type,
@@ -192,9 +247,10 @@ MUVR::permutationPlot(MVObj, permMatrix, model, type = type,
 }
 
 
-#' model VIP values
+#' Model VIP values
 #' 
-#' The function extracts autoselected ranked variables from the model (MUVR object)
+#' Once, the MVObj is created and validated, this function extracts autoselected
+#' ranked variables from the model (MUVR object). See `rdCV_PLS_RF` function.
 #'
 #' @inheritParams MUVR::getVIP
 #' @param MVObj a MUVR model
@@ -203,7 +259,30 @@ MUVR::permutationPlot(MVObj, permMatrix, model, type = type,
 #'
 #' @examples
 #' \dontrun{
-#' VIPs = model_VIP(MVObj)
+#' 
+#' # 1.Build a model with the X data from your nmr object and your class:
+#' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+#' Y = nmr_peak_table_completed$Timepoint)
+#' 
+#' 
+#' # 2.Model performance
+#' confusion_matrix(MVObj)
+#' 
+#' # 3.Plotting the model
+#' MUVR_model_plot(MVObj)
+#' 
+#' # 4.Permutation test
+#' permutations <- permutation_test_model(MVObj, nPerm = 50)
+#' 
+#' # 5.Plotting permutation test results
+#' permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+#' 
+#' # 6.p-Value
+#' p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+#' 
+#' # 7.Significant variables
+#' VIPs <- model_VIP(MVObj)
+#'  
 #' }
 #' 
 model_VIP = function(MVObj, model = "mid"){
@@ -227,10 +306,24 @@ model_VIP = function(MVObj, model = "mid"){
 #'
 #' @examples
 #' \dontrun{
-#' P = permutation_test_model(MVObj)
-#' p.value = p_value_perm(MVObj$miss[[2]], P[,2])
-#' }
 #' 
+#' # 1.Build a model with the X data from your nmr object and your class:
+#' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+#' Y = nmr_peak_table_completed$Timepoint)
+#' 
+#' 
+#' # 2.Model performance
+#' confusion_matrix(MVObj)
+#' 
+#' # 3.Plotting the model
+#' MUVR_model_plot(MVObj)
+#' 
+#' # 4.Permutation test
+#' permutations <- permutation_test_model(MVObj, nPerm = 50)
+#' 
+#' p.value = p_value_perm(MVObj$miss[[2]], permutations[,2])
+#' 
+#' }
 #' 
 p_value_perm = function (model_actual, permutation_object){
   MUVR::pPerm(actual = model_actual, h0 = permutation_object)
@@ -238,7 +331,9 @@ p_value_perm = function (model_actual, permutation_object){
 
 #' Confusion matrix of the MUVR model
 #' 
-#' The function makes a confusion matrix from a MUVR model
+#' After creating a model with the `rdCV_PLS_RF` function, you can run
+#' `confusion_matrix` on the model to make a confusion matrix from MUVR. This
+#' gives information about the model performance (e.g. classification rate).
 #'
 #' @inheritParams MUVR::confusionMatrix
 #'
@@ -247,12 +342,30 @@ p_value_perm = function (model_actual, permutation_object){
 #'
 #' @examples
 #' \dontrun{
-#' # Build a model with the X data from your nmr object and your class
+#' 
+#' # 1.Build a model with the X data from your nmr object and your class:
 #' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
 #' Y = nmr_peak_table_completed$Timepoint)
 #' 
-#' # Model performance
+#' 
+#' # 2.Model performance
 #' confusion_matrix(MVObj)
+#' 
+#' # 3.Plotting the model
+#' MUVR_model_plot(MVObj)
+#' 
+#' # 4.Permutation test
+#' permutations <- permutation_test_model(MVObj, nPerm = 50)
+#' 
+#' # 5.Plotting permutation test results
+#' permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+#' 
+#' # 6.p-Value
+#' p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+#' 
+#' # 7.Significant variables
+#' VIPs <- model_VIP(MVObj)
+#'  
 #' }
 #' 
 confusion_matrix = function(MVObj, model = "mid"){

@@ -37,8 +37,30 @@ Plot permutation test using actual model and permutated models
 }
 \examples{
 \dontrun{
-P = permutation_test_model(model)
-permutation_test_plot (model, P)
+
+# 1.Build a model with the X data from your nmr object and your class:
+MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+Y = nmr_peak_table_completed$Timepoint)
+
+
+# 2.Model performance
+confusion_matrix(MVObj)
+
+# 3.Plotting the model
+MUVR_model_plot(MVObj)
+
+# 4.Permutation test
+permutations <- permutation_test_model(MVObj, nPerm = 50)
+
+# 5.Plotting permutation test results
+permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+
+# 6.p-Value
+p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+
+# 7.Significant variables
+VIPs <- model_VIP(MVObj)
+ 
 }
 
 }

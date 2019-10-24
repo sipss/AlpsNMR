@@ -2,7 +2,7 @@
 % Please edit documentation in R/Classifier_MUVR.R
 \name{model_VIP}
 \alias{model_VIP}
-\title{model VIP values}
+\title{Model VIP values}
 \usage{
 model_VIP(MVObj, model = "mid")
 }
@@ -15,11 +15,35 @@ model_VIP(MVObj, model = "mid")
 a data frame with the order, name and average rank of selected variables
 }
 \description{
-The function extracts autoselected ranked variables from the model (MUVR object)
+Once, the MVObj is created and validated, this function extracts autoselected
+ranked variables from the model (MUVR object). See \code{rdCV_PLS_RF} function.
 }
 \examples{
 \dontrun{
-VIPs = model_VIP(MVObj)
+
+# 1.Build a model with the X data from your nmr object and your class:
+MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+Y = nmr_peak_table_completed$Timepoint)
+
+
+# 2.Model performance
+confusion_matrix(MVObj)
+
+# 3.Plotting the model
+MUVR_model_plot(MVObj)
+
+# 4.Permutation test
+permutations <- permutation_test_model(MVObj, nPerm = 50)
+
+# 5.Plotting permutation test results
+permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+
+# 6.p-Value
+p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+
+# 7.Significant variables
+VIPs <- model_VIP(MVObj)
+ 
 }
 
 }

@@ -27,7 +27,48 @@ column}
 An \link{nmr_dataset_peak_table} object
 }
 \description{
-Integrate peak positions
+The function allows the integration of a given ppm vector with a specific width.
+}
+\examples{
+\dontrun{
+
+# 0. Multiprocess (parallelization) to set the number of cores working in your PC
+plan(multiprocess, workers = 12)
+
+# 1.Peak detection in the dataset.
+peak_data <- nmr_detect_peaks(nmr_dataset,
+                              nDivRange_ppm = 0.1, # Size of detection segments
+                              scales = seq(1, 16, 2),
+                              baselineThresh = 0, # Minimum peak intensity
+                              SNR.Th = 4) # Signal to noise ratio
+                              
+# 2.Find the reference spectrum to align with.
+NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
+
+# 3.Spectra alignment using the ref spectrum and a maximum alignment shift
+nmr_dataset <- nmr_align(nmr_dataset, # the dataset
+                         peak_data, # detected peaks
+                         NMRExp_ref = NMRExp_ref, # ref spectrum
+                         maxShift_ppm = 0.0015, # max alignment shift
+                         acceptLostPeak = FALSE) # lost peaks
+                         
+# 4.Set sequential working to finish parallelization
+plan(sequential)
+
+# 5.PEAK INTEGRATION (please, consider previous normalization step).
+# First we take the peak table from the reference spectrum
+peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
+
+# Then we integrate spectra considering the peaks from the ref spectrum
+nmr_peak_table <- nmr_integrate_peak_positions(
+samples = nmr_dataset,
+peak_pos_ppm = peak_data_ref$ppm,
+peak_width_ppm = NULL) 
+
+#If you wanted the final peak table before machine learning you can run
+nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
+
+}
 }
 \seealso{
 Other peak integration functions: \code{\link{computes_peak_width_ppm}},

@@ -49,21 +49,40 @@ a MUVR model containing selection parameters, validation and fitness
 }
 \description{
 Statistical analysis and feature selection in a repeated double
-cross-validation frame based on the partial least squares
-(PLS) or random forest (RF) analyses using an algorithm
-for multivariate modelling with minimally biased variable
-selection (MUVR) from the \code{MUVR} package.
+cross-validation frame based on the partial least squares (PLS) or random
+forest (RF) analyses using an algorithm for multivariate modelling with
+minimally biased variable selection (MUVR) from the \code{MUVR} package. If your
+work with a \code{nmr_peak_table} object from AlpsNMR, first you need to extract
+the X data from the main nmr_dataset object (e.g. your peak table) with the
+\code{nmr_data} function, otherwise you would try to set a list on the X. You also
+need to set the class from this object, or just set it from another Y vector.
 }
 \examples{
 \dontrun{
-model = rdCV_PLS_RF(X = nmr_data(nmr_peak_table),
+
+# 1.Build a model with the X data from your nmr object and your class (Y):
+MVObj = rdCV_PLS_RF(X = nmr_data(nmr_peak_table),
                     Y = nmr_meta_get(nmr_peak_table, groups = "external")$Timepoint,
-                    ML = F, method = "PLS", 
-                    fitness = "AUROC", 
-                    nRep = 12, 
-                    nOuter = 4, 
-                    varRatio = 0.8,
-                    scale = T)
+                    ML = F, method = "PLS")
+
+# 2.Model performance
+confusion_matrix(MVObj)
+
+# 3.Plotting the model
+MUVR_model_plot(MVObj)
+
+# 4.Permutation test
+permutations <- permutation_test_model(MVObj, nPerm = 50)
+
+# 5.Plotting permutation test results
+permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+
+# 6.p-Value
+p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+
+# 7.Significant variables
+VIPs <- model_VIP(MVObj)
+ 
 }
 }
 \references{

@@ -15,16 +15,36 @@ confusion_matrix(MVObj, model = "mid")
 A confusion matrix of the model comparing actual vs predicted class
 }
 \description{
-The function makes a confusion matrix from a MUVR model
+After creating a model with the \code{rdCV_PLS_RF} function, you can run
+\code{confusion_matrix} on the model to make a confusion matrix from MUVR. This
+gives information about the model performance (e.g. classification rate).
 }
 \examples{
 \dontrun{
-# Build a model with the X data from your nmr object and your class
+
+# 1.Build a model with the X data from your nmr object and your class:
 MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
 Y = nmr_peak_table_completed$Timepoint)
 
-# Model performance
+
+# 2.Model performance
 confusion_matrix(MVObj)
+
+# 3.Plotting the model
+MUVR_model_plot(MVObj)
+
+# 4.Permutation test
+permutations <- permutation_test_model(MVObj, nPerm = 50)
+
+# 5.Plotting permutation test results
+permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+
+# 6.p-Value
+p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+
+# 7.Significant variables
+VIPs <- model_VIP(MVObj)
+ 
 }
 
 }

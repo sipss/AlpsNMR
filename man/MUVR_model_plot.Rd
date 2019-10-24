@@ -29,16 +29,30 @@ variable selection (MUVR) from the \code{MUVR} package, see Shi et al., 2018 (DO
 }
 \examples{
 \dontrun{
-model = rdCV_PLS_RF(X = nmr_data(nmr_peak_table),
-                    Y = nmr_meta_get(nmr_peak_table, groups = "external")$Timepoint,
-                    ML = F, method = "PLS", 
-                    fitness = "AUROC", 
-                    nRep = 12, 
-                    nOuter = 4, 
-                    varRatio = 0.8,
-                    scale = T)
 
-MUVR_model_plot(model)
+# 1.Build a model with the X data from your nmr object and your class:
+MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+Y = nmr_peak_table_completed$Timepoint)
+
+
+# 2.Model performance
+confusion_matrix(MVObj)
+
+# 3.Plotting the model
+MUVR_model_plot(MVObj)
+
+# 4.Permutation test
+permutations <- permutation_test_model(MVObj, nPerm = 50)
+
+# 5.Plotting permutation test results
+permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+
+# 6.p-Value
+p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+
+# 7.Significant variables
+VIPs <- model_VIP(MVObj)
+ 
 }
 
 }

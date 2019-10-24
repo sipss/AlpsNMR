@@ -11,11 +11,16 @@ pipe_peakdet_align(nmr_dataset_rds, nDivRange_ppm = 0.1,
 \arguments{
 \item{nmr_dataset_rds}{The nmr_dataset.rds file name coming from previous nodes}
 
-\item{nDivRange_ppm}{Segment size, in ppms, to divide the spectra and search for peaks.}
+\item{nDivRange_ppm}{Segment size, in ppms, to divide the spectra and search
+for peaks.}
 
 \item{scales}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.}
 
-\item{baselineThresh}{It will remove all peaks under an intensity set by baselineThresh. If you set it to 'NULL', nmr_detect_peaks will automatically compute an aproximate value}
+\item{baselineThresh}{It will remove all peaks under an intensity set by
+baselineThresh. If you set it to 'NULL', nmr_detect_peaks will
+automatically compute an aproximate value considering baseline between 9.5
+and 10.0 ppm (automatically calculation using \code{baselineThresh = NULL} will
+not work if spectra were not interpolated up to 10.0 ppm)}
 
 \item{SNR.Th}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.}
 

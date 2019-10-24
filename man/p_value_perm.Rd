@@ -23,9 +23,23 @@ belonging to 'h0' (\code{permutation_object} from the \code{permutation_test_mod
 }
 \examples{
 \dontrun{
-P = permutation_test_model(MVObj)
-p.value = p_value_perm(MVObj$miss[[2]], P[,2])
-}
 
+# 1.Build a model with the X data from your nmr object and your class:
+MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+Y = nmr_peak_table_completed$Timepoint)
+
+
+# 2.Model performance
+confusion_matrix(MVObj)
+
+# 3.Plotting the model
+MUVR_model_plot(MVObj)
+
+# 4.Permutation test
+permutations <- permutation_test_model(MVObj, nPerm = 50)
+
+p.value = p_value_perm(MVObj$miss[[2]], permutations[,2])
+
+}
 
 }

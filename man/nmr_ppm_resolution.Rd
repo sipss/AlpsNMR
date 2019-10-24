@@ -4,7 +4,7 @@
 \alias{nmr_ppm_resolution}
 \alias{nmr_ppm_resolution.nmr_dataset}
 \alias{nmr_ppm_resolution.nmr_dataset_1D}
-\title{Get the ppm resolution of the dataset}
+\title{PPM resolution of the spectra}
 \usage{
 nmr_ppm_resolution(nmr_dataset)
 
@@ -19,7 +19,14 @@ nmr_ppm_resolution(nmr_dataset)
 A number (the ppm resolution, measured in ppms)
 }
 \description{
-Get the ppm resolution of the dataset
+The function gets the ppm resolution of the dataset using the median of the
+difference of data points.
+}
+\examples{
+nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
+nmr_ppm_resolution(nmr_dataset)
+message("the ppm resolution of this dataset is ", nmr_ppm_resolution(nmr_dataset), " ppm")
+
 }
 \seealso{
 Other nmr_dataset functions: \code{\link{[.nmr_dataset}},
