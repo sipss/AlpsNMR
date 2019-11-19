@@ -57,6 +57,4 @@ addons:
     - r-cran-sparsem
     - r-cran-rgl
     - r-cran-nloptr
-    - libgsl2
-    - r-cran-rcppgsl
  
