@@ -1,0 +1,92 @@
+Package: AlpsNMR
+Type: Package
+Title: Automated spectraL Processing System for NMR
+Version: 2.3.3.9002
+Encoding: UTF-8
+Authors@R: c(
+    person(given = "Ivan",
+           family = "Montoliu Roura",
+           email = "Ivan.MontoliuRoura@rd.nestle.com",
+           role = c("aut")),
+    person(given = "Sergio",
+           family = "Oller Moreno",
+           email = "soller@ibecbarcelona.eu",
+           role = c("aut"),
+           comment = c(ORCID = "0000-0002-8994-1549")),
+    person(given = "Nestlé Institute of Health Sciences",
+           role = "cph"),
+    person(given = "Institute for Bioengineering of Catalonia",
+           role = "cph"),
+    person(given = "Francisco",
+           family = "Madrid Gambin",
+           email = "fmadrid@ibecbarcelona.eu",
+           role = c("aut"),
+           comment = c(ORCID = "0000-0001-9333-0014")),
+    person(given = "Luis",
+           family = "Fernandez",
+           email = "lfernandez@ibecbarcelona.eu",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-9790-6287"))
+    )
+Description: Reads Bruker NMR data directories both zipped and unzipped.
+ It provides automated and efficient signal processing for untargeted 
+ NMR metabolomics. 
+ It is able to interpolate the samples, detect outliers, exclude regions,
+ normalize, detect peaks, align the spectra, integrate peaks, manage metadata and
+ visualize the spectra.
+ After spectra proccessing, it can apply multivariate analysis on extracted data.
+ Efficient plotting with 1-D data is also available.
+ Basic reading of 1D ACD/Labs exported JDX samples is also available.
+License: MIT + file LICENSE
+LazyData: TRUE
+Depends: R (>= 3.2.0)
+Imports:
+ utils,
+ graphics,
+ signal (>= 0.7-6),
+ assertthat (>= 0.2.0),
+ rlang (>= 0.3.0.1),
+ stringr (>= 1.3.1),
+ magrittr (>= 1.5),
+ tibble(>= 1.3.4),
+ dplyr (>= 0.7.5),
+ tidyr (>= 1.0.0),
+ readxl (>= 1.1.0),
+ ggplot2 (>= 3.1.0),
+ plyr (>= 1.8.4),
+ purrr (>= 0.2.5),
+ glue (>= 1.2.0),
+ reshape2 (>= 1.4.3),
+ scales (>= 1.0.0),
+ GGally (>= 1.4.0),
+ mixOmics (>= 6.3.2),
+ matrixStats (>= 0.54.0),
+ writexl (>= 1.0),
+ fs (>= 1.2.6),
+ rmarkdown (>= 1.10),
+ speaq (>= 2.4.0),
+ htmltools (>= 0.3.6),
+ ggrepel (>= 0.8.0),
+ pcaPP (>= 1.9-73),
+ furrr (>= 0.1.0),
+ future (>= 1.10.0),
+ DT (>= 0.5),
+ rDolphin (>= 0.3.0),
+ baseline (>= 1.2-1),
+ MUVR (>= 0.0.972),
+ doParallel (>= 1.0.14),
+ data.table (>= 1.11.8),
+ tidyselect (>= 0.2.5)
+Suggests:
+    testthat (>= 2.0.0),
+    plotly (>= 4.7.1),
+    ChemoSpec,
+    ASICS,
+    knitr
+biocViews:
+Remotes:
+  gitlab::CarlBrunius/MUVR,
+  github::danielcanueto/rDolphin
+RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr
