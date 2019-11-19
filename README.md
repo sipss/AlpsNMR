@@ -15,7 +15,8 @@ AlpsNMR can be installed with the `remotes` package. Note that it uses packages 
 CRAN, from BioConductor and from git repositories:
 
 ```r
-install.packages("remotes")
+install.packages(c("BiocManager", "remotes"))
+BiocManager::install(c("MassSpecWavelet", "impute"), update = FALSE)
 remotes::install_github("sipss/AlpsNMR")
 ```
 
