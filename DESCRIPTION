@@ -71,8 +71,6 @@ Imports:
  furrr (>= 0.1.0),
  future (>= 1.10.0),
  DT (>= 0.5), 
- impute (>= 1.58.0), 
- MassSpecWavelet (>= 1.50.0),
  rDolphin (>= 0.3.0),
  baseline (>= 1.2-1),
  MUVR (>= 0.0.972),
