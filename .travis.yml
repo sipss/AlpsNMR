@@ -68,10 +68,10 @@ addons:
     - r-cran-tinytex
     - r-cran-xfun
     - r-cran-mqtl
-    - r-cran-doSNOW
+    - r-cran-dosnow
 #    - r-cran-rfast
     - r-cran-rvest
-    - r-cram-missforest
+    - r-cran-missforest
     - r-cran-pkgload
     - r-cran-quadprog
     - r-cran-hms
