@@ -48,7 +48,6 @@ addons:
     - r-cran-proc
     - r-cran-qap
     - r-cran-rcpp
-    - r-cran-rfast
     - r-cran-seriation
     - r-cran-shinyjs
     - r-cran-speaq
