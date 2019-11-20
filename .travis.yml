@@ -50,7 +50,6 @@ addons:
     - r-cran-rcpp
     - r-cran-seriation
     - r-cran-shinyjs
-    - r-cran-speaq
     - r-cran-stringr
     - r-cran-tsp
     - r-cran-rmarkdown
