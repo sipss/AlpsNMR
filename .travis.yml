@@ -1,6 +1,7 @@
 language: r
 cache: packages
 sudo: false
+dist: bionic
 
 before_install:
  - Rscript -e 'install.packages("pkgdown")'
