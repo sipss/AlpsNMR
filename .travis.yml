@@ -1,7 +1,7 @@
 language: r
 cache: packages
 sudo: false
-dist: bionic
+dist: xenial
 
 before_install:
  - Rscript -e 'install.packages("pkgdown")'
@@ -47,7 +47,7 @@ addons:
     - r-cran-plotly
     - r-cran-proc
     - r-cran-qap
-    - r-cran-rcppziggurat
+    - r-cran-rcpp
     - r-cran-rfast
     - r-cran-seriation
     - r-cran-shinyjs
@@ -59,4 +59,3 @@ addons:
     - r-cran-rgl
     - r-cran-nloptr
     - libgsl-dev
-    - libgsl2
