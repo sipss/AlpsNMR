@@ -59,3 +59,4 @@ addons:
     - r-cran-rgl
     - r-cran-nloptr
     - libgsl-dev
+    - libgsl2
