@@ -205,6 +205,7 @@ nmr_detect_peaks_plot <- function(nmr_dataset, peak_data, NMRExperiment, ...) {
   dots <- list(...)
   if ("chemshift_range" %in% names(dots)) {
     chemshift_range <- dots[["chemshift_range"]]
+    chemshift_range[1:2] <- range(chemshift_range[1:2])
   } else {
     chemshift_range <- range(peak_data$ppm)
   }
