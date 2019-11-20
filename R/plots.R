@@ -21,6 +21,12 @@ plot.nmr_dataset_1D <- function(x, NMRExperiment = NULL,
                                 ...) {
   if (is.null(chemshift_range)) {
     chemshift_range <- range(x$axis)
+  } else if (length(chemshift_range) == 2) {
+    chemshift_range <- range(chemshift_range)
+  } else if (length(chemshift_range) == 3) {
+    chemshift_range <- c(range(chemshift_range[1:2]), chemshift_range[3])
+  } else {
+    stop("chemshift_range should be a numeric vector of length 2 or 3.")
   }
   
   if (is.null(NMRExperiment)) {
