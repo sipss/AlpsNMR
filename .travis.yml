@@ -1,6 +1,7 @@
 language: r
 cache: packages
 sudo: false
+dist: xenial
 
 before_install:
  - Rscript -e 'install.packages("pkgdown")'
@@ -46,14 +47,41 @@ addons:
     - r-cran-plotly
     - r-cran-proc
     - r-cran-qap
-    - r-cran-rcppziggurat
-    - r-cran-rfast
+    - r-cran-rcpp
     - r-cran-seriation
     - r-cran-shinyjs
-    - r-cran-speaq
     - r-cran-stringr
     - r-cran-tsp
     - r-cran-rmarkdown
     - r-cran-sparsem
     - r-cran-rgl
     - r-cran-nloptr
+    - libgsl-dev
+    - r-cran-scales
+    - r-cran-rmarkdown
+#    - r-cran-speaq
+    - r-cran-future
+    - r-cran-baseline
+    - r-cran-testthat
+    - r-cran-knitr
+    - r-cran-farver
+    - r-cran-tinytex
+    - r-cran-xfun
+    - r-cran-mqtl
+    - r-cran-dosnow
+#    - r-cran-rfast
+    - r-cran-rvest
+    - r-cran-missforest
+    - r-cran-pkgload
+    - r-cran-quadprog
+    - r-cran-hms
+    - r-cran-rcppeigen
+    - r-cran-qtl
+    - r-cran-outliers
+    - r-cran-snow
+#    - r-cran-rcppziggurat
+#    - r-cran-rcppgsl
+    - r-cran-selectr
+    - r-cran-randomforest
+    - r-cran-itertools
+    - r-cran-pkgbuild
