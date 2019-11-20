@@ -57,3 +57,31 @@ addons:
     - r-cran-rgl
     - r-cran-nloptr
     - libgsl-dev
+    - r-cran-scales
+    - r-cran-rmarkdown
+#    - r-cran-speaq
+    - r-cran-future
+    - r-cran-baseline
+    - r-cran-testthat
+    - r-cran-knitr
+    - r-cran-farver
+    - r-cran-tinytex
+    - r-cran-xfun
+    - r-cran-mqtl
+    - r-cran-doSNOW
+#    - r-cran-rfast
+    - r-cran-rvest
+    - r-cram-missforest
+    - r-cran-pkgload
+    - r-cran-quadprog
+    - r-cran-hms
+    - r-cran-rcppeigen
+    - r-cran-qtl
+    - r-cran-outliers
+    - r-cran-snow
+#    - r-cran-rcppziggurat
+#    - r-cran-rcppgsl
+    - r-cran-selectr
+    - r-cran-randomforest
+    - r-cran-itertools
+    - r-cran-pkgbuild
