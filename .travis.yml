@@ -59,7 +59,7 @@ addons:
     - libgsl-dev
     - r-cran-scales
     - r-cran-rmarkdown
-#    - r-cran-speaq
+    - r-cran-speaq
     - r-cran-future
     - r-cran-baseline
     - r-cran-testthat
@@ -69,7 +69,7 @@ addons:
     - r-cran-xfun
     - r-cran-mqtl
     - r-cran-dosnow
-#    - r-cran-rfast
+    - r-cran-rfast
     - r-cran-rvest
     - r-cran-missforest
     - r-cran-pkgload
@@ -79,8 +79,8 @@ addons:
     - r-cran-qtl
     - r-cran-outliers
     - r-cran-snow
-#    - r-cran-rcppziggurat
-#    - r-cran-rcppgsl
+    - r-cran-rcppziggurat
+    - r-cran-rcppgsl
     - r-cran-selectr
     - r-cran-randomforest
     - r-cran-itertools
