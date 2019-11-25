@@ -26,6 +26,7 @@ Other peak alignment functions: \code{\link{nmr_align}}
 Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
   \code{\link{[.nmr_dataset_1D}},
   \code{\link{computes_peak_width_ppm}},
+  \code{\link{file_lister}},
   \code{\link{files_to_rDolphin_blood}},
   \code{\link{files_to_rDolphin_cell}},
   \code{\link{files_to_rDolphin_urine}},
