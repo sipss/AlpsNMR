@@ -16,7 +16,7 @@ nmr_ppm_resolution(nmr_dataset)
 \item{nmr_dataset}{An object containing NMR samples}
 }
 \value{
-A number (the ppm resolution, measured in ppms)
+Numeric (the ppm resolution, measured in ppms)
 }
 \description{
 The function gets the ppm resolution of the dataset using the median of the

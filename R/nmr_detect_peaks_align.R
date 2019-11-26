@@ -474,7 +474,7 @@ regions_from_peak_table <- function(peak_pos_ppm, peak_width_ppm) {
 #'
 #' @param nmr_dataset An object containing NMR samples
 #'
-#' @return A number (the ppm resolution, measured in ppms)
+#' @return Numeric (the ppm resolution, measured in ppms)
 #' @examples
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 #' nmr_ppm_resolution(nmr_dataset)
@@ -503,6 +503,24 @@ nmr_ppm_resolution.nmr_dataset <- function(nmr_dataset) {
 #' @export
 nmr_ppm_resolution.nmr_dataset_1D <- function(nmr_dataset) {
   stats::median(abs(diff(nmr_dataset$axis)))
+}
+
+#' Unlisted PPM resolution
+#' 
+#' A wrapper to unlist the output from the function
+#' `nmr_ppm_resolution(nmr_dataset)` when no interpolation has been applied.
+#'
+#' @param nmr_dataset An object containing NMR samples
+#'
+#' @return A number (the ppm resolution, measured in ppms)
+#' @examples
+#' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
+#' nmr_ppm_resolution(nmr_dataset)
+#' @return Numeric (the ppm resolution, measured in ppms)
+#' @export
+#'
+ppm_resolution <- function (nmr_dataset) {
+  unlist(nmr_ppm_resolution(nmr_dataset[1]))
 }
 
 
