@@ -60,10 +60,10 @@ need to set the class from this object, or just set it from another Y vector.
 \examples{
 \dontrun{
 
-# 1.Build a model with the X data from your nmr object and your class (Y):
-MVObj = rdCV_PLS_RF(X = nmr_data(nmr_peak_table),
-                    Y = nmr_meta_get(nmr_peak_table, groups = "external")$Timepoint,
-                    ML = F, method = "PLS")
+# 1.Build a model with the X data from your nmr object and your class:
+MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+Y = nmr_peak_table_completed$Timepoint)
+
 
 # 2.Model performance
 confusion_matrix(MVObj)
@@ -83,6 +83,8 @@ p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
 # 7.Significant variables
 VIPs <- model_VIP(MVObj)
  
+# 8.Identification
+results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
 }
 }
 \references{

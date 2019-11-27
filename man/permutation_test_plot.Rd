@@ -61,6 +61,8 @@ p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
 # 7.Significant variables
 VIPs <- model_VIP(MVObj)
  
+# 8.Identification
+results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
 }
 
 }
