@@ -160,13 +160,19 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples, regions,
 #' @family peak integration functions
 #' @family nmr_dataset_1D functions
 nmr_integrate_peak_positions <- function(samples,
-                                         peak_pos_ppm,
-                                         peak_width_ppm = 0.006,
-                                         ...) {
+                                          peak_pos_ppm,
+                                          peak_width_ppm = 0.006,
+                                          ...) {
   # Computes the alanine peak_width_ppm
   if(is.null(peak_width_ppm)){
     peak_width_ppm <- computes_peak_width_ppm(samples)}
-    
+  
+  # dataframe as input
+  if(is.data.frame(peak_pos_ppm)){
+    message("peak_pos_ppm input introduced as dataframe")
+    peak_pos_ppm = peak_pos_ppm$ppm
+  }
+  
   regions <- regions_from_peak_table(peak_pos_ppm, peak_width_ppm)
   nmr_integrate_regions(samples, regions, ...)
 }
