@@ -16,13 +16,8 @@ package) passed on to \code{grep()} to filter paths.}
 }
 \description{
 The function lists samples from the chosen folder required to import and
-create a \link{nmr_dataset_1D} object. The function is based on the \code{fs::dir_ls}
+create a \link{nmr_dataset_1D} object. The function is based on the \code{\link[fs:dir_ls]{fs::dir_ls()}}
 function.
-}
-\examples{
-\dontrun{
-
-}
 }
 \seealso{
 Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
