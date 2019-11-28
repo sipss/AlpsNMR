@@ -2,21 +2,13 @@
 % Please edit documentation in R/nmr_diagnose.R
 \name{nmr_diagnose}
 \alias{nmr_diagnose}
-\alias{nmr_diagnose<-}
-\title{Set/Get diagnostic information}
+\title{Deprecated function}
 \usage{
-nmr_diagnose(nmr_dataset)
-
-nmr_diagnose(nmr_dataset) <- value
-}
-\arguments{
-\item{nmr_dataset}{An \link{nmr_dataset_family} object}
-
-\item{value}{The diagnostic we want to set}
-}
-\value{
-Diagnostic information, usually a list with data or plots
+nmr_diagnose(samples)
 }
 \description{
-Set or get diagnostic information
+Deprecated function
+}
+\seealso{
+nmr_normalize
 }

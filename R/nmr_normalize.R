@@ -34,30 +34,45 @@ norm_pqn <- function(spectra) {
 
 
 #' Normalize nmr_dataset_1D samples
+#' 
+#' The `nmr_normalize` function is used to normalize all the samples according
+#' to a given criteria.
+#' 
+#' The `nmr_normalize_extra_info` function is used to extract additional information
+#' after the normalization. Typically, we want to know what was the actual normalization
+#' factor applied to each sample. The extra information includes a plot, representing
+#' the dispersion of the normalization factor for each sample.
 #'
 #' @param samples A [nmr_dataset_1D] object
 #'               
 #' @param method The criteria to be used for normalization
+#'   - area: Normalize to the total area
+#'   - max: Normalize to the maximum intensity
+#'   - value: Normalize each sample to a user defined value
+#'   - region: Integrate a region and normalize each sample to that region
+#'   - pqn: Use Probabalistic Quotient Normalization for normalization
+#'   - none: Do not normalize at all
 #' @param ... Method dependent arguments:
 #'   - `method == "value"`:
 #'       - `value`: A numeric vector with the normalization values to use
 #'   - `method == "region"`:
 #'       - `ppm_range`: A chemical shift region to integrate
 #'       - `...`: Other arguments passed on to [nmr_integrate_regions]
-#' @return The [nmr_dataset_1D] object, with the samples normalized
+#' @return The [nmr_dataset_1D] object, with the samples normalized.
+#' Further information for diagnostic of the normalization process is also saved
+#' and can be extracted by calling `nmr_normalize_extra_info()` afterwards.
 #' @family nmr_dataset_1D functions
 #' @export
 #' @examples
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 #' nmr_dataset <- nmr_normalize(nmr_dataset, method = "area")
-#' nmr_diagnose(nmr_dataset)
-
+#' norm_extra_info <- nmr_normalize_extra_info(nmr_dataset)
+#' print(norm_extra_info$plot)
 nmr_normalize <- function(samples, 
                           method = c("area", "max", "value", "region", "pqn", "none"),
                           ...) {
   validate_nmr_dataset_1D(samples)
-  nmr_diagnose(samples) <- NULL
-  
+
   method <- tolower(method[1])
   if (!(method %in% c("area", "max", "value", "region", "pqn", "none"))) {
     stop("Unknown method: ", method)
@@ -81,7 +96,7 @@ nmr_normalize <- function(samples,
     norm_result <- norm_pqn(samples[["data_1r"]])
     samples[["data_1r"]] <- norm_result$spectra
     norm_factor <- norm_result$norm_factor
-    nmr_diagnose(samples) <- nmr_normalize_diagnostics(samples, norm_factor)
+    samples <- nmr_normalize_add_extra_info(samples, norm_factor)
     return(samples)
   } else {
     stop("Unimplemented method: ", method)
@@ -90,11 +105,17 @@ nmr_normalize <- function(samples,
                                 MARGIN = 1,
                                 STATS = norm_factor,
                                 FUN = "/")
-  nmr_diagnose(samples) <- nmr_normalize_diagnostics(samples, norm_factor)
+  samples <- nmr_normalize_add_extra_info(samples, norm_factor)
   return(samples)
 }
 
-nmr_normalize_diagnostics <- function(samples, norm_factor) {
+#' @rdname nmr_normalize
+#' @export
+nmr_normalize_extra_info <- function(samples) {
+  attr(samples, "normalize_extra_info")
+}
+
+nmr_normalize_add_extra_info <- function(samples, norm_factor) {
   norm_factor_df <- cbind(nmr_meta_get(samples, columns = "NMRExperiment"),
                           norm_factor = norm_factor)
   
@@ -107,7 +128,9 @@ nmr_normalize_diagnostics <- function(samples, norm_factor) {
     ggplot2::geom_hline(yintercept = 1, color = "red") +
     ggplot2::scale_y_continuous(name = "Normalization factors (normalized to the median)") +
     ggplot2::coord_flip()
-  list(name = "Normalization",
-       norm_factor = norm_factor_df,
-       plot = gplt)
+  attr(samples, "normalize_extra_info") <- list(
+    norm_factor = norm_factor_df,
+    plot = gplt
+  )
+  samples
 }

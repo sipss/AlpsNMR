@@ -412,7 +412,7 @@ pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, outpu
   nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
   if (!is.null(internal_calibrant)) {
     nmr_dataset_norm_ic <- nmr_normalize(nmr_dataset, method = "region", ppm_range = internal_calibrant)
-    diag <- nmr_diagnose(nmr_dataset_norm_ic)
+    diag <- nmr_normalize_extra_info(nmr_dataset_norm_ic)
     ggplot2::ggsave(filename = plot_norm_factor_ic, plot = diag$plot, width = 14, height = 8, unit = "cm", dpi = 300)
     nfactor <- diag$norm_factor
     nfactor_extreme <- dplyr::filter(
@@ -431,7 +431,7 @@ pipe_normalization <- function(nmr_dataset_rds, internal_calibrant = NULL, outpu
     nmr_dataset <- nmr_dataset_norm_ic
   }
   nmr_dataset <- nmr_normalize(nmr_dataset, method = "pqn")
-  diag <- nmr_diagnose(nmr_dataset)
+  diag <- nmr_normalize_extra_info(nmr_dataset)
   ggplot2::ggsave(filename = plot_norm_factor_pqn, plot = diag$plot, width = 14, height = 8, unit = "cm", dpi = 300)
   
   

@@ -335,12 +335,15 @@ dataset_norm <- nmr_normalize(dataset_align, method = "pqn")
 ```
 
 The `AlpsNMR` package offers the possibility to extract additional 
-diagnostic information with `nmr_diagnose(dataset)`. For now, this 
-feature is only used on the normalization to explore the normalization 
-factors applied to each sample:
+normalization information with `nmr_normalize_extra_info(dataset)`, to explore
+the normalization factors applied to each sample:
+
+The plot shows the dispersion with respect to the median of the normalization
+factors, and can highlight samples with abnormaly large or small normalization
+factors.
 
 ```{r}
-diagnostic <- nmr_diagnose(dataset_norm)
+diagnostic <- nmr_normalize_extra_info(dataset_norm)
 print(diagnostic$norm_factor)
 print(diagnostic$plot)
 ```

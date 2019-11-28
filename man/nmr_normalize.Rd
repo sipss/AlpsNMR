@@ -2,15 +2,26 @@
 % Please edit documentation in R/nmr_normalize.R
 \name{nmr_normalize}
 \alias{nmr_normalize}
+\alias{nmr_normalize_extra_info}
 \title{Normalize nmr_dataset_1D samples}
 \usage{
 nmr_normalize(samples, method = c("area", "max", "value", "region",
   "pqn", "none"), ...)
+
+nmr_normalize_extra_info(samples)
 }
 \arguments{
 \item{samples}{A \link{nmr_dataset_1D} object}
 
-\item{method}{The criteria to be used for normalization}
+\item{method}{The criteria to be used for normalization
+\itemize{
+\item area: Normalize to the total area
+\item max: Normalize to the maximum intensity
+\item value: Normalize each sample to a user defined value
+\item region: Integrate a region and normalize each sample to that region
+\item pqn: Use Probabalistic Quotient Normalization for normalization
+\item none: Do not normalize at all
+}}
 
 \item{...}{Method dependent arguments:
 \itemize{
@@ -26,15 +37,25 @@ nmr_normalize(samples, method = c("area", "max", "value", "region",
 }}
 }
 \value{
-The \link{nmr_dataset_1D} object, with the samples normalized
+The \link{nmr_dataset_1D} object, with the samples normalized.
+Further information for diagnostic of the normalization process is also saved
+and can be extracted by calling \code{nmr_normalize_extra_info()} afterwards.
 }
 \description{
-Normalize nmr_dataset_1D samples
+The \code{nmr_normalize} function is used to normalize all the samples according
+to a given criteria.
+}
+\details{
+The \code{nmr_normalize_extra_info} function is used to extract additional information
+after the normalization. Typically, we want to know what was the actual normalization
+factor applied to each sample. The extra information includes a plot, representing
+the dispersion of the normalization factor for each sample.
 }
 \examples{
 nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 nmr_dataset <- nmr_normalize(nmr_dataset, method = "area")
-nmr_diagnose(nmr_dataset)
+norm_extra_info <- nmr_normalize_extra_info(nmr_dataset)
+print(norm_extra_info$plot)
 }
 \seealso{
 Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
