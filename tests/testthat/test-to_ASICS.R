@@ -7,10 +7,3 @@ dataset <- new_nmr_dataset_1D(ppm_axis = c(0:10),
 asics = to_ASICS(dataset)
 expect_true(is.integer((asics@spectra@Dim)))
 })
-
-test_that("startsWith",{
-startsWith <- function(x, prefix) {
-  return(substring(x, 1, nchar(prefix)) == prefix)
-}
-expect_true(startsWith(22,22))
-})

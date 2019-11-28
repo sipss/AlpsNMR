@@ -4,13 +4,6 @@
 # Author: Sergio Oller
 
 
-# If this package depends on R>=3.3.0 then this function is already
-# in base R and can be removed
-startsWith <- function(x, prefix) {
-  return(substring(x, 1, nchar(prefix)) == prefix)
-}
-
-
 #' Remove comments from JDX files
 #'
 #' JDX comments start with \code{$$}.
