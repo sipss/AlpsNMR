@@ -4,12 +4,15 @@
 \alias{nmr_identify_regions_blood}
 \title{NMR peak identification (plasma/serum samples)}
 \usage{
-nmr_identify_regions_blood(ppm_to_assign, num_proposed_compounds = 3)
+nmr_identify_regions_blood(ppm_to_assign, num_proposed_compounds = 3,
+  verbose = FALSE)
 }
 \arguments{
 \item{ppm_to_assign}{A vector with the ppm regions to assign}
 
 \item{num_proposed_compounds}{set the number of proposed metabolites sorted by the number times reported in the HMDB: \code{HMDB_blood}.}
+
+\item{verbose}{Logical value. Set it to TRUE to print additional information}
 }
 \value{
 a data frame with plausible assignations.

@@ -4,12 +4,15 @@
 \alias{nmr_identify_regions_cell}
 \title{NMR peak identification (cell samples)}
 \usage{
-nmr_identify_regions_cell(ppm_to_assign, num_proposed_compounds = 3)
+nmr_identify_regions_cell(ppm_to_assign, num_proposed_compounds = 3,
+  verbose = FALSE)
 }
 \arguments{
 \item{ppm_to_assign}{A vector with the ppm regions to assign}
 
 \item{num_proposed_compounds}{set the number of proposed metabolites in \code{HMDB_cell}.}
+
+\item{verbose}{Logical value. Set it to TRUE to print additional information}
 }
 \value{
 a data frame with plausible assignations.
