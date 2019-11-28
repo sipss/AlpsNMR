@@ -18,10 +18,6 @@
 #' @family peak integration functions
 #' @param ppm_to_assign A vector with the ppm regions to assign
 #' @param num_proposed_compounds set the number of proposed metabolites sorted by the number times reported in the HMDB: `HMDB_blood`.
-nmr_identify_regions_blood <- function(vector, ...) {
-  UseMethod("nmr_identify_regions_blood")
-}
-
 nmr_identify_regions_blood <- function(ppm_to_assign, num_proposed_compounds = 3){
   HMDB_blood <- NULL
   utils::data("HMDB_blood", package = "AlpsNMR", envir = environment())
@@ -75,9 +71,6 @@ NULL
 #' @family peak integration functions
 #' @param ppm_to_assign A vector with the ppm regions to assign
 #' @param num_proposed_compounds set the number of proposed metabolites sorted by the number times reported in the HMDB: `HMDB_urine`.
-nmr_identify_regions_urine <- function(vector, ...) {
-  UseMethod("nmr_identify_regions_urine")
-}
 nmr_identify_regions_urine <- function(ppm_to_assign, num_proposed_compounds = 5){
   HMDB_urine <- NULL
   utils::data("HMDB_urine", package = "AlpsNMR", envir = environment())
