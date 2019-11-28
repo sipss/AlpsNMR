@@ -18,20 +18,22 @@
 #' @family peak integration functions
 #' @param ppm_to_assign A vector with the ppm regions to assign
 #' @param num_proposed_compounds set the number of proposed metabolites sorted by the number times reported in the HMDB: `HMDB_blood`.
-nmr_identify_regions_blood <- function(ppm_to_assign, num_proposed_compounds = 3){
+#' @param verbose Logical value. Set it to TRUE to print additional information
+nmr_identify_regions_blood <- function(ppm_to_assign, num_proposed_compounds = 3, verbose = FALSE){
   HMDB_blood <- NULL
   utils::data("HMDB_blood", package = "AlpsNMR", envir = environment())
   output_assignation_list=HMDB_blood[NULL,]
   
   for(ppm in ppm_to_assign){
-    print(ppm)
     lower_ppm_right_edge <- ppm - 0.015
     higher_ppm_left_edge <- ppm + 0.015
     
     ind= intersect(which(HMDB_blood$Shift_ppm<higher_ppm_left_edge),which(HMDB_blood$Shift_ppm>lower_ppm_right_edge))
     assignation_list <- as.data.frame(HMDB_blood[ind,])
-    message("your peak at ",ppm, " probably corresponds to ",assignation_list[1,1], ", ",assignation_list[2,1], " or ", assignation_list[3,1])
-    message("")
+    if (isTRUE(verbose)) {
+      message("your peak at ",ppm, " probably corresponds to ",assignation_list[1,1], ", ",assignation_list[2,1], " or ", assignation_list[3,1])
+      message("")
+    }
     output_assignation_list <-rbind(output_assignation_list,assignation_list[1:num_proposed_compounds,])
   }
   output_assignation_list$ppm_to_assign <- rep(ppm_to_assign,each=num_proposed_compounds)
@@ -71,20 +73,22 @@ NULL
 #' @family peak integration functions
 #' @param ppm_to_assign A vector with the ppm regions to assign
 #' @param num_proposed_compounds set the number of proposed metabolites sorted by the number times reported in the HMDB: `HMDB_urine`.
-nmr_identify_regions_urine <- function(ppm_to_assign, num_proposed_compounds = 5){
+#' @param verbose Logical value. Set it to TRUE to print additional information
+nmr_identify_regions_urine <- function(ppm_to_assign, num_proposed_compounds = 5, verbose = FALSE){
   HMDB_urine <- NULL
   utils::data("HMDB_urine", package = "AlpsNMR", envir = environment())
   output_assignation_list=HMDB_urine[NULL,]
   
   for(ppm in ppm_to_assign){
-    print(ppm)
     lower_ppm_right_edge <- ppm - 0.015
     higher_ppm_left_edge <- ppm + 0.015
     
     ind= intersect(which(HMDB_urine$Shift_ppm<higher_ppm_left_edge),which(HMDB_urine$Shift_ppm>lower_ppm_right_edge))
     assignation_list <- as.data.frame(HMDB_urine[ind,])
-    message("your peak at ",ppm, " probably corresponds to ",assignation_list[1,1], ", ",assignation_list[2,1],", ", assignation_list[3,1],", ", assignation_list[4,1]," or ", assignation_list[5,1])
-    message("")
+    if (isTRUE(verbose)) {
+      message("your peak at ",ppm, " probably corresponds to ",assignation_list[1,1], ", ",assignation_list[2,1],", ", assignation_list[3,1],", ", assignation_list[4,1]," or ", assignation_list[5,1])
+      message("")
+    }
     output_assignation_list <-rbind(output_assignation_list,assignation_list[1:num_proposed_compounds,])
   }
   output_assignation_list$ppm_to_assign <- rep(ppm_to_assign,each=num_proposed_compounds)
