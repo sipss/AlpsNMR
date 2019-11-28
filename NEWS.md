@@ -5,6 +5,9 @@
 - Update of `save_profiling_plots`
 - Add tutorial
 - Remotes installation
+- nmr_diagnose is deprecated. Since nmr_diagnose was only used for getting extra
+  normalization information, it was been replaced with `nmr_normalize_extra_info`
+  that offers a less confusing name.
 
 
 # AlpsNMR 2.3.3.9001
