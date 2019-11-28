@@ -344,7 +344,7 @@ model_VIP = function(MVObj, model = "mid"){
 #' }
 #' 
 ppm_VIP_vector <- function(VIPs){
-  ppm_to_assign = tidyr::separate(VIPs, col = name,
+  ppm_to_assign = tidyr::separate(VIPs, col = rlang::sym("name"),
                                   into = c("x1", "ppms"),
                                   sep = "_")
   ppm_to_assign = as.numeric(ppm_to_assign$ppms)

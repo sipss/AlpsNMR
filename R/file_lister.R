@@ -1,7 +1,7 @@
 #' NMR file lister
 #'
 #' The function lists samples from the chosen folder required to import and
-#' create a [nmr_dataset_1D] object. The function is based on the `fs::dir_ls`
+#' create a [nmr_dataset_1D] object. The function is based on the [fs::dir_ls()]
 #' function.
 #' 
 #' @param dataset_path_nmr A character vector of the path where samples are.
@@ -12,10 +12,6 @@
 #'
 #'
 #' @family nmr_dataset_1D functions
-#' @examples 
-#' \dontrun{
-#' 
-#' }
 #' @export
 #'
 file_lister <- function(dataset_path_nmr, glob) {
