@@ -6,6 +6,9 @@
 \usage{
 nmr_diagnose(samples)
 }
+\arguments{
+\item{samples}{An nmr_dataset}
+}
 \description{
 Deprecated function
 }

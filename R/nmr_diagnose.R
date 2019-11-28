@@ -1,4 +1,5 @@
 #' Deprecated function
+#' @param samples An nmr_dataset
 #' @seealso nmr_normalize
 #' @export
 nmr_diagnose <- function(samples) {
