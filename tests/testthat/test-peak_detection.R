@@ -5,9 +5,7 @@ test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_pea
   dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
   data2 <- dataset[1:3]
   dataset <- nmr_interpolate_1D(dataset, axis = c(min = 1, max = 2, by = 0.002))
-  Ch = to_ChemoSpec(dataset)
-  
-  
+
   peak_table <- nmr_detect_peaks(dataset,
                                  nDivRange_ppm = 0.1,
                                  scales = seq(1, 16, 2),
@@ -19,9 +17,8 @@ test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_pea
                        maxShift_ppm = 0.0015, 
                        acceptLostPeak = FALSE)
 
-  plot = nmr_detect_peaks_plot (dataset,peak_table,NMRExp_ref)
+  plot <- nmr_detect_peaks_plot(dataset,peak_table,NMRExp_ref)
   
-  expect_true(is.list(Ch))
   
   peak_table_integration = nmr_integrate_peak_positions(
   samples = dataset,

@@ -4,12 +4,15 @@
 \alias{nmr_identify_regions_urine}
 \title{NMR peak identification (urine samples)}
 \usage{
-nmr_identify_regions_urine(ppm_to_assign, num_proposed_compounds = 5)
+nmr_identify_regions_urine(ppm_to_assign, num_proposed_compounds = 5,
+  verbose = FALSE)
 }
 \arguments{
 \item{ppm_to_assign}{A vector with the ppm regions to assign}
 
 \item{num_proposed_compounds}{set the number of proposed metabolites sorted by the number times reported in the HMDB: \code{HMDB_urine}.}
+
+\item{verbose}{Logical value. Set it to TRUE to print additional information}
 }
 \value{
 a data frame with plausible assignations.
