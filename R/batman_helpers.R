@@ -11,7 +11,6 @@
 #' 
 #' @family batman functions
 #' @name nmr_batman
-#' @noRd
 #' 
 NULL
 
@@ -56,7 +55,7 @@ NULL
 #'
 #' @return A batman_options object with the Batman Options
 #' @family batman functions
-#' @noRd
+#' @export
 nmr_batman_options <- function(ppmRange = matrix(c(3.0, 3.1,
                                                    3.6, 3.7,
                                                    3.9, 4.0,
@@ -113,7 +112,7 @@ nmr_batman_options <- function(ppmRange = matrix(c(3.0, 3.1,
 }
 
 #' @rdname nmr_batman
-#' @noRd
+#' @export
 nmr_batman_write_options <- function(bopts, batman_dir = "BatmanInput", filename = "batmanOptions.txt") {
   # ppmRange:
   full_filename <- batman_get_full_filename(batman_dir, filename)
@@ -204,7 +203,7 @@ batman_get_full_filename <- function(batman_dir, filename) {
 }
 
 #' @rdname nmr_batman
-#' @noRd
+#' @export
 nmr_batman_export_dataset <- function(nmr_dataset, batman_dir = "BatmanInput", filename = "NMRdata.txt") {
   full_filename <- batman_get_full_filename(batman_dir, filename)
   nmrdata <- t(nmr_data(nmr_dataset))
@@ -214,7 +213,7 @@ nmr_batman_export_dataset <- function(nmr_dataset, batman_dir = "BatmanInput", f
 }
 
 #' @rdname nmr_batman
-#' @noRd
+#' @export
 nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput", filename = "multi_data_user.csv") {
   hmdb <- NULL
   utils::data("hmdb", package = "AlpsNMR", envir = environment())
@@ -223,7 +222,7 @@ nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput", filename
 }
 
 #' @rdname nmr_batman
-#' @noRd
+#' @export
 nmr_batman_multi_data_user <- function(multiplet_table, batman_dir = "BatmanInput", filename = "multi_data_user.csv") {
   full_filename <- batman_get_full_filename(batman_dir, filename)
   
@@ -252,7 +251,7 @@ nmr_batman_multi_data_user <- function(multiplet_table, batman_dir = "BatmanInpu
 }
 
 #' @rdname nmr_batman
-#' @noRd
+#' @export
 nmr_batman_metabolites_list <- function(metabolite_names,
                                         batman_dir = "BatmanInput",
                                         filename = "metabolitesList.csv") {
