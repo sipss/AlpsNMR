@@ -244,12 +244,12 @@ MUVR_model_plot = function (MVObj, model = "mid", factCols, sampLabels, ylim = N
 #' }
 #' 
 permutation_test_plot = function (MVObj, permMatrix, model = "mid", type = type,
-                                 pos, xlab = NULL, xlim,
-                                  ylim = NULL, breaks = "Sturges", main = NULL)
+                                 pos, xlab = "Number of misclassifications", xlim,
+                                  ylim = NULL, breaks = "Sturges", main = "Permutation test")
 {
 MUVR::permutationPlot(MVObj, permMatrix, model, type = type,
                       pos = pos, xlab = xlab, xlim = xlim,
-                      ylim = NULL, breaks = breaks, main = NULL)
+                      ylim = ylim, breaks = breaks, main = main)
 }
 
 
@@ -344,7 +344,7 @@ model_VIP = function(MVObj, model = "mid"){
 #' }
 #' 
 ppm_VIP_vector <- function(VIPs){
-  ppm_to_assign = tidyr::separate(VIPs, col = rlang::sym("name"),
+  ppm_to_assign = tidyr::separate(VIPs, col = "name",
                                   into = c("x1", "ppms"),
                                   sep = "_")
   ppm_to_assign = as.numeric(ppm_to_assign$ppms)
