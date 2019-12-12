@@ -76,6 +76,7 @@ Imports:
  MUVR (>= 0.0.972),
  doParallel (>= 1.0.14),
  data.table (>= 1.11.8),
+ zip (>= 2.0.4),
  tidyselect (>= 0.2.5)
 Suggests:
     testthat (>= 2.0.0),
