@@ -4,7 +4,10 @@
 #'
 #' @return A folder with demo samples
 #' @export
-#'
+#' @example 
+#' \dontrun{
+#' download_demo(to = "C:/Users/")
+#'}
 download_demo <- function(to = ".") {
   if (!dir.exists(to)) {
     dir.create(to, recursive = TRUE)
