@@ -4,7 +4,7 @@
 #'
 #' @return A folder with demo samples
 #' @export
-#' @example 
+#' @examples 
 #' \dontrun{
 #' download_demo(to = "C:/Users/")
 #'}

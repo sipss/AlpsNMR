@@ -5,8 +5,8 @@
 \title{Permutation test plot}
 \usage{
 permutation_test_plot(MVObj, permMatrix, model = "mid", type = type,
-  pos, xlab = NULL, xlim, ylim = NULL, breaks = "Sturges",
-  main = NULL)
+  pos, xlab = "Number of misclassifications", xlim, ylim = NULL,
+  breaks = "Sturges", main = "Permutation test")
 }
 \arguments{
 \item{MVObj}{A MUVR object}
