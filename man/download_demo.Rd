@@ -2,7 +2,7 @@
 % Please edit documentation in R/download_MTBLS242_demo.R
 \name{download_demo}
 \alias{download_demo}
-\title{Downloadind the MTBLS242 dataset}
+\title{Download the MTBLS242 dataset}
 \usage{
 download_demo(to = ".")
 }
@@ -13,5 +13,15 @@ download_demo(to = ".")
 A folder with demo samples
 }
 \description{
-Downloadind the MTBLS242 dataset
+The function downloads the NMR dataset from Gralka et al., 2015. DOI: 10.3945/ajcn.115.110536.
+}
+\examples{
+\dontrun{
+library(AlpsNMR)
+download_demo(to = "C:/Users/")
+}
+
+}
+\references{
+\url{https://doi.org/10.3945/ajcn.115.110536}
 }

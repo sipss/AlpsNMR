@@ -1,9 +1,19 @@
-#' Downloadind the MTBLS242 dataset
+#' Download the MTBLS242 dataset
+#' 
+#' The function downloads the NMR dataset from Gralka et al., 2015. DOI: 10.3945/ajcn.115.110536.
 #'
 #' @param to A directory
-#'
+#' 
 #' @return A folder with demo samples
 #' @export
+#' @references \url{https://doi.org/10.3945/ajcn.115.110536}
+#' 
+#' @examples 
+#' \dontrun{
+#' library(AlpsNMR)
+#' download_demo(to = "C:/Users/")
+#' }
+#' 
 download_demo <- function(to = ".") {
   if (!dir.exists(to)) {
     dir.create(to, recursive = TRUE)
