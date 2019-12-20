@@ -15,9 +15,3 @@ A folder with demo samples
 \description{
 Downloadind the MTBLS242 dataset
 }
-\examples{
-\dontrun{
-download_demo(to = "C:/Users/")
-}
-
-}
