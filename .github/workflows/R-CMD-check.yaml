@@ -11,9 +11,16 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@master
       - name: Install dependencies
         run: |
-          Rscript -e "install.packages(c('remotes', 'rcmdcheck', 'BiocManager', 'covr'))" -e "BiocManager::install(c('MassSpecWavelet', 'impute'))" -e "remotes::install_deps(dependencies = TRUE)"
+          Rscript -e 'install.packages(c("remotes", "rcmdcheck", "BiocManager", "covr"))' \
+                  -e "BiocManager::install(c('MassSpecWavelet', 'impute'))" \
+                  -e 'remotes::install_deps(dependencies = TRUE)' \
+                  -e 'remotes::install_github("jimhester/pkgdown@github-actions-deploy")'
       - name: Check
         run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'error')"
       - name: Code coverage report
         run: |
           Rscript -e 'covr::codecov(token = "${{secrets.CODECOV_TOKEN}}")'
+      - name: Pkgdown upload
+        if: success() && github.ref == "master"
+        run: |
+          Rscript -e "pkgdown:::deploy_local(new_process = FALSE, remote_url = 'https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git')"
