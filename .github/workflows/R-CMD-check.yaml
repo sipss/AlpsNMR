@@ -8,9 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/setup-r@master
+      - uses: r-lib/actions/setup-pandoc@master
       - name: Install dependencies
         run: |
-          brew install pandoc
           Rscript -e "install.packages(c('remotes', 'rcmdcheck', 'BiocManager', 'covr'))" -e "BiocManager::install(c('MassSpecWavelet', 'impute'))" -e "remotes::install_deps(dependencies = TRUE)"
       - name: Check
         run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'error')"
