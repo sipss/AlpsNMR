@@ -15,12 +15,12 @@ jobs:
                   -e "BiocManager::install(c('MassSpecWavelet', 'impute'))" \
                   -e 'remotes::install_deps(dependencies = TRUE)' \
                   -e 'remotes::install_github("jimhester/pkgdown@github-actions-deploy")'
-      - name: Check
+      - name: Check pkg
         run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'error')"
       - name: Code coverage report
         run: |
           Rscript -e 'covr::codecov(token = "${{secrets.CODECOV_TOKEN}}")'
-      - name: Pkgdown upload
-        if: success() && github.ref == 'master'
+      - name: Pkgdown website
+        if: success () && github.ref == 'refs/heads/master'
         run: |
           Rscript -e "pkgdown:::deploy_local(new_process = FALSE, remote_url = 'https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git')"
