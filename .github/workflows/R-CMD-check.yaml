@@ -23,4 +23,5 @@ jobs:
       - name: Pkgdown website
         if: success () && github.ref == 'refs/heads/master'
         run: |
+          Rscript -e "remotes::install_local('.')"
           Rscript -e "pkgdown:::deploy_local(new_process = FALSE, remote_url = 'https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git')"
