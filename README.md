@@ -11,13 +11,12 @@ outlier detection among others. See the package vignette for details.
 
 ## Installation
 
-AlpsNMR can be installed with the `remotes` package. Note that it uses packages from
+AlpsNMR can be installed with the `BiocManager` and `remotes` packages. Note that it uses packages from
 CRAN, from BioConductor and from git repositories:
 
 ```r
 install.packages(c("BiocManager", "remotes"))
-BiocManager::install(c("MassSpecWavelet", "impute"), update = FALSE)
-remotes::install_github("sipss/AlpsNMR")
+BiocManager::install("sipss/AlpsNMR", update = FALSE)
 ```
 
 Quick start
