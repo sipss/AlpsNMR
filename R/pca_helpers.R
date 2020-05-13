@@ -269,7 +269,7 @@ nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
   
   pca_outliers_with_meta_only_out <- dplyr::filter(
     pca_outliers_with_meta, 
-    .data$Tscores > tscore_crit & .data$QResiduals > qres_crit)
+    .data$Tscores > tscore_crit | .data$QResiduals > qres_crit)
   
   ggplot2::ggplot(pca_outliers_with_meta,
                   ggplot2::aes_string(x = "Tscores", y = "QResiduals", label = "NMRExperiment")) +
@@ -299,7 +299,7 @@ nmr_pca_outliers_filter <- function(nmr_dataset, pca_outliers) {
   qres_crit <- pca_outliers[["QResidual_critical"]]
   
   nmrexp_to_keep <- outlier_info %>%
-    dplyr::filter(.data$Tscores < tscore_crit & .data$QResiduals < qres_crit) %>%
+    dplyr::filter(.data$Tscores < tscore_crit | .data$QResiduals < qres_crit) %>%
     dplyr::pull("NMRExperiment")
   
   dplyr::filter(nmr_dataset, .data$NMRExperiment %in% nmrexp_to_keep)
