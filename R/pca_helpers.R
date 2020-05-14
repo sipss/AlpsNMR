@@ -103,7 +103,7 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
 #'
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #' @param pca_model A pca model returned by [nmr_pca_build_model]
-#' @param ncomp Number of components to use. Use `NULL` for 90\% of the variance
+#' @param ncomp Number of components to use. Use `NULL` for 90% of the variance
 #' @param quantile_critical critical quantile
 #'
 #' @family PCA related functions
