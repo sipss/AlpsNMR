@@ -2,7 +2,10 @@ Meta
 doc
 inst/doc
 .Rproj.user
+.Rproj.user/*
 .Rhistory
+.Renviron
+.Rprofile
 .RData
 .Ruserdata
 docs/
