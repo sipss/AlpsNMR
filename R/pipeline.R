@@ -10,9 +10,11 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' pipe_load_samples("/dir/with/nmr/samples/",
-#'                                     glob = "*0",
-#'                                     output_dir = "/dir/to/save/output")
+#'                   glob = "*0",
+#'                   output_dir = "/dir/to/save/output")
+#'}
 pipe_load_samples <-
     function(samples_dir,
              glob = "*0",

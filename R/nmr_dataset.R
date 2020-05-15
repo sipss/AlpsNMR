@@ -388,8 +388,10 @@ is.nmr_dataset <- function(x)
 #' @param i indices of the samples to keep
 #' @return an nmr_dataset with the extracted samples
 #' @examples
+#' \dontrun{
 #' data <- nm_read_samples_dir("your_dir")
 #' data2 <- data[1:3] # get the first 3 samples
+#' }
 #' @family subsetting functions
 #' @family nmr_dataset functions
 #' @export
