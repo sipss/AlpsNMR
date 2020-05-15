@@ -10,7 +10,12 @@
 #' @return The same [nmr_dataset_1D] object after baseline removal.
 #' @export
 #'
-#'
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' dataset_no_base_line <- nmr_baseline_removal(dataset_1D, lambda = 6, p = 0.01)
+#' 
 nmr_baseline_removal <- function(nmr_dataset,
                                  lambda = 6,
                                  p = 0.05,

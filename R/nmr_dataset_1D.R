@@ -28,6 +28,12 @@ NULL
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
 #' @export
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' dataset_1D_validated <- validate_nmr_dataset_1D(dataset_1D)
+#' 
 validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
     validate_nmr_dataset_family(nmr_dataset_1D)
     assert_that(inherits(nmr_dataset_1D, "nmr_dataset_1D"),
@@ -67,6 +73,21 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
 #' @family nmr_dataset_1D functions
 #' @export
 #' @return Creates a new 1D nmr_dataset object from scratch
+#' 
+#' @examples
+#' # Create a random spectra matrix
+#' nsamp <- 12
+#' npoints <- 20
+#' dummy_ppm_axis <- seq(from = 0.2, to = 10, length.out = npoints)
+#' dummy_spectra_matrix <- matrix(runif(nsamp*npoints), nrow = nsamp, ncol = npoints)
+#' metadata <- list(external = data.frame(NMRExperiment = paste0("Sample", 1:12),
+#'                                        DummyClass = c("a", "b"),
+#'                                        stringsAsFactors = FALSE))
+#' dummy_nmr_dataset_1D <- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
+#'                                            data_1r = dummy_spectra_matrix,
+#'                                            metadata = metadata)
+#'                                                  
+
 new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
     samples <- list()
     samples[["metadata"]] <- metadata

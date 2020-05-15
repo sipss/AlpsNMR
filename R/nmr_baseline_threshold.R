@@ -10,7 +10,12 @@
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @return Numerical. A threshold value in intensity below that no peak is detected.
 #' @export
-#'
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' bl_threshold <- nmr_baseline_threshold(dataset_1D)
+#' 
 
 nmr_baseline_threshold <- function(nmr_dataset) {
     range_noise_ppm = c(9.5, 10)
