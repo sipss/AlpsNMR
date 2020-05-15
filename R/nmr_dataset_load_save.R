@@ -1,5 +1,5 @@
 #' Functions to load and save nmr_dataset objects
-#' 
+#'
 #' @name load_and_save_functions
 #' @param file_name The file name to load or save to
 #' @param nmr_dataset An object from the [nmr_dataset_family]
@@ -13,13 +13,13 @@ NULL
 #' @rdname load_and_save_functions
 #' @export
 nmr_dataset_load <- function(file_name) {
-  return(readRDS(file_name))
+    return(readRDS(file_name))
 }
 
 #' @rdname load_and_save_functions
 #' @export
 nmr_dataset_save <- function(nmr_dataset, file_name, ...) {
-  attr(nmr_dataset, "normalize_extra_info") <- NULL
-  saveRDS(nmr_dataset, file_name)
-  return(nmr_dataset)
+    attr(nmr_dataset, "normalize_extra_info") <- NULL
+    saveRDS(nmr_dataset, file_name)
+    return(nmr_dataset)
 }
