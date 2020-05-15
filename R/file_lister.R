@@ -3,7 +3,7 @@
 #' The function lists samples from the chosen folder required to import and
 #' create a [nmr_dataset_1D] object. The function is based on the [fs::dir_ls()]
 #' function.
-#' 
+#'
 #' @param dataset_path_nmr A character vector of the path where samples are.
 #' @param glob A wildcard or globbing pattern common for the samples to be read,
 #'   for example ending with *0 (spectra acquired by a NOESY sequence often end
@@ -15,8 +15,5 @@
 #' @export
 #'
 file_lister <- function(dataset_path_nmr, glob) {
-  as.character(fs::dir_ls(dataset_path_nmr, glob = glob))
+    as.character(fs::dir_ls(dataset_path_nmr, glob = glob))
 }
-  
-
-
