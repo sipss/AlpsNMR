@@ -5,28 +5,43 @@
 \alias{nmr_pca_build_model.nmr_dataset_1D}
 \title{Build a PCA on for an nmr_dataset}
 \usage{
-nmr_pca_build_model(nmr_dataset, ncomp = NULL, center = TRUE,
-  scale = FALSE, ...)
+nmr_pca_build_model(
+  nmr_dataset,
+  ncomp = NULL,
+  center = TRUE,
+  scale = FALSE,
+  ...
+)
 
-\method{nmr_pca_build_model}{nmr_dataset_1D}(nmr_dataset, ncomp = NULL,
-  center = TRUE, scale = FALSE, ...)
+\method{nmr_pca_build_model}{nmr_dataset_1D}(
+  nmr_dataset,
+  ncomp = NULL,
+  center = TRUE,
+  scale = FALSE,
+  ...
+)
 }
 \arguments{
 \item{nmr_dataset}{a \link{nmr_dataset_1D} object}
 
-\item{ncomp}{integer, if data is complete \code{ncomp} decides the number of components and associated
-eigenvalues to display from the \code{pcasvd} algorithm and if the data has missing values,
-\code{ncomp} gives the number of components to keep to perform the reconstitution of the data using
-the NIPALS algorithm. If \code{NULL}, function sets \code{ncomp = min(nrow(X), ncol(X))}}
+\item{ncomp}{integer, if data is complete \code{ncomp} decides the number of
+components and associated eigenvalues to display from the \code{pcasvd}
+algorithm and if the data has missing values, \code{ncomp} gives the number
+of components to keep to perform the reconstitution of the data using the
+NIPALS algorithm. If \code{NULL}, function sets \code{ncomp = min(nrow(X),
+ncol(X))}}
 
-\item{center}{a logical value indicating whether the variables should be shifted to be zero centered.
-Alternately, a vector of length equal the number of columns of \code{X} can be supplied.
-The value is passed to \code{\link{scale}}.}
+\item{center}{a logical value indicating whether the variables should be
+shifted to be zero centered. Alternately, a vector of length equal the
+number of columns of \code{X} can be supplied. The value is passed to
+\code{\link{scale}}.}
 
-\item{scale}{a logical value indicating whether the variables should be scaled to have
-unit variance before the analysis takes place. The default is \code{FALSE} for consistency with \code{prcomp}
-function, but in general scaling is advisable. Alternatively, a vector of length equal the number of
-columns of \code{X} can be supplied. The value is passed to \code{\link{scale}}.}
+\item{scale}{a logical value indicating whether the variables should be
+scaled to have unit variance before the analysis takes place. The default is
+\code{FALSE} for consistency with \code{prcomp} function, but in general
+scaling is advisable. Alternatively, a vector of length equal the number of
+columns of \code{X} can be supplied. The value is passed to
+\code{\link{scale}}.}
 
 \item{...}{Additional arguments passed on to \link[mixOmics:pca]{mixOmics::pca}}
 }
@@ -44,50 +59,55 @@ zero values (excluded regions) or near-zero variance regions are automatically
 excluded from the analysis.
 }
 \seealso{
-Other PCA related functions: \code{\link{nmr_pca_outliers_filter}},
-  \code{\link{nmr_pca_outliers_plot}},
-  \code{\link{nmr_pca_outliers_robust}},
-  \code{\link{nmr_pca_outliers}},
-  \code{\link{nmr_pca_plots}}
+Other PCA related functions: 
+\code{\link{nmr_pca_outliers_filter}()},
+\code{\link{nmr_pca_outliers_plot}()},
+\code{\link{nmr_pca_outliers_robust}()},
+\code{\link{nmr_pca_outliers}()},
+\code{\link{nmr_pca_plots}}
 
-Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
-  \code{\link{[.nmr_dataset_1D}},
-  \code{\link{computes_peak_width_ppm}},
-  \code{\link{file_lister}},
-  \code{\link{files_to_rDolphin_blood}},
-  \code{\link{files_to_rDolphin_cell}},
-  \code{\link{files_to_rDolphin_urine}},
-  \code{\link{get_integration_with_metadata}},
-  \code{\link{is.nmr_dataset_1D}},
-  \code{\link{load_and_save_functions}},
-  \code{\link{new_nmr_dataset_1D}},
-  \code{\link{nmr_align_find_ref}},
-  \code{\link{nmr_align}},
-  \code{\link{nmr_baseline_removal}},
-  \code{\link{nmr_baseline_threshold}},
-  \code{\link{nmr_detect_peaks_plot}},
-  \code{\link{nmr_detect_peaks_tune_snr}},
-  \code{\link{nmr_detect_peaks}},
-  \code{\link{nmr_exclude_region}},
-  \code{\link{nmr_integrate_peak_positions}},
-  \code{\link{nmr_integrate_regions}},
-  \code{\link{nmr_interpolate_1D}},
-  \code{\link{nmr_meta_add}},
-  \code{\link{nmr_meta_export}},
-  \code{\link{nmr_meta_get_column}},
-  \code{\link{nmr_meta_get}}, \code{\link{nmr_normalize}},
-  \code{\link{nmr_pca_outliers_filter}},
-  \code{\link{nmr_pca_outliers_plot}},
-  \code{\link{nmr_pca_outliers_robust}},
-  \code{\link{nmr_pca_outliers}},
-  \code{\link{nmr_ppm_resolution}},
-  \code{\link{plot.nmr_dataset_1D}},
-  \code{\link{plot_webgl}}, \code{\link{rdCV_PLS_RF_ML}},
-  \code{\link{rdCV_PLS_RF}},
-  \code{\link{save_files_to_rDolphin}},
-  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}},
-  \code{\link{to_rDolphin}},
-  \code{\link{validate_nmr_dataset_1D}}
+Other nmr_dataset_1D functions: 
+\code{\link{Automatic_targeted_profiling}()},
+\code{\link{[.nmr_dataset_1D}()},
+\code{\link{computes_peak_width_ppm}()},
+\code{\link{file_lister}()},
+\code{\link{files_to_rDolphin_blood}()},
+\code{\link{files_to_rDolphin_cell}()},
+\code{\link{files_to_rDolphin_urine}()},
+\code{\link{get_integration_with_metadata}()},
+\code{\link{is.nmr_dataset_1D}()},
+\code{\link{load_and_save_functions}},
+\code{\link{new_nmr_dataset_1D}()},
+\code{\link{nmr_align_find_ref}()},
+\code{\link{nmr_align}()},
+\code{\link{nmr_baseline_removal}()},
+\code{\link{nmr_baseline_threshold}()},
+\code{\link{nmr_detect_peaks_plot}()},
+\code{\link{nmr_detect_peaks_tune_snr}()},
+\code{\link{nmr_detect_peaks}()},
+\code{\link{nmr_exclude_region}()},
+\code{\link{nmr_integrate_peak_positions}()},
+\code{\link{nmr_integrate_regions}()},
+\code{\link{nmr_interpolate_1D}()},
+\code{\link{nmr_meta_add}()},
+\code{\link{nmr_meta_export}()},
+\code{\link{nmr_meta_get_column}()},
+\code{\link{nmr_meta_get}()},
+\code{\link{nmr_normalize}()},
+\code{\link{nmr_pca_outliers_filter}()},
+\code{\link{nmr_pca_outliers_plot}()},
+\code{\link{nmr_pca_outliers_robust}()},
+\code{\link{nmr_pca_outliers}()},
+\code{\link{nmr_ppm_resolution}()},
+\code{\link{plot.nmr_dataset_1D}()},
+\code{\link{plot_webgl}()},
+\code{\link{rdCV_PLS_RF_ML}()},
+\code{\link{rdCV_PLS_RF}()},
+\code{\link{save_files_to_rDolphin}()},
+\code{\link{to_ASICS}()},
+\code{\link{to_ChemoSpec}()},
+\code{\link{to_rDolphin}()},
+\code{\link{validate_nmr_dataset_1D}()}
 }
 \concept{PCA related functions}
 \concept{nmr_dataset_1D functions}

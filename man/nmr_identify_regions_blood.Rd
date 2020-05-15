@@ -4,8 +4,11 @@
 \alias{nmr_identify_regions_blood}
 \title{NMR peak identification (plasma/serum samples)}
 \usage{
-nmr_identify_regions_blood(ppm_to_assign, num_proposed_compounds = 3,
-  verbose = FALSE)
+nmr_identify_regions_blood(
+  ppm_to_assign,
+  num_proposed_compounds = 3,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{ppm_to_assign}{A vector with the ppm regions to assign}
@@ -31,23 +34,25 @@ identification <- nmr_identify_regions_blood (ppm_to_assign)
 }
 }
 \seealso{
-Other peak detection functions: \code{\link{nmr_baseline_threshold}},
-  \code{\link{nmr_detect_peaks_plot}},
-  \code{\link{nmr_detect_peaks_tune_snr}},
-  \code{\link{nmr_detect_peaks}},
-  \code{\link{nmr_identify_regions_cell}},
-  \code{\link{nmr_identify_regions_urine}},
-  \code{\link{nmr_integrate_regions}},
-  \code{\link{pipe_peakdet_align}},
-  \code{\link{regions_from_peak_table}}
+Other peak detection functions: 
+\code{\link{nmr_baseline_threshold}()},
+\code{\link{nmr_detect_peaks_plot}()},
+\code{\link{nmr_detect_peaks_tune_snr}()},
+\code{\link{nmr_detect_peaks}()},
+\code{\link{nmr_identify_regions_cell}()},
+\code{\link{nmr_identify_regions_urine}()},
+\code{\link{nmr_integrate_regions}()},
+\code{\link{pipe_peakdet_align}()},
+\code{\link{regions_from_peak_table}()}
 
-Other peak integration functions: \code{\link{computes_peak_width_ppm}},
-  \code{\link{get_integration_with_metadata}},
-  \code{\link{nmr_identify_regions_cell}},
-  \code{\link{nmr_identify_regions_urine}},
-  \code{\link{nmr_integrate_peak_positions}},
-  \code{\link{nmr_integrate_regions}},
-  \code{\link{pipe_peak_integration}}
+Other peak integration functions: 
+\code{\link{computes_peak_width_ppm}()},
+\code{\link{get_integration_with_metadata}()},
+\code{\link{nmr_identify_regions_cell}()},
+\code{\link{nmr_identify_regions_urine}()},
+\code{\link{nmr_integrate_peak_positions}()},
+\code{\link{nmr_integrate_regions}()},
+\code{\link{pipe_peak_integration}()}
 }
 \concept{peak detection functions}
 \concept{peak integration functions}

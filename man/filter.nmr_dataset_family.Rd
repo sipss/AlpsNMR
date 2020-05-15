@@ -27,10 +27,11 @@ test_samples <- nmr_dataset \%>\% filter(nmr_peak_table$metadata$external$Group 
 }
 }
 \seealso{
-Other subsetting functions: \code{\link{[.nmr_dataset_1D}},
-  \code{\link{[.nmr_dataset_peak_table}},
-  \code{\link{[.nmr_dataset}},
-  \code{\link{nmr_pca_outliers_filter}}
+Other subsetting functions: 
+\code{\link{[.nmr_dataset_1D}()},
+\code{\link{[.nmr_dataset_peak_table}()},
+\code{\link{[.nmr_dataset}()},
+\code{\link{nmr_pca_outliers_filter}()}
 }
 \concept{nmr_dataset_family manipulation functions}
 \concept{subsetting functions}

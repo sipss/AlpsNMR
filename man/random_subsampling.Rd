@@ -4,8 +4,13 @@
 \alias{random_subsampling}
 \title{Random subsampling}
 \usage{
-random_subsampling(sample_idx, iterations = 10L, test_size = 0.25,
-  keep_together = NULL, balance_in_train = NULL)
+random_subsampling(
+  sample_idx,
+  iterations = 10L,
+  test_size = 0.25,
+  keep_together = NULL,
+  balance_in_train = NULL
+)
 }
 \arguments{
 \item{sample_idx}{Typically a numeric vector with sample index to be separated.

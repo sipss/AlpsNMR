@@ -4,8 +4,12 @@
 \alias{pipe_peak_integration}
 \title{Pipeline: Peak integration}
 \usage{
-pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir, peak_width_ppm,
-  output_dir)
+pipe_peak_integration(
+  nmr_dataset_rds,
+  peak_det_align_dir,
+  peak_width_ppm,
+  output_dir
+)
 }
 \arguments{
 \item{nmr_dataset_rds}{The nmr_dataset.rds file name coming from previous nodes}
@@ -20,22 +24,24 @@ pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir, peak_width_ppm,
 Pipeline: Peak integration
 }
 \seealso{
-Other pipeline functions: \code{\link{pipe_add_metadata}},
-  \code{\link{pipe_exclude_regions}},
-  \code{\link{pipe_filter_samples}},
-  \code{\link{pipe_interpolate_1D}},
-  \code{\link{pipe_load_samples}},
-  \code{\link{pipe_normalization}},
-  \code{\link{pipe_outlier_detection}},
-  \code{\link{pipe_peakdet_align}}
+Other pipeline functions: 
+\code{\link{pipe_add_metadata}()},
+\code{\link{pipe_exclude_regions}()},
+\code{\link{pipe_filter_samples}()},
+\code{\link{pipe_interpolate_1D}()},
+\code{\link{pipe_load_samples}()},
+\code{\link{pipe_normalization}()},
+\code{\link{pipe_outlier_detection}()},
+\code{\link{pipe_peakdet_align}()}
 
-Other peak integration functions: \code{\link{computes_peak_width_ppm}},
-  \code{\link{get_integration_with_metadata}},
-  \code{\link{nmr_identify_regions_blood}},
-  \code{\link{nmr_identify_regions_cell}},
-  \code{\link{nmr_identify_regions_urine}},
-  \code{\link{nmr_integrate_peak_positions}},
-  \code{\link{nmr_integrate_regions}}
+Other peak integration functions: 
+\code{\link{computes_peak_width_ppm}()},
+\code{\link{get_integration_with_metadata}()},
+\code{\link{nmr_identify_regions_blood}()},
+\code{\link{nmr_identify_regions_cell}()},
+\code{\link{nmr_identify_regions_urine}()},
+\code{\link{nmr_integrate_peak_positions}()},
+\code{\link{nmr_integrate_regions}()}
 }
 \concept{peak integration functions}
 \concept{pipeline functions}

@@ -26,8 +26,8 @@ between samples in the plot and use as critical value the center of the gap.
 This approach seems to work well when there are outliers, but it fails when there
 isn't any outlier. For that case, the gap would be placed anywhere and that is
 not desirable as many samples would be incorrectly flagged. The
-second assumption that we use is that no more than 10\% of
-the samples may pass our critical value. If more than 10\% of the samples
+second assumption that we use is that no more than 10\\% of
+the samples may pass our critical value. If more than 10\\% of the samples
 pass the critical value, then we assume that our heuristics are not reasonable
 and we don't set any critical limit.}
 }
@@ -38,55 +38,61 @@ A list similar to \link{nmr_pca_outliers}
 Outlier detection through robust PCA
 }
 \seealso{
-Other PCA related functions: \code{\link{nmr_pca_build_model}},
-  \code{\link{nmr_pca_outliers_filter}},
-  \code{\link{nmr_pca_outliers_plot}},
-  \code{\link{nmr_pca_outliers}},
-  \code{\link{nmr_pca_plots}}
+Other PCA related functions: 
+\code{\link{nmr_pca_build_model}()},
+\code{\link{nmr_pca_outliers_filter}()},
+\code{\link{nmr_pca_outliers_plot}()},
+\code{\link{nmr_pca_outliers}()},
+\code{\link{nmr_pca_plots}}
 
-Other outlier detection functions: \code{\link{nmr_pca_outliers_filter}},
-  \code{\link{nmr_pca_outliers_plot}},
-  \code{\link{nmr_pca_outliers}},
-  \code{\link{pipe_outlier_detection}}
+Other outlier detection functions: 
+\code{\link{nmr_pca_outliers_filter}()},
+\code{\link{nmr_pca_outliers_plot}()},
+\code{\link{nmr_pca_outliers}()},
+\code{\link{pipe_outlier_detection}()}
 
-Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
-  \code{\link{[.nmr_dataset_1D}},
-  \code{\link{computes_peak_width_ppm}},
-  \code{\link{file_lister}},
-  \code{\link{files_to_rDolphin_blood}},
-  \code{\link{files_to_rDolphin_cell}},
-  \code{\link{files_to_rDolphin_urine}},
-  \code{\link{get_integration_with_metadata}},
-  \code{\link{is.nmr_dataset_1D}},
-  \code{\link{load_and_save_functions}},
-  \code{\link{new_nmr_dataset_1D}},
-  \code{\link{nmr_align_find_ref}},
-  \code{\link{nmr_align}},
-  \code{\link{nmr_baseline_removal}},
-  \code{\link{nmr_baseline_threshold}},
-  \code{\link{nmr_detect_peaks_plot}},
-  \code{\link{nmr_detect_peaks_tune_snr}},
-  \code{\link{nmr_detect_peaks}},
-  \code{\link{nmr_exclude_region}},
-  \code{\link{nmr_integrate_peak_positions}},
-  \code{\link{nmr_integrate_regions}},
-  \code{\link{nmr_interpolate_1D}},
-  \code{\link{nmr_meta_add}},
-  \code{\link{nmr_meta_export}},
-  \code{\link{nmr_meta_get_column}},
-  \code{\link{nmr_meta_get}}, \code{\link{nmr_normalize}},
-  \code{\link{nmr_pca_build_model}},
-  \code{\link{nmr_pca_outliers_filter}},
-  \code{\link{nmr_pca_outliers_plot}},
-  \code{\link{nmr_pca_outliers}},
-  \code{\link{nmr_ppm_resolution}},
-  \code{\link{plot.nmr_dataset_1D}},
-  \code{\link{plot_webgl}}, \code{\link{rdCV_PLS_RF_ML}},
-  \code{\link{rdCV_PLS_RF}},
-  \code{\link{save_files_to_rDolphin}},
-  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}},
-  \code{\link{to_rDolphin}},
-  \code{\link{validate_nmr_dataset_1D}}
+Other nmr_dataset_1D functions: 
+\code{\link{Automatic_targeted_profiling}()},
+\code{\link{[.nmr_dataset_1D}()},
+\code{\link{computes_peak_width_ppm}()},
+\code{\link{file_lister}()},
+\code{\link{files_to_rDolphin_blood}()},
+\code{\link{files_to_rDolphin_cell}()},
+\code{\link{files_to_rDolphin_urine}()},
+\code{\link{get_integration_with_metadata}()},
+\code{\link{is.nmr_dataset_1D}()},
+\code{\link{load_and_save_functions}},
+\code{\link{new_nmr_dataset_1D}()},
+\code{\link{nmr_align_find_ref}()},
+\code{\link{nmr_align}()},
+\code{\link{nmr_baseline_removal}()},
+\code{\link{nmr_baseline_threshold}()},
+\code{\link{nmr_detect_peaks_plot}()},
+\code{\link{nmr_detect_peaks_tune_snr}()},
+\code{\link{nmr_detect_peaks}()},
+\code{\link{nmr_exclude_region}()},
+\code{\link{nmr_integrate_peak_positions}()},
+\code{\link{nmr_integrate_regions}()},
+\code{\link{nmr_interpolate_1D}()},
+\code{\link{nmr_meta_add}()},
+\code{\link{nmr_meta_export}()},
+\code{\link{nmr_meta_get_column}()},
+\code{\link{nmr_meta_get}()},
+\code{\link{nmr_normalize}()},
+\code{\link{nmr_pca_build_model}()},
+\code{\link{nmr_pca_outliers_filter}()},
+\code{\link{nmr_pca_outliers_plot}()},
+\code{\link{nmr_pca_outliers}()},
+\code{\link{nmr_ppm_resolution}()},
+\code{\link{plot.nmr_dataset_1D}()},
+\code{\link{plot_webgl}()},
+\code{\link{rdCV_PLS_RF_ML}()},
+\code{\link{rdCV_PLS_RF}()},
+\code{\link{save_files_to_rDolphin}()},
+\code{\link{to_ASICS}()},
+\code{\link{to_ChemoSpec}()},
+\code{\link{to_rDolphin}()},
+\code{\link{validate_nmr_dataset_1D}()}
 }
 \concept{PCA related functions}
 \concept{nmr_dataset_1D functions}

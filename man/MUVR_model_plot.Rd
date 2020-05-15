@@ -4,8 +4,7 @@
 \alias{MUVR_model_plot}
 \title{Model plot}
 \usage{
-MUVR_model_plot(MVObj, model = "mid", factCols, sampLabels,
-  ylim = NULL)
+MUVR_model_plot(MVObj, model = "mid", factCols, sampLabels, ylim = NULL)
 }
 \arguments{
 \item{MVObj}{An `MVobject` obtained from the MVWrap function}

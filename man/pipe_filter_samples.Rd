@@ -16,8 +16,8 @@ Some examples:
 \itemize{
 \item conditions <- 'Gender == "Female"'
 \item conditions <- 'Cohort == "Chuv"'
-\item conditions <- 'TimePoint %in% c("T0", "T31")'
-\item conditions <- c(Cohort == "Chuv", 'TimePoint %in% c("T0", "T31")')
+\item conditions <- 'TimePoint \%in\% c("T0", "T31")'
+\item conditions <- c(Cohort == "Chuv", 'TimePoint \%in\% c("T0", "T31")')
 }
 
 Only samples fullfilling all the given conditions are kept in further analysis.}
@@ -28,13 +28,14 @@ Only samples fullfilling all the given conditions are kept in further analysis.}
 Pipeline: Filter samples according to metadata conditions
 }
 \seealso{
-Other pipeline functions: \code{\link{pipe_add_metadata}},
-  \code{\link{pipe_exclude_regions}},
-  \code{\link{pipe_interpolate_1D}},
-  \code{\link{pipe_load_samples}},
-  \code{\link{pipe_normalization}},
-  \code{\link{pipe_outlier_detection}},
-  \code{\link{pipe_peak_integration}},
-  \code{\link{pipe_peakdet_align}}
+Other pipeline functions: 
+\code{\link{pipe_add_metadata}()},
+\code{\link{pipe_exclude_regions}()},
+\code{\link{pipe_interpolate_1D}()},
+\code{\link{pipe_load_samples}()},
+\code{\link{pipe_normalization}()},
+\code{\link{pipe_outlier_detection}()},
+\code{\link{pipe_peak_integration}()},
+\code{\link{pipe_peakdet_align}()}
 }
 \concept{pipeline functions}
