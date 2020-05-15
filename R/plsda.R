@@ -213,7 +213,7 @@ callback_outer_cv_auroc_vip <- function(outer_cv_results) {
 }
 
 
-#' Method for nmr_data_analysis (PLSDA model with AUROC and VIP outputs)
+#' @return Method for nmr_data_analysis (PLSDA model with AUROC and VIP outputs)
 #' @param ncomp Max. number of latent variables to explore in the PLSDA analysis
 #' @param auc_increment_threshold Choose the number of latent variables when the
 #' AUC does not increment more than this threshold.

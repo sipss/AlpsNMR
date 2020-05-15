@@ -12,12 +12,14 @@ NULL
 
 #' @rdname load_and_save_functions
 #' @export
+#' @return load nmr dataset
 nmr_dataset_load <- function(file_name) {
     return(readRDS(file_name))
 }
 
 #' @rdname load_and_save_functions
 #' @export
+#' @return save nmr dataset
 nmr_dataset_save <- function(nmr_dataset, file_name, ...) {
     attr(nmr_dataset, "normalize_extra_info") <- NULL
     saveRDS(nmr_dataset, file_name)

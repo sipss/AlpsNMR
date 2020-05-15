@@ -256,7 +256,7 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)    {
     message("Ending pipe_outlier_detection at ", Sys.time())
 }
 
-#' Pipeline: Filter samples according to metadata conditions
+#' @return Pipeline: Filter samples according to metadata conditions
 #'
 #' @inheritParams pipe_add_metadata
 #' @param conditions A character vector with conditions to filter metadata.
@@ -308,7 +308,7 @@ pipe_filter_samples <-
         message("Ending pipe_filter_samples at ", Sys.time())
     }
 
-#' Pipeline: Peak detection and Alignment
+#' @return Pipeline: Peak detection and Alignment
 #' @inheritParams pipe_add_metadata
 #' @inheritParams nmr_detect_peaks
 #' @inheritParams nmr_align
@@ -381,7 +381,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
 }
 
 
-#' Pipeline: Peak integration
+#' @return Pipeline: Peak integration
 #'
 #' @inheritParams pipe_add_metadata
 #' @param peak_det_align_dir Output directory from [pipe_peakdet_align]
@@ -436,7 +436,7 @@ pipe_peak_integration <-
     }
 
 
-#' Pipe: Full spectra normalization
+#' @return Pipe: Full spectra normalization
 #'
 #' Normalize the full spectra to the internal calibrant region, then exclude
 #' that region and finally perform PQN normalization.

@@ -66,6 +66,7 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
 #' @export
+#' @return Creates a new 1D nmr_dataset object from scratch
 new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
     samples <- list()
     samples[["metadata"]] <- metadata

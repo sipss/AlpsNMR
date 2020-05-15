@@ -631,7 +631,7 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
     # The pulse sequence is not that obvious
     experiment_name = acqus_list$acqus$EXP
     NUCLEI <-
-        paste0("NUC", 1:8) # NUC1... NUC8 help to tell us the nuclei present
+        paste0("NUC", seq_len(8)) # NUC1... NUC8 help to tell us the nuclei present
     
     if (grepl(pattern = "NOESY",
                         x = experiment_name,

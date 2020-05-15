@@ -146,7 +146,7 @@ nmr_detect_peaks <- function(nmr_dataset,
     peakList_to_dataframe(nmr_dataset, peakList)
 }
 
-#' Plot peak detection results
+#' @return Plot peak detection results
 #'
 #' @family peak detection functions
 #' @inheritParams nmr_detect_peaks
