@@ -28,8 +28,7 @@ The function writes the plots of the adjusted compounds.
 }
 \examples{
 \dontrun{
-## library(AlpsNMR)
-Set the directory in which rDolphin files will be saved
+# Set the directory in which rDolphin files will be saved
 output_dir_10_rDolphin <- file.path(your_path, "10-rDolphin")
 fs::dir_create(output_dir_10_rDolphin)
 
@@ -40,7 +39,7 @@ files_rDolphin = files_to_rDolphin_blood(nmr_dataset_0_10_ppm)
 save_files_to_rDolphin(files_rDolphin, output_dir_10_rDolphin)
 
 # Build the rDolphin object. Do not forget to set the directory
-setwd(output_dir_10_rDolphin) 
+setwd(output_dir_10_rDolphin)
 rDolphin_object = to_rDolphin("Parameters.csv")
 
 # Visualize your spectra
@@ -60,5 +59,4 @@ intensities = targeted_profiling$final_output$intensity
 group = as.factor(rDolphin_object$Metadata$type)
 model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 }
-
 }

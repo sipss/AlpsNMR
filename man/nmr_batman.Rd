@@ -51,8 +51,11 @@ nmr_batman_metabolites_list(
 
 \item{metabolite_names}{A character vector of the metabolite names to consider}
 }
-\description{
+\value{
 These are helper functions to make Batman tests easier
+}
+\description{
+Batman helpers
 }
 \seealso{
 Other batman functions: 

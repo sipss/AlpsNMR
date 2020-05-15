@@ -25,7 +25,7 @@
 NULL
 
 
-#' Read NMR samples
+#' @return Read NMR samples
 #'
 #' These functions load samples from files and return a [nmr_dataset].
 #'
@@ -440,7 +440,7 @@ validate_nmr_dataset <- function(samples) {
     samples
 }
 
-#' Create an nmr_dataset object
+#' @return Create an nmr_dataset object
 #' @param metadata A named list of data frames
 #' @param data_fields A named list. Check the examples
 #' @param axis A list. Check the examples

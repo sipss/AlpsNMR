@@ -26,13 +26,10 @@ in human urine samples. The data frame contains the column "Bouatra_2013" showin
 the proposed metabolite was reported in this publication as regular urinary metabolite.
 }
 \examples{
-\dontrun{
 # We identify regions from from the corresponding ppm storaged in a vector.
-library(AlpsNMR)
 ppm_to_assign <- c(4.060960203, 3.048970634,2.405935596,
 3.24146865,0.990616851,1.002075066,0.955325548)
 identification <- nmr_identify_regions_urine (ppm_to_assign, num_proposed_compounds = 5)
-}
 }
 \seealso{
 Other peak detection functions: 

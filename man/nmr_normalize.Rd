@@ -17,27 +17,19 @@ nmr_normalize_extra_info(samples)
 \item{samples}{A \link{nmr_dataset_1D} object}
 
 \item{method}{The criteria to be used for normalization
-\itemize{
-\item area: Normalize to the total area
-\item max: Normalize to the maximum intensity
-\item value: Normalize each sample to a user defined value
-\item region: Integrate a region and normalize each sample to that region
-\item pqn: Use Probabalistic Quotient Normalization for normalization
-\item none: Do not normalize at all
-}}
+- area: Normalize to the total area
+- max: Normalize to the maximum intensity
+- value: Normalize each sample to a user defined value
+- region: Integrate a region and normalize each sample to that region
+- pqn: Use Probabalistic Quotient Normalization for normalization
+- none: Do not normalize at all}
 
 \item{...}{Method dependent arguments:
-\itemize{
-\item \code{method == "value"}:
-\itemize{
-\item \code{value}: A numeric vector with the normalization values to use
-}
-\item \code{method == "region"}:
-\itemize{
-\item \code{ppm_range}: A chemical shift region to integrate
-\item \code{...}: Other arguments passed on to \link{nmr_integrate_regions}
-}
-}}
+- \code{method == "value"}:
+- \code{value}: A numeric vector with the normalization values to use
+- \code{method == "region"}:
+- \code{ppm_range}: A chemical shift region to integrate
+- \code{...}: Other arguments passed on to \link{nmr_integrate_regions}}
 }
 \value{
 The \link{nmr_dataset_1D} object, with the samples normalized.

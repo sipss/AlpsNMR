@@ -10,11 +10,12 @@ plsda_auroc_vip_method(ncomp, auc_increment_threshold = 0.05)
 \item{ncomp}{Max. number of latent variables to explore in the PLSDA analysis}
 
 \item{auc_increment_threshold}{Choose the number of latent variables when the
-AUC does not increment more than this threshold.
-
+AUC does not increment more than this threshold.}
+}
+\value{
 Returns an object to be used with \link{nmr_data_analysis} to perform a (optionally
 multilevel) PLS-DA model, using the area under the ROC curve as figure of
-merit to determine the optimum number of latent variables.}
+merit to determine the optimum number of latent variables.
 }
 \description{
 Method for nmr_data_analysis (PLSDA model with AUROC and VIP outputs)

@@ -49,11 +49,8 @@ An \link{nmr_dataset_peak_table} object
 Integrate given regions and return a data frame with them
 }
 \examples{
-\dontrun{
 # We integrate a region with two peaks and a valley. This is how the
 # final area is integrated.
-library(ggplot2)
-library(signal)
 x <- seq(from = 1, to = 11, by = 0.05)
 y <- signal::interp1(x = 1:11,
                      y = c(10, 10, 10, 12, 14, 20, 9, 14, 11, 11, 12),
@@ -62,13 +59,12 @@ y <- signal::interp1(x = 1:11,
 xb <- c(which.min(abs(x - 3)), which.min(abs(x - 9)))
 basel <- AlpsNMR:::rough_baseline(y[xb[1]:xb[2]])
 
-ggplot(mapping = aes(x = x, y = y)) +
-  geom_line(data = data.frame(x = x, y = y)) + 
-  geom_polygon(data = data.frame(x = x[c(xb[1]:xb[2], rev(xb[1]:xb[2]))],
-                                 y = c(y[xb[1]:xb[2]], rev(basel))),
-               fill = "blue") +
-  scale_y_continuous(limits = c(5, 20))
-}
+ggplot2::ggplot(mapping = ggplot2::aes(x = x, y = y)) +
+    ggplot2::geom_line(data = data.frame(x = x, y = y)) +
+    ggplot2::geom_polygon(data = data.frame(x = x[c(xb[1]:xb[2], rev(xb[1]:xb[2]))],
+                                   y = c(y[xb[1]:xb[2]], rev(basel))),
+                                   fill = "blue") +
+    ggplot2::scale_y_continuous(limits = c(5, 20))
 }
 \seealso{
 Other peak detection functions: 

@@ -599,8 +599,16 @@ rdCV_PLS_RF_ML = function (nmr_peak_table,
 #'
 #' @examples
 #' \dontrun{
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' nmr_dataset_1D <- nmr_interpolate_1D(nmr_dataset)
+#' peak_data <- nmr_detect_peaks(nmr_dataset_1D,
+#'                               nDivRange_ppm = 0.1, # Size of detection segments
+#'                               scales = seq(1, 16, 2),
+#'                               baselineThresh = 0, # Minimum peak intensity
+#'                               SNR.Th = 4) # Signal to noise ratio
 #' # model = rdCV_PLS_RF(nmr_peak_table, label = "Timepoint")
-#' model = rdCV_PLS_RF(nmr_peak_table)
+#' model = rdCV_PLS_RF(peak_data)
 #' AUC_model(model)
 #'}
 

@@ -14,6 +14,9 @@ for example ending with *0 (spectra acquired by a NOESY sequence often end
 by 0: 10, 20, 30...) or *s (for example, samples from the tutorial in this
 package) passed on to \code{grep()} to filter paths.}
 }
+\value{
+lists of samples from the chosen folder
+}
 \description{
 The function lists samples from the chosen folder required to import and
 create a \link{nmr_dataset_1D} object. The function is based on the \code{\link[fs:dir_ls]{fs::dir_ls()}}

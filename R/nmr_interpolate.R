@@ -56,8 +56,8 @@ nmr_interpolate_1D.nmr_dataset <- function(samples, axis = c(min = 0.2, max = 10
                                                         ppm_axis = axis_full)
 
     new_nmr_dataset_1D(ppm_axis = axis_full,
-                                         data_1r = data_1r,
-                                         metadata = samples$metadata)
+                       data_1r = data_1r,
+                        metadata = samples$metadata)
 }
 
 
@@ -71,9 +71,9 @@ interpolate_1d <- function(list_of_ppms, list_of_1r, ppm_axis) {
         }
         for (i in seq_len(num_samples)) {
             data_matr[i, ] <- signal::interp1(x = list_of_ppms[[i]],
-                                                                                y = list_of_1r[[i]],
-                                                                                xi = ppm_axis,
-                                                                                method = "spline")
+                                              y = list_of_1r[[i]],
+                                              xi = ppm_axis,
+                                              method = "spline")
             if (!is.null(pb)) {
                 utils::setTxtProgressBar(pb, i)
             }

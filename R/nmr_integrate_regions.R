@@ -111,7 +111,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
                                metadata = samples$metadata)
 }
 
-#' Integrate peak positions
+#' @return Integrate peak positions
 #'
 #' The function allows the integration of a given ppm vector with a specific width.
 #'
@@ -180,7 +180,7 @@ nmr_integrate_peak_positions <- function(samples,
     nmr_integrate_regions(samples, regions, ...)
 }
 
-#' Get integrals with metadata from `integrate peak positions`
+#' @return Get integrals with metadata from `integrate peak positions`
 #'
 #' @param integration_object A [nmr_dataset] object
 #' @examples
