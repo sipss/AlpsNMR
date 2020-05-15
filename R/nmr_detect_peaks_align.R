@@ -146,7 +146,7 @@ nmr_detect_peaks <- function(nmr_dataset,
     peakList_to_dataframe(nmr_dataset, peakList)
 }
 
-#' @return Plot peak detection results
+#' Plot peak detection results
 #'
 #' @family peak detection functions
 #' @inheritParams nmr_detect_peaks
@@ -155,6 +155,7 @@ nmr_detect_peaks <- function(nmr_dataset,
 #' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
 #' @export
 #' @examples
+#' @return Plot peak detection results
 #' \dontrun{
 #' # 0. Multiprocess (parallelization) to set the number of cores working in your PC
 #' plan(multiprocess, workers = 12)

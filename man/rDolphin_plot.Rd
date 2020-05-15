@@ -17,7 +17,6 @@ The function provides an interactive plot with the spectra of random samples.
 }
 \examples{
 \dontrun{
-## library(AlpsNMR)
 rDolphin_object = to_rDolphin(parameters)
 rDolphin_plot(rDolphin_object)
 }

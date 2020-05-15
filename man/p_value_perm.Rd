@@ -7,7 +7,7 @@
 p_value_perm(model_actual, permutation_object)
 }
 \arguments{
-\item{model_actual}{The actual model performance  (e.g. misclassifications or Q2)}
+\item{model_actual}{The actual model performance    (e.g. misclassifications or Q2)}
 
 \item{permutation_object}{Null hypothesis distribution from permutation test
 from \code{permutation_test_model} function}
@@ -23,7 +23,6 @@ belonging to 'h0' (\code{permutation_object} from the \code{permutation_test_mod
 }
 \examples{
 \dontrun{
-
 # 1.Build a model with the X data from your nmr object and your class:
 MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
 Y = nmr_peak_table_completed$Timepoint)
@@ -41,5 +40,4 @@ permutations <- permutation_test_model(MVObj, nPerm = 50)
 p.value = p_value_perm(MVObj$miss[[2]], permutations[,2])
 
 }
-
 }

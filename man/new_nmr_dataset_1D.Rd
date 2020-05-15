@@ -13,6 +13,9 @@ new_nmr_dataset_1D(ppm_axis, data_1r, metadata)
 
 \item{metadata}{A list of data frames with at least the \code{NMRExperiment} column}
 }
+\value{
+Creates a new 1D nmr_dataset object from scratch
+}
 \description{
 Creates a new 1D nmr_dataset object from scratch
 }

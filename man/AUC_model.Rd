@@ -17,9 +17,8 @@ The function extracts the AUC value from the middle \code{MUVR} model
 }
 \examples{
 \dontrun{
-model = rdCV_PLS_RF(nmr_peak_table, label = "Timepoint")
-
+# model = rdCV_PLS_RF(nmr_peak_table, label = "Timepoint")
+model = rdCV_PLS_RF(nmr_peak_table)
 AUC_model(model)
-
 }
 }

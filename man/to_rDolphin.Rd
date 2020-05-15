@@ -19,8 +19,7 @@ The obtained rDolphin object can be used to extract the metabolite profiling usi
 \examples{
 \dontrun{
 ## After running AlpsNMR and get aligned spectra along with the corresponding metadata we run:
-## library(AlpsNMR)
-Set the directory in which rDolphin files will be saved
+## Set the directory in which rDolphin files will be saved
 output_dir_10_rDolphin <- file.path(your_path, "10-rDolphin")
 fs::dir_create(output_dir_10_rDolphin)
 
@@ -31,7 +30,7 @@ files_rDolphin = files_to_rDolphin_blood(nmr_dataset_0_10_ppm)
 save_files_to_rDolphin(files_rDolphin, output_dir_10_rDolphin)
 
 # Build the rDolphin object. Do not forget to set the directory
-setwd(output_dir_10_rDolphin) 
+setwd(output_dir_10_rDolphin)
 rDolphin_object = to_rDolphin("Parameters.csv")
 
 # Visualize your spectra

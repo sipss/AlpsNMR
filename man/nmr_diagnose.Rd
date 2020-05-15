@@ -9,6 +9,9 @@ nmr_diagnose(samples)
 \arguments{
 \item{samples}{An nmr_dataset}
 }
+\value{
+normalized nmr
+}
 \description{
 Deprecated function
 }

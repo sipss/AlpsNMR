@@ -9,7 +9,7 @@
 \usage{
 nmr_pca_plot_variance(pca_model)
 
-nmr_pca_scoreplot(nmr_dataset, pca_model, comp = 1:2, ...)
+nmr_pca_scoreplot(nmr_dataset, pca_model, comp = seq_len(2), ...)
 
 nmr_pca_loadingplot(pca_model, comp)
 }
@@ -21,6 +21,9 @@ nmr_pca_loadingplot(pca_model, comp)
 \item{comp}{Components to represent}
 
 \item{...}{Additional aesthetics passed on to \link[ggplot2:aes]{ggplot2::aes} (use bare unquoted names)}
+}
+\value{
+Plot of PCA
 }
 \description{
 Plotting functions for PCA

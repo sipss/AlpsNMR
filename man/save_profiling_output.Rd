@@ -28,7 +28,6 @@ The function saves the output from \link{Automatic_targeted_profiling} function 
 }
 \examples{
 \dontrun{
-## library(AlpsNMR)
 rDolphin_object = to_rDolphin(parameters)
 targeted_profiling = Automatic_targeted_profiling(rDolphin)
 save_profiling_output(targeted_profiling, output_directory)
