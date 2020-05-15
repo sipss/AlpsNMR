@@ -51,7 +51,7 @@ nmr_pca_build_model.nmr_dataset_1D <-
         pca_model
     }
 
-#' Plotting functions for PCA
+#' @return Plotting functions for PCA
 #'
 #' @param nmr_dataset an [nmr_dataset_1D] object
 #' @param pca_model A PCA model trained with [nmr_pca_build_model]

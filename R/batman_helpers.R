@@ -1,6 +1,6 @@
 #' Batman helpers
 #'
-#' These are helper functions to make Batman tests easier
+#' @return These are helper functions to make Batman tests easier
 #'
 #' @param bopts Batman options
 #' @param batman_dir Batman input directorye
@@ -58,12 +58,12 @@ NULL
 #' @export
 nmr_batman_options <- function(ppmRange = matrix(
     c(3.0, 3.1,
-    3.6, 3.7,
-    3.9, 4.0,
-    4.0, 4.1,
-    6.95, 7.05,
-    7.6, 7.7,
-    7.8, 7.9),
+      3.6, 3.7,
+      3.9, 4.0,
+      4.0, 4.1,
+      6.95, 7.05,
+      7.6, 7.7,
+      7.8, 7.9),
     ncol = 2,
     byrow = TRUE
 ),
@@ -283,7 +283,7 @@ nmr_batman_multi_data_user <-
                     "overwrite_truncation",
                     "Include_multiplet"
                 ),
-                value = c(-50, -50, 1),
+                value = c(-50,-50, 1),
                 stringsAsFactors = FALSE
             )
         

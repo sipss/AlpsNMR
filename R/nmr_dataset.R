@@ -428,7 +428,7 @@ format.nmr_dataset <- function(x, ...) {
     paste0("An nmr_dataset (", x$num_samples, " samples)")
 }
 
-#' Validate nmr_dataset objects
+#' @return Validate nmr_dataset objects
 #' @param samples An nmr_dataset object
 #' @family class helper functions
 #' @family nmr_dataset functions
@@ -447,6 +447,7 @@ validate_nmr_dataset <- function(samples) {
 #' @family class helper functions
 #' @family nmr_dataset functions
 #' @export
+#' @return Create an nmr_dataset object
 #' @examples
 #' #
 #' metadata_1D <- list(external = data.frame(NMRExperiment = c("10", "20")))

@@ -28,7 +28,7 @@ verify_axisn <- function(axisn, one_sample_axis) {
     return(axisn)
 }
 
-#' Interpolate a set of 1D NMR Spectra
+#' @return Interpolate a set of 1D NMR Spectra
 #' @param samples An NMR dataset
 #' @param axis The ppm axis range and optionally the ppm step
 #' @export

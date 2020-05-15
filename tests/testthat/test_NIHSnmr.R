@@ -23,7 +23,7 @@ test_that("AlpsNMR filter works", {
                                 metadata = list(external = data.frame(NMRExperiment = c("10", "20"))))
   dataset <- filter(dataset, NMRExperiment == "10")
   meta <- nmr_meta_get(dataset, groups = "external")
-  #Force error langujes to English
+  #Force error language to English
   Sys.setenv(LANGUAGE='en')
   expect_error(meta[["NMRExperiment"]][[2]], "subscript out of bounds")
 })
