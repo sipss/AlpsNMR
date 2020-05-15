@@ -12,8 +12,6 @@
 #' @examples
 #' # We integrate a region with two peaks and a valley. This is how the
 #' # final area is integrated.
-#' library(ggplot2)
-#' library(signal)
 #' x <- seq(from = 1, to = 11, by = 0.05)
 #' y <- signal::interp1(x = 1:11,
 #'                      y = c(10, 10, 10, 12, 14, 20, 9, 14, 11, 11, 12),
@@ -22,12 +20,12 @@
 #' xb <- c(which.min(abs(x - 3)), which.min(abs(x - 9)))
 #' basel <- AlpsNMR:::rough_baseline(y[xb[1]:xb[2]])
 #'
-#' ggplot(mapping = aes(x = x, y = y)) +
-#'     geom_line(data = data.frame(x = x, y = y)) +
-#'     geom_polygon(data = data.frame(x = x[c(xb[1]:xb[2], rev(xb[1]:xb[2]))],
-#'                                                                    y = c(y[xb[1]:xb[2]], rev(basel))),
-#'                                fill = "blue") +
-#'     scale_y_continuous(limits = c(5, 20))
+#' ggplot2::ggplot(mapping = ggplot2::aes(x = x, y = y)) +
+#'     ggplot2::geom_line(data = data.frame(x = x, y = y)) +
+#'     ggplot2::geom_polygon(data = data.frame(x = x[c(xb[1]:xb[2], rev(xb[1]:xb[2]))],
+#'                                    y = c(y[xb[1]:xb[2]], rev(basel))),
+#'                                    fill = "blue") +
+#'     ggplot2::scale_y_continuous(limits = c(5, 20))
 #' @export
 #' @family peak detection functions
 #' @family peak integration functions
@@ -124,7 +122,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #' @inherit nmr_integrate_regions return
 #' @export
 #' @examples
-#'
+#'\dontrun{
 #' # 0. Multiprocess (parallelization) to set the number of cores working in your PC
 #' plan(multiprocess, workers = 12)
 #'
@@ -160,7 +158,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #'
 #' #If you wanted the final peak table before machine learning you can run
 #' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
-#'
+#'}
 #' @family peak integration functions
 #' @family nmr_dataset_1D functions
 nmr_integrate_peak_positions <- function(samples,
@@ -186,13 +184,14 @@ nmr_integrate_peak_positions <- function(samples,
 #'
 #' @param integration_object A [nmr_dataset] object
 #' @examples
+#' \dontrun{
 #' peak_table_integration = nmr_integrate_peak_positions(
 #' samples = dataset_norm,
 #' peak_pos_ppm = peak_table$ppm,
 #' peak_width_ppm = 0.006)
 #'
 #' peak_table_integration = get_integration_with_metadata(peak_table_integration)
-#'
+#'}
 #' @export
 #'
 #' @family peak integration functions

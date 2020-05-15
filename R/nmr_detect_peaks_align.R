@@ -20,7 +20,7 @@
 #' @return A data frame with the NMRExperiment, the sample index, the position
 #'     in ppm and index and the peak intensity
 #' @examples
-#'
+#'\dontrun{
 #' # 0. Multiprocess (parallelization) to set the number of cores working in your PC
 #' plan(multiprocess, workers = 12)
 #'
@@ -36,10 +36,10 @@
 #'
 #' # 3.Spectra alignment using the ref spectrum and a maximum alignment shift
 #' nmr_dataset <- nmr_align(nmr_dataset, # the dataset
-#'                                                    peak_data, # detected peaks
-#'                                                    NMRExp_ref = NMRExp_ref, # ref spectrum
-#'                                                    maxShift_ppm = 0.0015, # max alignment shift
-#'                                                    acceptLostPeak = FALSE) # lost peaks
+#'                          peak_data, # detected peaks
+#'                          NMRExp_ref = NMRExp_ref, # ref spectrum
+#'                          maxShift_ppm = 0.0015, # max alignment shift
+#'                          acceptLostPeak = FALSE) # lost peaks
 #'
 #' # 4.Set sequential working to finish parallelization
 #' plan(sequential)
@@ -56,7 +56,7 @@
 #'
 #' #If you wanted the final peak table before machine learning you can run
 #' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
-#'
+#'}
 #' @export
 #'
 nmr_detect_peaks <- function(nmr_dataset,
@@ -119,7 +119,7 @@ nmr_detect_peaks <- function(nmr_dataset,
     data_matrix_to_list <-
         lapply(seq_len(nrow(nmr_dataset$data_1r)),
                function(i)
-                   matrix(nmr_dataset$data_1r[i,], nrow = 1))
+                   matrix(nmr_dataset$data_1r[i, ], nrow = 1))
     
     peakList <- furrr::future_map(data_matrix_to_list,
                                   function(spec, ...) {
@@ -155,7 +155,7 @@ nmr_detect_peaks <- function(nmr_dataset,
 #' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
 #' @export
 #' @examples
-#'
+#' \dontrun{
 #' # 0. Multiprocess (parallelization) to set the number of cores working in your PC
 #' plan(multiprocess, workers = 12)
 #'
@@ -191,7 +191,7 @@ nmr_detect_peaks <- function(nmr_dataset,
 #'
 #' #If you wanted the final peak table before machine learning you can run
 #' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
-#'
+#'}
 #' @family peak detection functions
 #' @family nmr_dataset_1D functions
 nmr_detect_peaks_plot <-
@@ -244,7 +244,7 @@ peakList_to_dataframe <- function(nmr_dataset, peakList) {
                                        nmr_dataset,
                                        NMRExperiment) {
         num_of_peaks_in_sample <- length(peak_idx)
-        spec <- as.numeric(nmr_dataset$data_1r[sample_idx,])
+        spec <- as.numeric(nmr_dataset$data_1r[sample_idx, ])
         data.frame(
             NMRExperiment = rep(NMRExperiment[sample_idx], num_of_peaks_in_sample),
             sample_idx = rep(sample_idx, num_of_peaks_in_sample),
@@ -349,7 +349,7 @@ nmr_detect_peaks_tune_snr <-
             )
         
         df1 <- data.frame(ppm = ds1$axis,
-                          intensity = as.numeric(ds1$data_1r[1,]))
+                          intensity = as.numeric(ds1$data_1r[1, ]))
         
         ord_thresh <- sort(unique(peaks_detected$SNR_threshold))
         num_thresholds <- length(ord_thresh)
@@ -401,16 +401,16 @@ nmr_detect_peaks_tune_snr <-
 #' @param NMRExp_ref NMRExperiment of the reference to use for alignment
 #' @inheritParams speaq::dohCluster
 #' @examples
-#'
+#'\dontrun{
 #' # 0. Multiprocess (parallelization) to set the number of cores working in your PC
 #' plan(multiprocess, workers = 12)
 #'
 #' # 1.Peak detection in the dataset.
 #' peak_data <- nmr_detect_peaks(nmr_dataset,
-#'                                                             nDivRange_ppm = 0.1, # Size of detection segments
-#'                                                             scales = seq(1, 16, 2),
-#'                                                             baselineThresh = 0, # Minimum peak intensity
-#'                                                             SNR.Th = 4) # Signal to noise ratio
+#'                               nDivRange_ppm = 0.1, # Size of detection segments
+#'                               scales = seq(1, 16, 2),
+#'                               baselineThresh = 0, # Minimum peak intensity
+#'                               SNR.Th = 4) # Signal to noise ratio
 #'
 #' # 2.Find the reference spectrum to align with.
 #' NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
@@ -437,7 +437,7 @@ nmr_detect_peaks_tune_snr <-
 #'
 #' #If you wanted the final peak table before machine learning you can run
 #' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
-#'
+#'}
 #' @return An [nmr_dataset_1D], with the spectra aligned
 #' @export
 #' @family peak alignment functions

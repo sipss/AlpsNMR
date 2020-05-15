@@ -78,11 +78,13 @@ dplyr::filter
 #' @family nmr_dataset_family manipulation functions
 #' @family subsetting functions
 #' @examples
+#' \dontrun{
 #' ## example 1
 #' placebo_samples <- filter(nmr_dataset, Group == "placebo")
 #'
 #' ## example 2
 #' test_samples <- nmr_dataset %>% filter(nmr_peak_table$metadata$external$Group == "placebo")
+#' }
 #' @export
 filter.nmr_dataset_family <- function(.data, ...) {
     dots <- rlang::quos(...)

@@ -14,7 +14,7 @@
 #'
 #' @export
 #' @examples
-#'
+#'\dontrun{
 #' # 1.Build a model with the X data from your nmr object and your class:
 #' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
 #' Y = nmr_peak_table_completed$Timepoint)
@@ -40,6 +40,7 @@
 #'
 #' # 8.Identification
 #' results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
+#' }
 #' @return a MUVR model containing selection parameters, validation and fitness
 #' @references Shi,L. et al. (2018) Variable selection and validation in multivariate modelling. Bioinformatics.
 rdCV_PLS_RF = function (X,
@@ -93,7 +94,9 @@ rdCV_PLS_RF = function (X,
 #' @return A permutation matrix with permuted values
 #' @export
 #' @examples
+#' \dontrun{
 #' P = permutation_test_model(model)
+#' }
 
 permutation_test_model = function (MVObj,
                                    nPerm = 50,
@@ -121,7 +124,7 @@ permutation_test_model = function (MVObj,
 #' @return A plot with the model performance
 #' @export
 #' @examples
-#'
+#'\dontrun{
 #' # 1.Build a model with the X data from your nmr object and your class:
 #' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
 #' Y = nmr_peak_table_completed$Timepoint)
@@ -147,7 +150,7 @@ permutation_test_model = function (MVObj,
 #'
 #' # 8.Identification
 #' results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
-#'
+#'}
 MUVR_model_plot = function (MVObj,
                             model = "mid",
                             factCols,
@@ -291,7 +294,7 @@ MUVR_model_plot = function (MVObj,
 #' @return A plot with the comparison between the actual model versus the permuted models
 #' @export
 #' @examples
-#'
+#'\dontrun{
 #' # 1.Build a model with the X data from your nmr object and your class:
 #' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
 #' Y = nmr_peak_table_completed$Timepoint)
@@ -317,7 +320,7 @@ MUVR_model_plot = function (MVObj,
 #'
 #' # 8.Identification
 #' results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
-#'
+#'}
 permutation_test_plot = function (MVObj,
                                   permMatrix,
                                   model = "mid",
@@ -355,7 +358,7 @@ permutation_test_plot = function (MVObj,
 #' @export
 #'
 #' @examples
-#'
+#'\dontrun{
 #' # 1.Build a model with the X data from your nmr object and your class:
 #' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
 #' Y = nmr_peak_table_completed$Timepoint)
@@ -381,7 +384,7 @@ permutation_test_plot = function (MVObj,
 #'
 #' # 8.Identification
 #' results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
-#'
+#'}
 model_VIP = function(MVObj, model = "mid") {
     MUVR::getVIP(MVObj, model)
 }
@@ -403,7 +406,7 @@ model_VIP = function(MVObj, model = "mid") {
 #' @export
 #'
 #' @examples
-#'
+#'\dontrun{
 #' # 1.Build a model with the X data from your nmr object and your class:
 #' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
 #' Y = nmr_peak_table_completed$Timepoint)
@@ -429,7 +432,7 @@ model_VIP = function(MVObj, model = "mid") {
 #'
 #' # 8.Identification
 #' results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
-#'
+#'}
 ppm_VIP_vector <- function(VIPs) {
     ppm_to_assign = tidyr::separate(VIPs,
                                     col = "name",
@@ -455,7 +458,7 @@ ppm_VIP_vector <- function(VIPs) {
 #' @export
 #'
 #' @examples
-#'
+#'\dontrun{
 #' # 1.Build a model with the X data from your nmr object and your class:
 #' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
 #' Y = nmr_peak_table_completed$Timepoint)
@@ -472,7 +475,7 @@ ppm_VIP_vector <- function(VIPs) {
 #'
 #' p.value = p_value_perm(MVObj$miss[[2]], permutations[,2])
 #'
-#'
+#'}
 p_value_perm = function (model_actual, permutation_object) {
     MUVR::pPerm(actual = model_actual, h0 = permutation_object)
 }
@@ -489,7 +492,7 @@ p_value_perm = function (model_actual, permutation_object) {
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' # 1.Build a model with the X data from your nmr object and your class:
 #' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
 #' Y = nmr_peak_table_completed$Timepoint)
@@ -515,7 +518,7 @@ p_value_perm = function (model_actual, permutation_object) {
 #'
 #' # 8.Identification
 #' results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
-#'
+#'}
 confusion_matrix = function(MVObj, model = "mid") {
     MUVR::confusionMatrix(MVObj, model)
 }
@@ -540,11 +543,13 @@ confusion_matrix = function(MVObj, model = "mid") {
 #'
 #' @export
 #' @examples
+#' \dontrun{
 #' # Creating the model
 #' model = rdCV_PLS_RF_ML(nmr_peak_table, label = "Timepoint", ML = TRUE)
 #'
 #' # Model performance
 #' MUVR_model_plot(model)
+#' }
 #' @return a MUVR model containing selection parameters, validation and fitness
 #' @references Shi,L. et al. (2018) Variable selection and validation in multivariate modelling. Bioinformatics.
 rdCV_PLS_RF_ML = function (nmr_peak_table,
@@ -593,10 +598,11 @@ rdCV_PLS_RF_ML = function (nmr_peak_table,
 #' @export
 #'
 #' @examples
-#' model = rdCV_PLS_RF(nmr_peak_table, label = "Timepoint")
-#'
+#' \dontrun{
+#' # model = rdCV_PLS_RF(nmr_peak_table, label = "Timepoint")
+#' model = rdCV_PLS_RF(nmr_peak_table)
 #' AUC_model(model)
-#'
+#'}
 
 AUC_model <- function (MVObj) {
     message("AUC model is ", MVObj$auc[[2]])
