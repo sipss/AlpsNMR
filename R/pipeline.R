@@ -67,6 +67,7 @@ pipe_load_samples <-
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
@@ -76,7 +77,7 @@ pipe_load_samples <-
 #' pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
 #'                                     excel_file = excel_file)
 #' # Check out: output_dir
-#'
+#'}
 pipe_add_metadata <-
     function(nmr_dataset_rds, excel_file, output_dir) {
         message("Starting pipe_add_metadata at ", Sys.time())

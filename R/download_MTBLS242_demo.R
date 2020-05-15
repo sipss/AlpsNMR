@@ -9,8 +9,9 @@
 #' @references \url{https://doi.org/10.3945/ajcn.115.110536}
 #' 
 #' @examples 
-#' download_demo(to = "C:/")
-#' 
+#' \dontrun{
+#' download_demo(to = ".")
+#' }
 download_demo <- function(to = ".") {
     if (!dir.exists(to)) {
         dir.create(to, recursive = TRUE)
