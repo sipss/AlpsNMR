@@ -9,7 +9,7 @@ pipe_load_samples(samples_dir, glob = "*0", output_dir = NULL)
 \arguments{
 \item{samples_dir}{The directory where the samples are}
 
-\item{glob}{A wildcard aka globbing pattern (e.g. \code{*.csv}) passed on to \code{\link[=grep]{grep()}} to filter paths.}
+\item{glob}{A wildcard aka globbing pattern (e.g. \verb{*.csv}) passed on to \code{\link[=grep]{grep()}} to filter paths.}
 
 \item{output_dir}{Directory where the nmr_dataset and the excel files will be saved}
 }
@@ -27,28 +27,32 @@ pipe_load_samples("/dir/with/nmr/samples/",
 }
 }
 \seealso{
-Other pipeline functions: \code{\link{pipe_add_metadata}},
-  \code{\link{pipe_exclude_regions}},
-  \code{\link{pipe_filter_samples}},
-  \code{\link{pipe_interpolate_1D}},
-  \code{\link{pipe_normalization}},
-  \code{\link{pipe_outlier_detection}},
-  \code{\link{pipe_peak_integration}},
-  \code{\link{pipe_peakdet_align}}
+Other pipeline functions: 
+\code{\link{pipe_add_metadata}()},
+\code{\link{pipe_exclude_regions}()},
+\code{\link{pipe_filter_samples}()},
+\code{\link{pipe_interpolate_1D}()},
+\code{\link{pipe_normalization}()},
+\code{\link{pipe_outlier_detection}()},
+\code{\link{pipe_peak_integration}()},
+\code{\link{pipe_peakdet_align}()}
 
-Other import/export functions: \code{\link{Automatic_targeted_profiling}},
-  \code{\link{files_to_rDolphin_blood}},
-  \code{\link{files_to_rDolphin_cell}},
-  \code{\link{files_to_rDolphin_urine}},
-  \code{\link{load_and_save_functions}},
-  \code{\link{nmr_data}}, \code{\link{nmr_meta_export}},
-  \code{\link{nmr_read_bruker_fid}},
-  \code{\link{nmr_read_samples}},
-  \code{\link{nmr_zip_bruker_samples}},
-  \code{\link{save_files_to_rDolphin}},
-  \code{\link{save_profiling_output}},
-  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}},
-  \code{\link{to_rDolphin}}
+Other import/export functions: 
+\code{\link{Automatic_targeted_profiling}()},
+\code{\link{files_to_rDolphin_blood}()},
+\code{\link{files_to_rDolphin_cell}()},
+\code{\link{files_to_rDolphin_urine}()},
+\code{\link{load_and_save_functions}},
+\code{\link{nmr_data}()},
+\code{\link{nmr_meta_export}()},
+\code{\link{nmr_read_bruker_fid}()},
+\code{\link{nmr_read_samples}()},
+\code{\link{nmr_zip_bruker_samples}()},
+\code{\link{save_files_to_rDolphin}()},
+\code{\link{save_profiling_output}()},
+\code{\link{to_ASICS}()},
+\code{\link{to_ChemoSpec}()},
+\code{\link{to_rDolphin}()}
 }
 \concept{import/export functions}
 \concept{pipeline functions}

@@ -4,8 +4,7 @@
 \alias{permutation_test_model}
 \title{Permutation test on MUVR}
 \usage{
-permutation_test_model(MVObj, nPerm = 50, nRep, nOuter, varRatio,
-  parallel)
+permutation_test_model(MVObj, nPerm = 50, nRep, nOuter, varRatio, parallel)
 }
 \arguments{
 \item{MVObj}{A MUVR obvject}

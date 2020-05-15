@@ -4,8 +4,14 @@
 \alias{nmr_data_analysis}
 \title{Data analysis}
 \usage{
-nmr_data_analysis(dataset, y_column, identity_column, external_val,
-  internal_val, data_analysis_method)
+nmr_data_analysis(
+  dataset,
+  y_column,
+  identity_column,
+  external_val,
+  internal_val,
+  data_analysis_method
+)
 }
 \arguments{
 \item{dataset}{An \link{nmr_dataset_family} object}

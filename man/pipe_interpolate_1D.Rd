@@ -20,13 +20,14 @@ This function saves the result to the output directory
 Pipeline: Interpolate 1D samples
 }
 \seealso{
-Other pipeline functions: \code{\link{pipe_add_metadata}},
-  \code{\link{pipe_exclude_regions}},
-  \code{\link{pipe_filter_samples}},
-  \code{\link{pipe_load_samples}},
-  \code{\link{pipe_normalization}},
-  \code{\link{pipe_outlier_detection}},
-  \code{\link{pipe_peak_integration}},
-  \code{\link{pipe_peakdet_align}}
+Other pipeline functions: 
+\code{\link{pipe_add_metadata}()},
+\code{\link{pipe_exclude_regions}()},
+\code{\link{pipe_filter_samples}()},
+\code{\link{pipe_load_samples}()},
+\code{\link{pipe_normalization}()},
+\code{\link{pipe_outlier_detection}()},
+\code{\link{pipe_peak_integration}()},
+\code{\link{pipe_peakdet_align}()}
 }
 \concept{pipeline functions}

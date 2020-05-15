@@ -13,25 +13,27 @@ validate_nmr_dataset(samples)
 Validate nmr_dataset objects
 }
 \seealso{
-Other class helper functions: \code{\link{is.nmr_dataset_1D}},
-  \code{\link{is.nmr_dataset_peak_table}},
-  \code{\link{new_nmr_dataset_1D}},
-  \code{\link{new_nmr_dataset_peak_table}},
-  \code{\link{new_nmr_dataset}},
-  \code{\link{validate_nmr_dataset_1D}},
-  \code{\link{validate_nmr_dataset_family}},
-  \code{\link{validate_nmr_dataset_peak_table}}
+Other class helper functions: 
+\code{\link{is.nmr_dataset_1D}()},
+\code{\link{is.nmr_dataset_peak_table}()},
+\code{\link{new_nmr_dataset_1D}()},
+\code{\link{new_nmr_dataset_peak_table}()},
+\code{\link{new_nmr_dataset}()},
+\code{\link{validate_nmr_dataset_1D}()},
+\code{\link{validate_nmr_dataset_family}()},
+\code{\link{validate_nmr_dataset_peak_table}()}
 
-Other nmr_dataset functions: \code{\link{[.nmr_dataset}},
-  \code{\link{load_and_save_functions}},
-  \code{\link{new_nmr_dataset}},
-  \code{\link{nmr_interpolate_1D}},
-  \code{\link{nmr_meta_add}},
-  \code{\link{nmr_meta_export}},
-  \code{\link{nmr_meta_get_column}},
-  \code{\link{nmr_meta_get}},
-  \code{\link{nmr_ppm_resolution}},
-  \code{\link{nmr_read_samples}}
+Other nmr_dataset functions: 
+\code{\link{[.nmr_dataset}()},
+\code{\link{load_and_save_functions}},
+\code{\link{new_nmr_dataset}()},
+\code{\link{nmr_interpolate_1D}()},
+\code{\link{nmr_meta_add}()},
+\code{\link{nmr_meta_export}()},
+\code{\link{nmr_meta_get_column}()},
+\code{\link{nmr_meta_get}()},
+\code{\link{nmr_ppm_resolution}()},
+\code{\link{nmr_read_samples}()}
 }
 \concept{class helper functions}
 \concept{nmr_dataset functions}

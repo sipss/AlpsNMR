@@ -37,13 +37,13 @@ my_nmr_dataset <- nmr_read_samples(sample_names) \%>\%
 }
 }
 \author{
-\strong{Maintainer}: Luis Fernandez \email{lfernandez@ibecbarcelona.eu} (0000-0001-9790-6287)
+\strong{Maintainer}: Luis Fernandez \email{lfernandez@ibecbarcelona.eu} (\href{https://orcid.org/0000-0001-9790-6287}{ORCID})
 
 Authors:
 \itemize{
   \item Ivan Montoliu Roura \email{Ivan.MontoliuRoura@rd.nestle.com}
-  \item Sergio Oller Moreno \email{soller@ibecbarcelona.eu} (0000-0002-8994-1549)
-  \item Francisco Madrid Gambin \email{fmadrid@ibecbarcelona.eu} (0000-0001-9333-0014)
+  \item Sergio Oller Moreno \email{soller@ibecbarcelona.eu} (\href{https://orcid.org/0000-0002-8994-1549}{ORCID})
+  \item Francisco Madrid Gambin \email{fmadrid@ibecbarcelona.eu} (\href{https://orcid.org/0000-0001-9333-0014}{ORCID})
 }
 
 Other contributors:

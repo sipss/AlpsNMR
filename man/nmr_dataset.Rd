@@ -14,7 +14,7 @@ It currently has the following elements:
 a given area (acquisition parameters, preprocessing parameters, general sample information...)
 \item \code{axis}: A list with length equal to the dimensionality of the data.
 For 1D spectra it is a list with a numeric vector
-\item \code{data_*}: Data arrays with the actual spectra. The first index represents
+\item \verb{data_*}: Data arrays with the actual spectra. The first index represents
 the sample, the rest of the indices match the length of each \code{axis}.
 Typically \code{data_1r} is a matrix with one sample on each row and the chemical
 shifts in the columns.
@@ -24,7 +24,8 @@ shifts in the columns.
 \seealso{
 \link[=load_and_save_functions]{Functions to save and load these objects}
 
-Other AlpsNMR dataset objects: \code{\link{nmr_dataset_1D}},
-  \code{\link{nmr_dataset_family}}
+Other AlpsNMR dataset objects: 
+\code{\link{nmr_dataset_1D}},
+\code{\link{nmr_dataset_family}}
 }
 \concept{AlpsNMR dataset objects}
