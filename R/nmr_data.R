@@ -44,7 +44,6 @@ nmr_data.nmr_dataset_peak_table <- function(nmr_dataset, ...) {
 #'
 #' @return The given nmr_dataset
 #' @export
-#'
 "nmr_data<-" <- function(nmr_dataset, value) {
     UseMethod("nmr_data<-")
 }

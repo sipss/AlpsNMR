@@ -66,11 +66,11 @@ norm_pqn <- function(spectra) {
 #' @examples
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 #' nmr_dataset <- nmr_normalize(nmr_dataset, method = "area")
-#' norm_extra_info <- nmr_normalize_extra_info(nmr_dataset)
-#' print(norm_extra_info$plot)
+#' norm_dataset <- nmr_normalize(nmr_dataset)
+#' print(norm_dataset$plot)
 nmr_normalize <- function(samples, 
-                                                    method = c("area", "max", "value", "region", "pqn", "none"),
-                                                    ...) {
+                          method = c("area", "max", "value", "region", "pqn", "none"),
+                          ...) {
     validate_nmr_dataset_1D(samples)
 
     method <- tolower(method[1])
@@ -102,15 +102,20 @@ nmr_normalize <- function(samples,
         stop("Unimplemented method: ", method)
     }
     samples[["data_1r"]] <- sweep(x = samples[["data_1r"]],
-                                                                MARGIN = 1,
-                                                                STATS = norm_factor,
-                                                                FUN = "/")
+                                  MARGIN = 1,
+                                  STATS = norm_factor,
+                                  FUN = "/")
     samples <- nmr_normalize_add_extra_info(samples, norm_factor)
     return(samples)
 }
 
 #' @rdname nmr_normalize
 #' @export
+#' @examples
+#' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
+#' nmr_dataset <- nmr_normalize(nmr_dataset, method = "area")
+#' norm_extra_info <- nmr_normalize_extra_info(nmr_dataset)
+#' print(norm_extra_info$plot)
 nmr_normalize_extra_info <- function(samples) {
     attr(samples, "normalize_extra_info")
 }

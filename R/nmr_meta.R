@@ -13,6 +13,11 @@
 #' @family nmr_dataset_1D functions
 #' @family nmr_dataset_peak_table functions
 #' @export
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' metadata <- nmr_meta_get(dataset)
+#' 
 nmr_meta_get <- function(samples,
                          columns = NULL,
                          groups = NULL) {
@@ -78,6 +83,11 @@ nmr_meta_get <- function(samples,
 #' @family nmr_dataset_1D functions
 #' @family nmr_dataset_peak_table functions
 #' @export
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' metadata_column <- nmr_meta_get_column(dataset)
+#' 
 nmr_meta_get_column <- function(samples, column = "NMRExperiment") {
     nmr_meta_get(samples, columns = column)[[column]]
 }
@@ -235,6 +245,11 @@ nmr_meta_add_tidy_excel <- function(nmr_data, excel_file) {
 #' @family nmr_dataset_1D functions
 #' @family nmr_dataset_peak_table functions
 #' @family import/export functions
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' nmr_meta_export(dataset, "metadata.xlsx")
+#' 
 nmr_meta_export <- function(nmr_dataset,
                             xlsx_file,
                             groups = c("info", "orig", "title", "external")) {

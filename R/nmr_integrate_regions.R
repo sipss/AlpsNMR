@@ -122,7 +122,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #' @inherit nmr_integrate_regions return
 #' @export
 #' @examples
-#'\dontrun{
+#' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 #' # 0. Multiprocess (parallelization) to set the number of cores working in your PC
 #' plan(multiprocess, workers = 12)
 #'
@@ -158,7 +158,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #'
 #' #If you wanted the final peak table before machine learning you can run
 #' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
-#'}
+#' 
 #' @family peak integration functions
 #' @family nmr_dataset_1D functions
 nmr_integrate_peak_positions <- function(samples,
