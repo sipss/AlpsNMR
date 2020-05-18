@@ -16,10 +16,10 @@ AlpsNMR can be installed with the `devtools` package. For this is needed Rtools 
 CRAN, from BioConductor and from git repositories:
 
 Download Rtools for version 3.6
-[![Rtools 3.6](https://cran.r-project.org/bin/windows/Rtools/Rtools35.exe)]
+[[Rtools 3.6](https://cran.r-project.org/bin/windows/Rtools/Rtools35.exe)]
 
 As you can see in Rtools website, is needed one additional step, Putting Rtools on the PATH
-[![Rtools web](https://cran.r-project.org/bin/windows/Rtools/)]
+[[Rtools web](https://cran.r-project.org/bin/windows/Rtools/)]
 
 The easiest way is to create Renviron file executing this command in R, (take care because if exist previous Renviron file will be erased, in this case that that file to the Renvion):
 
@@ -36,7 +36,7 @@ Sys.which("make")
 Install AlpsNMR:
 
 ```r
-if (!"devtools" %in% rownames(installed.packages())) install.packages("devtools") 
+if (!"devtools" %in% rownames(installed.packages()))\n \tinstall.packages("devtools") 
 devtools::install_github("sipss/AlpsNMR")
 ```
 
