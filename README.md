@@ -19,7 +19,7 @@ If you already have Rtools, follow this to install AlspNMR:
 
 ```r
 if (!"devtools" %in% rownames(installed.packages()))  
-install.packages("devtools")  
+    install.packages("devtools")  
 devtools::install_github("sipss/AlpsNMR")
 ```
 
@@ -47,7 +47,7 @@ Install AlpsNMR:
 
 ```r
 if (!"devtools" %in% rownames(installed.packages()))  
-install.packages("devtools")  
+    install.packages("devtools")  
 devtools::install_github("sipss/AlpsNMR")
 ```
 
