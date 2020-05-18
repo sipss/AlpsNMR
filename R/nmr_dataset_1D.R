@@ -167,7 +167,7 @@ format.nmr_dataset_1D <- function(x, ...) {
 #'
 #' @return The nmr_dataset object (unmodified)
 #' @export
-#'@examples 
+#' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))

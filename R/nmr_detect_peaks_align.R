@@ -20,43 +20,16 @@
 #' @return A data frame with the NMRExperiment, the sample index, the position
 #'     in ppm and index and the peak intensity
 #' @examples
-#'\dontrun{
-#' # 0. Multiprocess (parallelization) to set the number of cores working in your PC
-#' plan(multiprocess, workers = 12)
-#'
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' # 1.Peak detection in the dataset.
-#' peak_data <- nmr_detect_peaks(nmr_dataset,
+#' peak_data <- nmr_detect_peaks(dataset_1D,
 #'                               nDivRange_ppm = 0.1, # Size of detection segments
 #'                               scales = seq(1, 16, 2),
 #'                               baselineThresh = 0, # Minimum peak intensity
 #'                               SNR.Th = 4) # Signal to noise ratio
 #'
-#' # 2.Find the reference spectrum to align with.
-#' NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
-#'
-#' # 3.Spectra alignment using the ref spectrum and a maximum alignment shift
-#' nmr_dataset <- nmr_align(nmr_dataset, # the dataset
-#'                          peak_data, # detected peaks
-#'                          NMRExp_ref = NMRExp_ref, # ref spectrum
-#'                          maxShift_ppm = 0.0015, # max alignment shift
-#'                          acceptLostPeak = FALSE) # lost peaks
-#'
-#' # 4.Set sequential working to finish parallelization
-#' plan(sequential)
-#'
-#' # 5.Peak integration (please, consider previous normalization step).
-#' # First we take the peak table from the reference spectrum
-#' peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
-#'
-#' # Then we integrate spectra considering the peaks from the ref spectrum
-#' nmr_peak_table <- nmr_integrate_peak_positions(
-#' samples = nmr_dataset,
-#' peak_pos_ppm = peak_data_ref$ppm,
-#' peak_width_ppm = NULL)
-#'
-#' #If you wanted the final peak table before machine learning you can run
-#' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
-#'}
 #' @export
 #'
 nmr_detect_peaks <- function(nmr_dataset,
@@ -154,45 +127,19 @@ nmr_detect_peaks <- function(nmr_dataset,
 #' @param NMRExperiment a single NMR experiment to plot
 #' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
 #' @export
-#' @examples
 #' @return Plot peak detection results
-#' \dontrun{
-#' # 0. Multiprocess (parallelization) to set the number of cores working in your PC
-#' plan(multiprocess, workers = 12)
-#'
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' # 1.Peak detection in the dataset.
-#' peak_data <- nmr_detect_peaks(nmr_dataset,
-#'                                                             nDivRange_ppm = 0.1, # Size of detection segments
-#'                                                             scales = seq(1, 16, 2),
-#'                                                             baselineThresh = 0, # Minimum peak intensity
-#'                                                             SNR.Th = 4) # Signal to noise ratio
-#'
-#' # 2.Find the reference spectrum to align with.
-#' NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
-#'
-#' # 3.Spectra alignment using the ref spectrum and a maximum alignment shift
-#' nmr_dataset <- nmr_align(nmr_dataset, # the dataset
-#'                          peak_data, # detected peaks
-#'                          NMRExp_ref = NMRExp_ref, # ref spectrum
-#'                          maxShift_ppm = 0.0015, # max alignment shift
-#'                          acceptLostPeak = FALSE) # lost peaks
-#'
-#' # 4.Set sequential working to finish parallelization
-#' plan(sequential)
-#'
-#' # 5.Peak integration (please, consider previous normalization step).
-#' # First we take the peak table from the reference spectrum
-#' peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
-#'
-#' # Then we integrate spectra considering the peaks from the ref spectrum
-#' nmr_peak_table <- nmr_integrate_peak_positions(
-#' samples = nmr_dataset,
-#' peak_pos_ppm = peak_data_ref$ppm,
-#' peak_width_ppm = NULL)
-#'
-#' #If you wanted the final peak table before machine learning you can run
-#' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
-#'}
+#' peak_data <- nmr_detect_peaks(dataset_1D,
+#'                               nDivRange_ppm = 0.1, # Size of detection segments
+#'                               scales = seq(1, 16, 2),
+#'                               baselineThresh = 0, # Minimum peak intensity
+#'                               SNR.Th = 4) # Signal to noise ratio
+#' nmr_detect_peaks_plot(dataset_1D, peak_data, "NMRExp_ref")
+#' 
 #' @family peak detection functions
 #' @family nmr_dataset_1D functions
 nmr_detect_peaks_plot <-
@@ -299,6 +246,10 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #' @family peak detection functions
 #' @family nmr_dataset_1D functions
 #' @export
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' peaks_detected <- nmr_detect_peaks_tune_snr(dataset_1D)
 nmr_detect_peaks_tune_snr <-
     function(ds,
              NMRExperiment = NULL,
@@ -530,6 +481,11 @@ nmr_ppm_resolution <- function(nmr_dataset) {
 #' @rdname nmr_ppm_resolution
 #' @family nmr_dataset functions
 #' @export
+#' @examples
+#' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
+#' nmr_ppm_resolution(nmr_dataset)
+#' message("the ppm resolution of this dataset is ", nmr_ppm_resolution(nmr_dataset), " ppm")
+#' 
 nmr_ppm_resolution.nmr_dataset <- function(nmr_dataset) {
     # For each sample:
     purrr::map(nmr_dataset$axis, function(axis_sample) {
@@ -543,6 +499,9 @@ nmr_ppm_resolution.nmr_dataset <- function(nmr_dataset) {
 #' @rdname nmr_ppm_resolution
 #' @family nmr_dataset_1D functions
 #' @export
+#' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
+#' nmr_ppm_resolution(nmr_dataset)
+#' message("the ppm resolution of this dataset is ", nmr_ppm_resolution(nmr_dataset), " ppm")
 nmr_ppm_resolution.nmr_dataset_1D <- function(nmr_dataset) {
     stats::median(abs(diff(nmr_dataset$axis)))
 }
