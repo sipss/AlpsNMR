@@ -36,7 +36,8 @@ Sys.which("make")
 Install AlpsNMR:
 
 ```r
-if (!"devtools" %in% rownames(installed.packages()))\n \tinstall.packages("devtools") 
+if (!"devtools" %in% rownames(installed.packages()))  
+install.packages("devtools")  
 devtools::install_github("sipss/AlpsNMR")
 ```
 
