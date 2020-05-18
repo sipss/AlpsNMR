@@ -21,6 +21,7 @@ NULL
 #' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @export
+#' 
 validate_nmr_dataset_peak_table <-
     function(nmr_dataset_peak_table) {
         validate_nmr_dataset_family(nmr_dataset_peak_table)
