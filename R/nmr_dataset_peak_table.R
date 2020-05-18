@@ -21,7 +21,30 @@ NULL
 #' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @export
-#' 
+#' @examples 
+#' \dontrun{
+#' Error in nmr_dataset$data_1r[1, alanine] : número incorreto de dimensiones
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' nmr_dataset_1D <- nmr_interpolate_1D(nmr_dataset)
+#' peak_data <- nmr_detect_peaks(nmr_dataset_1D,
+#'                               nDivRange_ppm = 0.1, # Size of detection segments
+#'                               scales = seq(1, 16, 2),
+#'                               baselineThresh = 0, # Minimum peak intensity
+#'                               SNR.Th = 4) # Signal to noise ratio
+#' peak_list_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
+#' peak_width_ppm <- NULL
+#' # Integrate those peaks positions
+#' nmr_peak_table <- nmr_integrate_peak_positions(
+#'     # In all samples in the nmr_dataset
+#'     samples = nmr_dataset,
+#'     # Integrate those positions. You can introduce a ppm numeric vector or a
+#'      # dataframe with a "ppm" variable
+#'      peak_pos_ppm = peak_list_ref,
+#'      # With this width peaks. If NULL, this is calculated automatically
+#'      peak_width_ppm = peak_width_ppm)
+#'  validate_nmr_dataset_peak_table(nmr_peak_table)
+#' }
 validate_nmr_dataset_peak_table <-
     function(nmr_dataset_peak_table) {
         validate_nmr_dataset_family(nmr_dataset_peak_table)
