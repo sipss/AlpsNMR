@@ -112,6 +112,7 @@ nmr_read_samples_dir_internal <- function(samples_dir,
 
 
 #' @rdname nmr_read_samples
+#' @name nmr_read_samples
 #' @export
 #' @examples 
 #' glob <- "*0"
@@ -389,6 +390,11 @@ nmr_read_samples_jdx <-
 #' @return `TRUE` if the object is an [nmr_dataset], `FALSE` otherwise
 #' @family nmr_dataset manipulation functions
 #' @export
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' is(dataset)
+#' 
 is.nmr_dataset <- function(x)
     inherits(x, "nmr_dataset")
 
@@ -425,6 +431,7 @@ is.nmr_dataset <- function(x)
 
 #' @family class helper functions
 #' @family nmr_dataset functions
+#' @name print_nmr_dataset
 #' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -438,6 +445,7 @@ print.nmr_dataset <- function(x, ...) {
 
 #' @family class helper functions
 #' @family nmr_dataset functions
+#' @name format_nmr_dataset
 #' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -449,6 +457,7 @@ format.nmr_dataset <- function(x, ...) {
 }
 
 #' @return Validate nmr_dataset objects
+#' @name validate_nmr_dataset
 #' @param samples An nmr_dataset object
 #' @family class helper functions
 #' @family nmr_dataset functions
@@ -465,12 +474,15 @@ validate_nmr_dataset <- function(samples) {
     samples
 }
 
-#' @return Create an nmr_dataset object
+#' Create an nmr_dataset object
+#' 
 #' @param metadata A named list of data frames
 #' @param data_fields A named list. Check the examples
 #' @param axis A list. Check the examples
 #' @family class helper functions
 #' @family nmr_dataset functions
+#' @name new_nmr_dataset 
+#' @return Create an nmr_dataset object
 #' @export
 #' @return Create an nmr_dataset object
 #' @examples

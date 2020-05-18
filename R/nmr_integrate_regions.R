@@ -111,10 +111,12 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
                                metadata = samples$metadata)
 }
 
-#' @return Integrate peak positions
-#'
+#' Integrate peak positions
+#' 
 #' The function allows the integration of a given ppm vector with a specific width.
-#'
+#' 
+#' @return Integrate peak positions
+#' @name nmr_integrate_peak_positions
 #' @param samples A [nmr_dataset] object
 #' @inheritParams regions_from_peak_table
 #' @inheritDotParams nmr_integrate_regions
@@ -122,7 +124,9 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #' @inherit nmr_integrate_regions return
 #' @export
 #' @examples
-#' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' nmr_dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' # 0. Multiprocess (parallelization) to set the number of cores working in your PC
 #' plan(multiprocess, workers = 12)
 #'
@@ -180,9 +184,11 @@ nmr_integrate_peak_positions <- function(samples,
     nmr_integrate_regions(samples, regions, ...)
 }
 
-#' @return Get integrals with metadata from `integrate peak positions`
-#'
+#' Get integrals with metadata from `integrate peak positions`
+#' 
 #' @param integration_object A [nmr_dataset] object
+#' @return Get integrals with metadata from `integrate peak positions`
+#' @name get_integration_with_metada
 #' @examples
 #' \dontrun{
 #' peak_table_integration = nmr_integrate_peak_positions(

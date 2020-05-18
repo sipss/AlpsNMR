@@ -45,11 +45,12 @@ validate_nmr_dataset_peak_table <-
         nmr_dataset_peak_table
     }
 
-#' @return Creates a new nmr_dataset_peak_table object from scratch
-#'
+#' Creates a new nmr_dataset_peak_table object from scratch
+#' 
 #' @param peak_table A numeric matrix with one NMR spectrum on each row
 #' @param metadata A list of data frames with at least the `NMRExperiment` column
-#'
+#' @return Creates a new nmr_dataset_peak_table object from scratch
+#' @name new_nmr_dataset_peak_table 
 #' @importFrom assertthat assert_that
 #' @importFrom glue glue
 #' @family nmr_dataset_peak_table functions

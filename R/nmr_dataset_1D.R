@@ -20,9 +20,10 @@
 NULL
 
 #' Validate 1D nmr datasets
+#' @name validate_nmr_dataset
 #' @param nmr_dataset_1D An [nmr_dataset_1D] object
 #' @return The [nmr_dataset_1D] unchanged
-#'
+#' 
 #' This function is useful for its side-effects. Stopping in case of error
 #'
 #' @family class helper functions
@@ -63,6 +64,7 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
 
 #' Creates a new 1D nmr_dataset object from scratch
 #'
+#' @name new_nmr_dataset_1D
 #' @param ppm_axis A numeric vector with the ppm values for the columns of data_1r
 #' @param data_1r A numeric matrix with one NMR spectrum on each row
 #' @param metadata A list of data frames with at least the `NMRExperiment` column
@@ -87,7 +89,7 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
 #'                                            data_1r = dummy_spectra_matrix,
 #'                                            metadata = metadata)
 #'                                                  
-
+#'                                                  
 new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
     samples <- list()
     samples[["metadata"]] <- metadata
@@ -115,6 +117,7 @@ is.nmr_dataset_1D <- function(x)
 
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
+#' @name print_nmr_dataset_1D
 #' @export
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -128,6 +131,7 @@ print.nmr_dataset_1D <- function(x, ...) {
 
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
+#' @name format_nmr_dataset_1D
 #' @export
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -145,6 +149,7 @@ format.nmr_dataset_1D <- function(x, ...) {
 #' @family subsetting functions
 #' @family nmr_dataset_1D functions
 #' @export
+#' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
@@ -166,7 +171,7 @@ format.nmr_dataset_1D <- function(x, ...) {
 #' @param filename The csv filename
 #'
 #' @return The nmr_dataset object (unmodified)
-#' @export
+#' @export 
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
