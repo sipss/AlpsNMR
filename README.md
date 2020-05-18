@@ -12,13 +12,32 @@ outlier detection among others. See the package vignette for details.
 
 ## Installation
 
-AlpsNMR can be installed with the `remotes` package. Note that it uses packages from
+AlpsNMR can be installed with the `devtools` package. For this is needed Rtools and note that it uses packages from
 CRAN, from BioConductor and from git repositories:
 
+Download Rtools for version 3.6
+[![Rtools 3.6](https://cran.r-project.org/bin/windows/Rtools/Rtools35.exe)]
+
+As you can see in Rtools website, is needed one additional step, Putting Rtools on the PATH
+[![Rtools web](https://cran.r-project.org/bin/windows/Rtools/)]
+
+The easiest way is to create Renviron file executing this command in R, (take care because if exist previous Renviron file will be erased, in this case that that file to the Renvion):
+
 ```r
-install.packages(c("BiocManager", "remotes"))
-BiocManager::install(c("MassSpecWavelet", "impute"), update = FALSE)
-remotes::install_github("sipss/AlpsNMR")
+writeLines('PATH="C:\\Rtool\\bin;${PATH}"', con = "~/.Renviron")
+```
+
+Now restart R, and verify that make can be found, which should show the path to your Rtools installation. (In Rstudio, ctrl+shift+F10 restart R session)
+
+```r
+Sys.which("make")
+## "C:\\Rtools\\bin\\make.exe"
+```
+Install AlpsNMR:
+
+```r
+if (!"devtools" %in% rownames(installed.packages())) install.packages("devtools") 
+devtools::install_github("sipss/AlpsNMR")
 ```
 
 Quick start
