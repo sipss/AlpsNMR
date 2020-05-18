@@ -45,6 +45,10 @@ NULL
 #' @family nmr_dataset functions
 #' @family import/export functions
 #' @export
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' 
 nmr_read_samples_dir <- function(samples_dir,
                                  format = "bruker",
                                  pulse_sequence = NULL,
@@ -109,6 +113,12 @@ nmr_read_samples_dir_internal <- function(samples_dir,
 
 #' @rdname nmr_read_samples
 #' @export
+#' @examples 
+#' glob <- "*0"
+#' samples_dir <- system.file("dataset-demo", package = "AlpsNMR")
+#' NMRExperiments <- as.character(fs::dir_ls(samples_dir, glob = glob))
+#' nmr_dataset <- nmr_read_samples(NMRExperiments)
+#' 
 nmr_read_samples <- function(sample_names,
                              format = "bruker",
                              pulse_sequence = NULL,
@@ -387,14 +397,14 @@ is.nmr_dataset <- function(x)
 #' @param x an [nmr_dataset] object
 #' @param i indices of the samples to keep
 #' @return an nmr_dataset with the extracted samples
-#' @examples
-#' \dontrun{
-#' data <- nm_read_samples_dir("your_dir")
-#' data2 <- data[1:3] # get the first 3 samples
-#' }
 #' @family subsetting functions
 #' @family nmr_dataset functions
 #' @export
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset2 <- dataset[1:3] # get the first 3 samples
+#' 
 `[.nmr_dataset` <- function(x, i) {
     output <- x
     output$metadata <- purrr::map(output$metadata, function(metad) {
@@ -416,6 +426,11 @@ is.nmr_dataset <- function(x)
 #' @family class helper functions
 #' @family nmr_dataset functions
 #' @export
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' print(dataset)
+#' 
 print.nmr_dataset <- function(x, ...) {
     cat(format(x, ...), "\n")
     invisible(x)
@@ -424,6 +439,11 @@ print.nmr_dataset <- function(x, ...) {
 #' @family class helper functions
 #' @family nmr_dataset functions
 #' @export
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' format(dataset)
+#' 
 format.nmr_dataset <- function(x, ...) {
     paste0("An nmr_dataset (", x$num_samples, " samples)")
 }
@@ -433,6 +453,11 @@ format.nmr_dataset <- function(x, ...) {
 #' @family class helper functions
 #' @family nmr_dataset functions
 #' @export
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' validate_nmr_dataset(dataset)
+#' 
 validate_nmr_dataset <- function(samples) {
     validate_nmr_dataset_family(samples)
     assert_that(inherits(samples, "nmr_dataset"),
