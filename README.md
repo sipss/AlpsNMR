@@ -15,6 +15,16 @@ outlier detection among others. See the package vignette for details.
 AlpsNMR can be installed with the `devtools` package. For this is needed Rtools and note that it uses packages from
 CRAN, from BioConductor and from git repositories:
 
+If you already have Rtools, follow this to install AlspNMR:
+
+```r
+if (!"devtools" %in% rownames(installed.packages()))  
+install.packages("devtools")  
+devtools::install_github("sipss/AlpsNMR")
+```
+
+If you need install Rtools:
+
 Download Rtools for version 3.6
 [[Rtools 3.6](https://cran.r-project.org/bin/windows/Rtools/Rtools35.exe)]
 
