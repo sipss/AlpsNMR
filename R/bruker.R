@@ -803,6 +803,8 @@ bruker_merge_meta_pdata <- function(meta, pdata) {
 #' @return A character vector of the same length as path, with the zip file names
 #' @family import/export functions
 #' @export
+#' @examples 
+#' outpaths <- nmr_zip_bruker_samples(".", getwd())
 nmr_zip_bruker_samples <-
     function(path, workdir, overwrite = FALSE, ...) {
         current_wd <- getwd()
@@ -861,6 +863,8 @@ nmr_zip_bruker_samples <-
 #' @return A numeric vector with the free induction decay values
 #' @export
 #' @family import/export functions
+#' @examples 
+#' fid <- nmr_read_bruker_fid("sample.fid")
 nmr_read_bruker_fid <- function(sample_name, endian = "little") {
     fid_file <- file.path(sample_name, "fid")
     num_numbers <- file.size(fid_file) / 8

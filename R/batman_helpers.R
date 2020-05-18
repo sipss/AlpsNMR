@@ -56,6 +56,8 @@ NULL
 #' @return A batman_options object with the Batman Options
 #' @family batman functions
 #' @export
+#' @examples 
+#' bopts <- nmr_batman_options()
 nmr_batman_options <- function(ppmRange = matrix(
     c(3.0, 3.1,
       3.6, 3.7,
@@ -134,6 +136,9 @@ csFlag = 0) {
 
 #' @rdname nmr_batman
 #' @export
+#' @examples 
+#' bopts <- nmr_batman_options()
+#' nmr_batman_write_options(bopts)
 nmr_batman_write_options <-
     function(bopts,
              batman_dir = "BatmanInput",
@@ -235,6 +240,10 @@ batman_get_full_filename <- function(batman_dir, filename) {
 
 #' @rdname nmr_batman
 #' @export
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' nmr_batman_export_dataset(dataset)
 nmr_batman_export_dataset <-
     function(nmr_dataset,
              batman_dir = "BatmanInput",
@@ -253,6 +262,8 @@ nmr_batman_export_dataset <-
 
 #' @rdname nmr_batman
 #' @export
+#' @examples 
+#' multi_data_user_hmdb <- nmr_batman_multi_data_user_hmdb()
 nmr_batman_multi_data_user_hmdb <-
     function(batman_dir = "BatmanInput",
              filename = "multi_data_user.csv") {
@@ -269,6 +280,11 @@ nmr_batman_multi_data_user_hmdb <-
 
 #' @rdname nmr_batman
 #' @export
+#' @examples 
+#' hmdb <- NULL
+#' utils::data("hmdb", package = "AlpsNMR", envir = environment())
+#' hmdb <- nmr_batman_multi_data_user(hmbd)
+#' 
 nmr_batman_multi_data_user <-
     function(multiplet_table,
              batman_dir = "BatmanInput",
@@ -319,6 +335,8 @@ nmr_batman_multi_data_user <-
 
 #' @rdname nmr_batman
 #' @export
+#' metabolite_names <- c("alanine", "glucose")
+#' metabolite_names <- nmr_batman_metabolites_list(metabolite_names)
 nmr_batman_metabolites_list <- function(metabolite_names,
                                         batman_dir = "BatmanInput",
                                         filename = "metabolitesList.csv") {
