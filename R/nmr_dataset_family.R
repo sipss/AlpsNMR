@@ -21,6 +21,11 @@ NULL
 #' @family nmr_dataset_family functions
 #' @family class helper functions
 #' @export
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' validate_nmr_dataset_family(dataset_1D)
 validate_nmr_dataset_family <- function(nmr_dataset_family) {
     assert_that(inherits(nmr_dataset_family, "nmr_dataset_family"),
                             msg = "Not an nmr_dataset_family object")
@@ -67,6 +72,7 @@ validate_nmr_dataset_family <- function(nmr_dataset_family) {
 
 #' @importFrom dplyr filter
 #' @export
+#' @examples 
 dplyr::filter
 
 #' Keep samples based on metadata column criteria
@@ -78,13 +84,14 @@ dplyr::filter
 #' @family nmr_dataset_family manipulation functions
 #' @family subsetting functions
 #' @examples
-#' \dontrun{
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' ## example 1
-#' placebo_samples <- filter(nmr_dataset, Group == "placebo")
+#' placebo_samples <- filter(dataset_1D, Group == "placebo")
 #'
 #' ## example 2
-#' test_samples <- nmr_dataset %>% filter(nmr_peak_table$metadata$external$Group == "placebo")
-#' }
+#' #test_samples <- dataset_1D %>% filter(nmr_peak_table$metadata$external$Group == "placebo")
 #' @export
 filter.nmr_dataset_family <- function(.data, ...) {
     dots <- rlang::quos(...)
