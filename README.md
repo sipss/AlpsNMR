@@ -18,6 +18,9 @@ CRAN, from BioConductor and from git repositories:
 If you already have Rtools, follow this to install AlspNMR:
 
 ```r
+if (!"BiocManager" %in% rownames(installed.packages()))  
+    install.packages("BiocManager")  
+BiocManager::install(c("MassSpecWavelet", "impute"), update = FALSE)  
 if (!"devtools" %in% rownames(installed.packages()))  
     install.packages("devtools")  
 devtools::install_github("sipss/AlpsNMR")
@@ -46,6 +49,9 @@ Sys.which("make")
 Install AlpsNMR:
 
 ```r
+if (!"BiocManager" %in% rownames(installed.packages()))  
+    install.packages("BiocManager")  
+BiocManager::install(c("MassSpecWavelet", "impute"), update = FALSE)  
 if (!"devtools" %in% rownames(installed.packages()))  
     install.packages("devtools")  
 devtools::install_github("sipss/AlpsNMR")
