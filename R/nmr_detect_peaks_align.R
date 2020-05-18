@@ -246,10 +246,14 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #' @family peak detection functions
 #' @family nmr_dataset_1D functions
 #' @export
+#' @examples 
+#' \dontrun{
+#' Error in apply(nmr_dataset$data_1r[, threshold_ind], 2, mean) : dim(X) must have a positive length
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' peaks_detected <- nmr_detect_peaks_tune_snr(dataset_1D)
+#' }
 nmr_detect_peaks_tune_snr <-
     function(ds,
              NMRExperiment = NULL,
@@ -480,7 +484,7 @@ nmr_ppm_resolution <- function(nmr_dataset) {
 
 #' @rdname nmr_ppm_resolution
 #' @family nmr_dataset functions
-#' @export
+#' @export 
 #' @examples
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 #' nmr_ppm_resolution(nmr_dataset)
@@ -498,7 +502,8 @@ nmr_ppm_resolution.nmr_dataset <- function(nmr_dataset) {
 
 #' @rdname nmr_ppm_resolution
 #' @family nmr_dataset_1D functions
-#' @export
+#' @export 
+#' @examples 
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 #' nmr_ppm_resolution(nmr_dataset)
 #' message("the ppm resolution of this dataset is ", nmr_ppm_resolution(nmr_dataset), " ppm")
@@ -518,7 +523,7 @@ nmr_ppm_resolution.nmr_dataset_1D <- function(nmr_dataset) {
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 #' nmr_ppm_resolution(nmr_dataset)
 #' @return Numeric (the ppm resolution, measured in ppms)
-#' @export
+#' @export 
 #'
 ppm_resolution <- function (nmr_dataset) {
     unlist(nmr_ppm_resolution(nmr_dataset[1]))

@@ -28,10 +28,14 @@ verify_axisn <- function(axisn, one_sample_axis) {
     return(axisn)
 }
 
-#' @return Interpolate a set of 1D NMR Spectra
+#' Interpolate a set of 1D NMR Spectra
+#' 
 #' @param samples An NMR dataset
 #' @param axis The ppm axis range and optionally the ppm step
+#' @return Interpolate a set of 1D NMR Spectra
+#' @name nmr_interpolate_1D
 #' @export
+#' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
@@ -43,7 +47,8 @@ nmr_interpolate_1D <- function(samples, axis = c(min = 0.2, max = 10, by = 0.000
 #' @rdname nmr_interpolate_1D
 #' @family nmr_dataset functions
 #' @family nmr_dataset_1D functions
-#' @export
+#' @export 
+#' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))

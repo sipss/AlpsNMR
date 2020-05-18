@@ -256,11 +256,12 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)    {
     message("Ending pipe_outlier_detection at ", Sys.time())
 }
 
-#' @return Pipeline: Filter samples according to metadata conditions
+#' Pipeline: Filter samples according to metadata conditions
 #'
 #' @inheritParams pipe_add_metadata
+#' @return Pipeline: Filter samples according to metadata conditions
+#' @name pipe_filter_samples
 #' @param conditions A character vector with conditions to filter metadata.
-#'
 #' The `conditions` parameter should be a character vector of valid R logical conditions.
 #' Some examples:
 #'
@@ -308,11 +309,13 @@ pipe_filter_samples <-
         message("Ending pipe_filter_samples at ", Sys.time())
     }
 
-#' @return Pipeline: Peak detection and Alignment
+#' Pipeline: Peak detection and Alignment
+#' 
 #' @inheritParams pipe_add_metadata
 #' @inheritParams nmr_detect_peaks
 #' @inheritParams nmr_align
-#'
+#' @return Pipeline: Peak detection and Alignment
+#' @name pipe_pakdet_align
 #' @export
 #' @family pipeline functions
 #' @family peak detection functions
@@ -381,12 +384,13 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
 }
 
 
-#' @return Pipeline: Peak integration
+#' Pipeline: Peak integration
 #'
 #' @inheritParams pipe_add_metadata
 #' @param peak_det_align_dir Output directory from [pipe_peakdet_align]
 #' @param peak_width_ppm A peak width in ppm
-#'
+#' @return Pipeline: Peak integration
+#' @name pipe_peak_integration
 #' @importFrom rlang .data
 #' @export
 #' @family pipeline functions
@@ -436,13 +440,15 @@ pipe_peak_integration <-
     }
 
 
-#' @return Pipe: Full spectra normalization
+#' Pipe: Full spectra normalization
 #'
 #' Normalize the full spectra to the internal calibrant region, then exclude
 #' that region and finally perform PQN normalization.
 #'
 #' If there is no internal calibrant, only the PQN normalization is done.
 #'
+#' @return Pipe: Full spectra normalization
+#' @name Pipe_normalization
 #' @inheritParams pipe_add_metadata
 #' @param internal_calibrant A ppm range where the internal calibrant is, or `NULL`.
 #'

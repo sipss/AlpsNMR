@@ -11,6 +11,7 @@
 NULL
 
 #' @rdname load_and_save_functions
+#' @title nmr_dataset_load
 #' @export
 #' @return load nmr dataset
 #' @examples 
@@ -22,6 +23,7 @@ nmr_dataset_load <- function(file_name) {
 }
 
 #' @rdname load_and_save_functions
+#' @title nmr_dataset_save
 #' @export
 #' @return save nmr dataset
 #' @examples 
