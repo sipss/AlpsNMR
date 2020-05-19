@@ -58,28 +58,25 @@ NULL
 #' #If you wanted the final peak table before machine learning you can run
 #' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
 #'
-validate_nmr_dataset_peak_table <-
-    function(nmr_dataset_peak_table) {
-        validate_nmr_dataset_family(nmr_dataset_peak_table)
-        assert_that(inherits(nmr_dataset_peak_table, "nmr_dataset_peak_table"),
-                                msg = "Not an nmr_dataset_peak_table")
-        
-        assert_that("peak_table" %in% names(nmr_dataset_peak_table),
-                                msg = "nmr_dataset_peak_table must have a peak_table matrix")
-        
-        peak_table <- nmr_dataset_peak_table[["peak_table"]]
-        assert_that(is.matrix(peak_table) && is.numeric(peak_table),
-                                msg = "peak_table must be a numeric matrix")
-        
-        num_samples <- nrow(peak_table)
-        
-        assert_that(num_samples == nmr_dataset_peak_table[["num_samples"]],
-                                msg = "The num_samples value does not match nrow(peak_table)")
-        
-        
-        
-        nmr_dataset_peak_table
-    }
+validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
+    validate_nmr_dataset_family(nmr_dataset_peak_table)
+    assert_that(inherits(nmr_dataset_peak_table, "nmr_dataset_peak_table"),
+                msg = "Not an nmr_dataset_peak_table")
+    
+    assert_that("peak_table" %in% names(nmr_dataset_peak_table),
+                msg = "nmr_dataset_peak_table must have a peak_table matrix")
+    
+    peak_table <- nmr_dataset_peak_table[["peak_table"]]
+    assert_that(is.matrix(peak_table) && is.numeric(peak_table),
+                msg = "peak_table must be a numeric matrix")
+    
+    num_samples <- nrow(peak_table)
+    
+    assert_that(num_samples == nmr_dataset_peak_table[["num_samples"]],
+                msg = "The num_samples value does not match nrow(peak_table)")
+    
+    nmr_dataset_peak_table
+}
 
 #' Creates a new nmr_dataset_peak_table object from scratch
 #' 

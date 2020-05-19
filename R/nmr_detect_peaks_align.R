@@ -143,42 +143,41 @@ nmr_detect_peaks <- function(nmr_dataset,
 #' 
 #' @family peak detection functions
 #' @family nmr_dataset_1D functions
-nmr_detect_peaks_plot <-
-    function(nmr_dataset,
-             peak_data,
-             NMRExperiment,
-             ...) {
-        if (!rlang::is_scalar_character(NMRExperiment)) {
-            stop("NMRExperiment should be a string")
-        }
-        # If we plot only a subset of the data, we also plot only the required
-        # vertical lines:
-        dots <- list(...)
-        if ("chemshift_range" %in% names(dots)) {
-            chemshift_range <- dots[["chemshift_range"]]
-            chemshift_range[seq_len(2)] <-
-                range(chemshift_range[seq_len(2)])
-        } else {
-            chemshift_range <- range(peak_data$ppm)
-        }
-        peak_data_to_show <- dplyr::filter(
-            peak_data,
-            .data$NMRExperiment == !!NMRExperiment,
-            .data$ppm > chemshift_range[1] &
-                .data$ppm < chemshift_range[2]
-        )
-        # Plot:
-        plot(nmr_dataset,
-             NMRExperiment = NMRExperiment,
-             ...,
-             interactive = FALSE) +
-            ggplot2::geom_vline(
-                data = peak_data_to_show,
-                ggplot2::aes_string(xintercept = "ppm"),
-                color = "black",
-                linetype = "dashed"
-            )
+nmr_detect_peaks_plot <- function(nmr_dataset,
+                                  peak_data,
+                                  NMRExperiment,
+                                  ...) {
+    if (!rlang::is_scalar_character(NMRExperiment)) {
+        stop("NMRExperiment should be a string")
     }
+    # If we plot only a subset of the data, we also plot only the required
+    # vertical lines:
+    dots <- list(...)
+    if ("chemshift_range" %in% names(dots)) {
+        chemshift_range <- dots[["chemshift_range"]]
+        chemshift_range[seq_len(2)] <-
+            range(chemshift_range[seq_len(2)])
+    } else {
+        chemshift_range <- range(peak_data$ppm)
+    }
+    peak_data_to_show <- dplyr::filter(
+        peak_data,
+        .data$NMRExperiment == !!NMRExperiment,
+        .data$ppm > chemshift_range[1] &
+            .data$ppm < chemshift_range[2]
+    )
+    # Plot:
+    plot(nmr_dataset,
+         NMRExperiment = NMRExperiment,
+         ...,
+         interactive = FALSE) +
+        ggplot2::geom_vline(
+            data = peak_data_to_show,
+            ggplot2::aes_string(xintercept = "ppm"),
+            color = "black",
+            linetype = "dashed"
+        )
+}
 
 #' Convert a speaq::detectSpecPeaks peak list to an interpretable data frame
 #' @noRd

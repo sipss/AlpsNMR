@@ -10,11 +10,12 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' pipe_load_samples(dir_to_demo_dataset,
 #'                   glob = "*0",
 #'                   output_dir = "./pipe_output")
-#' \dontrun{
+#' 
 #' pipe_load_samples("/dir/with/nmr/samples/",
 #'                   glob = "*0",
 #'                   output_dir = "/dir/to/save/output")
