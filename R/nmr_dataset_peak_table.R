@@ -24,7 +24,7 @@ NULL
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' nmr_dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #'
 #' # 1.Peak detection in the dataset.
 #' peak_data <- nmr_detect_peaks(nmr_dataset,
@@ -54,6 +54,9 @@ NULL
 #'                       peak_width_ppm = NULL)
 #' 
 #' validate_nmr_dataset_peak_table(nmr_peak_table)
+#'
+#' #If you wanted the final peak table before machine learning you can run
+#' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
 #'
 validate_nmr_dataset_peak_table <-
     function(nmr_dataset_peak_table) {
