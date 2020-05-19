@@ -10,33 +10,36 @@
 #' @export
 #'
 #' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' pipe_load_samples(dir_to_demo_dataset,
+#'                   glob = "*0",
+#'                   output_dir = "./pipe_output")
 #' \dontrun{
 #' pipe_load_samples("/dir/with/nmr/samples/",
 #'                   glob = "*0",
 #'                   output_dir = "/dir/to/save/output")
 #'}
-pipe_load_samples <-
-    function(samples_dir,
-             glob = "*0",
-             output_dir = NULL) {
-        message("Starting pipe_load_samples at ", Sys.time())
-        
-        if (is.null(output_dir)) {
-            stop("An output directory must be specified")
-        }
-        
-        fs::dir_create(output_dir)
-        NMRExperiments <-
-            as.character(fs::dir_ls(samples_dir, glob = glob))
-        nmr_dataset <- nmr_read_samples(NMRExperiments)
-        message("Saving pipe_load_samples results at ", Sys.time())
-        nmr_dataset_rds <- fs::path(output_dir, "nmr_dataset.rds")
-        nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
-        nmr_meta_export(nmr_dataset,
-                        fs::path(output_dir, "nmr_dataset_metadata.xlsx"))
-        message(nmr_dataset$num_samples, " samples loaded.")
-        message("Ending pipe_load_samples at ", Sys.time())
+pipe_load_samples <- function(samples_dir,
+                              glob = "*0",
+                              output_dir = NULL) {
+    message("Starting pipe_load_samples at ", Sys.time())
+    
+    if (is.null(output_dir)) {
+        stop("An output directory must be specified")
     }
+    
+    fs::dir_create(output_dir)
+    NMRExperiments <-
+        as.character(fs::dir_ls(samples_dir, glob = glob))
+    nmr_dataset <- nmr_read_samples(NMRExperiments)
+    message("Saving pipe_load_samples results at ", Sys.time())
+    nmr_dataset_rds <- fs::path(output_dir, "nmr_dataset.rds")
+    nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
+    nmr_meta_export(nmr_dataset,
+                    fs::path(output_dir, "nmr_dataset_metadata.xlsx"))
+    message(nmr_dataset$num_samples, " samples loaded.")
+    message("Ending pipe_load_samples at ", Sys.time())
+}
 
 
 #' Pipeline: Add Metadata
@@ -80,29 +83,30 @@ pipe_load_samples <-
 #'                                     excel_file = excel_file)
 #' # Check out: output_dir
 #'}
-pipe_add_metadata <-
-    function(nmr_dataset_rds, excel_file, output_dir) {
-        message("Starting pipe_add_metadata at ", Sys.time())
-        
-        if (is.null(output_dir)) {
-            stop("An output directory must be specified")
-        }
-        
-        fs::dir_create(output_dir)
-        env <- new.env()
-        env$nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
-        env$excel_file <- excel_file
-        env$xlsx_file <-
-            as.character(fs::path(output_dir, "nmr_metadata_added.xlsx"))
-        env$nmr_dataset_outfile <-
-            as.character(fs::path(output_dir, "nmr_dataset.rds"))
-        rmd_file <-
-            system.file("pipeline-rmd", "add-metadata.Rmd", package = "AlpsNMR")
-        rmarkdown::render(input = rmd_file,
-                          output_dir = output_dir,
-                          envir = env)
-        message("Ending pipe_add_metadata at ", Sys.time())
+pipe_add_metadata <- function(nmr_dataset_rds,
+                              excel_file,
+                              output_dir) {
+    message("Starting pipe_add_metadata at ", Sys.time())
+    
+    if (is.null(output_dir)) {
+        stop("An output directory must be specified")
     }
+    
+    fs::dir_create(output_dir)
+    env <- new.env()
+    env$nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+    env$excel_file <- excel_file
+    env$xlsx_file <-
+        as.character(fs::path(output_dir, "nmr_metadata_added.xlsx"))
+    env$nmr_dataset_outfile <-
+        as.character(fs::path(output_dir, "nmr_dataset.rds"))
+    rmd_file <-
+        system.file("pipeline-rmd", "add-metadata.Rmd", package = "AlpsNMR")
+    rmarkdown::render(input = rmd_file,
+                      output_dir = output_dir,
+                      envir = env)
+    message("Ending pipe_add_metadata at ", Sys.time())
+}
 
 
 #' Pipeline: Interpolate 1D samples
@@ -138,8 +142,6 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis, output_dir) {
     
     message("Ending pipe_interpolate_1D at ", Sys.time())
 }
-
-
 
 
 #' Pipeline: Exclude regions
@@ -274,40 +276,43 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)    {
 #'
 #' @export
 #' @family pipeline functions
-pipe_filter_samples <-
-    function(nmr_dataset_rds, conditions, output_dir) {
-        message("Starting pipe_filter_samples at ", Sys.time())
-        
-        if (is.null(output_dir)) {
-            stop("An output directory must be specified")
-        }
-        
-        fs::dir_create(output_dir)
-        
-        metadata_fn <- file.path(output_dir, "metadata.xlsx")
-        raw_data_matrix_fn <- file.path(output_dir, "raw_data.csv")
-        nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
-        
-        nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
-        
-        conditions_expr <- rlang::parse_exprs(conditions)
-        
-        nmr_dataset <- AlpsNMR::filter(nmr_dataset,!!!conditions_expr)
-        
-        
-        message("Saving pipe_filter_samples at ", Sys.time())
-        nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
-        nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
-        nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
-        pasted_conditions <-
-            glue::glue_collapse(conditions,
-                                sep = ", ",
-                                width = 80,
-                                last = ", ")
-        message("Dataset filtered by: ", pasted_conditions)
-        
-        message("Ending pipe_filter_samples at ", Sys.time())
+pipe_filter_samples <- function(nmr_dataset_rds,
+                                conditions,
+                                output_dir) {
+    message("Starting pipe_filter_samples at ", Sys.time())
+    
+    if (is.null(output_dir)) {
+        stop("An output directory must be specified")
     }
+    
+    fs::dir_create(output_dir)
+    
+    metadata_fn <- file.path(output_dir, "metadata.xlsx")
+    raw_data_matrix_fn <- file.path(output_dir, "raw_data.csv")
+    nmr_dataset_outfile <-
+        file.path(output_dir, "nmr_dataset.rds")
+    
+    nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+    
+    conditions_expr <- rlang::parse_exprs(conditions)
+    
+    nmr_dataset <-
+        AlpsNMR::filter(nmr_dataset, !!!conditions_expr)
+    
+    
+    message("Saving pipe_filter_samples at ", Sys.time())
+    nmr_export_data_1r(nmr_dataset, raw_data_matrix_fn)
+    nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
+    nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
+    pasted_conditions <-
+        glue::glue_collapse(conditions,
+                            sep = ", ",
+                            width = 80,
+                            last = ", ")
+    message("Dataset filtered by: ", pasted_conditions)
+    
+    message("Ending pipe_filter_samples at ", Sys.time())
+}
 
 #' Pipeline: Peak detection and Alignment
 #' 
@@ -396,48 +401,48 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
 #' @family pipeline functions
 #' @family peak integration functions
 #'
-pipe_peak_integration <-
-    function(nmr_dataset_rds,
-             peak_det_align_dir,
-             peak_width_ppm,
-             output_dir) {
-        message("Starting pipe_peak_integration at ", Sys.time())
-        
-        if (is.null(output_dir)) {
-            stop("An output directory must be specified")
-        }
-        
-        fs::dir_create(output_dir)
-        
-        # Input files from previous node:
-        peak_data_fn <- file.path(peak_det_align_dir, "peak_data.csv")
-        NMRExp_ref_fn <-
-            file.path(peak_det_align_dir, "NMRExperiment_align_ref.txt")
-        
-        # Output files:
-        metadata_fn <- file.path(output_dir, "metadata.xlsx")
-        peak_table_fn <- file.path(output_dir, "peak_table.csv")
-        nmr_peak_table_rds <-
-            file.path(output_dir, "nmr_peak_table.rds")
-        
-        nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
-        peak_data <- utils::read.csv(file = peak_data_fn)
-        NMRExperimentRef <- readLines(NMRExp_ref_fn)
-        peak_data_integ <-
-            dplyr::filter(peak_data, .data$NMRExperiment == !!NMRExperimentRef)
-        nmr_peak_table <- nmr_integrate_peak_positions(
-            samples = nmr_dataset,
-            peak_pos_ppm = peak_data_integ$ppm,
-            peak_width_ppm = peak_width_ppm
-        )
-        
-        
-        message("Saving pipe_peak_integration at ", Sys.time())
-        nmr_dataset_save(nmr_peak_table, nmr_peak_table_rds)
-        nmr_meta_export(nmr_peak_table, metadata_fn, groups = "external")
-        utils::write.csv(nmr_data(nmr_peak_table), peak_table_fn, row.names = FALSE)
-        message("Ending pipe_peak_integration at ", Sys.time())
+pipe_peak_integration <- function(nmr_dataset_rds,
+                                  peak_det_align_dir,
+                                  peak_width_ppm,
+                                  output_dir) {
+    message("Starting pipe_peak_integration at ", Sys.time())
+    
+    if (is.null(output_dir)) {
+        stop("An output directory must be specified")
     }
+    
+    fs::dir_create(output_dir)
+    
+    # Input files from previous node:
+    peak_data_fn <-
+        file.path(peak_det_align_dir, "peak_data.csv")
+    NMRExp_ref_fn <-
+        file.path(peak_det_align_dir, "NMRExperiment_align_ref.txt")
+    
+    # Output files:
+    metadata_fn <- file.path(output_dir, "metadata.xlsx")
+    peak_table_fn <- file.path(output_dir, "peak_table.csv")
+    nmr_peak_table_rds <-
+        file.path(output_dir, "nmr_peak_table.rds")
+    
+    nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+    peak_data <- utils::read.csv(file = peak_data_fn)
+    NMRExperimentRef <- readLines(NMRExp_ref_fn)
+    peak_data_integ <-
+        dplyr::filter(peak_data, .data$NMRExperiment == !!NMRExperimentRef)
+    nmr_peak_table <- nmr_integrate_peak_positions(
+        samples = nmr_dataset,
+        peak_pos_ppm = peak_data_integ$ppm,
+        peak_width_ppm = peak_width_ppm
+    )
+    
+    
+    message("Saving pipe_peak_integration at ", Sys.time())
+    nmr_dataset_save(nmr_peak_table, nmr_peak_table_rds)
+    nmr_meta_export(nmr_peak_table, metadata_fn, groups = "external")
+    utils::write.csv(nmr_data(nmr_peak_table), peak_table_fn, row.names = FALSE)
+    message("Ending pipe_peak_integration at ", Sys.time())
+}
 
 
 #' Pipe: Full spectra normalization
@@ -454,81 +459,81 @@ pipe_peak_integration <-
 #'
 #' @family pipeline functions
 #' @export
-pipe_normalization <-
-    function(nmr_dataset_rds,
-             internal_calibrant = NULL,
-             output_dir = NULL) {
-        message("Starting pipe_normalization at ", Sys.time())
-        
-        if (is.null(output_dir)) {
-            stop("An output directory must be specified")
-        }
-        
-        fs::dir_create(output_dir)
-        
-        metadata_fn <- file.path(output_dir, "metadata.xlsx")
-        full_spectra_matrix_fn <-
-            file.path(output_dir, "full_spectra_matrix.csv")
-        nmr_dataset_outfile <- file.path(output_dir, "nmr_dataset.rds")
-        plot_norm_factor_ic <-
-            file.path(output_dir, "normalization_factor_ic.png")
-        plot_norm_factor_pqn <-
-            file.path(output_dir, "normalization_factor_pqn.png")
-        plot_html <- file.path(output_dir, "plot-samples.html")
-        
-        nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
-        if (!is.null(internal_calibrant)) {
-            nmr_dataset_norm_ic <-
-                nmr_normalize(nmr_dataset, method = "region", ppm_range = internal_calibrant)
-            diag <- nmr_normalize_extra_info(nmr_dataset_norm_ic)
-            ggplot2::ggsave(
-                filename = plot_norm_factor_ic,
-                plot = diag$plot,
-                width = 14,
-                height = 8,
-                unit = "cm",
-                dpi = 300
-            )
-            nfactor <- diag$norm_factor
-            nfactor_extreme <- dplyr::filter(nfactor,
-                                             .data$norm_factor_norm > 4 |
-                                                 .data$norm_factor_norm < 1 / 4)
-            
-            if (nrow(nfactor_extreme) > 0) {
-                nmr_experiments_weird <-
-                    glue::glue_collapse(nfactor_extreme$NMRExperiment,
-                                        sep = ", ",
-                                        last = " and ")
-                
-                warning(
-                    "Samples with NMRExperiment ",
-                    nmr_experiments_weird,
-                    " have >4x or <0.25x values in the internal calibrant."
-                )
-            }
-            
-            nmr_dataset_norm_ic <-
-                nmr_exclude_region(nmr_dataset_norm_ic,
-                                   exclude = list(ic = internal_calibrant))
-            # Use the normalized samples for PQN
-            nmr_dataset <- nmr_dataset_norm_ic
-        }
-        nmr_dataset <- nmr_normalize(nmr_dataset, method = "pqn")
-        diag <- nmr_normalize_extra_info(nmr_dataset)
+pipe_normalization <- function(nmr_dataset_rds,
+                               internal_calibrant = NULL,
+                               output_dir = NULL) {
+    message("Starting pipe_normalization at ", Sys.time())
+    
+    if (is.null(output_dir)) {
+        stop("An output directory must be specified")
+    }
+    
+    fs::dir_create(output_dir)
+    
+    metadata_fn <- file.path(output_dir, "metadata.xlsx")
+    full_spectra_matrix_fn <-
+        file.path(output_dir, "full_spectra_matrix.csv")
+    nmr_dataset_outfile <-
+        file.path(output_dir, "nmr_dataset.rds")
+    plot_norm_factor_ic <-
+        file.path(output_dir, "normalization_factor_ic.png")
+    plot_norm_factor_pqn <-
+        file.path(output_dir, "normalization_factor_pqn.png")
+    plot_html <- file.path(output_dir, "plot-samples.html")
+    
+    nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
+    if (!is.null(internal_calibrant)) {
+        nmr_dataset_norm_ic <-
+            nmr_normalize(nmr_dataset, method = "region", ppm_range = internal_calibrant)
+        diag <- nmr_normalize_extra_info(nmr_dataset_norm_ic)
         ggplot2::ggsave(
-            filename = plot_norm_factor_pqn,
+            filename = plot_norm_factor_ic,
             plot = diag$plot,
             width = 14,
             height = 8,
             unit = "cm",
             dpi = 300
         )
+        nfactor <- diag$norm_factor
+        nfactor_extreme <- dplyr::filter(nfactor,
+                                         .data$norm_factor_norm > 4 |
+                                             .data$norm_factor_norm < 1 / 4)
         
+        if (nrow(nfactor_extreme) > 0) {
+            nmr_experiments_weird <-
+                glue::glue_collapse(nfactor_extreme$NMRExperiment,
+                                    sep = ", ",
+                                    last = " and ")
+            
+            warning(
+                "Samples with NMRExperiment ",
+                nmr_experiments_weird,
+                " have >4x or <0.25x values in the internal calibrant."
+            )
+        }
         
-        message("Saving pipe_normalization results at ", Sys.time())
-        nmr_export_data_1r(nmr_dataset, full_spectra_matrix_fn)
-        nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
-        nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
-        plot_webgl(nmr_dataset, html_filename = plot_html)
-        message("Ending pipe_normalization at ", Sys.time())
+        nmr_dataset_norm_ic <-
+            nmr_exclude_region(nmr_dataset_norm_ic,
+                               exclude = list(ic = internal_calibrant))
+        # Use the normalized samples for PQN
+        nmr_dataset <- nmr_dataset_norm_ic
     }
+    nmr_dataset <- nmr_normalize(nmr_dataset, method = "pqn")
+    diag <- nmr_normalize_extra_info(nmr_dataset)
+    ggplot2::ggsave(
+        filename = plot_norm_factor_pqn,
+        plot = diag$plot,
+        width = 14,
+        height = 8,
+        unit = "cm",
+        dpi = 300
+    )
+    
+    
+    message("Saving pipe_normalization results at ", Sys.time())
+    nmr_export_data_1r(nmr_dataset, full_spectra_matrix_fn)
+    nmr_meta_export(nmr_dataset, metadata_fn, groups = "external")
+    nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
+    plot_webgl(nmr_dataset, html_filename = plot_html)
+    message("Ending pipe_normalization at ", Sys.time())
+}

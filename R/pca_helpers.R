@@ -15,41 +15,52 @@
 #' These attributes are used internally by AlpsNMR to create loading plots
 #'
 #' @export
-nmr_pca_build_model <-
-    function(nmr_dataset,
-             ncomp = NULL,
-             center = TRUE,
-             scale = FALSE,
-             ...) {
-        UseMethod("nmr_pca_build_model")
-    }
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' model <- nmr_pca_build_model(dataset_1D)
+#'
+nmr_pca_build_model <- function(nmr_dataset,
+                                ncomp = NULL,
+                                center = TRUE,
+                                scale = FALSE,
+                                ...) {
+    UseMethod("nmr_pca_build_model")
+}
 
 
 #' @rdname nmr_pca_build_model
 #' @family nmr_dataset_1D functions
 #' @export
-nmr_pca_build_model.nmr_dataset_1D <-
-    function(nmr_dataset,
-             ncomp = NULL,
-             center = TRUE,
-             scale = FALSE,
-             ...) {
-        data_1r <- nmr_dataset$data_1r
-        rownames(data_1r) <-
-            nmr_meta_get_column(nmr_dataset, column = "NMRExperiment")
-        pca_model <-
-            mixOmics::pca(
-                X = data_1r,
-                ncomp = ncomp,
-                center = center,
-                scale = scale,
-                ...
-            )
-        # These attributes are used by nmr_pca_loadingplot:
-        attr(pca_model, "nmr_data_axis") <- nmr_dataset$axis
-        attr(pca_model, "nmr_included") <- seq_along(nmr_dataset$axis)
-        pca_model
-    }
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' model <- nmr_pca_build_model(dataset_1D)
+#'
+nmr_pca_build_model.nmr_dataset_1D <- function(nmr_dataset,
+                                               ncomp = NULL,
+                                               center = TRUE,
+                                               scale = FALSE,
+                                               ...) {
+    data_1r <- nmr_dataset$data_1r
+    rownames(data_1r) <-
+        nmr_meta_get_column(nmr_dataset, column = "NMRExperiment")
+    pca_model <-
+        mixOmics::pca(
+            X = data_1r,
+            ncomp = ncomp,
+            center = center,
+            scale = scale,
+            ...
+        )
+    # These attributes are used by nmr_pca_loadingplot:
+    attr(pca_model, "nmr_data_axis") <- nmr_dataset$axis
+    attr(pca_model, "nmr_included") <-
+        seq_along(nmr_dataset$axis)
+    pca_model
+}
 
 #' Plotting functions for PCA
 #'
@@ -65,8 +76,16 @@ NULL
 
 #' @rdname nmr_pca_plots
 #' @export
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' model <- nmr_pca_build_model(dataset_1D)
+#' nmr_pca_plot_variance(model)
+#'
 nmr_pca_plot_variance <- function(pca_model) {
-    cum_var_percent <- 100 * cumsum(pca_model$sdev ^ 2 / pca_model$var.tot)
+    cum_var_percent <-
+        100 * cumsum(pca_model$sdev ^ 2 / pca_model$var.tot)
     ggplot2::qplot(x = seq_along(cum_var_percent),
                    y = cum_var_percent,
                    geom = "line") +
@@ -76,53 +95,68 @@ nmr_pca_plot_variance <- function(pca_model) {
 
 #' @rdname nmr_pca_plots
 #' @export
-nmr_pca_scoreplot <-
-    function(nmr_dataset, pca_model, comp = seq_len(2), ...) {
-        nmr_metadata <- nmr_meta_get(nmr_dataset)
-        scores <-
-            tibble::as_tibble(pca_model$x, rownames = "NMRExperiment") %>%
-            dplyr::left_join(nmr_metadata, by = "NMRExperiment")
-        var_percent <- 100 * pca_model$sdev ^ 2 / pca_model$var.tot
-        axis_labels <-
-            paste0("PC",
-                   seq_along(var_percent),
-                   " (",
-                   round(var_percent, 2),
-                   "%)")
-        names(axis_labels) <- paste0("PC", seq_along(var_percent))
-        if (length(comp) == 2) {
-            xy <- paste0("PC", comp)
-            gplt <- ggplot2::ggplot(
-                data = scores,
-                mapping = ggplot2::aes(
-                    x = !!rlang::sym(xy[1]),
-                    y = !!rlang::sym(xy[2]),
-                    ...
-                )
-            ) +
-                ggplot2::geom_point() +
-                ggplot2::xlab(axis_labels[xy[1]]) +
-                ggplot2::ylab(axis_labels[xy[2]])
-        } else {
-            gplt <- GGally::ggpairs(
-                data = scores,
-                mapping = ggplot2::aes(...),
-                columns = comp + 1,
-                # +1 because the NMRExperiment becomes the first column
-                progress = FALSE,
-                labeller = ggplot2::as_labeller(axis_labels)
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' model <- nmr_pca_build_model(dataset_1D)
+#' nmr_pca_scoreplot(dataset_1D, model)
+#'
+nmr_pca_scoreplot <- function(nmr_dataset,
+                              pca_model,
+                              comp = seq_len(2), ...) {
+    nmr_metadata <- nmr_meta_get(nmr_dataset)
+    scores <-
+        tibble::as_tibble(pca_model$x, rownames = "NMRExperiment") %>%
+        dplyr::left_join(nmr_metadata, by = "NMRExperiment")
+    var_percent <- 100 * pca_model$sdev ^ 2 / pca_model$var.tot
+    axis_labels <-
+        paste0("PC",
+               seq_along(var_percent),
+               " (",
+               round(var_percent, 2),
+               "%)")
+    names(axis_labels) <- paste0("PC", seq_along(var_percent))
+    if (length(comp) == 2) {
+        xy <- paste0("PC", comp)
+        gplt <- ggplot2::ggplot(
+            data = scores,
+            mapping = ggplot2::aes(
+                x = !!rlang::sym(xy[1]),
+                y = !!rlang::sym(xy[2]),
+                ...
             )
-        }
-        gplt
+        ) +
+            ggplot2::geom_point() +
+            ggplot2::xlab(axis_labels[xy[1]]) +
+            ggplot2::ylab(axis_labels[xy[2]])
+    } else {
+        gplt <- GGally::ggpairs(
+            data = scores,
+            mapping = ggplot2::aes(...),
+            columns = comp + 1,
+            # +1 because the NMRExperiment becomes the first column
+            progress = FALSE,
+            labeller = ggplot2::as_labeller(axis_labels)
+        )
     }
+    gplt
+}
 
 #' @rdname nmr_pca_plots
 #' @export
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' model <- nmr_pca_build_model(dataset_1D)
+#' nmr_pca_loadingplot(model, 1)
+#'
 nmr_pca_loadingplot <- function(pca_model, comp) {
     ppm_axis <- attr(pca_model, "nmr_data_axis")
     loadings <-
         matrix(0, nrow = length(ppm_axis), ncol = length(comp))
-    loadings[attr(pca_model, "nmr_included"), ] <-
+    loadings[attr(pca_model, "nmr_included"),] <-
         pca_model$rotation[, comp, drop = FALSE]
     # loadings[,1] # first loading
     loadings <- as.data.frame(loadings)
@@ -159,54 +193,60 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
 #'    - Tscore_critical, QResidual_critical: Critical values, given a quantile, for both Q and T.
 #'
 #' @export
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' model <- nmr_pca_build_model(dataset_1D)
+#' outliers_info <- nmr_pca_outliers(dataset_1D, model)
 #'
-nmr_pca_outliers <-
-    function(nmr_dataset,
-             pca_model,
-             ncomp = NULL,
-             quantile_critical = 0.975) {
-        validate_nmr_dataset_1D(nmr_dataset)
-        
-        if (is.null(ncomp)) {
-            cum_var_percent <- 100 * cumsum(pca_model$sdev ^ 2 / pca_model$var.tot)
-            ncomp <- which(cum_var_percent > 90)[1]
-        }
-        
-        # T scores:
-        scores <- pca_model$variates$X[, seq_len(ncomp), drop = FALSE]
-        variances <- utils::head(pca_model$sdev ^ 2, ncomp)
-        loadings <- pca_model$loadings$X[, seq_len(ncomp), drop = FALSE]
-        Tscore <-
-            sqrt(apply(scores ^ 2 / rep(variances, each = nrow(scores)), 1, sum))
-        
-        # Q residuals
-        Xs <-
-            scale(nmr_dataset$data_1r,
-                  center = pca_model$center,
-                  scale = pca_model$scale)
-        residuals <- Xs - scores %*% t(loadings)
-        Qres <- sqrt(apply(residuals ^ 2, 1, sum))
-        
-        # compute critical values
-        Tscore_critical <- sqrt(stats::qchisq(quantile_critical, ncomp))
-        QResidual_critical <-
-            (stats::median(Qres ^ (2 / 3)) + stats::mad(Qres ^ (2 / 3)) * stats::qnorm(quantile_critical)) ^
-            (3 / 2)
-        
-        outlier_info <- nmr_dataset %>%
-            nmr_meta_get(columns = "NMRExperiment") %>%
-            dplyr::mutate(Tscores = Tscore,
-                          QResiduals = Qres)
-        list(
-            outlier_info = outlier_info,
-            ncomp = ncomp,
-            Tscore_critical = Tscore_critical,
-            QResidual_critical = QResidual_critical
-        )
+nmr_pca_outliers <- function(nmr_dataset,
+                             pca_model,
+                             ncomp = NULL,
+                             quantile_critical = 0.975) {
+    validate_nmr_dataset_1D(nmr_dataset)
+    
+    if (is.null(ncomp)) {
+        cum_var_percent <-
+            100 * cumsum(pca_model$sdev ^ 2 / pca_model$var.tot)
+        ncomp <- which(cum_var_percent > 90)[1]
     }
-
-
-
+    
+    # T scores:
+    scores <-
+        pca_model$variates$X[, seq_len(ncomp), drop = FALSE]
+    variances <- utils::head(pca_model$sdev ^ 2, ncomp)
+    loadings <-
+        pca_model$loadings$X[, seq_len(ncomp), drop = FALSE]
+    Tscore <-
+        sqrt(apply(scores ^ 2 / rep(variances, each = nrow(scores)), 1, sum))
+    
+    # Q residuals
+    Xs <-
+        scale(nmr_dataset$data_1r,
+              center = pca_model$center,
+              scale = pca_model$scale)
+    residuals <- Xs - scores %*% t(loadings)
+    Qres <- sqrt(apply(residuals ^ 2, 1, sum))
+    
+    # compute critical values
+    Tscore_critical <-
+        sqrt(stats::qchisq(quantile_critical, ncomp))
+    QResidual_critical <-
+        (stats::median(Qres ^ (2 / 3)) + stats::mad(Qres ^ (2 / 3)) * stats::qnorm(quantile_critical)) ^
+        (3 / 2)
+    
+    outlier_info <- nmr_dataset %>%
+        nmr_meta_get(columns = "NMRExperiment") %>%
+        dplyr::mutate(Tscores = Tscore,
+                      QResiduals = Qres)
+    list(
+        outlier_info = outlier_info,
+        ncomp = ncomp,
+        Tscore_critical = Tscore_critical,
+        QResidual_critical = QResidual_critical
+    )
+}
 
 
 #' Outlier detection through robust PCA
@@ -240,6 +280,11 @@ nmr_pca_outliers <-
 #' @family PCA related functions
 #' @family outlier detection functions
 #' @family nmr_dataset_1D functions
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' outliers_info <- nmr_pca_outliers_robust(dataset_1D)
 #'
 nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
     validate_nmr_dataset_1D(nmr_dataset)
@@ -317,15 +362,24 @@ nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
 #' @family outlier detection functions
 #' @family nmr_dataset_1D functions
 #' @importFrom rlang .data
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' model <- nmr_pca_build_model(dataset_1D)
+#' outliers_info <- nmr_pca_outliers(dataset_1D, model)
+#' nmr_pca_outliers_plot(dataset_1D, outliers_info)
+#' 
 nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
     outlier_info <- pca_outliers[["outlier_info"]]
     tscore_crit <- pca_outliers[["Tscore_critical"]]
     qres_crit <- pca_outliers[["QResidual_critical"]]
     ncomp <- pca_outliers[["ncomp"]]
     
-    pca_outliers_with_meta <- dplyr::left_join(nmr_meta_get(nmr_dataset, groups = "external"),
-                                               outlier_info,
-                                               by = "NMRExperiment")
+    pca_outliers_with_meta <-
+        dplyr::left_join(nmr_meta_get(nmr_dataset, groups = "external"),
+                         outlier_info,
+                         by = "NMRExperiment")
     
     pca_outliers_with_meta_only_out <- dplyr::filter(
         pca_outliers_with_meta,
@@ -360,7 +414,14 @@ nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
 #' @family outlier detection functions
 #' @family nmr_dataset_1D functions
 #' @family subsetting functions
-#'
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' model <- nmr_pca_build_model(dataset_1D)
+#' outliers_info <- nmr_pca_outliers(dataset_1D, model)
+#' dataset_whitout_outliers <- nmr_pca_outliers_filter(dataset_1D, outliers_info)
+#' 
 nmr_pca_outliers_filter <- function(nmr_dataset, pca_outliers) {
     outlier_info <- pca_outliers[["outlier_info"]]
     tscore_crit <- pca_outliers[["Tscore_critical"]]

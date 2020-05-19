@@ -367,13 +367,6 @@ nmr_detect_peaks_tune_snr <-
 #'                               baselineThresh = 0, # Minimum peak intensity
 #'                               SNR.Th = 4) # Signal to noise ratio
 #' 
-#' # 1.Peak detection in the dataset.
-#' peak_data <- nmr_detect_peaks(dataset_1D,
-#'                               nDivRange_ppm = 0.1, # Size of detection segments
-#'                               scales = seq(1, 16, 2),
-#'                               baselineThresh = 0, # Minimum peak intensity
-#'                               SNR.Th = 4) # Signal to noise ratio
-#'
 #' # 2.Find the reference spectrum to align with.
 #' NMRExp_ref <- nmr_align_find_ref(dataset_1D, peak_data)
 #'
