@@ -8,13 +8,6 @@
 #' @family nmr_dataset_1D functions
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @return Numerical. A peak width (ppm) that may be set in `nmr_integrate_peak_positions`
-#' @examples
-#' \dontrun{
-#' # Este ejemplo da problemas porque el dataset no tiene alanina
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' computes_peak_width_ppm(nmr_dataset)
-#' }
 
 computes_peak_width_ppm = function(nmr_dataset) {
     ppms = nmr_dataset$axis

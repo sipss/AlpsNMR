@@ -127,8 +127,6 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' nmr_dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' # 0. Multiprocess (parallelization) to set the number of cores working in your PC
-#' plan(multiprocess, workers = 12)
 #'
 #' # 1.Peak detection in the dataset.
 #' peak_data <- nmr_detect_peaks(nmr_dataset,
@@ -147,18 +145,15 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #'                          maxShift_ppm = 0.0015, # max alignment shift
 #'                          acceptLostPeak = FALSE) # lost peaks
 #'
-#' # 4.Set sequential working to finish parallelization
-#' plan(sequential)
-#'
-#' # 5.PEAK INTEGRATION (please, consider previous normalization step).
+#' # 4.PEAK INTEGRATION (please, consider previous normalization step).
 #' # First we take the peak table from the reference spectrum
 #' peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
 #'
 #' # Then we integrate spectra considering the peaks from the ref spectrum
 #' nmr_peak_table <- nmr_integrate_peak_positions(
-#' samples = nmr_dataset,
-#' peak_pos_ppm = peak_data_ref$ppm,
-#' peak_width_ppm = NULL)
+#'                       samples = nmr_dataset,
+#'                       peak_pos_ppm = peak_data_ref$ppm,
+#'                       peak_width_ppm = NULL)
 #'
 #' #If you wanted the final peak table before machine learning you can run
 #' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)

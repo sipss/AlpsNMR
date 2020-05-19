@@ -22,29 +22,39 @@ NULL
 #' @family class helper functions
 #' @export
 #' @examples 
-#' \dontrun{
-#' Error in nmr_dataset$data_1r[1, alanine] : número incorreto de dimensiones
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' nmr_dataset_1D <- nmr_interpolate_1D(nmr_dataset)
-#' peak_data <- nmr_detect_peaks(nmr_dataset_1D,
+#' nmr_dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#'
+#' # 1.Peak detection in the dataset.
+#' peak_data <- nmr_detect_peaks(nmr_dataset,
 #'                               nDivRange_ppm = 0.1, # Size of detection segments
 #'                               scales = seq(1, 16, 2),
 #'                               baselineThresh = 0, # Minimum peak intensity
 #'                               SNR.Th = 4) # Signal to noise ratio
-#' peak_list_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
-#' peak_width_ppm <- NULL
-#' # Integrate those peaks positions
+#'
+#' # 2.Find the reference spectrum to align with.
+#' NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
+#'
+#' # 3.Spectra alignment using the ref spectrum and a maximum alignment shift
+#' nmr_dataset <- nmr_align(nmr_dataset, # the dataset
+#'                          peak_data, # detected peaks
+#'                          NMRExp_ref = NMRExp_ref, # ref spectrum
+#'                          maxShift_ppm = 0.0015, # max alignment shift
+#'                          acceptLostPeak = FALSE) # lost peaks
+#'
+#' # 4.PEAK INTEGRATION (please, consider previous normalization step).
+#' # First we take the peak table from the reference spectrum
+#' peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
+#'
+#' # Then we integrate spectra considering the peaks from the ref spectrum
 #' nmr_peak_table <- nmr_integrate_peak_positions(
-#'     # In all samples in the nmr_dataset
-#'     samples = nmr_dataset,
-#'     # Integrate those positions. You can introduce a ppm numeric vector or a
-#'      # dataframe with a "ppm" variable
-#'      peak_pos_ppm = peak_list_ref,
-#'      # With this width peaks. If NULL, this is calculated automatically
-#'      peak_width_ppm = peak_width_ppm)
-#'  validate_nmr_dataset_peak_table(nmr_peak_table)
-#' }
+#'                       samples = nmr_dataset,
+#'                       peak_pos_ppm = peak_data_ref$ppm,
+#'                       peak_width_ppm = NULL)
+#' 
+#' validate_nmr_dataset_peak_table(nmr_peak_table)
+#'
 validate_nmr_dataset_peak_table <-
     function(nmr_dataset_peak_table) {
         validate_nmr_dataset_family(nmr_dataset_peak_table)
@@ -79,6 +89,43 @@ validate_nmr_dataset_peak_table <-
 #' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @export
+#' @examples
+#' metadata_1D <- list(external = data.frame(NMRExperiment = c("10", "20")))
+#' # Sample 10 and Sample 20 can have different lengths (due to different setups)
+#' data_fields_1D <- list(data_1r = list(runif(16), runif(32)))
+#' # Each sample has its own axis list, with one element (because this example is 1D)
+#' axis_1D <- list(list(1:16), list(1:32))
+#' nmr_dataset <- new_nmr_dataset(metadata_1D, data_fields_1D, axis_1D)
+#'
+#' # 1.Peak detection in the dataset.
+#' peak_data <- nmr_detect_peaks(nmr_dataset,
+#'                               nDivRange_ppm = 0.1, # Size of detection segments
+#'                               scales = seq(1, 16, 2),
+#'                               baselineThresh = 0, # Minimum peak intensity
+#'                               SNR.Th = 4) # Signal to noise ratio
+#'
+#' # 2.Find the reference spectrum to align with.
+#' NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
+#'
+#' # 3.Spectra alignment using the ref spectrum and a maximum alignment shift
+#' nmr_dataset <- nmr_align(nmr_dataset, # the dataset
+#'                          peak_data, # detected peaks
+#'                          NMRExp_ref = NMRExp_ref, # ref spectrum
+#'                          maxShift_ppm = 0.0015, # max alignment shift
+#'                          acceptLostPeak = FALSE) # lost peaks
+#'
+#' # 4.PEAK INTEGRATION (please, consider previous normalization step).
+#' # First we take the peak table from the reference spectrum
+#' peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
+#'
+#' # Then we integrate spectra considering the peaks from the ref spectrum
+#' nmr_peak_table <- nmr_integrate_peak_positions(
+#'                       samples = nmr_dataset,
+#'                       peak_pos_ppm = peak_data_ref$ppm,
+#'                       peak_width_ppm = NULL)
+#'
+#' new_nmr_dataset_peak_table(nmr_peak_table, metadata_1D)
+#'
 new_nmr_dataset_peak_table <- function(peak_table, metadata) {
     samples <- list()
     samples[["metadata"]] <- metadata
