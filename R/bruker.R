@@ -30,19 +30,19 @@ read_bruker_param <- function(file_name) {
     # row, the rest of the regular expressions for that row are ignored.
     R <- as.data.frame(matrix(
         c(
-            '^##\\$*(.+)=\\s?\\(\\d\\.\\.\\d+\\)(.+)$'                         ,
+            '^##\\$*(.+)=\\s?\\(\\d\\.\\.\\d+\\)(.+)$',
             'ParVecVal',
-            '^##\\$*(.+)=\\s?\\(\\d\\.\\.\\d+\\)$'                                         ,
+            '^##\\$*(.+)=\\s?\\(\\d\\.\\.\\d+\\)$',
             'ParVec',
-            '^##\\$*(.+)=\\s?(.+)$'                                                                                                        ,
+            '^##\\$*(.+)=\\s?(.+)$',
             'ParVal',
-            '^([^\\$#].*)$'                                                                                                                                        ,
+            '^([^\\$#].*)$',
             'Val',
-            '^\\$\\$(.+)$'                                                                                                                                         ,
+            '^\\$\\$(.+)$',
             'Stamp',
-            '^##\\$*(.+)=$'                                                                                                                                        ,
+            '^##\\$*(.+)=$',
             'ParEmpty',
-            '^\\s*$'                                                                                                                                                                 ,
+            '^\\s*$',
             'Empty'
         ),
         ncol = 2,
@@ -146,7 +146,7 @@ convert_field <- function(element) {
 #'
 #' @param full_pdata_path The path to the procs files
 #' @param procs_files a character vector with the procs file names. If
-#'                                                                                procs_files is NULL default sensible names are tested.
+#'                    procs_files is NULL default sensible names are tested.
 #' @return a list with a list of parameters for each procs file given
 #' @keywords internal
 #' @noRd
@@ -168,7 +168,7 @@ read_procs_file <- function(full_pdata_path, procs_files = NULL) {
 #'
 #' @param sample_path A directory that corresponds to a sample
 #' @param acqus_files The acqus files that you want to load. if \code{NULL} the
-#'                                                                                default set of acqus files is used.
+#'                    default set of acqus files is used.
 #' @return a list with a list of parameters for each acqus file given
 #' @keywords internal
 #' @noRd
@@ -422,7 +422,7 @@ read_pdata_title_file <-
 #' Read processed Bruker NMR data
 #'
 #' @param pdata_file File name of the binary NMR data to load. Usually "1r".
-#'                                                                         If `NULL`, it is autodetected based on the dimension
+#'                   If `NULL`, it is autodetected based on the dimension
 #' @param sample_path A character path of the sample directory
 #' @param pdata_path Path from `sample_path` to the preprocessed data
 #' @param all_components If `FALSE` load only the real component. Otherwise load the real and imaginary components
@@ -431,10 +431,10 @@ read_pdata_title_file <-
 #' @keywords internal
 #' @noRd
 read_bruker_pdata <- function(sample_path,
-                                                            pdata_file = NULL,
-                                                            pdata_path        = "pdata/1",
-                                                            all_components = FALSE,
-                                                            read_pdata_title = TRUE) {
+                              pdata_file = NULL,
+                              pdata_path        = "pdata/1",
+                              all_components = FALSE,
+                              read_pdata_title = TRUE) {
     full_pdata_path <- file.path(sample_path, pdata_path)
     if (is.null(pdata_file)) {
         # determine the dimension
@@ -510,8 +510,8 @@ read_bruker_pdata <- function(sample_path,
     }
     
     output$levels <- read_levels(full_pdata_path,
-                                                             endian = endian,
-                                                             NC_proc = output$procs$NC_proc)
+                                 endian = endian,
+                                 NC_proc = output$procs$NC_proc)
     
     data_shapes <- guess_shape_and_submatrix_shape(output)
     
@@ -566,7 +566,7 @@ read_bruker_pdata <- function(sample_path,
         XDIM2 = data_shapes$submatrix_shape[2]
         NoSM_along_dimensions <-
             data_shapes$shape / data_shapes$submatrix_shape
-        NoSM2 = NoSM_along_dimensions[length(NoSM_along_dimensions)]         # No of SM along F1
+        NoSM2 = NoSM_along_dimensions[length(NoSM_along_dimensions)] # No of SM along F1
         NoSM <-
             cumprod(NoSM_along_dimensions) # cummulative total number of Submatrices along dimensions
         num_submatrices <- NoSM[length(NoSM)]
@@ -623,8 +623,8 @@ read_bruker_pdata <- function(sample_path,
 #'
 infer_dim_pulse_nuclei <- function(acqus_list) {
     output <- list(dimension = NULL,
-                                 pulse_sequence = NULL,
-                                 nuclei = NULL)
+                   pulse_sequence = NULL,
+                   nuclei = NULL)
     # The dimension is easy
     output$dimension <- length(acqus_list)
     
@@ -711,7 +711,7 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
 #' @param sample_path A character path of the sample directory
 #' @param pdata_path Optional character path of the processed data (to read pdata title file)
 #' @param read_pdata_title logical. If `TRUE` reads the `pdata/1/title`
-#'                                                                                                 file if it exists.
+#'                         file if it exists.
 #' @return A list with the read metadata
 #' @noRd
 read_bruker_metadata <-
@@ -736,12 +736,11 @@ read_bruker_metadata <-
         
         
         
-        output <- list(info = info,
-                                     orig = orig)
+        output <- list(info = info, orig = orig)
         
         if (isTRUE(read_pdata_title)) {
             pdata_1_title <- read_pdata_title_file(sample_path = sample_path,
-                                                                                         pdata_path = pdata_path)
+                                                   pdata_path = pdata_path)
             output$title <- pdata_1_title
         }
         
@@ -761,22 +760,22 @@ read_bruker_metadata <-
 #' Read a Bruker sample directory
 #'
 #' @param pdata_file File name of the binary NMR data to load. Usually "1r".
-#'                                                                         If it is null it is autodetected and all files are loaded.
+#'                   If it is null it is autodetected and all files are loaded.
 #' @param sample_path A character path of the sample directory
 #' @param pdata_path Path from `sample_path` to the preprocessed data
 #' @param all_components If `FALSE` load only the real component. Otherwise load all of them
 #' @return a list with all the bruker sample information
 read_bruker_sample <- function(sample_path,
-                                                             pdata_file = NULL,
-                                                             pdata_path        = "pdata/1",
-                                                             all_components = FALSE) {
-    meta <- read_bruker_metadata(sample_path, pdata_path,
-                                                             read_pdata_title = TRUE)
-    
+                               pdata_file = NULL,
+                               pdata_path = "pdata/1",
+                               all_components = FALSE) {
+    meta <- read_bruker_metadata(sample_path,
+                                 pdata_path,
+                                 read_pdata_title = TRUE)
     pdata <- read_bruker_pdata(
         sample_path = sample_path,
         pdata_file = pdata_file,
-        pdata_path        = pdata_path,
+        pdata_path = pdata_path,
         all_components = all_components,
         read_pdata_title = FALSE
     ) # pdata title already read
@@ -864,7 +863,10 @@ nmr_zip_bruker_samples <-
 #' @export
 #' @family import/export functions
 #' @examples 
+#' \dontrun{
+#' Error in file(con, "rb") : no se puede abrir la conexión
 #' fid <- nmr_read_bruker_fid("sample.fid")
+#' }
 nmr_read_bruker_fid <- function(sample_name, endian = "little") {
     fid_file <- file.path(sample_name, "fid")
     num_numbers <- file.size(fid_file) / 8

@@ -126,7 +126,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' nmr_dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #'
 #' # 1.Peak detection in the dataset.
 #' peak_data <- nmr_detect_peaks(nmr_dataset,
@@ -187,7 +187,7 @@ nmr_integrate_peak_positions <- function(samples,
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' nmr_dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #'
 #' # 1.Peak detection in the dataset.
 #' peak_data <- nmr_detect_peaks(nmr_dataset,

@@ -93,18 +93,30 @@ validate_nmr_dataset_peak_table <-
 #' @family class helper functions
 #' @export
 #' @examples
+#' \dontrun{
+#'  Error: metadata should be a list 
+#' #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' metadata <- nmr_meta_get(dataset)
+#' peak_table <- nmr_data(dataset_1D)
+#' new <- new_nmr_dataset_peak_table(peak_table, metadata)
+#' }
+#' \dontrun{
+#' Error: multiples errores
 #' metadata_1D <- list(external = data.frame(NMRExperiment = c("10", "20")))
 #' # Sample 10 and Sample 20 can have different lengths (due to different setups)
 #' data_fields_1D <- list(data_1r = list(runif(16), runif(32)))
 #' # Each sample has its own axis list, with one element (because this example is 1D)
 #' axis_1D <- list(list(1:16), list(1:32))
 #' nmr_dataset <- new_nmr_dataset(metadata_1D, data_fields_1D, axis_1D)
-#'
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' 
 #' # 1.Peak detection in the dataset.
 #' peak_data <- nmr_detect_peaks(nmr_dataset,
 #'                               nDivRange_ppm = 0.1, # Size of detection segments
 #'                               scales = seq(1, 16, 2),
-#'                               baselineThresh = 0, # Minimum peak intensity
+#'                               baselineThresh = NULL, # Minimum peak intensity
 #'                               SNR.Th = 4) # Signal to noise ratio
 #'
 #' # 2.Find the reference spectrum to align with.
@@ -126,9 +138,8 @@ validate_nmr_dataset_peak_table <-
 #'                       samples = nmr_dataset,
 #'                       peak_pos_ppm = peak_data_ref$ppm,
 #'                       peak_width_ppm = NULL)
-#'
-#' new_nmr_dataset_peak_table(nmr_peak_table, metadata_1D)
-#'
+#' new_nmr_dataset <- new_nmr_dataset_peak_table(nmr_peak_table, metadata_1D)
+#'}
 new_nmr_dataset_peak_table <- function(peak_table, metadata) {
     samples <- list()
     samples[["metadata"]] <- metadata

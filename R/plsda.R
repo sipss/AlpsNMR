@@ -224,6 +224,9 @@ callback_outer_cv_auroc_vip <- function(outer_cv_results) {
 #' 
 #' 
 #' @export
+#' @examples 
+#' method <- plsda_auroc_vip_method(3)
+#' 
 plsda_auroc_vip_method <- function(ncomp, auc_increment_threshold = 0.05) {
     new_nmr_data_analysis_method(
         train_evaluate_model = callback_plsda_auroc_vip,
@@ -237,13 +240,18 @@ plsda_auroc_vip_method <- function(ncomp, auc_increment_threshold = 0.05) {
 }
 
 
-
 #' Compare PLSDA auroc VIP results
 #'
 #' @param ... Results of [nmr_data_analysis] to be combined. Give each result a name.
 #'
 #' @return A plot of the AUC for each method
 #' @export
+#' @examples 
+#' \dontrun{
+#' method <- plsda_auroc_vip_method(3)
+#' #analisis missed
+#' plsda_auroc_vip_compare()
+#' }
 plsda_auroc_vip_compare <- function(...) {
     dots <- list(...)
     class_compare <- names(dots)
