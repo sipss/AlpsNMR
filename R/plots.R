@@ -13,6 +13,12 @@
 #' @return The plot
 #' @importFrom graphics plot
 #' @export
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' plot(dataset_1D)
+#' 
 plot.nmr_dataset_1D <- function(x,
                                 NMRExperiment = NULL,
                                 chemshift_range = NULL,
@@ -212,7 +218,12 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #'
 #' @return the html filename created
 #' @export
-#'
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' html_plot <- plot_webgl(dataset_1D, "html_plot.html")
+#' 
 plot_webgl <- function(nmr_dataset, html_filename, ...) {
     plt <- plot(nmr_dataset, ...)
     plot_interactive(plt = plt, html_filename = html_filename)
@@ -227,7 +238,14 @@ plot_webgl <- function(nmr_dataset, html_filename, ...) {
 #'
 #' @return The html_filename
 #' @export
-#'
+#' @examples 
+#' \dontrun{
+#' Error in writeImpl(text) : Text to be written must be a length-one character vector
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' html_plot_interactive <- plot_interactive(dataset_1D, "html_plot_interactive.html")
+#' }
 plot_interactive <- function(plt, html_filename) {
     htmltools::save_html(
         html = htmltools::as.tags(x = plotly::toWebGL(plt),
