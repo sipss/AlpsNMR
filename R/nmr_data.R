@@ -32,6 +32,11 @@ nmr_data.nmr_dataset_1D <- function(nmr_dataset, ...) {
 
 #' @noRd
 #' @export
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' peak_table <- nmr_data(dataset_1D)
 nmr_data.nmr_dataset_peak_table <- function(nmr_dataset, ...) {
     peak_table <- nmr_dataset$peak_table
     rownames(peak_table) <-
