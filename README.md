@@ -27,25 +27,10 @@ devtools::install_github("sipss/AlpsNMR")
 ```
 
 If you need install Rtools:
+Follow steps of Rtools website [[Rtools web](https://cran.r-project.org/bin/windows/Rtools/)]
 
-Download Rtools for version 3.6
-[[Rtools 3.6](https://cran.r-project.org/bin/windows/Rtools/Rtools35.exe)]
+Don't forget the additional step, Putting Rtools on the PATH.
 
-As you can see in Rtools website, is needed one additional step, Putting Rtools on the PATH
-[[Rtools web](https://cran.r-project.org/bin/windows/Rtools/)]
-
-The easiest way is to create Renviron file executing this command in R, (take care because if exist previous Renviron file will be erased, in this case that that file to the Renvion):
-
-```r
-writeLines('PATH="C:\\Rtool\\bin;${PATH}"', con = "~/.Renviron")
-```
-
-Now restart R, and verify that make can be found, which should show the path to your Rtools installation. (In Rstudio, ctrl+shift+F10 restart R session)
-
-```r
-Sys.which("make")
-## "C:\\Rtools\\bin\\make.exe"
-```
 Install AlpsNMR:
 
 ```r
