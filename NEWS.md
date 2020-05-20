@@ -1,3 +1,7 @@
+# AlpsNMR 2.4.9002 (2020-05-13)
+
+- Changes to pass checks for R4
+
 # AlpsNMR 2.3.3.9002
 
 - NIHS_specific removed
