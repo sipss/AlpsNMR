@@ -157,7 +157,7 @@ MUVR_model_plot = function (MVObj,
                             sampLabels,
                             ylim = NULL)
 {
-    if (!any(is(MVObj) == "MVObject")) {
+    if (!any(is(MVObj, "MVObject"))) {
         cat("\nWrong object class: Return NULL")
         return(NULL)
     }
@@ -173,7 +173,7 @@ MUVR_model_plot = function (MVObj,
         )
         sampLabels = seq_len(nSamp)
     }
-    if (is(MVObj)[3] == "Regression") {
+    if (is(MVObj, "Regression")) {
         YP = MVObj$yPred[, modNum]
         YPR = MVObj$yPredPerRep[[modNum]]
         if (is.null(ylim))
@@ -201,7 +201,7 @@ MUVR_model_plot = function (MVObj,
                          ),
                          bty = "n")
     }
-    else if (is(MVObj)[3] == "Classification") {
+    else if (is(MVObj, "Classification")) {
         YP = MVObj$yPred[[modNum]]
         YPR = MVObj$yPredPerRep[[modNum]]
         if (is.null(ylim))
@@ -539,7 +539,6 @@ confusion_matrix = function(MVObj, model = "mid") {
 #' @param nmr_peak_table an AlpsNMR integration object (2 classes)
 #' @param label the name of the variable to test (e.g. "Timepoint")
 #' @inheritParams MUVR::MUVR
-#' @importFrom methods is
 #'
 #' @export
 #' @examples
