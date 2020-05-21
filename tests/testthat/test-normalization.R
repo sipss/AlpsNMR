@@ -10,7 +10,7 @@ test_that("nmr_normalize & nmr_normalize_extra_info work", {
   expect_true(is.numeric(dataset[["data_1r"]][[1]]))
   expect_true(is.list(diagnostic))
   expect_true(is.data.frame(diagnostic[["norm_factor"]]))
-  expect_true(is.factor(diagnostic[["norm_factor"]][[1,1]]))
+  expect_true(is.character(diagnostic[["norm_factor"]][[1,1]]))
 })
 
 test_that("nmr_normalize with negative values and below 10 samples work", {
