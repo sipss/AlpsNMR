@@ -102,7 +102,7 @@ new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
 }
 
 #' Object is of [nmr_dataset_1D] class
-#' @param x An object
+#' @param x an [nmr_dataset_1D] object
 #' @return `TRUE` if the object is an [nmr_dataset_1D], `FALSE` otherwise
 #' @export
 #' @family class helper functions
@@ -115,9 +115,10 @@ new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
 is.nmr_dataset_1D <- function(x)
     inherits(x, "nmr_dataset_1D")
 
+#' print for nmr_dataset_1D
+#' @param x an [nmr_dataset_1D] object
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
-#' @name print_nmr_dataset_1D
 #' @export
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -129,9 +130,10 @@ print.nmr_dataset_1D <- function(x, ...) {
     invisible(x)
 }
 
+#' format for nmr_dataset_1D
+#' @param x an [nmr_dataset_1D] object
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
-#' @name format_nmr_dataset_1D
 #' @export
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")

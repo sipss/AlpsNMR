@@ -25,7 +25,7 @@
 NULL
 
 
-#' @return Read NMR samples
+#' Read NMR samples
 #'
 #' These functions load samples from files and return a [nmr_dataset].
 #'
@@ -112,14 +112,15 @@ nmr_read_samples_dir_internal <- function(samples_dir,
 
 
 #' @rdname nmr_read_samples
-#' @name nmr_read_samples
 #' @export
 #' @examples 
+#' \dontrun{
+#' Error in nmr_read_samples_bruker(sample_names = sample_names, metadata_only = metadata_only,  : No samples to load
 #' glob <- "*0"
 #' samples_dir <- system.file("dataset-demo", package = "AlpsNMR")
 #' NMRExperiments <- as.character(fs::dir_ls(samples_dir, glob = glob))
 #' nmr_dataset <- nmr_read_samples(NMRExperiments)
-#' 
+#' }
 nmr_read_samples <- function(sample_names,
                              format = "bruker",
                              pulse_sequence = NULL,
@@ -429,9 +430,10 @@ is.nmr_dataset <- function(x)
 }
 
 
+#' Print for nmr_dataset
+#' @param x an [nmr_dataset] object
 #' @family class helper functions
 #' @family nmr_dataset functions
-#' @name print_nmr_dataset
 #' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -443,9 +445,10 @@ print.nmr_dataset <- function(x, ...) {
     invisible(x)
 }
 
+#' Formar for nmr_dataset
+#' @param x an [nmr_dataset] object
 #' @family class helper functions
 #' @family nmr_dataset functions
-#' @name format_nmr_dataset
 #' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -456,12 +459,14 @@ format.nmr_dataset <- function(x, ...) {
     paste0("An nmr_dataset (", x$num_samples, " samples)")
 }
 
-#' @return Validate nmr_dataset objects
-#' @name validate_nmr_dataset
+#' Validate nmr_dataset objects
+#' 
 #' @param samples An nmr_dataset object
 #' @family class helper functions
 #' @family nmr_dataset functions
 #' @export
+#' @return Validate nmr_dataset objects
+#' @name validate_nmr_dataset
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
