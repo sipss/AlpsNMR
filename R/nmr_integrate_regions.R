@@ -193,9 +193,6 @@ nmr_integrate_peak_positions <- function(samples,
 #' 
 #' @family peak integration functions
 #' @family nmr_dataset_1D functions
-get_integration_with_metadata = function(...) {
-UseMethod("get_integration_with_metadata")
-}
 get_integration_with_metadata <- function(integration_object){
   integration_data = nmr_data(integration_object)
   meta_data = nmr_meta_get(integration_object, groups = "external")
