@@ -35,22 +35,26 @@ save_profiling_output(targeted_profiling, output_directory)
 }
 }
 \seealso{
-Other import/export functions: \code{\link{Automatic_targeted_profiling}},
-  \code{\link{files_to_rDolphin_blood}},
-  \code{\link{files_to_rDolphin_cell}},
-  \code{\link{files_to_rDolphin_urine}},
-  \code{\link{load_and_save_functions}},
-  \code{\link{nmr_data}}, \code{\link{nmr_meta_export}},
-  \code{\link{nmr_read_bruker_fid}},
-  \code{\link{nmr_read_samples}},
-  \code{\link{nmr_zip_bruker_samples}},
-  \code{\link{pipe_load_samples}},
-  \code{\link{save_files_to_rDolphin}},
-  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}},
-  \code{\link{to_rDolphin}}
+Other import/export functions: 
+\code{\link{Automatic_targeted_profiling}()},
+\code{\link{files_to_rDolphin_blood}()},
+\code{\link{files_to_rDolphin_cell}()},
+\code{\link{files_to_rDolphin_urine}()},
+\code{\link{load_and_save_functions}},
+\code{\link{nmr_data}()},
+\code{\link{nmr_meta_export}()},
+\code{\link{nmr_read_bruker_fid}()},
+\code{\link{nmr_read_samples}()},
+\code{\link{nmr_zip_bruker_samples}()},
+\code{\link{pipe_load_samples}()},
+\code{\link{save_files_to_rDolphin}()},
+\code{\link{to_ASICS}()},
+\code{\link{to_ChemoSpec}()},
+\code{\link{to_rDolphin}()}
 
-Other to_rDolphin_blood functions: \code{\link{files_to_rDolphin_blood}},
-  \code{\link{save_files_to_rDolphin}}
+Other to_rDolphin_blood functions: 
+\code{\link{files_to_rDolphin_blood}()},
+\code{\link{save_files_to_rDolphin}()}
 }
 \concept{import/export functions}
 \concept{to_rDolphin_blood functions}

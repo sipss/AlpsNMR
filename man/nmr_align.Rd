@@ -4,8 +4,13 @@
 \alias{nmr_align}
 \title{Align NMR spectra}
 \usage{
-nmr_align(nmr_dataset, peak_data, NMRExp_ref = NULL,
-  maxShift_ppm = 0.0015, acceptLostPeak = FALSE)
+nmr_align(
+  nmr_dataset,
+  peak_data,
+  NMRExp_ref = NULL,
+  maxShift_ppm = 0.0015,
+  acceptLostPeak = FALSE
+)
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D}}
@@ -66,49 +71,55 @@ nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
 }
 }
 \seealso{
-Other alignment functions: \code{\link{nmr_align_find_ref}},
-  \code{\link{pipe_peakdet_align}}
+Other alignment functions: 
+\code{\link{nmr_align_find_ref}()},
+\code{\link{pipe_peakdet_align}()}
 
-Other peak alignment functions: \code{\link{nmr_align_find_ref}}
+Other peak alignment functions: 
+\code{\link{nmr_align_find_ref}()}
 
-Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
-  \code{\link{[.nmr_dataset_1D}},
-  \code{\link{computes_peak_width_ppm}},
-  \code{\link{file_lister}},
-  \code{\link{files_to_rDolphin_blood}},
-  \code{\link{files_to_rDolphin_cell}},
-  \code{\link{files_to_rDolphin_urine}},
-  \code{\link{get_integration_with_metadata}},
-  \code{\link{is.nmr_dataset_1D}},
-  \code{\link{load_and_save_functions}},
-  \code{\link{new_nmr_dataset_1D}},
-  \code{\link{nmr_align_find_ref}},
-  \code{\link{nmr_baseline_removal}},
-  \code{\link{nmr_baseline_threshold}},
-  \code{\link{nmr_detect_peaks_plot}},
-  \code{\link{nmr_detect_peaks_tune_snr}},
-  \code{\link{nmr_detect_peaks}},
-  \code{\link{nmr_exclude_region}},
-  \code{\link{nmr_integrate_peak_positions}},
-  \code{\link{nmr_integrate_regions}},
-  \code{\link{nmr_interpolate_1D}},
-  \code{\link{nmr_meta_add}},
-  \code{\link{nmr_meta_export}},
-  \code{\link{nmr_meta_get_column}},
-  \code{\link{nmr_meta_get}}, \code{\link{nmr_normalize}},
-  \code{\link{nmr_pca_build_model}},
-  \code{\link{nmr_pca_outliers_filter}},
-  \code{\link{nmr_pca_outliers_plot}},
-  \code{\link{nmr_pca_outliers_robust}},
-  \code{\link{nmr_pca_outliers}},
-  \code{\link{nmr_ppm_resolution}},
-  \code{\link{plot.nmr_dataset_1D}},
-  \code{\link{plot_webgl}}, \code{\link{rdCV_PLS_RF_ML}},
-  \code{\link{rdCV_PLS_RF}},
-  \code{\link{save_files_to_rDolphin}},
-  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}},
-  \code{\link{to_rDolphin}},
-  \code{\link{validate_nmr_dataset_1D}}
+Other nmr_dataset_1D functions: 
+\code{\link{Automatic_targeted_profiling}()},
+\code{\link{[.nmr_dataset_1D}()},
+\code{\link{computes_peak_width_ppm}()},
+\code{\link{file_lister}()},
+\code{\link{files_to_rDolphin_blood}()},
+\code{\link{files_to_rDolphin_cell}()},
+\code{\link{files_to_rDolphin_urine}()},
+\code{\link{get_integration_with_metadata}()},
+\code{\link{is.nmr_dataset_1D}()},
+\code{\link{load_and_save_functions}},
+\code{\link{new_nmr_dataset_1D}()},
+\code{\link{nmr_align_find_ref}()},
+\code{\link{nmr_baseline_removal}()},
+\code{\link{nmr_baseline_threshold}()},
+\code{\link{nmr_detect_peaks_plot}()},
+\code{\link{nmr_detect_peaks_tune_snr}()},
+\code{\link{nmr_detect_peaks}()},
+\code{\link{nmr_exclude_region}()},
+\code{\link{nmr_integrate_peak_positions}()},
+\code{\link{nmr_integrate_regions}()},
+\code{\link{nmr_interpolate_1D}()},
+\code{\link{nmr_meta_add}()},
+\code{\link{nmr_meta_export}()},
+\code{\link{nmr_meta_get_column}()},
+\code{\link{nmr_meta_get}()},
+\code{\link{nmr_normalize}()},
+\code{\link{nmr_pca_build_model}()},
+\code{\link{nmr_pca_outliers_filter}()},
+\code{\link{nmr_pca_outliers_plot}()},
+\code{\link{nmr_pca_outliers_robust}()},
+\code{\link{nmr_pca_outliers}()},
+\code{\link{nmr_ppm_resolution}()},
+\code{\link{plot.nmr_dataset_1D}()},
+\code{\link{plot_webgl}()},
+\code{\link{rdCV_PLS_RF_ML}()},
+\code{\link{rdCV_PLS_RF}()},
+\code{\link{save_files_to_rDolphin}()},
+\code{\link{to_ASICS}()},
+\code{\link{to_ChemoSpec}()},
+\code{\link{to_rDolphin}()},
+\code{\link{validate_nmr_dataset_1D}()}
 }
 \concept{alignment functions}
 \concept{nmr_dataset_1D functions}

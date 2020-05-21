@@ -4,9 +4,18 @@
 \alias{permutation_test_plot}
 \title{Permutation test plot}
 \usage{
-permutation_test_plot(MVObj, permMatrix, model = "mid", type = type,
-  pos, xlab = "Number of misclassifications", xlim, ylim = NULL,
-  breaks = "Sturges", main = "Permutation test")
+permutation_test_plot(
+  MVObj,
+  permMatrix,
+  model = "mid",
+  type = type,
+  pos,
+  xlab = "Number of misclassifications",
+  xlim,
+  ylim = NULL,
+  breaks = "Sturges",
+  main = "Permutation test"
+)
 }
 \arguments{
 \item{MVObj}{A MUVR object}

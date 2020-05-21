@@ -18,19 +18,21 @@ This function saves the result to the output directory
 Uses \link{nmr_pca_outliers_robust} to perform the detection of outliers
 }
 \seealso{
-Other outlier detection functions: \code{\link{nmr_pca_outliers_filter}},
-  \code{\link{nmr_pca_outliers_plot}},
-  \code{\link{nmr_pca_outliers_robust}},
-  \code{\link{nmr_pca_outliers}}
+Other outlier detection functions: 
+\code{\link{nmr_pca_outliers_filter}()},
+\code{\link{nmr_pca_outliers_plot}()},
+\code{\link{nmr_pca_outliers_robust}()},
+\code{\link{nmr_pca_outliers}()}
 
-Other pipeline functions: \code{\link{pipe_add_metadata}},
-  \code{\link{pipe_exclude_regions}},
-  \code{\link{pipe_filter_samples}},
-  \code{\link{pipe_interpolate_1D}},
-  \code{\link{pipe_load_samples}},
-  \code{\link{pipe_normalization}},
-  \code{\link{pipe_peak_integration}},
-  \code{\link{pipe_peakdet_align}}
+Other pipeline functions: 
+\code{\link{pipe_add_metadata}()},
+\code{\link{pipe_exclude_regions}()},
+\code{\link{pipe_filter_samples}()},
+\code{\link{pipe_interpolate_1D}()},
+\code{\link{pipe_load_samples}()},
+\code{\link{pipe_normalization}()},
+\code{\link{pipe_peak_integration}()},
+\code{\link{pipe_peakdet_align}()}
 }
 \concept{outlier detection functions}
 \concept{pipeline functions}

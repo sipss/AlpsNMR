@@ -4,8 +4,11 @@
 \alias{nmr_detect_peaks_tune_snr}
 \title{Diagnose SNR threshold in peak detection}
 \usage{
-nmr_detect_peaks_tune_snr(ds, NMRExperiment = NULL,
-  SNR_thresholds = seq(from = 2, to = 6, by = 0.1))
+nmr_detect_peaks_tune_snr(
+  ds,
+  NMRExperiment = NULL,
+  SNR_thresholds = seq(from = 2, to = 6, by = 0.1)
+)
 }
 \arguments{
 \item{ds}{An \link{nmr_dataset_1D} dataset}
@@ -38,54 +41,59 @@ if it should be parallellized or not.
 }
 
 \seealso{
-Other peak detection functions: \code{\link{nmr_baseline_threshold}},
-  \code{\link{nmr_detect_peaks_plot}},
-  \code{\link{nmr_detect_peaks}},
-  \code{\link{nmr_identify_regions_blood}},
-  \code{\link{nmr_identify_regions_cell}},
-  \code{\link{nmr_identify_regions_urine}},
-  \code{\link{nmr_integrate_regions}},
-  \code{\link{pipe_peakdet_align}},
-  \code{\link{regions_from_peak_table}}
+Other peak detection functions: 
+\code{\link{nmr_baseline_threshold}()},
+\code{\link{nmr_detect_peaks_plot}()},
+\code{\link{nmr_detect_peaks}()},
+\code{\link{nmr_identify_regions_blood}()},
+\code{\link{nmr_identify_regions_cell}()},
+\code{\link{nmr_identify_regions_urine}()},
+\code{\link{nmr_integrate_regions}()},
+\code{\link{pipe_peakdet_align}()},
+\code{\link{regions_from_peak_table}()}
 
-Other nmr_dataset_1D functions: \code{\link{Automatic_targeted_profiling}},
-  \code{\link{[.nmr_dataset_1D}},
-  \code{\link{computes_peak_width_ppm}},
-  \code{\link{file_lister}},
-  \code{\link{files_to_rDolphin_blood}},
-  \code{\link{files_to_rDolphin_cell}},
-  \code{\link{files_to_rDolphin_urine}},
-  \code{\link{get_integration_with_metadata}},
-  \code{\link{is.nmr_dataset_1D}},
-  \code{\link{load_and_save_functions}},
-  \code{\link{new_nmr_dataset_1D}},
-  \code{\link{nmr_align_find_ref}},
-  \code{\link{nmr_align}},
-  \code{\link{nmr_baseline_removal}},
-  \code{\link{nmr_baseline_threshold}},
-  \code{\link{nmr_detect_peaks_plot}},
-  \code{\link{nmr_detect_peaks}},
-  \code{\link{nmr_exclude_region}},
-  \code{\link{nmr_integrate_peak_positions}},
-  \code{\link{nmr_integrate_regions}},
-  \code{\link{nmr_interpolate_1D}},
-  \code{\link{nmr_meta_add}},
-  \code{\link{nmr_meta_export}},
-  \code{\link{nmr_meta_get_column}},
-  \code{\link{nmr_meta_get}}, \code{\link{nmr_normalize}},
-  \code{\link{nmr_pca_build_model}},
-  \code{\link{nmr_pca_outliers_filter}},
-  \code{\link{nmr_pca_outliers_plot}},
-  \code{\link{nmr_pca_outliers_robust}},
-  \code{\link{nmr_pca_outliers}},
-  \code{\link{nmr_ppm_resolution}},
-  \code{\link{plot.nmr_dataset_1D}},
-  \code{\link{plot_webgl}}, \code{\link{rdCV_PLS_RF_ML}},
-  \code{\link{rdCV_PLS_RF}},
-  \code{\link{save_files_to_rDolphin}},
-  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}},
-  \code{\link{to_rDolphin}},
-  \code{\link{validate_nmr_dataset_1D}}
+Other nmr_dataset_1D functions: 
+\code{\link{Automatic_targeted_profiling}()},
+\code{\link{[.nmr_dataset_1D}()},
+\code{\link{computes_peak_width_ppm}()},
+\code{\link{file_lister}()},
+\code{\link{files_to_rDolphin_blood}()},
+\code{\link{files_to_rDolphin_cell}()},
+\code{\link{files_to_rDolphin_urine}()},
+\code{\link{get_integration_with_metadata}()},
+\code{\link{is.nmr_dataset_1D}()},
+\code{\link{load_and_save_functions}},
+\code{\link{new_nmr_dataset_1D}()},
+\code{\link{nmr_align_find_ref}()},
+\code{\link{nmr_align}()},
+\code{\link{nmr_baseline_removal}()},
+\code{\link{nmr_baseline_threshold}()},
+\code{\link{nmr_detect_peaks_plot}()},
+\code{\link{nmr_detect_peaks}()},
+\code{\link{nmr_exclude_region}()},
+\code{\link{nmr_integrate_peak_positions}()},
+\code{\link{nmr_integrate_regions}()},
+\code{\link{nmr_interpolate_1D}()},
+\code{\link{nmr_meta_add}()},
+\code{\link{nmr_meta_export}()},
+\code{\link{nmr_meta_get_column}()},
+\code{\link{nmr_meta_get}()},
+\code{\link{nmr_normalize}()},
+\code{\link{nmr_pca_build_model}()},
+\code{\link{nmr_pca_outliers_filter}()},
+\code{\link{nmr_pca_outliers_plot}()},
+\code{\link{nmr_pca_outliers_robust}()},
+\code{\link{nmr_pca_outliers}()},
+\code{\link{nmr_ppm_resolution}()},
+\code{\link{plot.nmr_dataset_1D}()},
+\code{\link{plot_webgl}()},
+\code{\link{rdCV_PLS_RF_ML}()},
+\code{\link{rdCV_PLS_RF}()},
+\code{\link{save_files_to_rDolphin}()},
+\code{\link{to_ASICS}()},
+\code{\link{to_ChemoSpec}()},
+\code{\link{to_rDolphin}()},
+\code{\link{validate_nmr_dataset_1D}()}
 }
 \concept{nmr_dataset_1D functions}
 \concept{peak detection functions}

@@ -26,10 +26,11 @@ nmr_pca_loadingplot(pca_model, comp)
 Plotting functions for PCA
 }
 \seealso{
-Other PCA related functions: \code{\link{nmr_pca_build_model}},
-  \code{\link{nmr_pca_outliers_filter}},
-  \code{\link{nmr_pca_outliers_plot}},
-  \code{\link{nmr_pca_outliers_robust}},
-  \code{\link{nmr_pca_outliers}}
+Other PCA related functions: 
+\code{\link{nmr_pca_build_model}()},
+\code{\link{nmr_pca_outliers_filter}()},
+\code{\link{nmr_pca_outliers_plot}()},
+\code{\link{nmr_pca_outliers_robust}()},
+\code{\link{nmr_pca_outliers}()}
 }
 \concept{PCA related functions}

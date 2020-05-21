@@ -5,11 +5,21 @@
 \alias{nmr_read_samples_dir}
 \title{Read NMR samples}
 \usage{
-nmr_read_samples_dir(samples_dir, format = "bruker",
-  pulse_sequence = NULL, metadata_only = FALSE, ...)
+nmr_read_samples_dir(
+  samples_dir,
+  format = "bruker",
+  pulse_sequence = NULL,
+  metadata_only = FALSE,
+  ...
+)
 
-nmr_read_samples(sample_names, format = "bruker",
-  pulse_sequence = NULL, metadata_only = FALSE, ...)
+nmr_read_samples(
+  sample_names,
+  format = "bruker",
+  pulse_sequence = NULL,
+  metadata_only = FALSE,
+  ...
+)
 }
 \arguments{
 \item{samples_dir}{A directory that contains multiple samples}
@@ -33,30 +43,34 @@ a \link{nmr_dataset} object
 These functions load samples from files and return a \link{nmr_dataset}.
 }
 \seealso{
-Other nmr_dataset functions: \code{\link{[.nmr_dataset}},
-  \code{\link{load_and_save_functions}},
-  \code{\link{new_nmr_dataset}},
-  \code{\link{nmr_interpolate_1D}},
-  \code{\link{nmr_meta_add}},
-  \code{\link{nmr_meta_export}},
-  \code{\link{nmr_meta_get_column}},
-  \code{\link{nmr_meta_get}},
-  \code{\link{nmr_ppm_resolution}},
-  \code{\link{validate_nmr_dataset}}
+Other nmr_dataset functions: 
+\code{\link{[.nmr_dataset}()},
+\code{\link{load_and_save_functions}},
+\code{\link{new_nmr_dataset}()},
+\code{\link{nmr_interpolate_1D}()},
+\code{\link{nmr_meta_add}()},
+\code{\link{nmr_meta_export}()},
+\code{\link{nmr_meta_get_column}()},
+\code{\link{nmr_meta_get}()},
+\code{\link{nmr_ppm_resolution}()},
+\code{\link{validate_nmr_dataset}()}
 
-Other import/export functions: \code{\link{Automatic_targeted_profiling}},
-  \code{\link{files_to_rDolphin_blood}},
-  \code{\link{files_to_rDolphin_cell}},
-  \code{\link{files_to_rDolphin_urine}},
-  \code{\link{load_and_save_functions}},
-  \code{\link{nmr_data}}, \code{\link{nmr_meta_export}},
-  \code{\link{nmr_read_bruker_fid}},
-  \code{\link{nmr_zip_bruker_samples}},
-  \code{\link{pipe_load_samples}},
-  \code{\link{save_files_to_rDolphin}},
-  \code{\link{save_profiling_output}},
-  \code{\link{to_ASICS}}, \code{\link{to_ChemoSpec}},
-  \code{\link{to_rDolphin}}
+Other import/export functions: 
+\code{\link{Automatic_targeted_profiling}()},
+\code{\link{files_to_rDolphin_blood}()},
+\code{\link{files_to_rDolphin_cell}()},
+\code{\link{files_to_rDolphin_urine}()},
+\code{\link{load_and_save_functions}},
+\code{\link{nmr_data}()},
+\code{\link{nmr_meta_export}()},
+\code{\link{nmr_read_bruker_fid}()},
+\code{\link{nmr_zip_bruker_samples}()},
+\code{\link{pipe_load_samples}()},
+\code{\link{save_files_to_rDolphin}()},
+\code{\link{save_profiling_output}()},
+\code{\link{to_ASICS}()},
+\code{\link{to_ChemoSpec}()},
+\code{\link{to_rDolphin}()}
 }
 \concept{import/export functions}
 \concept{nmr_dataset functions}

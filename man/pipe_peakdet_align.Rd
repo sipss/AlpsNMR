@@ -4,9 +4,16 @@
 \alias{pipe_peakdet_align}
 \title{Pipeline: Peak detection and Alignment}
 \usage{
-pipe_peakdet_align(nmr_dataset_rds, nDivRange_ppm = 0.1,
-  scales = seq(1, 16, 2), baselineThresh = 0.01, SNR.Th = -1,
-  maxShift_ppm = 0.0015, acceptLostPeak = FALSE, output_dir = NULL)
+pipe_peakdet_align(
+  nmr_dataset_rds,
+  nDivRange_ppm = 0.1,
+  scales = seq(1, 16, 2),
+  baselineThresh = 0.01,
+  SNR.Th = -1,
+  maxShift_ppm = 0.0015,
+  acceptLostPeak = FALSE,
+  output_dir = NULL
+)
 }
 \arguments{
 \item{nmr_dataset_rds}{The nmr_dataset.rds file name coming from previous nodes}
@@ -34,27 +41,30 @@ not work if spectra were not interpolated up to 10.0 ppm)}
 Pipeline: Peak detection and Alignment
 }
 \seealso{
-Other pipeline functions: \code{\link{pipe_add_metadata}},
-  \code{\link{pipe_exclude_regions}},
-  \code{\link{pipe_filter_samples}},
-  \code{\link{pipe_interpolate_1D}},
-  \code{\link{pipe_load_samples}},
-  \code{\link{pipe_normalization}},
-  \code{\link{pipe_outlier_detection}},
-  \code{\link{pipe_peak_integration}}
+Other pipeline functions: 
+\code{\link{pipe_add_metadata}()},
+\code{\link{pipe_exclude_regions}()},
+\code{\link{pipe_filter_samples}()},
+\code{\link{pipe_interpolate_1D}()},
+\code{\link{pipe_load_samples}()},
+\code{\link{pipe_normalization}()},
+\code{\link{pipe_outlier_detection}()},
+\code{\link{pipe_peak_integration}()}
 
-Other peak detection functions: \code{\link{nmr_baseline_threshold}},
-  \code{\link{nmr_detect_peaks_plot}},
-  \code{\link{nmr_detect_peaks_tune_snr}},
-  \code{\link{nmr_detect_peaks}},
-  \code{\link{nmr_identify_regions_blood}},
-  \code{\link{nmr_identify_regions_cell}},
-  \code{\link{nmr_identify_regions_urine}},
-  \code{\link{nmr_integrate_regions}},
-  \code{\link{regions_from_peak_table}}
+Other peak detection functions: 
+\code{\link{nmr_baseline_threshold}()},
+\code{\link{nmr_detect_peaks_plot}()},
+\code{\link{nmr_detect_peaks_tune_snr}()},
+\code{\link{nmr_detect_peaks}()},
+\code{\link{nmr_identify_regions_blood}()},
+\code{\link{nmr_identify_regions_cell}()},
+\code{\link{nmr_identify_regions_urine}()},
+\code{\link{nmr_integrate_regions}()},
+\code{\link{regions_from_peak_table}()}
 
-Other alignment functions: \code{\link{nmr_align_find_ref}},
-  \code{\link{nmr_align}}
+Other alignment functions: 
+\code{\link{nmr_align_find_ref}()},
+\code{\link{nmr_align}()}
 }
 \concept{alignment functions}
 \concept{peak detection functions}

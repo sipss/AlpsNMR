@@ -22,7 +22,7 @@ below to see their documentation.
 \describe{
   \item{dplyr}{\code{\link[dplyr]{filter}}}
 
-  \item{future}{\code{\link[future]{plan}}, \code{\link[future]{sequential}}, \code{\link[future]{multicore}}, \code{\link[future]{multiprocess}}, \code{\link[future]{multisession}}, \code{\link[future]{cluster}}, \code{\link[future]{remote}}}
+  \item{future}{\code{\link[future]{cluster}}, \code{\link[future]{multicore}}, \code{\link[future]{multiprocess}}, \code{\link[future]{multisession}}, \code{\link[future]{plan}}, \code{\link[future]{remote}}, \code{\link[future]{sequential}}}
 
   \item{magrittr}{\code{\link[magrittr]{\%>\%}}}
 }}
