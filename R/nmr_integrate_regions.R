@@ -26,6 +26,8 @@
 #'                                    y = c(y[xb[1]:xb[2]], rev(basel))),
 #'                                    fill = "blue") +
 #'     ggplot2::scale_y_continuous(limits = c(5, 20))
+#'     
+#' #exclude_regions <- list(water = c(5.1, 4.5))
 #' @export
 #' @family peak detection functions
 #' @family peak integration functions

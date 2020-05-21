@@ -90,53 +90,16 @@ validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
 #' @family class helper functions
 #' @export
 #' @examples
-#' \dontrun{
-#'  Error: metadata should be a list 
-#' #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' metadata <- nmr_meta_get(dataset)
+#' meta <- file.path(dir_to_demo_dataset, "dummy_metadata.xlsx")
+#' metadata <- readxl::read_excel(meta, sheet = 1)
+#' dataset_1D <- nmr_meta_add(dataset_1D, metadata = metadata, by = "NMRExperiment")
+#' metadata <- list(external = dataset_1D[["metadata"]][["external"]])
 #' peak_table <- nmr_data(dataset_1D)
 #' new <- new_nmr_dataset_peak_table(peak_table, metadata)
-#' }
-#' \dontrun{
-#' Error: multiples errores
-#' metadata_1D <- list(external = data.frame(NMRExperiment = c("10", "20")))
-#' # Sample 10 and Sample 20 can have different lengths (due to different setups)
-#' data_fields_1D <- list(data_1r = list(runif(16), runif(32)))
-#' # Each sample has its own axis list, with one element (because this example is 1D)
-#' axis_1D <- list(list(1:16), list(1:32))
-#' nmr_dataset <- new_nmr_dataset(metadata_1D, data_fields_1D, axis_1D)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' 
-#' # 1.Peak detection in the dataset.
-#' peak_data <- nmr_detect_peaks(nmr_dataset,
-#'                               nDivRange_ppm = 0.1, # Size of detection segments
-#'                               scales = seq(1, 16, 2),
-#'                               baselineThresh = NULL, # Minimum peak intensity
-#'                               SNR.Th = 4) # Signal to noise ratio
-#'
-#' # 2.Find the reference spectrum to align with.
-#' NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
-#'
-#' # 3.Spectra alignment using the ref spectrum and a maximum alignment shift
-#' nmr_dataset <- nmr_align(nmr_dataset, # the dataset
-#'                          peak_data, # detected peaks
-#'                          NMRExp_ref = NMRExp_ref, # ref spectrum
-#'                          maxShift_ppm = 0.0015, # max alignment shift
-#'                          acceptLostPeak = FALSE) # lost peaks
-#'
-#' # 4.PEAK INTEGRATION (please, consider previous normalization step).
-#' # First we take the peak table from the reference spectrum
-#' peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
-#'
-#' # Then we integrate spectra considering the peaks from the ref spectrum
-#' nmr_peak_table <- nmr_integrate_peak_positions(
-#'                       samples = nmr_dataset,
-#'                       peak_pos_ppm = peak_data_ref$ppm,
-#'                       peak_width_ppm = NULL)
-#' new_nmr_dataset <- new_nmr_dataset_peak_table(nmr_peak_table, metadata_1D)
-#'}
 new_nmr_dataset_peak_table <- function(peak_table, metadata) {
     samples <- list()
     samples[["metadata"]] <- metadata
@@ -149,26 +112,64 @@ new_nmr_dataset_peak_table <- function(peak_table, metadata) {
 }
 
 #' Object is of [nmr_dataset_peak_table] class
-#' @param x An object
+#' @@param x an [nmr_dataset_peak_table] object
 #' @return `TRUE` if the object is an `nmr_dataset_peak_table`, `FALSE` otherwise
 #' @export
 #' @family nmr_dataset_peak_table functions
 #' @family class helper functions
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' meta <- file.path(dir_to_demo_dataset, "dummy_metadata.xlsx")
+#' metadata <- readxl::read_excel(meta, sheet = 1)
+#' dataset_1D <- nmr_meta_add(dataset_1D, metadata = metadata, by = "NMRExperiment")
+#' metadata <- list(external = dataset_1D[["metadata"]][["external"]])
+#' peak_table <- nmr_data(dataset_1D)
+#' new <- new_nmr_dataset_peak_table(peak_table, metadata)
+#' is(new)
+#' 
 is.nmr_dataset_peak_table <-
     function(x)
         inherits(x, "nmr_dataset_peak_table")
 
+#' print for nmr_dataset_peak_table
+#' @param x an [nmr_dataset_peak_table] object
 #' @export
 #' @family nmr_dataset_peak_table functions
 #' @family class helper functions
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' meta <- file.path(dir_to_demo_dataset, "dummy_metadata.xlsx")
+#' metadata <- readxl::read_excel(meta, sheet = 1)
+#' dataset_1D <- nmr_meta_add(dataset_1D, metadata = metadata, by = "NMRExperiment")
+#' metadata <- list(external = dataset_1D[["metadata"]][["external"]])
+#' peak_table <- nmr_data(dataset_1D)
+#' new <- new_nmr_dataset_peak_table(peak_table, metadata)
+#' print(new)
 print.nmr_dataset_peak_table <- function(x, ...) {
     cat(format(x, ...), "\n")
     invisible(x)
 }
 
+#' Format for nmr_dataset_peak_table
+#' @param x an [nmr_dataset_peak_table] object
 #' @export
 #' @family nmr_dataset_peak_table functions
 #' @family class helper functions
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' meta <- file.path(dir_to_demo_dataset, "dummy_metadata.xlsx")
+#' metadata <- readxl::read_excel(meta, sheet = 1)
+#' dataset_1D <- nmr_meta_add(dataset_1D, metadata = metadata, by = "NMRExperiment")
+#' metadata <- list(external = dataset_1D[["metadata"]][["external"]])
+#' peak_table <- nmr_data(dataset_1D)
+#' new <- new_nmr_dataset_peak_table(peak_table, metadata)
+#' format(new)
 format.nmr_dataset_peak_table <- function(x, ...) {
     paste0(
         "An nmr_dataset_peak_table (",
@@ -186,6 +187,17 @@ format.nmr_dataset_peak_table <- function(x, ...) {
 #' @family subsetting functions
 #' @family nmr_dataset_peak_table functions
 #' @export
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' meta <- file.path(dir_to_demo_dataset, "dummy_metadata.xlsx")
+#' metadata <- readxl::read_excel(meta, sheet = 1)
+#' dataset_1D <- nmr_meta_add(dataset_1D, metadata = metadata, by = "NMRExperiment")
+#' metadata <- list(external = dataset_1D[["metadata"]][["external"]])
+#' peak_table <- nmr_data(dataset_1D)
+#' new <- new_nmr_dataset_peak_table(peak_table, metadata)
+#' new[0]
 `[.nmr_dataset_peak_table` <- function(x, i) {
     output <- x
     output$metadata <- purrr::map(output$metadata, function(metad) {
