@@ -247,13 +247,11 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #' @family nmr_dataset_1D functions
 #' @export
 #' @examples 
-#' \dontrun{
-#' Error in apply(nmr_dataset$data_1r[, threshold_ind], 2, mean) : dim(X) must have a positive length
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' peaks_detected <- nmr_detect_peaks_tune_snr(dataset_1D)
-#' }
+#'
 nmr_detect_peaks_tune_snr <-
     function(ds,
              NMRExperiment = NULL,
@@ -271,10 +269,10 @@ nmr_detect_peaks_tune_snr <-
                 ds1,
                 nDivRange_ppm = 0.03,
                 scales = seq(1, 16, 2),
-                baselineThresh = NULL,
+                baselineThresh = 0,
                 SNR.Th = .
             ),
-            #baselineThresh = 0 antes
+            #it was baselineThresh = NULL before
             .id = "SNR_threshold",
             .options = furrr::future_options(globals = character(), packages = character())
         )

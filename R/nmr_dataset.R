@@ -114,13 +114,9 @@ nmr_read_samples_dir_internal <- function(samples_dir,
 #' @rdname nmr_read_samples
 #' @export
 #' @examples 
-#' \dontrun{
-#' Error in nmr_read_samples_bruker(sample_names = sample_names, metadata_only = metadata_only,  : No samples to load
-#' glob <- "*0"
-#' samples_dir <- system.file("dataset-demo", package = "AlpsNMR")
-#' NMRExperiments <- as.character(fs::dir_ls(samples_dir, glob = glob))
-#' nmr_dataset <- nmr_read_samples(NMRExperiments)
-#' }
+#' zip_files <- fs::dir_ls(samples_dir, glob = "*.zip")
+#' dataset <- nmr_read_samples(sample_names = zip_files)
+#' 
 nmr_read_samples <- function(sample_names,
                              format = "bruker",
                              pulse_sequence = NULL,

@@ -230,13 +230,22 @@ callback_outer_cv_auroc_vip <- function(outer_cv_results) {
 plsda_auroc_vip_method <- function(ncomp, auc_increment_threshold = 0.05) {
     new_nmr_data_analysis_method(
         train_evaluate_model = callback_plsda_auroc_vip,
-        train_evaluate_model_params_inner = list(ncomp = ncomp, return_model = FALSE,
-                                                                                         return_auroc = TRUE, return_auroc_full = FALSE,
-                                                                                         return_vip = FALSE),
+        train_evaluate_model_params_inner = list(
+            ncomp = ncomp,
+            return_model = FALSE,
+            return_auroc = TRUE,
+            return_auroc_full = FALSE,
+            return_vip = FALSE
+        ),
         choose_best_inner = fun_choose_best_ncomp_auc_threshold(auc_threshold = auc_increment_threshold),
-        train_evaluate_model_params_outer = list(return_model = TRUE, return_auroc = TRUE,
-                                                                                         return_auroc_full = TRUE, return_vip = TRUE),
-        train_evaluate_model_digest_outer = callback_outer_cv_auroc_vip)
+        train_evaluate_model_params_outer = list(
+            return_model = TRUE,
+            return_auroc = TRUE,
+            return_auroc_full = TRUE,
+            return_vip = TRUE
+        ),
+        train_evaluate_model_digest_outer = callback_outer_cv_auroc_vip
+    )
 }
 
 

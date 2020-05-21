@@ -10,24 +10,17 @@
 #' @return An [nmr_dataset_peak_table] object
 #'
 #' @examples
-#' # We integrate a region with two peaks and a valley. This is how the
-#' # final area is integrated.
-#' x <- seq(from = 1, to = 11, by = 0.05)
-#' y <- signal::interp1(x = 1:11,
-#'                      y = c(10, 10, 10, 12, 14, 20, 9, 14, 11, 11, 12),
-#'                      xi = x)
-#'
-#' xb <- c(which.min(abs(x - 3)), which.min(abs(x - 9)))
-#' basel <- AlpsNMR:::rough_baseline(y[xb[1]:xb[2]])
-#'
-#' ggplot2::ggplot(mapping = ggplot2::aes(x = x, y = y)) +
-#'     ggplot2::geom_line(data = data.frame(x = x, y = y)) +
-#'     ggplot2::geom_polygon(data = data.frame(x = x[c(xb[1]:xb[2], rev(xb[1]:xb[2]))],
-#'                                    y = c(y[xb[1]:xb[2]], rev(basel))),
-#'                                    fill = "blue") +
-#'     ggplot2::scale_y_continuous(limits = c(5, 20))
-#'     
-#' #exclude_regions <- list(water = c(5.1, 4.5))
+#' #Creating a dataset
+#' dataset <- new_nmr_dataset_1D(ppm_axis = 1:10,
+#'                               data_1r = matrix(sample(0:99,replace = TRUE), nrow = 10),
+#'                               metadata = list(external = data.frame(NMRExperiment = c("10", "20", "30", "40", "50", "60", "70", "80", "90", "100"))))
+#' 
+#' # Integrating selected regions
+#' peak_table_integration = nmr_integrate_regions(
+#'                                    samples = dataset,
+#'                                    regions = list(ppm = c(2,5)),
+#'                                    fix_baseline = TRUE)
+#'         
 #' @export
 #' @family peak detection functions
 #' @family peak integration functions
@@ -68,6 +61,18 @@ rough_baseline <- function(x, allow_baseline_above_signal = TRUE) {
 #'
 #' @param ... Keep for compatibility
 #' @export
+#' @examples
+#' #Creating a dataset
+#' dataset <- new_nmr_dataset_1D(ppm_axis = 1:10,
+#'                               data_1r = matrix(sample(0:99,replace = TRUE), nrow = 10),
+#'                               metadata = list(external = data.frame(NMRExperiment = c("10", "20", "30", "40", "50", "60", "70", "80", "90", "100"))))
+#' 
+#' # Integrating selected regions
+#' peak_table_integration = nmr_integrate_regions(
+#'                                    samples = dataset,
+#'                                    regions = list(ppm = c(2,5)),
+#'                                    fix_baseline = TRUE)
+#'         
 nmr_integrate_regions.nmr_dataset_1D <- function(samples,
                                                  regions,
                                                  fix_baseline = TRUE,
