@@ -135,6 +135,7 @@ is.nmr_dataset_peak_table <-
 
 #' print for nmr_dataset_peak_table
 #' @param x an [nmr_dataset_peak_table] object
+#' @param ... for future use
 #' @export
 #' @return print for nmr_dataset_peak_table
 #' @family nmr_dataset_peak_table functions
@@ -157,6 +158,7 @@ print.nmr_dataset_peak_table <- function(x, ...) {
 
 #' Format for nmr_dataset_peak_table
 #' @param x an [nmr_dataset_peak_table] object
+#' @param ... for future use
 #' @export
 #' @return Format for nmr_dataset_peak_table
 #' @family nmr_dataset_peak_table functions
