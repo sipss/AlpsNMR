@@ -119,6 +119,7 @@ is.nmr_dataset_1D <- function(x)
 #' @param x an [nmr_dataset_1D] object
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
+#' @return print for nmr_dataset_1D
 #' @export
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -134,6 +135,7 @@ print.nmr_dataset_1D <- function(x, ...) {
 #' @param x an [nmr_dataset_1D] object
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
+#' @return format for nmr_dataset_1D
 #' @export
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")

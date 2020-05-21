@@ -10,16 +10,11 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' pipe_load_samples(dir_to_demo_dataset,
-#'                   glob = ".zip",
+#'                   glob = "*.zip",
 #'                   output_dir = "./pipe_output")
 #' 
-#' pipe_load_samples("/dir/with/nmr/samples/",
-#'                   glob = "*0",
-#'                   output_dir = "/dir/to/save/output")
-#'}
 pipe_load_samples <- function(samples_dir,
                               glob = "*0",
                               output_dir = NULL) {
@@ -73,7 +68,6 @@ pipe_load_samples <- function(samples_dir,
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
@@ -83,7 +77,7 @@ pipe_load_samples <- function(samples_dir,
 #' pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
 #'                                     excel_file = excel_file)
 #' # Check out: output_dir
-#'}
+#' 
 pipe_add_metadata <- function(nmr_dataset_rds,
                               excel_file,
                               output_dir) {
@@ -118,6 +112,15 @@ pipe_add_metadata <- function(nmr_dataset_rds,
 #'
 #' @return This function saves the result to the output directory
 #' @export
+#' @examples
+#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
+#' nmr_dataset <- nmr_read_samples_dir(dataset)
+#' nmr_dataset_rds <- tempfile(fileext = ".rds")
+#' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
+#' output_dir <- tempdir()
+#' pipe_interpolate_1D(nmr_dataset_rds, axis = c(min = -0.5, max = 10, by = 2.3E-4), output_dir,)
+#' 
 pipe_interpolate_1D <- function(nmr_dataset_rds, axis, output_dir) {
     message("Starting pipe_interpolate_1D at ", Sys.time())
     
