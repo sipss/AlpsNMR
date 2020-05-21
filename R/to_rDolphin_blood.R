@@ -47,6 +47,10 @@ to_rDolphin <- function(...) {
 UseMethod("to_rDolphin")
 }
 to_rDolphin <- function (parameters){
+  if (!requireNamespace("rDolphin", quietly = TRUE)) {
+    stop("rDolphin needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   rDolphin::import_data(parameters)
 }
 
@@ -103,6 +107,10 @@ Automatic_targeted_profiling <- function(...) {
 UseMethod("Automatic_targeted_profiling")
 }
 Automatic_targeted_profiling= function (imported_data, ROI=imported_data$ROI, optimization = TRUE, spectra_to_profile = NULL){
+  if (!requireNamespace("rDolphin", quietly = TRUE)) {
+    stop("rDolphin needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   rDolphin::automatic_profiling(imported_data, ROI=imported_data$ROI, optimization = TRUE, spectra_to_profile = NULL)
 }
 
@@ -487,7 +495,11 @@ NULL
 #' }
 #' @export
 rDolphin_plot = function (rDolphin_object){
-rDolphin::exemplars_plot(rDolphin_object)
+  if (!requireNamespace("rDolphin", quietly = TRUE)) {
+    stop("rDolphin needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  rDolphin::exemplars_plot(rDolphin_object)
 }
 
 NULL
@@ -538,8 +550,12 @@ NULL
 #' 
 save_profiling_plots = function(export_path, final_output, reproducibility_data,
                                 signals_to_plot = NA){
-rDolphin::write_plots(export_path, final_output, reproducibility_data,
-                      signals_to_plot = signals_to_plot)
+  if (!requireNamespace("rDolphin", quietly = TRUE)) {
+    stop("rDolphin needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  rDolphin::write_plots(export_path, final_output, reproducibility_data,
+                        signals_to_plot = signals_to_plot)
 }
 
 
