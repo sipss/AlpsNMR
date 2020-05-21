@@ -117,6 +117,7 @@ is.nmr_dataset_1D <- function(x)
 
 #' print for nmr_dataset_1D
 #' @param x an [nmr_dataset_1D] object
+#' @param ... for future use
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
 #' @return print for nmr_dataset_1D
@@ -133,6 +134,7 @@ print.nmr_dataset_1D <- function(x, ...) {
 
 #' format for nmr_dataset_1D
 #' @param x an [nmr_dataset_1D] object
+#' @param ... for future use
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
 #' @return format for nmr_dataset_1D

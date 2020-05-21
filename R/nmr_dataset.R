@@ -114,7 +114,8 @@ nmr_read_samples_dir_internal <- function(samples_dir,
 #' @rdname nmr_read_samples
 #' @export
 #' @examples 
-#' zip_files <- fs::dir_ls(samples_dir, glob = "*.zip")
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' zip_files <- fs::dir_ls(dir_to_demo_dataset, glob = "*.zip")
 #' dataset <- nmr_read_samples(sample_names = zip_files)
 #' 
 nmr_read_samples <- function(sample_names,
@@ -428,6 +429,7 @@ is.nmr_dataset <- function(x)
 
 #' Print for nmr_dataset
 #' @param x an [nmr_dataset] object
+#' @param ... for future use
 #' @family class helper functions
 #' @family nmr_dataset functions
 #' @return Print for nmr_dataset
@@ -444,6 +446,7 @@ print.nmr_dataset <- function(x, ...) {
 
 #' Format for nmr_dataset
 #' @param x an [nmr_dataset] object
+#' @param ... for future use
 #' @family class helper functions
 #' @family nmr_dataset functions
 #' @return Format for nmr_dataset
