@@ -55,15 +55,17 @@ rdCV_PLS_RF = function (X, Y, ID, scale = TRUE, nRep = 10, nOuter = 5,
     stop("MUVR needed for this function to work. Please install it.",
          call. = FALSE)
   }
-  cl=parallel::makeCluster(parallel::detectCores()-1)
-  doParallel::registerDoParallel(cl)
+  if (isTRUE(parallel)) {
+    cl=parallel::makeCluster(parallel::detectCores()-1)
+    doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl))
+  }
   model = MUVR::MUVR(X, Y, ID, scale, nRep, nOuter, 
                      nInner, varRatio, DA, 
                      fitness, 
                      method, nCompMax, 
                      methParam, ML = FALSE , modReturn, 
                      logg, parallel)
-  parallel::stopCluster(cl)# Stop parallel processing
   return(model)
 }
 
@@ -85,10 +87,12 @@ permutation_test_model = function (MVObj, nPerm = 50, nRep, nOuter, varRatio, pa
     stop("MUVR needed for this function to work. Please install it.",
          call. = FALSE)
   }
-  cl=parallel::makeCluster(parallel::detectCores()-1)
-  doParallel::registerDoParallel(cl)
+  if (!missing(parallel) && isTRUE(parallel)) {
+    cl=parallel::makeCluster(parallel::detectCores()-1)
+    doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl))
+  }
   permMatrix = MUVR::permutations(MVObj, nPerm, nRep, nOuter, varRatio, parallel)
-  parallel::stopCluster(cl)
   return (permMatrix)
 }
 
@@ -510,11 +514,13 @@ rdCV_PLS_RF_ML = function (nmr_peak_table, label, scale = TRUE, nRep = 10, nOute
   X = a[1:nrow(a),] - b[1:nrow(a),]
   X = X[, colSums(is.na(X)) != nrow(X)]
   X = stats::na.omit(X)
-  
-  cl=parallel::makeCluster(parallel::detectCores()-1)
-  doParallel::registerDoParallel(cl)
+
+  if (isTRUE(parallel)) {
+    cl=parallel::makeCluster(parallel::detectCores()-1)
+    doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl))
+  }
   model = MUVR::MUVR(X,  ML = TRUE)
-  parallel::stopCluster(cl)# Stop parallel processing
   return(model)
 }
 
@@ -535,7 +541,6 @@ rdCV_PLS_RF_ML = function (nmr_peak_table, label, scale = TRUE, nRep = 10, nOute
 #' AUC_model(model)
 #' 
 #' }
- 
 AUC_model <- function (MVObj){
-message("AUC model is ", MVObj$auc[[2]])
+  message("AUC model is ", MVObj$auc[[2]])
 }
