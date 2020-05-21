@@ -293,7 +293,7 @@ nmr_detect_peaks_tune_snr <- function(ds, NMRExperiment = NULL, SNR_thresholds =
     ~nmr_detect_peaks(ds1,
                       nDivRange_ppm = 0.03, 
                       scales = seq(1, 16, 2),
-                      baselineThresh = NULL, SNR.Th = .), #baselineThresh = 0 antes
+                      baselineThresh = 0, SNR.Th = .), #it was baselineThresh = NULL before
     .id = "SNR_threshold",
     .options = furrr::future_options(globals = character(), packages = character())
   )
