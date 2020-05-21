@@ -2,7 +2,6 @@
 #' 
 #' Import an spectra object from the rDolphin package using the information provided by the `parameters` file.
 #' The obtained rDolphin object can be used to extract the metabolite profiling using `Automatic_targeted_profiling` function.
-#' @importFrom rDolphin import_data
 #' @param parameters the path in which the parameters CSV file is stored to create an rDolphin object
 #' @return an `rDolphin_object`
 #' @family import/export functions
@@ -58,7 +57,6 @@ NULL
 #' Automatic targeted profiling
 #'
 #' Automatic quantification of metabolites for all experiments using the information located in the ROI patterns file
-#' @importFrom rDolphin automatic_profiling
 #' @param imported_data an `rDolphin_object` created with `to_rDolphin` function
 #' @param ROI a ROI file containing a targeted list of metabolites to fit
 #' @param optimization By default TRUE. If TRUE, signals parameters are optimized for profiling quality
