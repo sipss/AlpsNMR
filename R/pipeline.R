@@ -13,7 +13,7 @@
 #' \dontrun{
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' pipe_load_samples(dir_to_demo_dataset,
-#'                   glob = "*0",
+#'                   glob = ".zip",
 #'                   output_dir = "./pipe_output")
 #' 
 #' pipe_load_samples("/dir/with/nmr/samples/",

@@ -9,7 +9,7 @@
 #' @references \url{https://doi.org/10.3945/ajcn.115.110536}
 #' 
 #' @examples 
-#' \dontrun{
+#' \dontrun{ #it takes too much time
 #' download_demo(to = ".")
 #' }
 download_demo <- function(to = ".") {

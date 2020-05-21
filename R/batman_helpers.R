@@ -137,9 +137,8 @@ csFlag = 0) {
 #' @export
 #' @examples
 #' bopts <- nmr_batman_options()
-#' \dontrun{
-#' nmr_batman_write_options(bopts)
-#' }
+#' # nmr_batman_write_options(bopts)
+#' 
 nmr_batman_write_options <- function(bopts,
                                      batman_dir = "BatmanInput",
                                      filename = "batmanOptions.txt") {
@@ -243,9 +242,7 @@ batman_get_full_filename <- function(batman_dir, filename) {
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' \dontrun{
-#' nmr_batman_export_dataset(dataset_1D)
-#' }
+#' # nmr_batman_export_dataset(dataset_1D)
 #'
 nmr_batman_export_dataset <- function(nmr_dataset,
                                       batman_dir = "BatmanInput",
@@ -283,9 +280,7 @@ nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput",
 #' @examples
 #' hmdb <- NULL
 #' utils::data("hmdb", package = "AlpsNMR", envir = environment())
-#' \dontrun{
-#' hmdb <- nmr_batman_multi_data_user(hmbd)
-#' }
+#' # hmdb <- nmr_batman_multi_data_user(hmbd)
 #'
 nmr_batman_multi_data_user <- function(multiplet_table,
                                        batman_dir = "BatmanInput",
