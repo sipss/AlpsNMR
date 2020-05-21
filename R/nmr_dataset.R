@@ -430,6 +430,7 @@ is.nmr_dataset <- function(x)
 #' @param x an [nmr_dataset] object
 #' @family class helper functions
 #' @family nmr_dataset functions
+#' @return Print for nmr_dataset
 #' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -441,10 +442,11 @@ print.nmr_dataset <- function(x, ...) {
     invisible(x)
 }
 
-#' Formar for nmr_dataset
+#' Format for nmr_dataset
 #' @param x an [nmr_dataset] object
 #' @family class helper functions
 #' @family nmr_dataset functions
+#' @return Format for nmr_dataset
 #' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")

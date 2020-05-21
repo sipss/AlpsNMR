@@ -112,7 +112,7 @@ new_nmr_dataset_peak_table <- function(peak_table, metadata) {
 }
 
 #' Object is of [nmr_dataset_peak_table] class
-#' @@param x an [nmr_dataset_peak_table] object
+#' @param x an [nmr_dataset_peak_table] object
 #' @return `TRUE` if the object is an `nmr_dataset_peak_table`, `FALSE` otherwise
 #' @export
 #' @family nmr_dataset_peak_table functions
@@ -136,6 +136,7 @@ is.nmr_dataset_peak_table <-
 #' print for nmr_dataset_peak_table
 #' @param x an [nmr_dataset_peak_table] object
 #' @export
+#' @return print for nmr_dataset_peak_table
 #' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @examples
@@ -157,6 +158,7 @@ print.nmr_dataset_peak_table <- function(x, ...) {
 #' Format for nmr_dataset_peak_table
 #' @param x an [nmr_dataset_peak_table] object
 #' @export
+#' @return Format for nmr_dataset_peak_table
 #' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @examples
