@@ -183,7 +183,7 @@ NULL
 files_to_rDolphin_blood = function (nmr_dataset){
   message("you can edit obtained files for better performance in rDolphin")
   meta_D_3col= c("NMRExperiment", "SubjectID", "Group")
-  meta_rDolphin= AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
+  meta_rDolphin= nmr_meta_get(nmr_dataset)[meta_D_3col]
   newcolnames=c("sample", "individual", "type")
   colnames(meta_rDolphin)=newcolnames
   meta_rDolphin$type=as.numeric(as.factor(meta_rDolphin$type))
@@ -251,7 +251,7 @@ NULL
 files_to_rDolphin_cell = function (nmr_dataset){
   message("you can edit obtained files for better performance in rDolphin")
   meta_D_3col= c("NMRExperiment", "SubjectID", "Group")
-  meta_rDolphin= AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
+  meta_rDolphin= nmr_meta_get(nmr_dataset)[meta_D_3col]
   newcolnames=c("sample", "individual", "type")
   colnames(meta_rDolphin)=newcolnames
   meta_rDolphin$type=as.numeric(as.factor(meta_rDolphin$type))
@@ -342,7 +342,7 @@ NULL
 files_to_rDolphin_urine = function (nmr_dataset){
   message("you can edit obtained files for better performance in rDolphin")
   meta_D_3col= c("NMRExperiment", "SubjectID", "Group")
-  meta_rDolphin= AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
+  meta_rDolphin= nmr_meta_get(nmr_dataset)[meta_D_3col]
   newcolnames=c("sample", "individual", "type")
   colnames(meta_rDolphin)=newcolnames
   meta_rDolphin$type=as.numeric(as.factor(meta_rDolphin$type))

@@ -470,7 +470,7 @@ rdCV_PLS_RF_ML = function (nmr_peak_table, label, scale = TRUE, nRep = 10, nOute
                         method = "PLS", ML = TRUE, modReturn = FALSE, 
                         logg = FALSE, parallel = TRUE)
 {
-  ordered = AlpsNMR::get_integration_with_metadata(nmr_peak_table)
+  ordered = get_integration_with_metadata(nmr_peak_table)
   ordered = ordered[order(ordered[[label]],ordered$NMRExperiment),]
   levelAB = levels(as.factor(ordered[[label]]))
   A = ordered[ordered[[label]]==levelAB[1],]
