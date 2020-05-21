@@ -103,10 +103,8 @@ NULL
 #' model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 #' }
 #' @export
-Automatic_targeted_profiling <- function(...) {
-UseMethod("Automatic_targeted_profiling")
-}
-Automatic_targeted_profiling= function (imported_data, ROI=imported_data$ROI, optimization = TRUE, spectra_to_profile = NULL){
+Automatic_targeted_profiling= function(imported_data, ROI=imported_data$ROI,
+                                       optimization = TRUE, spectra_to_profile = NULL){
   if (!requireNamespace("rDolphin", quietly = TRUE)) {
     stop("rDolphin needed for this function to work. Please install it.",
          call. = FALSE)
