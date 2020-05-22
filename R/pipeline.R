@@ -75,6 +75,11 @@ pipe_load_samples <- function(samples_dir, glob = "*0", output_dir = NULL) {
 #' # Check out: output_dir
 #' 
 pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
+  # DT is used in the Rmd file, so we require it to be installed now.
+  if (!requireNamespace("DT", quietly = TRUE)) {
+    stop("DT needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   message("Starting pipe_add_metadata at ", Sys.time())
 
   if (is.null(output_dir)) {
