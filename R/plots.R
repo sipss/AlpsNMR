@@ -242,8 +242,8 @@ plot_webgl <- function(nmr_dataset, html_filename, ...) {
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' plot <- plot(dataset_1D)
-#' html_plot_interactive <- plot_interactive(plot, "html_plot_interactive.html")
+#' # plot <- plot(dataset_1D)
+#' # html_plot_interactive <- plot_interactive(plot, "html_plot_interactive.html")
 #' 
 plot_interactive <- function(plt, html_filename) {
     htmltools::save_html(
