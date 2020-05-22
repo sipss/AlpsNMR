@@ -218,10 +218,11 @@ callback_outer_cv_auroc_vip <- function(outer_cv_results) {
 #' @param auc_increment_threshold Choose the number of latent variables when the
 #' AUC does not increment more than this threshold.
 #' 
+#' @return
 #' Returns an object to be used with [nmr_data_analysis] to perform a (optionally 
 #' multilevel) PLS-DA model, using the area under the ROC curve as figure of
-#' merit to determine the optimum number of latent variables.
-#' 
+#' merit to determine the optimum number of latent variables. See
+#' [mixOmics::plsda()] for details.
 #' 
 #' @export
 plsda_auroc_vip_method <- function(ncomp, auc_increment_threshold = 0.05) {
