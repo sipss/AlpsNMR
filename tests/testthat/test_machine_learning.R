@@ -15,7 +15,7 @@ test_that("rdCV_PLS_RF & permutation_test_model work", {
   )
   meta <- nmr_meta_get(dataset, groups = "external")
   model <- rdCV_PLS_RF(nmr_data(dataset),Y = meta$group, nOuter = 3, nInner = 2, nRep = 2, parallel = FALSE)
-  permutations = permutation_test_model(model, nPerm = 2)
+  permutations = permutation_test_model(model, nPerm = 2, parallel = FALSE)
   VIPs= model_VIP(model)
   expect_true(is.numeric(model[["calcMins"]]))
   expect_true(is.matrix(permutations))
