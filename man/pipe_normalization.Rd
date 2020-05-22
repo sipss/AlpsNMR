@@ -4,8 +4,11 @@
 \alias{pipe_normalization}
 \title{Pipe: Full spectra normalization}
 \usage{
-pipe_normalization(nmr_dataset_rds, internal_calibrant = NULL,
-  output_dir = NULL)
+pipe_normalization(
+  nmr_dataset_rds,
+  internal_calibrant = NULL,
+  output_dir = NULL
+)
 }
 \arguments{
 \item{nmr_dataset_rds}{The nmr_dataset.rds file name coming from previous nodes}
@@ -22,13 +25,14 @@ that region and finally perform PQN normalization.
 If there is no internal calibrant, only the PQN normalization is done.
 }
 \seealso{
-Other pipeline functions: \code{\link{pipe_add_metadata}},
-  \code{\link{pipe_exclude_regions}},
-  \code{\link{pipe_filter_samples}},
-  \code{\link{pipe_interpolate_1D}},
-  \code{\link{pipe_load_samples}},
-  \code{\link{pipe_outlier_detection}},
-  \code{\link{pipe_peak_integration}},
-  \code{\link{pipe_peakdet_align}}
+Other pipeline functions: 
+\code{\link{pipe_add_metadata}()},
+\code{\link{pipe_exclude_regions}()},
+\code{\link{pipe_filter_samples}()},
+\code{\link{pipe_interpolate_1D}()},
+\code{\link{pipe_load_samples}()},
+\code{\link{pipe_outlier_detection}()},
+\code{\link{pipe_peak_integration}()},
+\code{\link{pipe_peakdet_align}()}
 }
 \concept{pipeline functions}

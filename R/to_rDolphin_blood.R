@@ -2,7 +2,6 @@
 #' 
 #' Import an spectra object from the rDolphin package using the information provided by the `parameters` file.
 #' The obtained rDolphin object can be used to extract the metabolite profiling using `Automatic_targeted_profiling` function.
-#' @importFrom rDolphin import_data
 #' @param parameters the path in which the parameters CSV file is stored to create an rDolphin object
 #' @return an `rDolphin_object`
 #' @family import/export functions
@@ -47,6 +46,10 @@ to_rDolphin <- function(...) {
 UseMethod("to_rDolphin")
 }
 to_rDolphin <- function (parameters){
+  if (!requireNamespace("rDolphin", quietly = TRUE)) {
+    stop("rDolphin needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   rDolphin::import_data(parameters)
 }
 
@@ -54,7 +57,6 @@ NULL
 #' Automatic targeted profiling
 #'
 #' Automatic quantification of metabolites for all experiments using the information located in the ROI patterns file
-#' @importFrom rDolphin automatic_profiling
 #' @param imported_data an `rDolphin_object` created with `to_rDolphin` function
 #' @param ROI a ROI file containing a targeted list of metabolites to fit
 #' @param optimization By default TRUE. If TRUE, signals parameters are optimized for profiling quality
@@ -99,10 +101,12 @@ NULL
 #' model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 #' }
 #' @export
-Automatic_targeted_profiling <- function(...) {
-UseMethod("Automatic_targeted_profiling")
-}
-Automatic_targeted_profiling= function (imported_data, ROI=imported_data$ROI, optimization = TRUE, spectra_to_profile = NULL){
+Automatic_targeted_profiling= function(imported_data, ROI=imported_data$ROI,
+                                       optimization = TRUE, spectra_to_profile = NULL){
+  if (!requireNamespace("rDolphin", quietly = TRUE)) {
+    stop("rDolphin needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   rDolphin::automatic_profiling(imported_data, ROI=imported_data$ROI, optimization = TRUE, spectra_to_profile = NULL)
 }
 
@@ -183,7 +187,7 @@ NULL
 files_to_rDolphin_blood = function (nmr_dataset){
   message("you can edit obtained files for better performance in rDolphin")
   meta_D_3col= c("NMRExperiment", "SubjectID", "Group")
-  meta_rDolphin= AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
+  meta_rDolphin= nmr_meta_get(nmr_dataset)[meta_D_3col]
   newcolnames=c("sample", "individual", "type")
   colnames(meta_rDolphin)=newcolnames
   meta_rDolphin$type=as.numeric(as.factor(meta_rDolphin$type))
@@ -251,7 +255,7 @@ NULL
 files_to_rDolphin_cell = function (nmr_dataset){
   message("you can edit obtained files for better performance in rDolphin")
   meta_D_3col= c("NMRExperiment", "SubjectID", "Group")
-  meta_rDolphin= AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
+  meta_rDolphin= nmr_meta_get(nmr_dataset)[meta_D_3col]
   newcolnames=c("sample", "individual", "type")
   colnames(meta_rDolphin)=newcolnames
   meta_rDolphin$type=as.numeric(as.factor(meta_rDolphin$type))
@@ -342,7 +346,7 @@ NULL
 files_to_rDolphin_urine = function (nmr_dataset){
   message("you can edit obtained files for better performance in rDolphin")
   meta_D_3col= c("NMRExperiment", "SubjectID", "Group")
-  meta_rDolphin= AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
+  meta_rDolphin= nmr_meta_get(nmr_dataset)[meta_D_3col]
   newcolnames=c("sample", "individual", "type")
   colnames(meta_rDolphin)=newcolnames
   meta_rDolphin$type=as.numeric(as.factor(meta_rDolphin$type))
@@ -487,7 +491,11 @@ NULL
 #' }
 #' @export
 rDolphin_plot = function (rDolphin_object){
-rDolphin::exemplars_plot(rDolphin_object)
+  if (!requireNamespace("rDolphin", quietly = TRUE)) {
+    stop("rDolphin needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  rDolphin::exemplars_plot(rDolphin_object)
 }
 
 NULL
@@ -538,8 +546,12 @@ NULL
 #' 
 save_profiling_plots = function(export_path, final_output, reproducibility_data,
                                 signals_to_plot = NA){
-rDolphin::write_plots(export_path, final_output, reproducibility_data,
-                      signals_to_plot = signals_to_plot)
+  if (!requireNamespace("rDolphin", quietly = TRUE)) {
+    stop("rDolphin needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  rDolphin::write_plots(export_path, final_output, reproducibility_data,
+                        signals_to_plot = signals_to_plot)
 }
 
 

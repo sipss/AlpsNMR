@@ -272,11 +272,11 @@ nmr_data_analysis <- function(dataset,
                               internal_val,
                               data_analysis_method) {
   
-  train_evaluate_model <- data_analysis_method$train_evaluate_model
-  train_evaluate_model_params_inner <- data_analysis_method$train_evaluate_model_params_inner
-  choose_best_inner <- data_analysis_method$choose_best_inner
-  train_evaluate_model_params_outer <- data_analysis_method$train_evaluate_model_params_outer
-  train_evaluate_model_digest_outer <- data_analysis_method$train_evaluate_model_digest_outer
+  train_evaluate_model <- data_analysis_method[["train_evaluate_model"]]
+  train_evaluate_model_params_inner <- data_analysis_method[["train_evaluate_model_params_inner"]]
+  choose_best_inner <- data_analysis_method[["choose_best_inner"]]
+  train_evaluate_model_params_outer <- data_analysis_method[["train_evaluate_model_params_outer"]]
+  train_evaluate_model_digest_outer <- data_analysis_method[["train_evaluate_model_digest_outer"]]
   
   # Prepare double cross-validation splits:
   train_test_blind_subsets <- split_double_cv(dataset,

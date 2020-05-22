@@ -4,8 +4,12 @@
 \alias{read_bruker_sample}
 \title{Read a Bruker sample directory}
 \usage{
-read_bruker_sample(sample_path, pdata_file = NULL,
-  pdata_path = "pdata/1", all_components = FALSE)
+read_bruker_sample(
+  sample_path,
+  pdata_file = NULL,
+  pdata_path = "pdata/1",
+  all_components = FALSE
+)
 }
 \arguments{
 \item{sample_path}{A character path of the sample directory}
