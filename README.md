@@ -3,50 +3,49 @@
 [![Build Status](https://github.com/sipss/AlpsNMR/workflows/R-CMD-check/badge.svg?branch=master)](https://github.com/sipss/AlpsNMR/actions/) [![codecov.io](https://codecov.io/github/sipss/AlpsNMR/coverage.svg?branch=master)](https://codecov.io/github/sipss/AlpsNMR) [![Documentation](https://img.shields.io/badge/documentation-pkgdown-informational)](https://sipss.github.io/AlpsNMR/)
 [![Publication](https://img.shields.io/badge/Bioinformatics-Accepted-success)](https://doi.org/10.1093/bioinformatics/btaa022)
 
-`AlpsNMR` is an R package that can load Bruker and JDX samples as well as
-preprocess them.
+`AlpsNMR` is an R package that can load Bruker and JDX samples. It provides automated and efficient signal processing for untargeted 
+ NMR metabolomics.
 
-It includes functions for region exclusion, normalization, peak detection & integration and
-outlier detection among others. See the package vignette for details.
+It is able to interpolate the samples, detect outliers, exclude regions, normalize, detect peaks, align the spectra, integrate peaks, manage metadata and visualize the spectra. See the package vignette for details.
 
 
 ## Installation
 
-AlpsNMR can be installed with the `devtools` package. For this is needed Rtools and note that it uses packages from
-CRAN, from BioConductor and from git repositories:
+`AlpsNMR` can be installed with the `devtools` package and note that it utilizes packages from CRAN, from BioConductor, and git repositories. Therefore, `Rtools` is also required.
 
-If you already have Rtools, follow this to install AlspNMR:
+Probably you already have `Rtools` installed. Then, run this code to install `AlspNMR`:
 
 ```r
 if (!"BiocManager" %in% rownames(installed.packages()))  
-    install.packages("BiocManager")  
+    install.packages("BiocManager")
 BiocManager::install(c("MassSpecWavelet", "impute"), update = FALSE)  
 if (!"devtools" %in% rownames(installed.packages()))  
-    install.packages("devtools")  
+    install.packages("devtools")
 devtools::install_github("sipss/AlpsNMR")
 ```
 
-If you need install Rtools:
 
-Download Rtools for version 3.6
+If you need to install `Rtools`:
+
+1. Download `Rtools` for version 3.6
 [[Rtools 3.6](https://cran.r-project.org/bin/windows/Rtools/Rtools35.exe)]
 
-As you can see in Rtools website, is needed one additional step, Putting Rtools on the PATH
-[[Rtools web](https://cran.r-project.org/bin/windows/Rtools/)]
+2. The additional step of adding `Rtools` to the [[PATH](https://cran.r-project.org/bin/windows/Rtools/)] is recommended to ensure the proper installation of the package.
 
-The easiest way is to create Renviron file executing this command in R, (take care because if exist previous Renviron file will be erased, in this case that that file to the Renvion):
+The easiest way to do this is to create an `Renviron` file executing this command in R (note that if this file already exists, it will be replaced):
 
 ```r
 writeLines('PATH="C:\\Rtool\\bin;${PATH}"', con = "~/.Renviron")
 ```
 
-Now restart R, and verify that make can be found, which should show the path to your Rtools installation. (In Rstudio, ctrl+shift+F10 restart R session)
+3. Now it is time to restart R, and verify that `make` can be found. Ths command should show the path to your `Rtools` installation.
 
 ```r
 Sys.which("make")
 ## "C:\\Rtools\\bin\\make.exe"
 ```
-Install AlpsNMR:
+
+4. Install AlpsNMR:
 
 ```r
 if (!"BiocManager" %in% rownames(installed.packages()))  
