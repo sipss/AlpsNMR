@@ -3,8 +3,7 @@
 [![Build Status](https://github.com/sipss/AlpsNMR/workflows/R-CMD-check/badge.svg?branch=master)](https://github.com/sipss/AlpsNMR/actions/) [![codecov.io](https://codecov.io/github/sipss/AlpsNMR/coverage.svg?branch=master)](https://codecov.io/github/sipss/AlpsNMR) [![Documentation](https://img.shields.io/badge/documentation-pkgdown-informational)](https://sipss.github.io/AlpsNMR/)
 [![Publication](https://img.shields.io/badge/Bioinformatics-Accepted-success)](https://doi.org/10.1093/bioinformatics/btaa022)
 
-`AlpsNMR` is an R package that can load Bruker and JDX samples. It provides automated and efficient signal processing for untargeted 
- NMR metabolomics.
+`AlpsNMR` is an R package that offers an automated untargeted NMR-based metabolomics analysis. It can load Bruker and JDX samples and it provides automated and efficient signal processing for untargeted NMR metabolomics.
 
 It is able to interpolate the samples, detect outliers, exclude regions, normalize, detect peaks, align the spectra, integrate peaks, manage metadata and visualize the spectra. See the package vignette for details.
 
