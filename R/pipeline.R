@@ -69,9 +69,12 @@ pipe_load_samples <- function(samples_dir,
 #'
 #' @examples
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
+#' excel_file <- system.file("dataset-demo", 
+#'                           "dummy_metadata.xlsx", 
+#'                           package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
+#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' nmr_dataset_rds <- tempfile(fileext = ".rds")
 #' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 #' output_dir <- tempdir()
@@ -115,12 +118,16 @@ pipe_add_metadata <- function(nmr_dataset_rds,
 #' @export
 #' @examples
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
+#' excel_file <- system.file("dataset-demo", 
+#'                           "dummy_metadata.xlsx", 
+#'                           package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
 #' nmr_dataset_rds <- tempfile(fileext = ".rds")
 #' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 #' output_dir <- tempdir()
-#' pipe_interpolate_1D(nmr_dataset_rds, axis = c(min = -0.5, max = 10, by = 2.3E-4), output_dir)
+#' pipe_interpolate_1D(nmr_dataset_rds, 
+#'                     axis = c(min = -0.5, max = 10, by = 2.3E-4), 
+#'                     output_dir)
 #' 
 pipe_interpolate_1D <- function(nmr_dataset_rds, axis, output_dir) {
     message("Starting pipe_interpolate_1D at ", Sys.time())
@@ -159,9 +166,12 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis, output_dir) {
 #' @export
 #' @examples
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
+#' excel_file <- system.file("dataset-demo", 
+#'                           "dummy_metadata.xlsx", 
+#'                           package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
+#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' nmr_dataset_rds <- tempfile(fileext = ".rds")
 #' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 #' exclude_regions <- list(water = c(5.1, 4.5))
@@ -211,9 +221,12 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
 #' @export
 #' @examples
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
+#' excel_file <- system.file("dataset-demo", 
+#'                           "dummy_metadata.xlsx", 
+#'                           package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
+#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' nmr_dataset_rds <- tempfile(fileext = ".rds")
 #' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 #' output_dir <- tempdir()
@@ -264,7 +277,8 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)    {
     
     if (length(nmr_exp_out) > 0) {
         message(
-            "The following NMRExperiments have been flagged and excluded as outliers:\n",
+            "The following NMRExperiments have been flagged
+            and excluded as outliers:\n",
             glue::glue_collapse(nmr_exp_out, sep = ", ", last = " and ")
         )
         plot_webgl(
@@ -275,7 +289,8 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)    {
         )
     } else {
         message(
-            "No outlier detected on a first unscaled PCA (further outliers may be detected later)"
+            "No outlier detected on a first unscaled PCA 
+            (further outliers may be detected later)"
         )
     }
     
@@ -288,7 +303,8 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)    {
 #' @return Pipeline: Filter samples according to metadata conditions
 #' @name pipe_filter_samples
 #' @param conditions A character vector with conditions to filter metadata.
-#' The `conditions` parameter should be a character vector of valid R logical conditions.
+#' The `conditions` parameter should be a character vector of 
+#' valid R logical conditions.
 #' Some examples:
 #'
 #' - conditions <- 'Gender == "Female"'
@@ -302,9 +318,12 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)    {
 #' @family pipeline functions
 #' @examples
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
+#' excel_file <- system.file("dataset-demo", 
+#'                           "dummy_metadata.xlsx", 
+#'                           package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
+#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' nmr_dataset_rds <- tempfile(fileext = ".rds")
 #' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 #' output_dir <- tempdir()
@@ -362,9 +381,12 @@ pipe_filter_samples <- function(nmr_dataset_rds,
 #' @family alignment functions
 #' @examples
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
+#' excel_file <- system.file("dataset-demo", 
+#'                           "dummy_metadata.xlsx", 
+#'                           package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
+#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' nmr_dataset_rds <- tempfile(fileext = ".rds")
 #' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 #' output_dir <- tempdir()
@@ -447,15 +469,20 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
 #' @family peak integration functions
 #' @examples
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
+#' excel_file <- system.file("dataset-demo", 
+#'                           "dummy_metadata.xlsx", 
+#'                           package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
+#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' nmr_dataset_rds <- tempfile(fileext = ".rds")
 #' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 #' output_dir <- tempdir()
 #' conditions <- 'NMRExperiment == "10"'
 #' pipe_peakdet_align(nmr_dataset_rds, output_dir = output_dir)
-#' pipe_peak_integration(nmr_dataset_rds, peak_det_align_dir = output_dir, peak_width_ppm = 0.006, output_dir)
+#' pipe_peak_integration(nmr_dataset_rds, 
+#'                       peak_det_align_dir = output_dir,
+#'                        peak_width_ppm = 0.006, output_dir)
 #' 
 pipe_peak_integration <- function(nmr_dataset_rds,
                                   peak_det_align_dir,
@@ -517,9 +544,12 @@ pipe_peak_integration <- function(nmr_dataset_rds,
 #' @export
 #' @examples
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
+#' excel_file <- system.file("dataset-demo", 
+#'                           "dummy_metadata.xlsx", 
+#'                           package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
+#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' nmr_dataset_rds <- tempfile(fileext = ".rds")
 #' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 #' output_dir <- tempdir()
@@ -550,7 +580,9 @@ pipe_normalization <- function(nmr_dataset_rds,
     nmr_dataset <- nmr_dataset_load(nmr_dataset_rds)
     if (!is.null(internal_calibrant)) {
         nmr_dataset_norm_ic <-
-            nmr_normalize(nmr_dataset, method = "region", ppm_range = internal_calibrant)
+            nmr_normalize(nmr_dataset, 
+                          method = "region", 
+                          ppm_range = internal_calibrant)
         diag <- nmr_normalize_extra_info(nmr_dataset_norm_ic)
         ggplot2::ggsave(
             filename = plot_norm_factor_ic,
