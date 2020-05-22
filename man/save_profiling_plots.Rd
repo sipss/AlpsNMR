@@ -4,8 +4,12 @@
 \alias{save_profiling_plots}
 \title{Save rDolphin output and profiling plots}
 \usage{
-save_profiling_plots(export_path, final_output, reproducibility_data,
-  signals_to_plot = NA)
+save_profiling_plots(
+  export_path,
+  final_output,
+  reproducibility_data,
+  signals_to_plot = NA
+)
 }
 \arguments{
 \item{export_path}{Path where plots are stored inside a created 'plots' folder}

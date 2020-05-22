@@ -51,15 +51,21 @@ rdCV_PLS_RF = function (X, Y, ID, scale = TRUE, nRep = 10, nOuter = 5,
                         methParam, ML = FALSE, modReturn = FALSE, 
                         logg = FALSE, parallel = TRUE)
 {
-  cl=parallel::makeCluster(parallel::detectCores()-1)
-  doParallel::registerDoParallel(cl)
+  if (!requireNamespace("MUVR", quietly = TRUE)) {
+    stop("MUVR needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  if (isTRUE(parallel)) {
+    cl=parallel::makeCluster(parallel::detectCores()-1)
+    doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl))
+  }
   model = MUVR::MUVR(X, Y, ID, scale, nRep, nOuter, 
                      nInner, varRatio, DA, 
                      fitness, 
                      method, nCompMax, 
                      methParam, ML = FALSE , modReturn, 
                      logg, parallel)
-  parallel::stopCluster(cl)# Stop parallel processing
   return(model)
 }
 
@@ -77,11 +83,17 @@ rdCV_PLS_RF = function (X, Y, ID, scale = TRUE, nRep = 10, nOuter = 5,
 
 permutation_test_model = function (MVObj, nPerm = 50, nRep, nOuter, varRatio, parallel)
 {
-cl=parallel::makeCluster(parallel::detectCores()-1)
-doParallel::registerDoParallel(cl)
-permMatrix = MUVR::permutations(MVObj, nPerm, nRep, nOuter, varRatio, parallel)
-parallel::stopCluster(cl)
-return (permMatrix)
+  if (!requireNamespace("MUVR", quietly = TRUE)) {
+    stop("MUVR needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  if (!missing(parallel) && isTRUE(parallel)) {
+    cl=parallel::makeCluster(parallel::detectCores()-1)
+    doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl))
+  }
+  permMatrix = MUVR::permutations(MVObj, nPerm, nRep, nOuter, varRatio, parallel)
+  return (permMatrix)
 }
 
 #' Model plot
@@ -247,9 +259,13 @@ permutation_test_plot = function (MVObj, permMatrix, model = "mid", type = type,
                                  pos, xlab = "Number of misclassifications", xlim,
                                   ylim = NULL, breaks = "Sturges", main = "Permutation test")
 {
-MUVR::permutationPlot(MVObj, permMatrix, model, type = type,
-                      pos = pos, xlab = xlab, xlim = xlim,
-                      ylim = ylim, breaks = breaks, main = main)
+  if (!requireNamespace("MUVR", quietly = TRUE)) {
+    stop("MUVR needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  MUVR::permutationPlot(MVObj, permMatrix, model, type = type,
+                        pos = pos, xlab = xlab, xlim = xlim,
+                        ylim = ylim, breaks = breaks, main = main)
 }
 
 
@@ -294,6 +310,10 @@ MUVR::permutationPlot(MVObj, permMatrix, model, type = type,
 #' }
 #' 
 model_VIP = function(MVObj, model = "mid"){
+  if (!requireNamespace("MUVR", quietly = TRUE)) {
+    stop("MUVR needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   MUVR::getVIP(MVObj, model)
 }
 
@@ -388,6 +408,10 @@ ppm_VIP_vector <- function(VIPs){
 #' }
 #' 
 p_value_perm = function (model_actual, permutation_object){
+  if (!requireNamespace("MUVR", quietly = TRUE)) {
+    stop("MUVR needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   MUVR::pPerm(actual = model_actual, h0 = permutation_object)
 }
 
@@ -433,6 +457,10 @@ p_value_perm = function (model_actual, permutation_object){
 #' }
 #' 
 confusion_matrix = function(MVObj, model = "mid"){
+  if (!requireNamespace("MUVR", quietly = TRUE)) {
+    stop("MUVR needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   MUVR::confusionMatrix(MVObj, model)
 }
 
@@ -470,7 +498,11 @@ rdCV_PLS_RF_ML = function (nmr_peak_table, label, scale = TRUE, nRep = 10, nOute
                         method = "PLS", ML = TRUE, modReturn = FALSE, 
                         logg = FALSE, parallel = TRUE)
 {
-  ordered = AlpsNMR::get_integration_with_metadata(nmr_peak_table)
+  if (!requireNamespace("MUVR", quietly = TRUE)) {
+    stop("MUVR needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  ordered = get_integration_with_metadata(nmr_peak_table)
   ordered = ordered[order(ordered[[label]],ordered$NMRExperiment),]
   levelAB = levels(as.factor(ordered[[label]]))
   A = ordered[ordered[[label]]==levelAB[1],]
@@ -482,11 +514,13 @@ rdCV_PLS_RF_ML = function (nmr_peak_table, label, scale = TRUE, nRep = 10, nOute
   X = a[1:nrow(a),] - b[1:nrow(a),]
   X = X[, colSums(is.na(X)) != nrow(X)]
   X = stats::na.omit(X)
-  
-  cl=parallel::makeCluster(parallel::detectCores()-1)
-  doParallel::registerDoParallel(cl)
+
+  if (isTRUE(parallel)) {
+    cl=parallel::makeCluster(parallel::detectCores()-1)
+    doParallel::registerDoParallel(cl)
+    on.exit(parallel::stopCluster(cl))
+  }
   model = MUVR::MUVR(X,  ML = TRUE)
-  parallel::stopCluster(cl)# Stop parallel processing
   return(model)
 }
 
@@ -507,7 +541,6 @@ rdCV_PLS_RF_ML = function (nmr_peak_table, label, scale = TRUE, nRep = 10, nOute
 #' AUC_model(model)
 #' 
 #' }
- 
 AUC_model <- function (MVObj){
-message("AUC model is ", MVObj$auc[[2]])
+  message("AUC model is ", MVObj$auc[[2]])
 }
