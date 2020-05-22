@@ -57,7 +57,6 @@ Imports:
  purrr (>= 0.2.5),
  glue (>= 1.2.0),
  reshape2 (>= 1.4.3),
- scales (>= 1.0.0),
  GGally (>= 1.4.0),
  mixOmics (>= 6.3.2),
  matrixStats (>= 0.54.0),
