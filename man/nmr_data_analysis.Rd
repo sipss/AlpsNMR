@@ -38,5 +38,69 @@ A list with the following elements:
 }
 }
 \description{
-Data analysis
+Data analysis on AlpsNMR can be performed on both \link{nmr_dataset_1D} full spectra
+as well as \link{nmr_dataset_peak_table} peak tables.
+}
+\details{
+The workflow consists of a double cross validation strategy using random
+subsampling for splitting into train and test sets. The classification model
+and the metric to choose the best model can be customized (see
+\code{\link[=new_nmr_data_analysis_method]{new_nmr_data_analysis_method()}}), but for now only a PLSDA classification
+model with a best area under ROC curve metric is implemented (see
+the examples here and \link{plsda_auroc_vip_method})
+}
+\examples{
+# Data analysis for a table of integrated peaks
+
+## Generate an artificial nmr_dataset_peak_table:
+### Generate artificial metadata:
+num_samples <- 32 # use an even number in this example
+num_peaks <- 20
+metadata <- data.frame(
+  NMRExperiment = as.character(1:num_samples),
+  Condition = rep(c("A", "B"), times = num_samples/2),
+  stringsAsFactors = FALSE
+)
+
+### The matrix with peaks
+peak_means <- runif(n = num_peaks, min = 300, max = 600)
+peak_sd <- runif(n = num_peaks, min = 30, max = 60)
+peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
+                      mu = peak_means, sd = peak_sd)
+colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+
+## Artificial differences depending on the condition:
+peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+  peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+
+peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+  peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+  
+### The nmr_dataset_peak_table
+peak_table <- new_nmr_dataset_peak_table(
+  peak_table = peak_matrix,
+  metadata = list(external = metadata)
+)
+print(peak_table)
+
+## We will use a double cross validation, splitting the samples with random
+## subsampling both in the external and internal validation.
+## The classification model will be a PLSDA, exploring at maximum 3 latent
+## variables.
+## The best model will be selected based on the area under the ROC curve
+methodology <- plsda_auroc_vip_method(ncomp = 3)
+model <- nmr_data_analysis(
+  peak_table,
+  y_column = "Condition",
+  identity_column = NULL,
+  external_val = list(iterations = 3, test_size = 0.25),
+  internal_val = list(iterations = 3, test_size = 0.25),
+  data_analysis_method = methodology
+)
+## Area under ROC for each outer cross-validation iteration:
+print(model$outer_cv_results_digested$auroc)
+## Rank Product of the Variable Importance in the Projection
+## (Lower means more important)
+print(sort(model$outer_cv_results_digested$vip_rankproducts))
+
 }
