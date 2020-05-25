@@ -81,8 +81,6 @@ Suggests:
     plotly (>= 4.7.1),
     ChemoSpec,
     ASICS,
-    MUVR (>= 0.0.972),
-    rDolphin (>= 0.3.0),
     knitr
 biocViews: Metabolomics
 RoxygenNote: 7.1.0
