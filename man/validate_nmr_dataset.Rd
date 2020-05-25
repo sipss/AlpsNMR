@@ -120,7 +120,6 @@ Other nmr_dataset_1D functions:
 \code{\link{plot_webgl}()},
 \code{\link{print.nmr_dataset_1D}()},
 \code{\link{save_files_to_rDolphin}()},
-\code{\link{to_ASICS}()},
 \code{\link{to_ChemoSpec}()}
 }
 \concept{class helper functions}

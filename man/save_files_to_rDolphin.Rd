@@ -46,7 +46,6 @@ Other import/export functions:
 \code{\link{nmr_zip_bruker_samples}()},
 \code{\link{pipe_load_samples}()},
 \code{\link{save_profiling_output}()},
-\code{\link{to_ASICS}()},
 \code{\link{to_ChemoSpec}()}
 
 Other nmr_dataset_1D functions: 
@@ -86,7 +85,6 @@ Other nmr_dataset_1D functions:
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
 \code{\link{print.nmr_dataset_1D}()},
-\code{\link{to_ASICS}()},
 \code{\link{to_ChemoSpec}()},
 \code{\link{validate_nmr_dataset}()}
 

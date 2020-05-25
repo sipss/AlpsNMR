@@ -7,6 +7,9 @@
 \usage{
 nmr_diagnose()
 }
+\value{
+nmr_normalize_extra_info will return a plot of the info
+}
 \description{
 Defunct function
 }

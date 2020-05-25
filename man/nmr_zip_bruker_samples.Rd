@@ -37,7 +37,6 @@ Other import/export functions:
 \code{\link{pipe_load_samples}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{save_profiling_output}()},
-\code{\link{to_ASICS}()},
 \code{\link{to_ChemoSpec}()}
 }
 \concept{import/export functions}
