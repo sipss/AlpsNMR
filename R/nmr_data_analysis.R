@@ -41,59 +41,59 @@ random_subsampling <- function(sample_idx,
                                test_size = 0.25,
                                keep_together = NULL,
                                balance_in_train = NULL) {
-    resample <- function(x, ...) x[sample.int(length(x), ...)]
-    num_samples <- length(sample_idx)
-    output <- vector("list", iterations)
-    if (is.null(keep_together)) {
-        keep_together <- sample_idx
+  resample <- function(x, ...) x[sample.int(length(x), ...)]
+  num_samples <- length(sample_idx)
+  output <- vector("list", iterations)
+  if (is.null(keep_together)) {
+    keep_together <- sample_idx
+  }
+  keep_together <- as.factor(keep_together)
+  stopifnot(length(keep_together) == num_samples)
+  if (!is.null(balance_in_train)) {
+    balance_in_train <- as.factor(balance_in_train)
+    # Check keep_together & balance consistency
+    stopifnot(length(balance_in_train) == num_samples)
+    for (lev in levels(keep_together)) {
+      samples_in_lev <- which(keep_together == lev)
+      if (length(unique(balance_in_train[samples_in_lev])) > 1) {
+        stop(glue::glue(
+          "Can't balance samples and keep samples together",
+          " for samples of keep_together == {lev}, because they",
+          " belong to more than one balancing groups: {paste0(unique(balance_in_train[samples_in_lev]))}"
+        ))
+      }
     }
-    keep_together <- as.factor(keep_together)
-    stopifnot(length(keep_together) == num_samples)
-    if (!is.null(balance_in_train)) {
-        balance_in_train <- as.factor(balance_in_train)
-        # Check keep_together & balance consistency
-        stopifnot(length(balance_in_train) == num_samples)
-        for (lev in levels(keep_together)) {
-            samples_in_lev <- which(keep_together == lev)
-            if (length(unique(balance_in_train[samples_in_lev])) > 1) {
-                stop(glue::glue(
-                    "Can't balance samples and keep samples together",
-                    " for samples of keep_together == {lev}, because they",
-                    " belong to more than one balancing groups: {paste0(unique(balance_in_train[samples_in_lev]))}"
-                ))
-            }
-        }
-        keep_balance <- data.frame(keep_together = keep_together,
-                                   balance_in_train = balance_in_train,
-                                   stringsAsFactors = TRUE)
-        keep_balance <- unique(keep_balance)
-        
-        smaller_balancing_group <- min(table(keep_balance$balance_in_train))
-        num_groups_train <- max(floor(smaller_balancing_group*(1 - test_size)), 1)
-        
-        for (i in seq_len(iterations)) {
-            groups_train <- keep_balance %>%
-                dplyr::group_by(balance_in_train) %>% 
-                dplyr::sample_n(num_groups_train) %>% 
-                dplyr::ungroup() %>%
-                dplyr::pull(keep_together)
-            train_samples <- sample_idx[keep_together %in% groups_train]
-            test_samples <- base::setdiff(sample_idx, train_samples)
-            output[[i]] <- list(training = train_samples,
-                                test = test_samples)
-        }
-    } else {
-        groups_keep_together <- unique(keep_together)
-        num_groups_test <- floor(length(groups_keep_together)*test_size)
-        for (i in seq_len(iterations)) {
-            groups_test <- resample(x = groups_keep_together, size = num_groups_test)
-            test_samples <- sample_idx[keep_together %in% groups_test]
-            train_samples <- base::setdiff(sample_idx, test_samples)
-            output[[i]] <- list(training = train_samples,
-                                test = test_samples)
-        }
+    keep_balance <- data.frame(keep_together = keep_together,
+                               balance_in_train = balance_in_train,
+                               stringsAsFactors = TRUE)
+    keep_balance <- unique(keep_balance)
+    
+    smaller_balancing_group <- min(table(keep_balance$balance_in_train))
+    num_groups_train <- max(floor(smaller_balancing_group*(1 - test_size)), 1)
+    
+    for (i in seq_len(iterations)) {
+      groups_train <- keep_balance %>%
+        dplyr::group_by(balance_in_train) %>% 
+        dplyr::sample_n(num_groups_train) %>% 
+        dplyr::ungroup() %>%
+        dplyr::pull(keep_together)
+      train_samples <- sample_idx[keep_together %in% groups_train]
+      test_samples <- base::setdiff(sample_idx, train_samples)
+      output[[i]] <- list(training = train_samples,
+                          test = test_samples)
     }
-    return(output)
+  } else {
+    groups_keep_together <- unique(keep_together)
+    num_groups_test <- floor(length(groups_keep_together)*test_size)
+    for (i in seq_len(iterations)) {
+      groups_test <- resample(x = groups_keep_together, size = num_groups_test)
+      test_samples <- sample_idx[keep_together %in% groups_test]
+      train_samples <- base::setdiff(sample_idx, test_samples)
+      output[[i]] <- list(training = train_samples,
+                          test = test_samples)
+    }
+  }
+  return(output)
 }
 
 #' Split samples for double cross-validation
@@ -110,47 +110,47 @@ random_subsampling <- function(sample_idx,
 split_double_cv <- function(dataset, keep_together = NULL,
                             external_val = list(iterations = 16L, test_size = 0.25),
                             internal_val = list(iterations = 10L, test_size = 0.25)) {
-    if (is.null(keep_together)) {
-        keep_together_data <- seq_len(dataset$num_samples)
-    } else {
-        keep_together_data <- as.factor(nmr_meta_get_column(dataset, keep_together))
-    }
-    sample_idx <- seq_len(dataset$num_samples)
-    
-    outer_cv_loop <- random_subsampling(sample_idx = sample_idx,
-                                        iterations = external_val$iterations,
-                                        test_size = external_val$test_size,
-                                        keep_together = keep_together_data)
-    outer_cv_iterations <- purrr::imap(outer_cv_loop, function(outer, outer_idx) {
+  if (is.null(keep_together)) {
+    keep_together_data <- seq_len(dataset$num_samples)
+  } else {
+    keep_together_data <- as.factor(nmr_meta_get_column(dataset, keep_together))
+  }
+  sample_idx <- seq_len(dataset$num_samples)
+  
+  outer_cv_loop <- random_subsampling(sample_idx = sample_idx,
+                                      iterations = external_val$iterations,
+                                      test_size = external_val$test_size,
+                                      keep_together = keep_together_data)
+  outer_cv_iterations <- purrr::imap(outer_cv_loop, function(outer, outer_idx) {
+    list(outer_iter = outer_idx,
+         outer_train = outer$training,
+         outer_test = outer$test)
+  })
+  names(outer_cv_iterations) <- as.character(purrr::map_int(outer_cv_iterations, "outer_iter"))
+  
+  inner_cv_iterations <- purrr::flatten(
+    purrr::imap(outer_cv_loop, function(outer, outer_idx) {
+      calib_idx <- outer$training
+      blind_idx <- outer$test
+      inner_cv <- random_subsampling(sample_idx = calib_idx,
+                                     iterations = internal_val$iterations,
+                                     test_size = internal_val$test_size,
+                                     keep_together = keep_together_data[calib_idx])
+      purrr::imap(inner_cv, function(inner_iter, inner_iter_idx) {
         list(outer_iter = outer_idx,
-             outer_train = outer$training,
-             outer_test = outer$test)
-    })
-    names(outer_cv_iterations) <- as.character(purrr::map_int(outer_cv_iterations, "outer_iter"))
-    
-    inner_cv_iterations <- purrr::flatten(
-        purrr::imap(outer_cv_loop, function(outer, outer_idx) {
-            calib_idx <- outer$training
-            blind_idx <- outer$test
-            inner_cv <- random_subsampling(sample_idx = calib_idx,
-                                           iterations = internal_val$iterations,
-                                           test_size = internal_val$test_size,
-                                           keep_together = keep_together_data[calib_idx])
-            purrr::imap(inner_cv, function(inner_iter, inner_iter_idx) {
-                list(outer_iter = outer_idx,
-                     inner_iter = inner_iter_idx,
-                     inner_train_idx = inner_iter$training,
-                     inner_test_idx = inner_iter$test)
-            })
-        }))
-    
-    names(inner_cv_iterations) <- 
-        paste0(as.character(purrr::map_int(inner_cv_iterations, "outer_iter")),
-               "_", 
-               as.character(purrr::map_int(inner_cv_iterations, "inner_iter")))
-    
-    list(outer = outer_cv_iterations,
-         inner = inner_cv_iterations)
+             inner_iter = inner_iter_idx,
+             inner_train_idx = inner_iter$training,
+             inner_test_idx = inner_iter$test)
+      })
+    }))
+  
+  names(inner_cv_iterations) <- 
+    paste0(as.character(purrr::map_int(inner_cv_iterations, "outer_iter")),
+           "_", 
+           as.character(purrr::map_int(inner_cv_iterations, "inner_iter")))
+  
+  list(outer = outer_cv_iterations,
+       inner = inner_cv_iterations)
 }
 
 
@@ -174,37 +174,37 @@ split_build_perform <- function(train_test_subset,
                                 identity_column = NULL,
                                 train_evaluate_model,
                                 ...) {
-    x_all <- nmr_data(dataset)
-    y_all <- nmr_meta_get_column(dataset, column = y_column)
-    if (!is.null(identity_column)) {
-        identity_all <- nmr_meta_get_column(dataset, column = identity_column)
-    } else {
-        identity_all <- NULL
-    }
-    
-    # Split
-    train_idx <- train_test_subset[[1]]
-    test_idx <- train_test_subset[[2]]
-    
-    x_train <- x_all[train_idx,, drop = FALSE]
-    y_train <- y_all[train_idx]
-    if (!is.null(identity_all)) {
-        identity_train <- identity_all[train_idx]
-    } else {
-        identity_train <- NULL
-    }
-    
-    x_test <- x_all[test_idx,, drop = FALSE]
-    y_test <- y_all[test_idx]
-    if (!is.null(identity_all)) {
-        identity_test <- identity_all[test_idx]
-    } else {
-        identity_test <- NULL
-    }
-    
-    # Build & performance:
-    train_evaluate_model(x_train = x_train, y_train = y_train, identity_train = identity_train,
-                         x_test = x_test, y_test = y_test, identity_test = identity_test, ...)
+  x_all <- nmr_data(dataset)
+  y_all <- nmr_meta_get_column(dataset, column = y_column)
+  if (!is.null(identity_column)) {
+    identity_all <- nmr_meta_get_column(dataset, column = identity_column)
+  } else {
+    identity_all <- NULL
+  }
+  
+  # Split
+  train_idx <- train_test_subset[[1]]
+  test_idx <- train_test_subset[[2]]
+  
+  x_train <- x_all[train_idx,, drop = FALSE]
+  y_train <- y_all[train_idx]
+  if (!is.null(identity_all)) {
+    identity_train <- identity_all[train_idx]
+  } else {
+    identity_train <- NULL
+  }
+  
+  x_test <- x_all[test_idx,, drop = FALSE]
+  y_test <- y_all[test_idx]
+  if (!is.null(identity_all)) {
+    identity_test <- identity_all[test_idx]
+  } else {
+    identity_test <- NULL
+  }
+  
+  # Build & performance:
+  train_evaluate_model(x_train = x_train, y_train = y_train, identity_train = identity_train,
+                       x_test = x_test, y_test = y_test, identity_test = identity_test, ...)
 }
 
 
@@ -221,25 +221,25 @@ split_build_perform <- function(train_test_subset,
 #' @noRd
 do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
                   train_test_subsets, train_evaluate_model_args_iter = NULL, ...) {
-    if (show_progress_bar(length(train_test_subsets) > 5)) {
-        prgrs <- TRUE
-    } else {
-        prgrs <- FALSE
-    }
-    output <- furrr::future_pmap(
-        c(list(train_test_subset = train_test_subsets),
-          train_evaluate_model_args_iter),
-        split_build_perform,
-        dataset = dataset, 
-        y_column = y_column,
-        identity_column = identity_column,
-        train_evaluate_model = train_evaluate_model,
-        ...,
-        .progress = prgrs,
-        .options = furrr::future_options(globals = character(0),
-                                         packages = character(0)))
-    names(output) <- names(train_test_subsets)
-    output
+  if (show_progress_bar(length(train_test_subsets) > 5)) {
+    prgrs <- TRUE
+  } else {
+    prgrs <- FALSE
+  }
+  output <- furrr::future_pmap(
+    c(list(train_test_subset = train_test_subsets),
+      train_evaluate_model_args_iter),
+    split_build_perform,
+    dataset = dataset, 
+    y_column = y_column,
+    identity_column = identity_column,
+    train_evaluate_model = train_evaluate_model,
+    ...,
+    .progress = prgrs,
+    .options = furrr::future_options(globals = character(0),
+                                     packages = character(0)))
+  names(output) <- names(train_test_subsets)
+  output
 }
 
 
@@ -335,66 +335,65 @@ nmr_data_analysis <- function(dataset,
                               external_val,
                               internal_val,
                               data_analysis_method) {
-    
-    
-    train_evaluate_model <- data_analysis_method[["train_evaluate_model"]]
-    train_evaluate_model_params_inner <- data_analysis_method[["train_evaluate_model_params_inner"]]
-    choose_best_inner <- data_analysis_method[["choose_best_inner"]]
-    train_evaluate_model_params_outer <- data_analysis_method[["train_evaluate_model_params_outer"]]
-    train_evaluate_model_digest_outer <- data_analysis_method[["train_evaluate_model_digest_outer"]]
-    
-    # Prepare double cross-validation splits:
-    train_test_blind_subsets <- split_double_cv(dataset,
-                                                keep_together = identity_column,
-                                                external_val = external_val,
-                                                internal_val = internal_val)
-    
-    # These are ALL the inner cross-validation iterations:
-    train_test_subsets_inner <- purrr::map(train_test_blind_subsets$inner,
-                                           ~ .[c("inner_train_idx", "inner_test_idx")])
-    
-    # We run the train_evaluate_model function for each of the inner CV.
-    inner_cv_results <- do.call(
-        what = do_cv,
-        args = c(list(dataset = dataset,
-                      y_column = y_column,
-                      identity_column = identity_column,
-                      train_evaluate_model = train_evaluate_model,
-                      train_test_subsets = train_test_subsets_inner),
-                 train_evaluate_model_params_inner))
-    
-    # We choose the best hyper-parameters for each inner cross-validation:
-    inner_cv_results_digested <- choose_best_inner(inner_cv_results)
-    
-    # Prepare the indices for the final outer cv models:
-    train_test_subsets_outer <- purrr::map(train_test_blind_subsets$outer,
-                                           ~ .[c("outer_train", "outer_test")])
-    
-    # Compute the outer cv models
-    outer_cv_results <- do.call(
-        what = do_cv,
-        args = c(list(dataset = dataset,
-                      y_column = y_column,
-                      identity_column = identity_column,
-                      train_evaluate_model = train_evaluate_model,
-                      train_test_subsets = train_test_subsets_outer,
-                      train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args
-        ),
-        train_evaluate_model_params_outer
-        )
+  
+  train_evaluate_model <- data_analysis_method[["train_evaluate_model"]]
+  train_evaluate_model_params_inner <- data_analysis_method[["train_evaluate_model_params_inner"]]
+  choose_best_inner <- data_analysis_method[["choose_best_inner"]]
+  train_evaluate_model_params_outer <- data_analysis_method[["train_evaluate_model_params_outer"]]
+  train_evaluate_model_digest_outer <- data_analysis_method[["train_evaluate_model_digest_outer"]]
+  
+  # Prepare double cross-validation splits:
+  train_test_blind_subsets <- split_double_cv(dataset,
+                                              keep_together = identity_column,
+                                              external_val = external_val,
+                                              internal_val = internal_val)
+  
+  # These are ALL the inner cross-validation iterations:
+  train_test_subsets_inner <- purrr::map(train_test_blind_subsets$inner,
+                                         ~ .[c("inner_train_idx", "inner_test_idx")])
+  
+  # We run the train_evaluate_model function for each of the inner CV.
+  inner_cv_results <- do.call(
+    what = do_cv,
+    args = c(list(dataset = dataset,
+                  y_column = y_column,
+                  identity_column = identity_column,
+                  train_evaluate_model = train_evaluate_model,
+                  train_test_subsets = train_test_subsets_inner),
+             train_evaluate_model_params_inner))
+  
+  # We choose the best hyper-parameters for each inner cross-validation:
+  inner_cv_results_digested <- choose_best_inner(inner_cv_results)
+  
+  # Prepare the indices for the final outer cv models:
+  train_test_subsets_outer <- purrr::map(train_test_blind_subsets$outer,
+                                         ~ .[c("outer_train", "outer_test")])
+  
+  # Compute the outer cv models
+  outer_cv_results <- do.call(
+    what = do_cv,
+    args = c(list(dataset = dataset,
+                  y_column = y_column,
+                  identity_column = identity_column,
+                  train_evaluate_model = train_evaluate_model,
+                  train_test_subsets = train_test_subsets_outer,
+                  train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args
+    ),
+    train_evaluate_model_params_outer
     )
-    
-    # Digest the results:
-    outer_cv_results_dig <- train_evaluate_model_digest_outer(outer_cv_results)
-    
-    # Give output:
-    list(
-        train_test_partitions = train_test_blind_subsets,
-        inner_cv_results = inner_cv_results,
-        inner_cv_results_digested = inner_cv_results_digested,
-        outer_cv_results = outer_cv_results,
-        outer_cv_results_digested = outer_cv_results_dig
-    )
+  )
+  
+  # Digest the results:
+  outer_cv_results_dig <- train_evaluate_model_digest_outer(outer_cv_results)
+  
+  # Give output:
+  list(
+    train_test_partitions = train_test_blind_subsets,
+    inner_cv_results = inner_cv_results,
+    inner_cv_results_digested = inner_cv_results_digested,
+    outer_cv_results = outer_cv_results,
+    outer_cv_results_digested = outer_cv_results_dig
+  )
 }
 
 
@@ -444,11 +443,11 @@ new_nmr_data_analysis_method <- function(train_evaluate_model,
                                          choose_best_inner,
                                          train_evaluate_model_params_outer,
                                          train_evaluate_model_digest_outer) {
-    out <- list(train_evaluate_model = train_evaluate_model,
-                train_evaluate_model_params_inner = train_evaluate_model_params_inner,
-                choose_best_inner = choose_best_inner,
-                train_evaluate_model_params_outer = train_evaluate_model_params_outer,
-                train_evaluate_model_digest_outer = train_evaluate_model_digest_outer)
-    class(out) <- "nmr_data_analysis_method"
-    out
+  out <- list(train_evaluate_model = train_evaluate_model,
+              train_evaluate_model_params_inner = train_evaluate_model_params_inner,
+              choose_best_inner = choose_best_inner,
+              train_evaluate_model_params_outer = train_evaluate_model_params_outer,
+              train_evaluate_model_digest_outer = train_evaluate_model_digest_outer)
+  class(out) <- "nmr_data_analysis_method"
+  out
 }
