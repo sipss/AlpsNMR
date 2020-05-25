@@ -24,6 +24,12 @@ The Excel file name
 \description{
 Export Metadata to an Excel file
 }
+\examples{
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+nmr_meta_export(dataset, "metadata.xlsx")
+
+}
 \seealso{
 Other metadata functions: 
 \code{\link{nmr_meta_add}()},
@@ -33,6 +39,7 @@ Other metadata functions:
 
 Other nmr_dataset functions: 
 \code{\link{[.nmr_dataset}()},
+\code{\link{format.nmr_dataset}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset}()},
 \code{\link{nmr_interpolate_1D}()},
@@ -41,17 +48,18 @@ Other nmr_dataset functions:
 \code{\link{nmr_meta_get}()},
 \code{\link{nmr_ppm_resolution}()},
 \code{\link{nmr_read_samples}()},
+\code{\link{print.nmr_dataset}()},
 \code{\link{validate_nmr_dataset}()}
 
 Other nmr_dataset_1D functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{[.nmr_dataset_1D}()},
 \code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
-\code{\link{get_integration_with_metadata}()},
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset_1D}()},
@@ -78,26 +86,25 @@ Other nmr_dataset_1D functions:
 \code{\link{nmr_ppm_resolution}()},
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
+\code{\link{print.nmr_dataset_1D}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ASICS}()},
 \code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()},
-\code{\link{validate_nmr_dataset_1D}()}
+\code{\link{validate_nmr_dataset}()}
 
 Other nmr_dataset_peak_table functions: 
 \code{\link{[.nmr_dataset_peak_table}()},
+\code{\link{format.nmr_dataset_peak_table}()},
 \code{\link{is.nmr_dataset_peak_table}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset_peak_table}()},
 \code{\link{nmr_meta_add}()},
 \code{\link{nmr_meta_get_column}()},
 \code{\link{nmr_meta_get}()},
+\code{\link{print.nmr_dataset_peak_table}()},
 \code{\link{validate_nmr_dataset_peak_table}()}
 
 Other import/export functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
@@ -110,8 +117,7 @@ Other import/export functions:
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{save_profiling_output}()},
 \code{\link{to_ASICS}()},
-\code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()}
+\code{\link{to_ChemoSpec}()}
 }
 \concept{import/export functions}
 \concept{metadata functions}

@@ -19,7 +19,7 @@ a list containing:
 }
 }
 \description{
-The function generates the files required by \link{to_rDolphin} function.
+The function generates the files required by to_rDolphin function.
 }
 \examples{
 \dontrun{
@@ -57,7 +57,6 @@ model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 }
 \seealso{
 Other import/export functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_urine}()},
 \code{\link{load_and_save_functions}},
@@ -70,17 +69,16 @@ Other import/export functions:
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{save_profiling_output}()},
 \code{\link{to_ASICS}()},
-\code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()}
+\code{\link{to_ChemoSpec}()}
 
 Other nmr_dataset_1D functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{[.nmr_dataset_1D}()},
 \code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_urine}()},
-\code{\link{get_integration_with_metadata}()},
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset_1D}()},
@@ -108,13 +106,11 @@ Other nmr_dataset_1D functions:
 \code{\link{nmr_ppm_resolution}()},
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
+\code{\link{print.nmr_dataset_1D}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ASICS}()},
 \code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()},
-\code{\link{validate_nmr_dataset_1D}()}
+\code{\link{validate_nmr_dataset}()}
 
 Other to_rDolphin_cell functions: 
 \code{\link{files_to_rDolphin_urine}()}

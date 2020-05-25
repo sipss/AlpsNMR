@@ -2,12 +2,12 @@
 % Please edit documentation in R/Classifier_MUVR.R
 \name{ppm_VIP_vector}
 \alias{ppm_VIP_vector}
-\title{Numeric VIPs vector}
+\title{Feature selection and validation in multivariate analysis}
 \usage{
 ppm_VIP_vector(VIPs)
 }
 \arguments{
-\item{VIPs}{a dataframe from the \code{model_VIP(MVObj)} function. It requires a
+\item{VIPs}{a dataframe from the model_VIP(MVObj) function. It requires a
 "ppms" variable}
 }
 \value{
@@ -16,10 +16,13 @@ a numeric ppm vector ready to be identified with
 \code{nmr_identify_regions_urine}
 }
 \description{
-The function extracts the VIPs vector (numeric) from the \code{model_VIP(MVObj)}
+Numeric VIPs vector
+}
+\details{
+The function extracts the VIPs vector (numeric) from the model_VIP(MVObj)
 function. It is not necessary if you have the ppm values in a numeric vector.
 This is needed in case that an automated pipeline is applied, connecting the
-output from \code{model_VIP(MVObj)} to \code{nmr_identify_regions} family functions.
+output from model_VIP(MVObj) to \code{nmr_identify_regions} family functions.
 }
 \examples{
 \dontrun{

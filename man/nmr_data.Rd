@@ -27,9 +27,14 @@ The given nmr_dataset
 \description{
 Set/Return the full spectra matrix
 }
+\examples{
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+dataset_data <- nmr_data(dataset_1D)
+}
 \seealso{
 Other import/export functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
@@ -42,7 +47,6 @@ Other import/export functions:
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{save_profiling_output}()},
 \code{\link{to_ASICS}()},
-\code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()}
+\code{\link{to_ChemoSpec}()}
 }
 \concept{import/export functions}

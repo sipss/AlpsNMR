@@ -96,6 +96,9 @@ A batman_options object with the Batman Options
 \description{
 Batman Options helper
 }
+\examples{
+bopts <- nmr_batman_options()
+}
 \seealso{
 Other batman functions: 
 \code{\link{nmr_batman}}

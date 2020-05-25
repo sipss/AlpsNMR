@@ -3,8 +3,11 @@
 \docType{data}
 \name{Parameters_blood}
 \alias{Parameters_blood}
-\title{Parameters for blood (plasma/serum) samples profiling}
+\title{to rDolphin}
 \description{
+Parameters for blood (plasma/serum) samples profiling
+}
+\details{
 The template \code{Parameters_blood} contains the chosen normalization approach (by default, PQN), the Spectometer Frequency (by default, 600.04MHz),
 alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)
 }

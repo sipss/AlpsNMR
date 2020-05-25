@@ -20,3 +20,7 @@ merit to determine the optimum number of latent variables.
 \description{
 Method for nmr_data_analysis (PLSDA model with AUROC and VIP outputs)
 }
+\examples{
+method <- plsda_auroc_vip_method(3)
+
+}
