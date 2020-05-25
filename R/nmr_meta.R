@@ -137,7 +137,7 @@ nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
   if (!all(are_identical)) {
     stop("Can't add metadata because of column conflict at: ", paste(conflict[!are_identical], sep = ", ", collapse = ", "))
   }
-  nmr_meta_new <- dplyr::select(nmr_meta_new, -dplyr::ends_with("__REMOVE__"))
+  nmr_meta_new <- dplyr::select(nmr_meta_new, -tidyselect::ends_with("__REMOVE__"))
   nmr_data$metadata$external <- nmr_meta_new
   nmr_data
 }
