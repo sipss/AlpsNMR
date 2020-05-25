@@ -224,24 +224,26 @@ to_ChemoSpec <- function(nmr_dataset, desc = "A nmr_dataset") {
     return(Spectra)
 }
 
-#' Convert to Spectra class from the ASICS package
-#' @param nmr_dataset An [nmr_dataset_1D] object
-#' @return A Spectra object from the ASICS package
-#' @family import/export functions
-#' @family nmr_dataset_1D functions
-#' @export
-#' @examples 
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' asics_spectra <- to_ASICS(dataset_1D)
-#' 
-to_ASICS <- function(nmr_dataset) {
-    if (!requireNamespace("ASICS", quietly = TRUE)) {
-        stop("ASICS needed for this function to work. Please install it.",
-                 call. = FALSE)
-    }
-    data <- nmr_data(nmr_dataset)
-    data_for_asics <- as.data.frame(t(data))
-    ASICS::createSpectra(data_for_asics)
-}
+#' ASICS is not available in R4
+#'
+#' #' Convert to Spectra class from the ASICS package
+#' #' @param nmr_dataset An [nmr_dataset_1D] object
+#' #' @return A Spectra object from the ASICS package
+#' #' @family import/export functions
+#' #' @family nmr_dataset_1D functions
+#' #' @export
+#' #' @examples 
+#' #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' #' asics_spectra <- to_ASICS(dataset_1D)
+#' #' 
+#' to_ASICS <- function(nmr_dataset) {
+#'     if (!requireNamespace("ASICS", quietly = TRUE)) {
+#'         stop("ASICS needed for this function to work. Please install it.",
+#'                  call. = FALSE)
+#'     }
+#'     data <- nmr_data(nmr_dataset)
+#'     data_for_asics <- as.data.frame(t(data))
+#'     ASICS::createSpectra(data_for_asics)
+#' }
