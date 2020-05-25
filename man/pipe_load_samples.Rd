@@ -20,25 +20,24 @@ This function saves the result to the output directory
 Pipeline: Load NMR samples
 }
 \examples{
-\dontrun{
-pipe_load_samples("/dir/with/nmr/samples/",
-                  glob = "*0",
-                  output_dir = "/dir/to/save/output")
-}
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+pipe_load_samples(dir_to_demo_dataset,
+                  glob = "*.zip",
+                  output_dir = "./pipe_output")
+
 }
 \seealso{
 Other pipeline functions: 
+\code{\link{Pipe_normalization}},
 \code{\link{pipe_add_metadata}()},
 \code{\link{pipe_exclude_regions}()},
 \code{\link{pipe_filter_samples}()},
 \code{\link{pipe_interpolate_1D}()},
-\code{\link{pipe_normalization}()},
 \code{\link{pipe_outlier_detection}()},
-\code{\link{pipe_peak_integration}()},
-\code{\link{pipe_peakdet_align}()}
+\code{\link{pipe_pakdet_align}},
+\code{\link{pipe_peak_integration}()}
 
 Other import/export functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
@@ -51,8 +50,7 @@ Other import/export functions:
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{save_profiling_output}()},
 \code{\link{to_ASICS}()},
-\code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()}
+\code{\link{to_ChemoSpec}()}
 }
 \concept{import/export functions}
 \concept{pipeline functions}

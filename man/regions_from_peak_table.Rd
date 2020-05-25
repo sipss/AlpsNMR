@@ -27,6 +27,6 @@ Other peak detection functions:
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},
 \code{\link{nmr_integrate_regions}()},
-\code{\link{pipe_peakdet_align}()}
+\code{\link{pipe_pakdet_align}}
 }
 \concept{peak detection functions}

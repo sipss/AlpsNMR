@@ -16,7 +16,7 @@ A folder with demo samples
 The function downloads the NMR dataset from Gralka et al., 2015. DOI: 10.3945/ajcn.115.110536.
 }
 \examples{
-\dontrun{
+\dontrun{ #it takes too much time
 download_demo(to = ".")
 }
 }

@@ -40,12 +40,12 @@ Other peak detection functions:
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_integrate_regions}()},
-\code{\link{pipe_peakdet_align}()},
+\code{\link{pipe_pakdet_align}},
 \code{\link{regions_from_peak_table}()}
 
 Other peak integration functions: 
 \code{\link{computes_peak_width_ppm}()},
-\code{\link{get_integration_with_metadata}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_integrate_peak_positions}()},

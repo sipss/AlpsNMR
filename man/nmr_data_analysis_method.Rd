@@ -14,7 +14,7 @@ new_nmr_data_analysis_method(
 )
 }
 \arguments{
-\item{train_evaluate_model}{A function. The \code{train_evaluate_model} must have the following signature:\preformatted{    function(x_train, y_train, identity_train, x_test, y_test, identity_test, ...)
+\item{train_evaluate_model}{A function. The \code{train_evaluate_model} must have the following signature:\preformatted{function(x_train, y_train, identity_train, x_test, y_test, identity_test, ...)
 }
 
 The \code{x_train} and \code{y_train} (and their test counterparts) are self-explanatory.
@@ -29,19 +29,19 @@ The \code{...} arguments are free to be defined for each \code{train_evaluate_mo
 \item{train_evaluate_model_params_inner, train_evaluate_model_params_outer}{A list with additional
 arguments to pass to \code{train_evaluate_model} either in the inner cv loop or in the outer cv loop.}
 
-\item{choose_best_inner}{A function with a single argument:\preformatted{    function(inner_cv_results)
+\item{choose_best_inner}{A function with a single argument:\preformatted{function(inner_cv_results)
 }
 
 The argument is a list of \code{train_evaluate_model} outputs.
 The return value of must be a list with at least an element named \code{train_evaluate_model_args}.
-\code{train_evaluate_model_args} must be a named list.\preformatted{       - Each element must be named as one of the `train_evaluate_model` arguments.
-       - Each element must be a vector as long as the number of outer cross-validations.
-       - The values of each vector must be the values that the `train_evaluate_model` argument must take on each outer cross-validation iteration
+\code{train_evaluate_model_args} must be a named list.\preformatted{ - Each element must be named as one of the `train_evaluate_model` arguments.
+ - Each element must be a vector as long as the number of outer cross-validations.
+ - The values of each vector must be the values that the `train_evaluate_model` argument must take on each outer cross-validation iteration
 }
 
 Additional list elements can be returned and will be given back to the user}
 
-\item{train_evaluate_model_digest_outer}{A function with a single argument:\preformatted{    function(outer_cv_results)
+\item{train_evaluate_model_digest_outer}{A function with a single argument:\preformatted{function(outer_cv_results)
 }
 
 The argument is a list of \code{train_evaluate_model} outputs in outer cross-validation.

@@ -17,14 +17,25 @@ This function is useful for its side-effects: Stopping in case of error
 \description{
 Validate nmr_dataset_family objects
 }
+\examples{
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+validate_nmr_dataset_family(dataset_1D)
+}
 \seealso{
 Other class helper functions: 
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{format.nmr_dataset_peak_table}()},
+\code{\link{format.nmr_dataset}()},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{is.nmr_dataset_peak_table}()},
 \code{\link{new_nmr_dataset_1D}()},
 \code{\link{new_nmr_dataset_peak_table}()},
 \code{\link{new_nmr_dataset}()},
-\code{\link{validate_nmr_dataset_1D}()},
+\code{\link{print.nmr_dataset_1D}()},
+\code{\link{print.nmr_dataset_peak_table}()},
+\code{\link{print.nmr_dataset}()},
 \code{\link{validate_nmr_dataset_peak_table}()},
 \code{\link{validate_nmr_dataset}()}
 }

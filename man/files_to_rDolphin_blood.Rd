@@ -22,8 +22,8 @@ a list containing:
 The rDolphin family functions are introduced to perform automatic targeted
 metabolite profiling. Therefore, ensure that you interpolated from -0.1 ppm
 in order to consider the TSP/DSS signal at 0.0 ppm. The function generates a
-list with the files required by \code{to_rDolphin} function. Then, it is required
-to save them with the \code{save_files_to_rDolphin}. \code{to_rDolphin} function will
+list with the files required by to_rDolphin function. Then, it is required
+to save them with the \code{save_files_to_rDolphin}. to_rDolphin function will
 read the generated "parameters.csv" file.
 function.
 }
@@ -63,7 +63,6 @@ model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 }
 \seealso{
 Other import/export functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
 \code{\link{load_and_save_functions}},
@@ -76,17 +75,16 @@ Other import/export functions:
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{save_profiling_output}()},
 \code{\link{to_ASICS}()},
-\code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()}
+\code{\link{to_ChemoSpec}()}
 
 Other nmr_dataset_1D functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{[.nmr_dataset_1D}()},
 \code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
-\code{\link{get_integration_with_metadata}()},
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset_1D}()},
@@ -114,13 +112,11 @@ Other nmr_dataset_1D functions:
 \code{\link{nmr_ppm_resolution}()},
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
+\code{\link{print.nmr_dataset_1D}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ASICS}()},
 \code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()},
-\code{\link{validate_nmr_dataset_1D}()}
+\code{\link{validate_nmr_dataset}()}
 
 Other to_rDolphin_blood functions: 
 \code{\link{save_files_to_rDolphin}()},

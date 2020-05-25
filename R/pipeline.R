@@ -76,6 +76,7 @@ pipe_load_samples <- function(samples_dir,
 #' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
 #'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' nmr_dataset_rds <- tempfile(fileext = ".rds")
+#' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 #' output_dir <- tempdir()
 #' pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
 #'                                     excel_file = excel_file)

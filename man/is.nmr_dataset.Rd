@@ -15,4 +15,10 @@ is.nmr_dataset(x)
 \description{
 Object is of \link{nmr_dataset} class
 }
+\examples{
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+is(dataset)
+
+}
 \concept{nmr_dataset manipulation functions}

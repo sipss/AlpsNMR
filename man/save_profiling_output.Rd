@@ -7,12 +7,12 @@
 save_profiling_output(targeted_profiling, output_directory)
 }
 \arguments{
-\item{targeted_profiling}{A list from \link{Automatic_targeted_profiling} function}
+\item{targeted_profiling}{A list from Automatic_targeted_profiling function}
 
 \item{output_directory}{a directory in which the CSV files are saved}
 }
 \value{
-rDolphin output from \link{Automatic_targeted_profiling} function:
+rDolphin output from Automatic_targeted_profiling function:
 \itemize{
 \item metabolites_intensity
 \item metabolites_quantification
@@ -24,7 +24,7 @@ rDolphin output from \link{Automatic_targeted_profiling} function:
 }
 }
 \description{
-The function saves the output from \link{Automatic_targeted_profiling} function in CSV format.
+The function saves the output from Automatic_targeted_profiling function in CSV format.
 }
 \examples{
 \dontrun{
@@ -35,7 +35,6 @@ save_profiling_output(targeted_profiling, output_directory)
 }
 \seealso{
 Other import/export functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
@@ -48,8 +47,7 @@ Other import/export functions:
 \code{\link{pipe_load_samples}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ASICS}()},
-\code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()}
+\code{\link{to_ChemoSpec}()}
 
 Other to_rDolphin_blood functions: 
 \code{\link{files_to_rDolphin_blood}()},

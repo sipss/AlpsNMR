@@ -249,8 +249,11 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' peaks_detected <- nmr_detect_peaks_tune_snr(dataset_1D, SNR_thresholds = seq(from = 2, to = 3, by = 0.5))
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, 
+#'                                                    max = 10, by = 2.3E-4))
+#' peaks_detected <- nmr_detect_peaks_tune_snr(dataset_1D, 
+#'                                             SNR_thresholds = seq(from = 2, 
+#'                                             to = 3, by = 0.5))
 #'
 nmr_detect_peaks_tune_snr <-
     function(ds,

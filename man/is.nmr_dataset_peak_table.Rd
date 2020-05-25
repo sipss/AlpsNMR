@@ -7,7 +7,7 @@
 is.nmr_dataset_peak_table(x)
 }
 \arguments{
-\item{x}{An object}
+\item{x}{an \link{nmr_dataset_peak_table} object}
 }
 \value{
 \code{TRUE} if the object is an \code{nmr_dataset_peak_table}, \code{FALSE} otherwise
@@ -15,23 +15,43 @@ is.nmr_dataset_peak_table(x)
 \description{
 Object is of \link{nmr_dataset_peak_table} class
 }
+\examples{
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+meta <- file.path(dir_to_demo_dataset, "dummy_metadata.xlsx")
+metadata <- readxl::read_excel(meta, sheet = 1)
+dataset_1D <- nmr_meta_add(dataset_1D, metadata = metadata, by = "NMRExperiment")
+metadata <- list(external = dataset_1D[["metadata"]][["external"]])
+peak_table <- nmr_data(dataset_1D)
+new <- new_nmr_dataset_peak_table(peak_table, metadata)
+is(new)
+
+}
 \seealso{
 Other nmr_dataset_peak_table functions: 
 \code{\link{[.nmr_dataset_peak_table}()},
+\code{\link{format.nmr_dataset_peak_table}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset_peak_table}()},
 \code{\link{nmr_meta_add}()},
 \code{\link{nmr_meta_export}()},
 \code{\link{nmr_meta_get_column}()},
 \code{\link{nmr_meta_get}()},
+\code{\link{print.nmr_dataset_peak_table}()},
 \code{\link{validate_nmr_dataset_peak_table}()}
 
 Other class helper functions: 
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{format.nmr_dataset_peak_table}()},
+\code{\link{format.nmr_dataset}()},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{new_nmr_dataset_1D}()},
 \code{\link{new_nmr_dataset_peak_table}()},
 \code{\link{new_nmr_dataset}()},
-\code{\link{validate_nmr_dataset_1D}()},
+\code{\link{print.nmr_dataset_1D}()},
+\code{\link{print.nmr_dataset_peak_table}()},
+\code{\link{print.nmr_dataset}()},
 \code{\link{validate_nmr_dataset_family}()},
 \code{\link{validate_nmr_dataset_peak_table}()},
 \code{\link{validate_nmr_dataset}()}
