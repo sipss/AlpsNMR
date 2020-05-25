@@ -1,7 +1,7 @@
 Package: AlpsNMR
 Type: Package
 Title: Automated spectraL Processing System for NMR
-Version: 2.4.9003
+Version: 2.5.9002
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -81,7 +81,7 @@ Suggests:
     plotly (>= 4.7.1),
     ChemoSpec,
     knitr
-biocViews: Metabolomics
+biocViews: Software, Metabolomics
 RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
