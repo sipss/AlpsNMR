@@ -17,6 +17,20 @@ This function saves the result to the output directory
 \description{
 Uses \link{nmr_pca_outliers_robust} to perform the detection of outliers
 }
+\examples{
+dataset <- system.file("dataset-demo", package = "AlpsNMR")
+excel_file <- system.file("dataset-demo", 
+                          "dummy_metadata.xlsx", 
+                          package = "AlpsNMR")
+nmr_dataset <- nmr_read_samples_dir(dataset)
+nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
+                                  axis = c(min = -0.5, max = 10, by = 2.3E-4))
+nmr_dataset_rds <- tempfile(fileext = ".rds")
+nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
+output_dir <- tempdir()
+pipe_outlier_detection(nmr_dataset_rds, output_dir)
+
+}
 \seealso{
 Other outlier detection functions: 
 \code{\link{nmr_pca_outliers_filter}()},
@@ -25,14 +39,14 @@ Other outlier detection functions:
 \code{\link{nmr_pca_outliers}()}
 
 Other pipeline functions: 
+\code{\link{Pipe_normalization}},
 \code{\link{pipe_add_metadata}()},
 \code{\link{pipe_exclude_regions}()},
 \code{\link{pipe_filter_samples}()},
 \code{\link{pipe_interpolate_1D}()},
 \code{\link{pipe_load_samples}()},
-\code{\link{pipe_normalization}()},
-\code{\link{pipe_peak_integration}()},
-\code{\link{pipe_peakdet_align}()}
+\code{\link{pipe_pakdet_align}},
+\code{\link{pipe_peak_integration}()}
 }
 \concept{outlier detection functions}
 \concept{pipeline functions}

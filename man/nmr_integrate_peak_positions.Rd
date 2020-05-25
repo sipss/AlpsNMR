@@ -28,16 +28,15 @@ column}
   }}
 }
 \value{
-An \link{nmr_dataset_peak_table} object
+Integrate peak positions
 }
 \description{
 The function allows the integration of a given ppm vector with a specific width.
 }
 \examples{
-\dontrun{
-
-# 0. Multiprocess (parallelization) to set the number of cores working in your PC
-plan(multiprocess, workers = 12)
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 
 # 1.Peak detection in the dataset.
 peak_data <- nmr_detect_peaks(nmr_dataset,
@@ -45,7 +44,7 @@ peak_data <- nmr_detect_peaks(nmr_dataset,
                               scales = seq(1, 16, 2),
                               baselineThresh = 0, # Minimum peak intensity
                               SNR.Th = 4) # Signal to noise ratio
-                              
+
 # 2.Find the reference spectrum to align with.
 NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
 
@@ -55,29 +54,25 @@ nmr_dataset <- nmr_align(nmr_dataset, # the dataset
                          NMRExp_ref = NMRExp_ref, # ref spectrum
                          maxShift_ppm = 0.0015, # max alignment shift
                          acceptLostPeak = FALSE) # lost peaks
-                         
-# 4.Set sequential working to finish parallelization
-plan(sequential)
 
-# 5.PEAK INTEGRATION (please, consider previous normalization step).
+# 4.PEAK INTEGRATION (please, consider previous normalization step).
 # First we take the peak table from the reference spectrum
 peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
 
 # Then we integrate spectra considering the peaks from the ref spectrum
 nmr_peak_table <- nmr_integrate_peak_positions(
-samples = nmr_dataset,
-peak_pos_ppm = peak_data_ref$ppm,
-peak_width_ppm = NULL) 
+                      samples = nmr_dataset,
+                      peak_pos_ppm = peak_data_ref$ppm,
+                      peak_width_ppm = NULL)
 
 #If you wanted the final peak table before machine learning you can run
 nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
 
 }
-}
 \seealso{
 Other peak integration functions: 
 \code{\link{computes_peak_width_ppm}()},
-\code{\link{get_integration_with_metadata}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},
@@ -85,14 +80,14 @@ Other peak integration functions:
 \code{\link{pipe_peak_integration}()}
 
 Other nmr_dataset_1D functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{[.nmr_dataset_1D}()},
 \code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
-\code{\link{get_integration_with_metadata}()},
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset_1D}()},
@@ -119,13 +114,10 @@ Other nmr_dataset_1D functions:
 \code{\link{nmr_ppm_resolution}()},
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
+\code{\link{print.nmr_dataset_1D}()},
 \code{\link{save_files_to_rDolphin}()},
-\code{\link{to_ASICS}()},
 \code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()},
-\code{\link{validate_nmr_dataset_1D}()}
+\code{\link{validate_nmr_dataset}()}
 }
 \concept{nmr_dataset_1D functions}
 \concept{peak integration functions}

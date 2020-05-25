@@ -16,4 +16,3 @@ test_that("nmr_baseline_threshold works", {
   n <- nmr_baseline_threshold (dataset)
   expect_true(is.numeric(n))
 })
-  

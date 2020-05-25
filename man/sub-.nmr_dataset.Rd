@@ -18,10 +18,10 @@ an nmr_dataset with the extracted samples
 Extract parts of an nmr_dataset
 }
 \examples{
-\dontrun{
-data <- nm_read_samples_dir("your_dir")
-data2 <- data[1:3] # get the first 3 samples
-}
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+dataset2 <- dataset[1:3] # get the first 3 samples
+
 }
 \seealso{
 Other subsetting functions: 
@@ -31,6 +31,7 @@ Other subsetting functions:
 \code{\link{nmr_pca_outliers_filter}()}
 
 Other nmr_dataset functions: 
+\code{\link{format.nmr_dataset}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset}()},
 \code{\link{nmr_interpolate_1D}()},
@@ -40,6 +41,7 @@ Other nmr_dataset functions:
 \code{\link{nmr_meta_get}()},
 \code{\link{nmr_ppm_resolution}()},
 \code{\link{nmr_read_samples}()},
+\code{\link{print.nmr_dataset}()},
 \code{\link{validate_nmr_dataset}()}
 }
 \concept{nmr_dataset functions}

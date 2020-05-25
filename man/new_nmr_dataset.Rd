@@ -13,6 +13,11 @@ new_nmr_dataset(metadata, data_fields, axis)
 
 \item{axis}{A list. Check the examples}
 }
+\value{
+Create an nmr_dataset object
+
+Create an nmr_dataset object
+}
 \description{
 Create an nmr_dataset object
 }
@@ -28,7 +33,7 @@ my_1D_data <- new_nmr_dataset(metadata_1D, data_fields_1D, axis_1D)
 # Example for 2D samples
 metadata_2D <- list(external = data.frame(NMRExperiment = c("11", "21")))
 data_fields_2D <- list(data_2rr = list(matrix(runif(16*3), nrow=16, ncol=3),
-                                              runif(32*3), nrow=32, ncol=3))
+                        runif(32*3), nrow=32, ncol=3))
 # Each sample has its own axis list, with one element (because this example is 1D)
 axis_2D <- list(list(1:16, 1:3), list(1:32, 1:3))
 my_2D_data <- new_nmr_dataset(metadata_2D, data_fields_2D, axis_2D)
@@ -36,17 +41,23 @@ my_2D_data <- new_nmr_dataset(metadata_2D, data_fields_2D, axis_2D)
 }
 \seealso{
 Other class helper functions: 
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{format.nmr_dataset_peak_table}()},
+\code{\link{format.nmr_dataset}()},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{is.nmr_dataset_peak_table}()},
 \code{\link{new_nmr_dataset_1D}()},
 \code{\link{new_nmr_dataset_peak_table}()},
-\code{\link{validate_nmr_dataset_1D}()},
+\code{\link{print.nmr_dataset_1D}()},
+\code{\link{print.nmr_dataset_peak_table}()},
+\code{\link{print.nmr_dataset}()},
 \code{\link{validate_nmr_dataset_family}()},
 \code{\link{validate_nmr_dataset_peak_table}()},
 \code{\link{validate_nmr_dataset}()}
 
 Other nmr_dataset functions: 
 \code{\link{[.nmr_dataset}()},
+\code{\link{format.nmr_dataset}()},
 \code{\link{load_and_save_functions}},
 \code{\link{nmr_interpolate_1D}()},
 \code{\link{nmr_meta_add}()},
@@ -55,6 +66,7 @@ Other nmr_dataset functions:
 \code{\link{nmr_meta_get}()},
 \code{\link{nmr_ppm_resolution}()},
 \code{\link{nmr_read_samples}()},
+\code{\link{print.nmr_dataset}()},
 \code{\link{validate_nmr_dataset}()}
 }
 \concept{class helper functions}

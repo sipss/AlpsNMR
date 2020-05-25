@@ -26,15 +26,13 @@ The \link{nmr_dataset} object is essentially a list, so it is easy to access
 its components for further analysis.
 }
 \examples{
-\dontrun{
-library(AlpsNMR)
-sample_names <- c("dataset/10/", "dataset/20/", "dataset/30/")
-my_nmr_dataset <- nmr_read_samples(sample_names) \%>\%
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+my_nmr_dataset <- dataset \%>\%
   nmr_interpolate_1D(axis = c(0.4, 10)) \%>\%
   nmr_exclude_region(exclude = list(water = c(4.6, 5))) \%>\%
   nmr_normalize(method = "pqn") \%>\%
   plot
-}
 }
 \author{
 \strong{Maintainer}: Luis Fernandez \email{lfernandez@ibecbarcelona.eu} (\href{https://orcid.org/0000-0001-9790-6287}{ORCID})

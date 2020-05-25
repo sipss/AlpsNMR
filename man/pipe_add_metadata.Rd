@@ -19,7 +19,7 @@ Each of the sheets contain metadata that has to be integrated. The merge
 
 In practical terms this means that the first sheet of the excel file MUST
 start with an "NMRExperiment" column, and as many additional columns to add
-(e.g. FluidXBarcode, SampleCollectionDate,  TimePoint and SubjectID).
+(e.g. FluidXBarcode, SampleCollectionDate,    TimePoint and SubjectID).
 
 The second sheet can have as the first column any of the already added columns,
 for instance the "SubjectID", and any additional columns (e.g. Gender, Age).
@@ -38,26 +38,30 @@ Pipeline: Add Metadata
 }
 \examples{
 dataset <- system.file("dataset-demo", package = "AlpsNMR")
-excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
+excel_file <- system.file("dataset-demo", 
+                          "dummy_metadata.xlsx", 
+                          package = "AlpsNMR")
 nmr_dataset <- nmr_read_samples_dir(dataset)
+nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
+                                  axis = c(min = -0.5, max = 10, by = 2.3E-4))
 nmr_dataset_rds <- tempfile(fileext = ".rds")
 nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 output_dir <- tempdir()
 pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
-                  excel_file = excel_file)
+                                    excel_file = excel_file)
 # Check out: output_dir
 
 }
 \seealso{
 Other pipeline functions: 
+\code{\link{Pipe_normalization}},
 \code{\link{pipe_exclude_regions}()},
 \code{\link{pipe_filter_samples}()},
 \code{\link{pipe_interpolate_1D}()},
 \code{\link{pipe_load_samples}()},
-\code{\link{pipe_normalization}()},
 \code{\link{pipe_outlier_detection}()},
-\code{\link{pipe_peak_integration}()},
-\code{\link{pipe_peakdet_align}()}
+\code{\link{pipe_pakdet_align}},
+\code{\link{pipe_peak_integration}()}
 
 Other metadata functions: 
 \code{\link{nmr_meta_add}()},

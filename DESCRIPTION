@@ -1,7 +1,7 @@
 Package: AlpsNMR
 Type: Package
 Title: Automated spectraL Processing System for NMR
-Version: 2.3.3.9002
+Version: 2.5.9002
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -39,7 +39,7 @@ Description: Reads Bruker NMR data directories both zipped and unzipped.
  Basic reading of 1D ACD/Labs exported JDX samples is also available.
 License: MIT + file LICENSE
 LazyData: TRUE
-Depends: R (>= 3.6.0)
+Depends: R (>= 4.0)
 Imports:
  utils,
  graphics,
@@ -52,7 +52,6 @@ Imports:
  dplyr (>= 0.7.5),
  tidyr (>= 1.0.0),
  readxl (>= 1.1.0),
- ggplot2 (>= 3.1.0),
  plyr (>= 1.8.4),
  purrr (>= 0.2.5),
  glue (>= 1.2.0),
@@ -69,6 +68,7 @@ Imports:
  pcaPP (>= 1.9-73),
  furrr (>= 0.1.0),
  future (>= 1.10.0),
+ ggplot2 (>= 3.1.0),
  baseline (>= 1.2-1),
  doParallel (>= 1.0.14),
  zip (>= 2.0.4),
@@ -76,16 +76,11 @@ Imports:
 Suggests:
     DT (>= 0.5),
     testthat (>= 2.0.0),
-    MUVR (>= 0.0.972),
-    rDolphin (>= 0.3.0),
     plotly (>= 4.7.1),
     ChemoSpec,
-    ASICS,
     knitr
-biocViews:
-Remotes:
-  gitlab::CarlBrunius/MUVR,
-  github::danielcanueto/rDolphin
+biocViews: Software, Preprocessing, Visualization, 
+           Cheminformatics, Metabolomics, DataImport
 RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
