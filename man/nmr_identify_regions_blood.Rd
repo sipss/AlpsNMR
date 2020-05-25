@@ -25,13 +25,10 @@ Identify given regions and return a data frame with plausible assignations
 in human plasma/serum samples.
 }
 \examples{
-\dontrun{
 # We identify regions from from the corresponding ppm storaged in a vector.
-library(AlpsNMR)
 ppm_to_assign <- c(4.060960203, 3.048970634,2.405935596,
 3.24146865,0.990616851,1.002075066,0.955325548)
 identification <- nmr_identify_regions_blood (ppm_to_assign)
-}
 }
 \seealso{
 Other peak detection functions: 
@@ -42,12 +39,12 @@ Other peak detection functions:
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},
 \code{\link{nmr_integrate_regions}()},
-\code{\link{pipe_peakdet_align}()},
+\code{\link{pipe_pakdet_align}},
 \code{\link{regions_from_peak_table}()}
 
 Other peak integration functions: 
 \code{\link{computes_peak_width_ppm}()},
-\code{\link{get_integration_with_metadata}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},
 \code{\link{nmr_integrate_peak_positions}()},

@@ -15,9 +15,12 @@ AUC does not increment more than this threshold.}
 \value{
 Returns an object to be used with \link{nmr_data_analysis} to perform a (optionally
 multilevel) PLS-DA model, using the area under the ROC curve as figure of
-merit to determine the optimum number of latent variables. See
-\code{\link[mixOmics:plsda]{mixOmics::plsda()}} for details.
+merit to determine the optimum number of latent variables.
 }
 \description{
 Method for nmr_data_analysis (PLSDA model with AUROC and VIP outputs)
+}
+\examples{
+method <- plsda_auroc_vip_method(3)
+
 }

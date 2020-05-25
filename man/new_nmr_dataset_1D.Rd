@@ -13,29 +13,52 @@ new_nmr_dataset_1D(ppm_axis, data_1r, metadata)
 
 \item{metadata}{A list of data frames with at least the \code{NMRExperiment} column}
 }
+\value{
+Creates a new 1D nmr_dataset object from scratch
+}
 \description{
 Creates a new 1D nmr_dataset object from scratch
 }
+\examples{
+# Create a random spectra matrix
+nsamp <- 12
+npoints <- 20
+dummy_ppm_axis <- seq(from = 0.2, to = 10, length.out = npoints)
+dummy_spectra_matrix <- matrix(runif(nsamp*npoints), nrow = nsamp, ncol = npoints)
+metadata <- list(external = data.frame(NMRExperiment = paste0("Sample", 1:12),
+                                       DummyClass = c("a", "b"),
+                                       stringsAsFactors = FALSE))
+dummy_nmr_dataset_1D <- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
+                                           data_1r = dummy_spectra_matrix,
+                                           metadata = metadata)
+                                                 
+                                                 
+}
 \seealso{
 Other class helper functions: 
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{format.nmr_dataset_peak_table}()},
+\code{\link{format.nmr_dataset}()},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{is.nmr_dataset_peak_table}()},
 \code{\link{new_nmr_dataset_peak_table}()},
 \code{\link{new_nmr_dataset}()},
-\code{\link{validate_nmr_dataset_1D}()},
+\code{\link{print.nmr_dataset_1D}()},
+\code{\link{print.nmr_dataset_peak_table}()},
+\code{\link{print.nmr_dataset}()},
 \code{\link{validate_nmr_dataset_family}()},
 \code{\link{validate_nmr_dataset_peak_table}()},
 \code{\link{validate_nmr_dataset}()}
 
 Other nmr_dataset_1D functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{[.nmr_dataset_1D}()},
 \code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
-\code{\link{get_integration_with_metadata}()},
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{load_and_save_functions}},
 \code{\link{nmr_align_find_ref}()},
@@ -62,13 +85,10 @@ Other nmr_dataset_1D functions:
 \code{\link{nmr_ppm_resolution}()},
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
+\code{\link{print.nmr_dataset_1D}()},
 \code{\link{save_files_to_rDolphin}()},
-\code{\link{to_ASICS}()},
 \code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()},
-\code{\link{validate_nmr_dataset_1D}()}
+\code{\link{validate_nmr_dataset}()}
 }
 \concept{class helper functions}
 \concept{nmr_dataset_1D functions}

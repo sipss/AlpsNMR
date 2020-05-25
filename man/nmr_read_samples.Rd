@@ -42,9 +42,19 @@ a \link{nmr_dataset} object
 \description{
 These functions load samples from files and return a \link{nmr_dataset}.
 }
+\examples{
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+zip_files <- fs::dir_ls(dir_to_demo_dataset, glob = "*.zip")
+dataset <- nmr_read_samples(sample_names = zip_files)
+
+}
 \seealso{
 Other nmr_dataset functions: 
 \code{\link{[.nmr_dataset}()},
+\code{\link{format.nmr_dataset}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset}()},
 \code{\link{nmr_interpolate_1D}()},
@@ -53,10 +63,10 @@ Other nmr_dataset functions:
 \code{\link{nmr_meta_get_column}()},
 \code{\link{nmr_meta_get}()},
 \code{\link{nmr_ppm_resolution}()},
+\code{\link{print.nmr_dataset}()},
 \code{\link{validate_nmr_dataset}()}
 
 Other import/export functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
@@ -68,9 +78,7 @@ Other import/export functions:
 \code{\link{pipe_load_samples}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{save_profiling_output}()},
-\code{\link{to_ASICS}()},
-\code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()}
+\code{\link{to_ChemoSpec}()}
 }
 \concept{import/export functions}
 \concept{nmr_dataset functions}

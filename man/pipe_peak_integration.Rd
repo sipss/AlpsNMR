@@ -20,23 +20,43 @@ pipe_peak_integration(
 
 \item{output_dir}{The output directory for this pipe element}
 }
+\value{
+Pipeline: Peak integration
+}
 \description{
 Pipeline: Peak integration
 }
+\examples{
+dataset <- system.file("dataset-demo", package = "AlpsNMR")
+excel_file <- system.file("dataset-demo", 
+                          "dummy_metadata.xlsx", 
+                          package = "AlpsNMR")
+nmr_dataset <- nmr_read_samples_dir(dataset)
+nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
+                                  axis = c(min = -0.5, max = 10, by = 2.3E-4))
+nmr_dataset_rds <- tempfile(fileext = ".rds")
+nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
+output_dir <- tempdir()
+pipe_peakdet_align(nmr_dataset_rds, output_dir = output_dir)
+pipe_peak_integration(nmr_dataset_rds, 
+                      peak_det_align_dir = output_dir,
+                      peak_width_ppm = 0.006, output_dir)
+
+}
 \seealso{
 Other pipeline functions: 
+\code{\link{Pipe_normalization}},
 \code{\link{pipe_add_metadata}()},
 \code{\link{pipe_exclude_regions}()},
 \code{\link{pipe_filter_samples}()},
 \code{\link{pipe_interpolate_1D}()},
 \code{\link{pipe_load_samples}()},
-\code{\link{pipe_normalization}()},
 \code{\link{pipe_outlier_detection}()},
-\code{\link{pipe_peakdet_align}()}
+\code{\link{pipe_pakdet_align}}
 
 Other peak integration functions: 
 \code{\link{computes_peak_width_ppm}()},
-\code{\link{get_integration_with_metadata}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},

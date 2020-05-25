@@ -21,9 +21,11 @@ A character vector of the same length as path, with the zip file names
 \description{
 Create one zip file for each brucker sample path
 }
+\examples{
+outpaths <- nmr_zip_bruker_samples(".", getwd())
+}
 \seealso{
 Other import/export functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
@@ -35,8 +37,6 @@ Other import/export functions:
 \code{\link{pipe_load_samples}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{save_profiling_output}()},
-\code{\link{to_ASICS}()},
-\code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()}
+\code{\link{to_ChemoSpec}()}
 }
 \concept{import/export functions}

@@ -15,3 +15,10 @@ A plot of the AUC for each method
 \description{
 Compare PLSDA auroc VIP results
 }
+\examples{
+\dontrun{
+method <- plsda_auroc_vip_method(3)
+#analisis missed
+plsda_auroc_vip_compare()
+}
+}

@@ -4,7 +4,7 @@
 \alias{load_and_save_functions}
 \alias{nmr_dataset_load}
 \alias{nmr_dataset_save}
-\title{Functions to load and save nmr_dataset objects}
+\title{nmr_dataset_load}
 \usage{
 nmr_dataset_load(file_name)
 
@@ -17,12 +17,31 @@ nmr_dataset_save(nmr_dataset, file_name, ...)
 
 \item{...}{Additional arguments passed to \link{saveRDS}.}
 }
-\description{
+\value{
 Functions to load and save nmr_dataset objects
+
+load nmr dataset
+
+save nmr dataset
+}
+\description{
+nmr_dataset_load
+
+nmr_dataset_save
+}
+\examples{
+# dataset <- nmr_dataset_load("test")
+nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
+
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+# nmr_dataset_save(dataset, "test")
+
 }
 \seealso{
 Other nmr_dataset functions: 
 \code{\link{[.nmr_dataset}()},
+\code{\link{format.nmr_dataset}()},
 \code{\link{new_nmr_dataset}()},
 \code{\link{nmr_interpolate_1D}()},
 \code{\link{nmr_meta_add}()},
@@ -31,17 +50,18 @@ Other nmr_dataset functions:
 \code{\link{nmr_meta_get}()},
 \code{\link{nmr_ppm_resolution}()},
 \code{\link{nmr_read_samples}()},
+\code{\link{print.nmr_dataset}()},
 \code{\link{validate_nmr_dataset}()}
 
 Other nmr_dataset_1D functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{[.nmr_dataset_1D}()},
 \code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
-\code{\link{get_integration_with_metadata}()},
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{new_nmr_dataset_1D}()},
 \code{\link{nmr_align_find_ref}()},
@@ -68,26 +88,24 @@ Other nmr_dataset_1D functions:
 \code{\link{nmr_ppm_resolution}()},
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
+\code{\link{print.nmr_dataset_1D}()},
 \code{\link{save_files_to_rDolphin}()},
-\code{\link{to_ASICS}()},
 \code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()},
-\code{\link{validate_nmr_dataset_1D}()}
+\code{\link{validate_nmr_dataset}()}
 
 Other nmr_dataset_peak_table functions: 
 \code{\link{[.nmr_dataset_peak_table}()},
+\code{\link{format.nmr_dataset_peak_table}()},
 \code{\link{is.nmr_dataset_peak_table}()},
 \code{\link{new_nmr_dataset_peak_table}()},
 \code{\link{nmr_meta_add}()},
 \code{\link{nmr_meta_export}()},
 \code{\link{nmr_meta_get_column}()},
 \code{\link{nmr_meta_get}()},
+\code{\link{print.nmr_dataset_peak_table}()},
 \code{\link{validate_nmr_dataset_peak_table}()}
 
 Other import/export functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
@@ -99,9 +117,7 @@ Other import/export functions:
 \code{\link{pipe_load_samples}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{save_profiling_output}()},
-\code{\link{to_ASICS}()},
-\code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()}
+\code{\link{to_ChemoSpec}()}
 }
 \concept{import/export functions}
 \concept{nmr_dataset functions}

@@ -17,9 +17,14 @@ A numeric vector with the free induction decay values
 \description{
 Reads an FID file. This is a very simple function.
 }
+\examples{
+\dontrun{
+Error in file(con, "rb") : no se puede abrir la conexiÃ³n
+fid <- nmr_read_bruker_fid("sample.fid")
+}
+}
 \seealso{
 Other import/export functions: 
-\code{\link{Automatic_targeted_profiling}()},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
@@ -31,8 +36,6 @@ Other import/export functions:
 \code{\link{pipe_load_samples}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{save_profiling_output}()},
-\code{\link{to_ASICS}()},
-\code{\link{to_ChemoSpec}()},
-\code{\link{to_rDolphin}()}
+\code{\link{to_ChemoSpec}()}
 }
 \concept{import/export functions}
