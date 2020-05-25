@@ -80,7 +80,7 @@ Suggests:
     ChemoSpec,
     knitr
 biocViews: Software, Preprocessing, Visualization, 
-Cheminformatics, Metabolomics, DataImport
+           Cheminformatics, Metabolomics, DataImport
 RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
