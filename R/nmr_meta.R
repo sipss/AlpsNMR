@@ -163,7 +163,7 @@ nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
         )
     }
     nmr_meta_new <-
-        dplyr::select(nmr_meta_new, -dplyr::ends_with("__REMOVE__"))
+        dplyr::select(nmr_meta_new, -tidyselect::ends_with("__REMOVE__"))
     nmr_data$metadata$external <- nmr_meta_new
     nmr_data
 }

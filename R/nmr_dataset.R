@@ -292,7 +292,7 @@ nmr_read_samples_bruker <-
                                   function(x) {
                                       x %>%
                                           dplyr::mutate(NMRExperiment = nmr_experiment_col) %>%
-                                          dplyr::select(.data$NMRExperiment, dplyr::everything())
+                                          dplyr::select(.data$NMRExperiment, tidyselect::everything())
                                   })
         sample_meta[["external"]] = tibble::tibble(NMRExperiment = nmr_experiment_col)
         data_fields_full <- list()
@@ -355,7 +355,7 @@ nmr_read_samples_jdx <-
             metadata$NMRExperiment <- NMRExperiments
         }
         metadata <-
-            dplyr::select(metadata, .data$NMRExperiment, dplyr::everything())
+            dplyr::select(metadata, .data$NMRExperiment, tidyselect::everything())
         metadata_external = tibble::tibble(NMRExperiment = metadata$NMRExperiment)
         
         

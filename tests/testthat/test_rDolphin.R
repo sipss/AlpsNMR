@@ -1,6 +1,8 @@
 # context("test-rDolphin")
 # 
 # test_that("to rDolphin files works", {
+# skip_on_bioc()
+# skip_if_not_installed("rDolphin")
 # dataset <- new_nmr_dataset_1D(ppm_axis = 1:10,
 #                               data_1r = matrix(sample(-1:88,replace = FALSE), nrow = 9),
 #                               metadata = list(external = data.frame(NMRExperiment = c("10", "20", "30", "40", "50", "60", "70", "80", "90"))))
