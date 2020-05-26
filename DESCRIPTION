@@ -79,7 +79,7 @@ Suggests:
     plotly (>= 4.7.1),
     ChemoSpec,
     knitr
-biocViews: Software, Preprocessing, Visualization, 
+biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
 RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
