@@ -99,9 +99,9 @@ plsda_vip <- function(plsda_model) {
 #' @noRd
 callback_plsda_auroc_vip <- function(x_train, y_train, identity_train, x_test, y_test, identity_test,
                                                                          ncomp, return_model = FALSE, return_auroc = TRUE,
-                                                                         return_auroc_full = FALSE, return_vip = FALSE) {
+                                                                         return_auroc_full = FALSE, return_vip = FALSE, return_perf = FALSE) {
     plsda_model <- plsda_build(x_train, y_train, identity_train, ncomp = max(ncomp))
-    out <- list(model = NULL, auroc = NULL, auroc_full = NULL, vip = NULL)
+    out <- list(model = NULL, auroc = NULL, auroc_full = NULL, vip = NULL, perf = NULL)
     if (isTRUE(return_model)) {
         out$model <- plsda_model
     }
@@ -119,6 +119,11 @@ callback_plsda_auroc_vip <- function(x_train, y_train, identity_train, x_test, y
     if (isTRUE(return_vip)) {
         vip <- plsda_vip(plsda_model)
         out$vip <- vip
+    }
+    
+    if (isTRUE(return_perf)) {
+        out$perf <- mixOmics::perf(plsda_model, validation = "Mfold", folds = 5, 
+                           progressBar = FALSE, auc = TRUE, nrepeat = 10) 
     }
     out
 }
@@ -164,8 +169,8 @@ fun_choose_best_ncomp_auc_threshold <- function(auc_threshold = 0.05) {
     
     plot_to_choose_nlv <- ggplot2::ggplot(model_performances) + 
         ggplot2::geom_jitter(ggplot2::aes(x = .data$ncomp, y = .data$auc,
-                                                                            group = .data$ncomp, color = as.character(.data$cv_inner_iteration)), 
-                                                 width = 0.25, height = 0) +
+                                          group = .data$ncomp, color = as.character(.data$cv_inner_iteration)), 
+                             width = 0.25, height = 0) +
         ggplot2::geom_vline(data = nlv, mapping = ggplot2::aes(xintercept = .data$ncomp), color = "red") +
         ggplot2::scale_x_continuous(name = "Number of latent variables", breaks = function(limits) {
             seq(from = 1, to = max(limits))
@@ -208,8 +213,8 @@ callback_outer_cv_auroc_vip <- function(outer_cv_results) {
     vip_rp <- apply(vip_ranks, 1, function(x) exp(mean(log(x)))) # geom mean (RankProducts)
     
     list(auroc = auroc,
-             vip_vectors = vip_vectors,
-             vip_rankproducts = vip_rp)
+         vip_vectors = vip_vectors,
+         vip_rankproducts = vip_rp)
 }
 
 
@@ -235,14 +240,16 @@ plsda_auroc_vip_method <- function(ncomp, auc_increment_threshold = 0.05) {
             return_model = FALSE,
             return_auroc = TRUE,
             return_auroc_full = FALSE,
-            return_vip = FALSE
+            return_vip = FALSE,
+            return_perf = FALSE
         ),
         choose_best_inner = fun_choose_best_ncomp_auc_threshold(auc_threshold = auc_increment_threshold),
         train_evaluate_model_params_outer = list(
             return_model = TRUE,
             return_auroc = TRUE,
             return_auroc_full = TRUE,
-            return_vip = TRUE
+            return_vip = TRUE,
+            return_perf = TRUE
         ),
         train_evaluate_model_digest_outer = callback_outer_cv_auroc_vip
     )

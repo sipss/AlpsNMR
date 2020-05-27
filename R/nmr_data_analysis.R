@@ -451,3 +451,159 @@ new_nmr_data_analysis_method <- function(train_evaluate_model,
   class(out) <- "nmr_data_analysis_method"
   out
 }
+
+#' Permutation test
+#'
+#' Make permutations with data and default settings from an nmr_data_analysis_method
+#'
+#' @importFrom doParallel registerDoParallel
+#' @return A permutation matrix with permuted values
+#' @export
+#' @examples
+#' \dontrun{
+#' P = permutation_test_model(model)
+#' }
+permutation_test_model = function (dataset,
+                                   y_column,
+                                   identity_column, 
+                                   external_val,
+                                   internal_val,
+                                   data_analysis_method,
+                                   nPerm = 50)
+{
+  cl = parallel::makeCluster(parallel::detectCores() - 1)
+  doParallel::registerDoParallel(cl)
+  
+  startTime=proc.time()[3]
+  permMatrix=matrix(ncol=3,nrow=nPerm)
+  colnames(permMatrix)=c('Min','Mid','Max') #No se porque tiene tres
+  dataset_perm <- dataset
+  y_all <- nmr_meta_get_column(dataset, column = y_column)
+  for (p in 1:nPerm) {
+    cat('\n permutation ',p,' of ',nPerm,'\n',sep = '')
+    
+    #Permutar columna y_colum del dataset
+    YPerm=sample(y_all)
+    dataset_perm[["metadata"]][["external"]][[y_column]] <- YPerm
+    # y_test <- nmr_meta_get_column(dataset_perm, column = y_column)
+    # print(sum(y_test!=y_all))
+    permMod=nmr_data_analysis(dataset_perm,
+                              y_column = y_column,
+                              identity_column = identity_column,
+                              external_val = external_val,
+                              internal_val = internal_val,
+                              data_analysis_method = data_analysis_method)
+    
+    # De que modelo cojo la predicción?
+    # hay external_val$iterations modelos
+    
+    # Classify predictions
+    classPred = permMod$outer_cv_results$`1`$perf$predict
+    miss = sum(classPred!=y_all)
+    print(miss)
+    
+    permMatrix[p,1]=miss
+    nowTime=proc.time()[3]
+    timePerRep=(nowTime-startTime)/p
+    timeLeft=(timePerRep*(nPerm-p))/60
+    cat('\nEstimated time left:',timeLeft,'mins\n\n')
+  }
+
+  
+#   # Classify predictions
+#   miss=numeric(3)
+#   yClass=data.frame(Y)
+#   for (mo in 1:3) {
+#     classPred=factor(apply(yPred[[mo]],1,function(x) levels(Y)[which.max(x)]),levels=levels(Y))
+#     miss[mo]=sum(classPred!=Y)
+#     yClass[,mo]=classPred
+#   }
+#   names(miss)=colnames(yClass)=c('min','mid','max')
+#   rownames(yClass)=paste(1:nSamp,ID,sep='_ID')
+#   # Report
+#   modelReturn$yClass=yClass
+#   modelReturn$miss=miss
+#   modelReturn$auc=auc
+# } else if (ML) {
+#   modelReturn$yClass=apply(yPred,2,function(x) ifelse(x>0,1,-1))
+#   modelReturn$miss=apply(modelReturn$yClass,2,function(x) sum(x!=Y))
+#   modelReturn$auc=apply(yPred,2,function(x) roc(Y,x)$auc)
+#   colnames(modelReturn$yClass)=names(modelReturn$miss)=names(modelReturn$auc)=c('min','mid','max')
+#   rownames(modelReturn$yClass)=paste(1:nSamp,ID,sep='_ID')
+# }
+
+  parallel::stopCluster(cl)
+  return (permMatrix)
+}
+
+#' Permutation test plot
+#'
+#' Plot permutation test using actual model and permutated models
+#'
+#'
+#' @return A plot with the comparison between the actual model versus the permuted models
+#' @export
+#' @examples
+#'\dontrun{
+#' # 1.Build a model with the X data from your nmr object and your class:
+#' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+#' Y = nmr_peak_table_completed$Timepoint)
+#'
+#'
+#' # 2.Model performance
+#' confusion_matrix(MVObj)
+#'
+#' # 3.Plotting the model
+#' MUVR_model_plot(MVObj)
+#'
+#' # 4.Permutation test
+#' permutations <- permutation_test_model(MVObj, nPerm = 50)
+#'
+#' # 5.Plotting permutation test results
+#' permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+#'
+#' # 6.p-Value
+#' p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+#'
+#' # 7.Significant variables
+#' VIPs <- model_VIP(MVObj)
+#'
+#' # 8.Identification
+#' results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
+#'}
+permutation_test_plot = function (MVObj,
+                                  permMatrix,
+                                  model = "mid",
+                                  type = type,
+                                  pos,
+                                  xlab = "Number of misclassifications",
+                                  xlim,
+                                  ylim = NULL,
+                                  breaks = "Sturges",
+                                  main = "Permutation test")
+{
+  
+  # plot permutation
+  ms1=modCB$miss[permModPref]/2
+  p1Emp=ecdf(H1/2)(ms1) # Empirical
+  p1Stud=pt((ms1-(mean(H1)/2))/sd(H1/2),(length(H1)-1)) # Students
+  hist(H1/2,axes=F,ylim=c(0,50),xlim=c(0,11),xlab='Misclassifications',main='')
+  axis(1,pos=0)
+  axis(2,pos=0)
+  lines(rep(ms1,2),c(0,40),lty=5,col=2, lwd=2)
+  text(0.3,40,paste('p=',signif(p1Stud,3),sep=''),pos=3)# cambio posicion donde pinta el valor p para que quede cuadrado.
+  
+  
+  MUVR::permutationPlot(
+    MVObj,
+    permMatrix,
+    model,
+    type = type,
+    pos = pos,
+    xlab = xlab,
+    xlim = xlim,
+    ylim = ylim,
+    breaks = breaks,
+    main = main
+  )
+}
