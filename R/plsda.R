@@ -152,8 +152,8 @@ fun_choose_best_ncomp_auc_threshold <- function(auc_threshold = 0.05) {
         purrr::map("auroc") %>%
         purrr::map_dfr(~ ., .id = "outer_inner") %>%
         tidyr::separate("outer_inner",
-                                        into = c("cv_outer_iteration", "cv_inner_iteration"),
-                                        convert = TRUE)
+                        into = c("cv_outer_iteration", "cv_inner_iteration"),
+                        convert = TRUE)
     # There is a more elegant way to do this.
     nlv <- model_performances %>%
         dplyr::group_by(.data$cv_outer_iteration, .data$cv_inner_iteration) %>%

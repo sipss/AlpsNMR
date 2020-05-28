@@ -494,15 +494,21 @@ permutation_test_model = function (dataset,
                               internal_val = internal_val,
                               data_analysis_method = data_analysis_method)
     
+    # I will use the mean of the auc of the outer_cv for the test static
+    test_stat = mean(permMod$outer_cv_results_digested$auroc$auc)
+    
     # De que modelo cojo la predicción?
     # hay external_val$iterations modelos
     
     # Classify predictions
-    classPred = permMod$outer_cv_results$`1`$perf$predict
-    miss = sum(classPred!=y_all)
-    print(miss)
-    
-    permMatrix[p,1]=miss
+    # classPred = permMod$outer_cv_results$`1`$perf$predict
+    #TODO classPred es una matriz
+    #3 months after surgery       preop
+    #Obs0_0001s             0.47028786  0.52971214
+    #Obs0_0002s             0.47891706  0.52108294
+    #miss = sum(classPred!=y_all)
+
+    permMatrix[p,1] = test_stat
     nowTime=proc.time()[3]
     timePerRep=(nowTime-startTime)/p
     timeLeft=(timePerRep*(nPerm-p))/60
