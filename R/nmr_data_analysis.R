@@ -176,6 +176,9 @@ split_build_perform <- function(train_test_subset,
                                 ...) {
     x_all <- nmr_data(dataset)
     y_all <- nmr_meta_get_column(dataset, column = y_column)
+    if (is.null(y_all)) {
+      stop(y_column, "column not found in the dataset")
+    }
     if (!is.null(identity_column)) {
         identity_all <- nmr_meta_get_column(dataset, column = identity_column)
     } else {
@@ -342,6 +345,14 @@ nmr_data_analysis <- function(dataset,
                                                 keep_together = identity_column,
                                                 external_val = external_val,
                                                 internal_val = internal_val)
+    
+    if(length(train_test_blind_subsets$inner) 
+       < data_analysis_method$train_evaluate_model_params_inner$ncomp*10 ||
+       length(train_test_blind_subsets$outer) 
+       < data_analysis_method$train_evaluate_model_params_inner$ncomp*10){
+        warning("Recommended number of samples is at least 10 times the number
+                of components evaluated")
+    }
     
     # These are ALL the inner cross-validation iterations:
     train_test_subsets_inner <- purrr::map(train_test_blind_subsets$inner,
