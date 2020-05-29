@@ -57,31 +57,30 @@ the examples here and \link{plsda_auroc_vip_method})
 num_samples <- 32 # use an even number in this example
 num_peaks <- 20
 metadata <- data.frame(
-  NMRExperiment = as.character(1:num_samples),
-  Condition = rep(c("A", "B"), times = num_samples/2),
-  stringsAsFactors = FALSE
+    NMRExperiment = as.character(1:num_samples),
+    Condition = rep(c("A", "B"), times = num_samples/2),
+    stringsAsFactors = FALSE
 )
 
 ### The matrix with peaks
 peak_means <- runif(n = num_peaks, min = 300, max = 600)
 peak_sd <- runif(n = num_peaks, min = 30, max = 60)
 peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
-                      mu = peak_means, sd = peak_sd)
+                                            mu = peak_means, sd = peak_sd)
 colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
 
 ## Artificial differences depending on the condition:
 peak_matrix[metadata$Condition == "A", "Peak2"] <- 
-  peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+    peak_matrix[metadata$Condition == "A", "Peak2"] + 70
 
 peak_matrix[metadata$Condition == "A", "Peak6"] <- 
-  peak_matrix[metadata$Condition == "A", "Peak6"] - 60
-  
+    peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+    
 ### The nmr_dataset_peak_table
 peak_table <- new_nmr_dataset_peak_table(
-  peak_table = peak_matrix,
-  metadata = list(external = metadata)
+    peak_table = peak_matrix,
+    metadata = list(external = metadata)
 )
-print(peak_table)
 
 ## We will use a double cross validation, splitting the samples with random
 ## subsampling both in the external and internal validation.
@@ -90,12 +89,12 @@ print(peak_table)
 ## The best model will be selected based on the area under the ROC curve
 methodology <- plsda_auroc_vip_method(ncomp = 3)
 model <- nmr_data_analysis(
-  peak_table,
-  y_column = "Condition",
-  identity_column = NULL,
-  external_val = list(iterations = 3, test_size = 0.25),
-  internal_val = list(iterations = 3, test_size = 0.25),
-  data_analysis_method = methodology
+    peak_table,
+    y_column = "Condition",
+    identity_column = NULL,
+    external_val = list(iterations = 3, test_size = 0.25),
+    internal_val = list(iterations = 3, test_size = 0.25),
+    data_analysis_method = methodology
 )
 ## Area under ROC for each outer cross-validation iteration:
 print(model$outer_cv_results_digested$auroc)

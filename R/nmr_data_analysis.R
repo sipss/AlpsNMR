@@ -1,29 +1,29 @@
 #' Random subsampling
 #'
 #' @param sample_idx Typically a numeric vector with sample index to be separated.
-#'   A character vector with sample IDs could also be used
+#'     A character vector with sample IDs could also be used
 #' @param iterations An integer, the number of iterations in the random subsampling
 #' @param test_size A number between 0 and 1. The samples to be included in the 
-#'  test set on each interation.
+#'    test set on each interation.
 #' @param keep_together Either `NULL` or a factor with the same length as `sample_idx`. 
-#'   `keep_together` can be used to ensure that groups of samples are kept
-#'   in together in all iterations (either on training or on test, but never split).
-#'   A typical use case for this is when you have sample replicates and you want
-#'   to keep all replicates together to prevent overoptimistic results (having
-#'   one sample on the train subset and its replicate on the test subset would
-#'   make the prediction easier to guess).
-#'   Another use case for this is when you have a longitudinal study and you
-#'   want to keep some subjects in the same train or test group, because you
-#'   want to use some information in a longitudinal way (e.g. a multilevel plsda model).
+#'     `keep_together` can be used to ensure that groups of samples are kept
+#'     in together in all iterations (either on training or on test, but never split).
+#'     A typical use case for this is when you have sample replicates and you want
+#'     to keep all replicates together to prevent overoptimistic results (having
+#'     one sample on the train subset and its replicate on the test subset would
+#'     make the prediction easier to guess).
+#'     Another use case for this is when you have a longitudinal study and you
+#'     want to keep some subjects in the same train or test group, because you
+#'     want to use some information in a longitudinal way (e.g. a multilevel plsda model).
 #' @param balance_in_train Either `NULL` or a factor with the same length as `sample_idx`.
-#'   `balance_in_train` can be used to force that on each iteration, the train
-#'   partition contains the same number of samples of the given factor levels.
-#'   For instance, if we have a dataset with 40 samples of class "A" and 20 samples
-#'   of class "B", using a `test_size = 0.25`, we can force to always have 16
-#'   samples of class "A" and 16 samples of class "B" in the training subset.
-#'   This is beneficial to those algorithms that require that the training groups
-#'   are balanced.
-#'   
+#'     `balance_in_train` can be used to force that on each iteration, the train
+#'     partition contains the same number of samples of the given factor levels.
+#'     For instance, if we have a dataset with 40 samples of class "A" and 20 samples
+#'     of class "B", using a `test_size = 0.25`, we can force to always have 16
+#'     samples of class "A" and 16 samples of class "B" in the training subset.
+#'     This is beneficial to those algorithms that require that the training groups
+#'     are balanced.
+#'     
 #' @return A list of length equal to `iterations`. Each element of the list is
 #' a list with two entries (`training` and `test`) containing the `sample_idx`
 #' values that will belong to each subset.
@@ -41,59 +41,59 @@ random_subsampling <- function(sample_idx,
                                test_size = 0.25,
                                keep_together = NULL,
                                balance_in_train = NULL) {
-  resample <- function(x, ...) x[sample.int(length(x), ...)]
-  num_samples <- length(sample_idx)
-  output <- vector("list", iterations)
-  if (is.null(keep_together)) {
-    keep_together <- sample_idx
-  }
-  keep_together <- as.factor(keep_together)
-  stopifnot(length(keep_together) == num_samples)
-  if (!is.null(balance_in_train)) {
-    balance_in_train <- as.factor(balance_in_train)
-    # Check keep_together & balance consistency
-    stopifnot(length(balance_in_train) == num_samples)
-    for (lev in levels(keep_together)) {
-      samples_in_lev <- which(keep_together == lev)
-      if (length(unique(balance_in_train[samples_in_lev])) > 1) {
-        stop(glue::glue(
-          "Can't balance samples and keep samples together",
-          " for samples of keep_together == {lev}, because they",
-          " belong to more than one balancing groups: {paste0(unique(balance_in_train[samples_in_lev]))}"
-        ))
-      }
+    resample <- function(x, ...) x[sample.int(length(x), ...)]
+    num_samples <- length(sample_idx)
+    output <- vector("list", iterations)
+    if (is.null(keep_together)) {
+        keep_together <- sample_idx
     }
-    keep_balance <- data.frame(keep_together = keep_together,
-                               balance_in_train = balance_in_train,
-                               stringsAsFactors = TRUE)
-    keep_balance <- unique(keep_balance)
-    
-    smaller_balancing_group <- min(table(keep_balance$balance_in_train))
-    num_groups_train <- max(floor(smaller_balancing_group*(1 - test_size)), 1)
-    
-    for (i in seq_len(iterations)) {
-      groups_train <- keep_balance %>%
-        dplyr::group_by(balance_in_train) %>% 
-        dplyr::sample_n(num_groups_train) %>% 
-        dplyr::ungroup() %>%
-        dplyr::pull(keep_together)
-      train_samples <- sample_idx[keep_together %in% groups_train]
-      test_samples <- base::setdiff(sample_idx, train_samples)
-      output[[i]] <- list(training = train_samples,
-                          test = test_samples)
+    keep_together <- as.factor(keep_together)
+    stopifnot(length(keep_together) == num_samples)
+    if (!is.null(balance_in_train)) {
+        balance_in_train <- as.factor(balance_in_train)
+        # Check keep_together & balance consistency
+        stopifnot(length(balance_in_train) == num_samples)
+        for (lev in levels(keep_together)) {
+            samples_in_lev <- which(keep_together == lev)
+            if (length(unique(balance_in_train[samples_in_lev])) > 1) {
+                stop(glue::glue(
+                    "Can't balance samples and keep samples together",
+                    " for samples of keep_together == {lev}, because they",
+                    " belong to more than one balancing groups: {paste0(unique(balance_in_train[samples_in_lev]))}"
+                ))
+            }
+        }
+        keep_balance <- data.frame(keep_together = keep_together,
+                                   balance_in_train = balance_in_train,
+                                   stringsAsFactors = TRUE)
+        keep_balance <- unique(keep_balance)
+        
+        smaller_balancing_group <- min(table(keep_balance$balance_in_train))
+        num_groups_train <- max(floor(smaller_balancing_group*(1 - test_size)), 1)
+        
+        for (i in seq_len(iterations)) {
+            groups_train <- keep_balance %>%
+                dplyr::group_by(balance_in_train) %>% 
+                dplyr::sample_n(num_groups_train) %>% 
+                dplyr::ungroup() %>%
+                dplyr::pull(keep_together)
+            train_samples <- sample_idx[keep_together %in% groups_train]
+            test_samples <- base::setdiff(sample_idx, train_samples)
+            output[[i]] <- list(training = train_samples,
+                                                    test = test_samples)
+        }
+    } else {
+        groups_keep_together <- unique(keep_together)
+        num_groups_test <- floor(length(groups_keep_together)*test_size)
+        for (i in seq_len(iterations)) {
+            groups_test <- resample(x = groups_keep_together, size = num_groups_test)
+            test_samples <- sample_idx[keep_together %in% groups_test]
+            train_samples <- base::setdiff(sample_idx, test_samples)
+            output[[i]] <- list(training = train_samples,
+                                                    test = test_samples)
+        }
     }
-  } else {
-    groups_keep_together <- unique(keep_together)
-    num_groups_test <- floor(length(groups_keep_together)*test_size)
-    for (i in seq_len(iterations)) {
-      groups_test <- resample(x = groups_keep_together, size = num_groups_test)
-      test_samples <- sample_idx[keep_together %in% groups_test]
-      train_samples <- base::setdiff(sample_idx, test_samples)
-      output[[i]] <- list(training = train_samples,
-                          test = test_samples)
-    }
-  }
-  return(output)
+    return(output)
 }
 
 #' Split samples for double cross-validation
@@ -101,7 +101,7 @@ random_subsampling <- function(sample_idx,
 #' @param dataset An [nmr_dataset_family] like object
 #' @inheritParams random_subsampling
 #' @inheritParams nmr_data_analysis
-#'  
+#'    
 #' @return A list with two elements: `outer` and `inner`. Each of those elements
 #' is a list as long as the number of iterations given in `external_val` and `internal_val`
 #' and it includes the indices of the samples that will belong to the train and test
@@ -110,47 +110,47 @@ random_subsampling <- function(sample_idx,
 split_double_cv <- function(dataset, keep_together = NULL,
                             external_val = list(iterations = 16L, test_size = 0.25),
                             internal_val = list(iterations = 10L, test_size = 0.25)) {
-  if (is.null(keep_together)) {
-    keep_together_data <- seq_len(dataset$num_samples)
-  } else {
-    keep_together_data <- as.factor(nmr_meta_get_column(dataset, keep_together))
-  }
-  sample_idx <- seq_len(dataset$num_samples)
-  
-  outer_cv_loop <- random_subsampling(sample_idx = sample_idx,
-                                      iterations = external_val$iterations,
-                                      test_size = external_val$test_size,
-                                      keep_together = keep_together_data)
-  outer_cv_iterations <- purrr::imap(outer_cv_loop, function(outer, outer_idx) {
-    list(outer_iter = outer_idx,
-         outer_train = outer$training,
-         outer_test = outer$test)
-  })
-  names(outer_cv_iterations) <- as.character(purrr::map_int(outer_cv_iterations, "outer_iter"))
-  
-  inner_cv_iterations <- purrr::flatten(
-    purrr::imap(outer_cv_loop, function(outer, outer_idx) {
-      calib_idx <- outer$training
-      blind_idx <- outer$test
-      inner_cv <- random_subsampling(sample_idx = calib_idx,
-                                     iterations = internal_val$iterations,
-                                     test_size = internal_val$test_size,
-                                     keep_together = keep_together_data[calib_idx])
-      purrr::imap(inner_cv, function(inner_iter, inner_iter_idx) {
+    if (is.null(keep_together)) {
+        keep_together_data <- seq_len(dataset$num_samples)
+    } else {
+        keep_together_data <- as.factor(nmr_meta_get_column(dataset, keep_together))
+    }
+    sample_idx <- seq_len(dataset$num_samples)
+    
+    outer_cv_loop <- random_subsampling(sample_idx = sample_idx,
+                                        iterations = external_val$iterations,
+                                        test_size = external_val$test_size,
+                                        keep_together = keep_together_data)
+    outer_cv_iterations <- purrr::imap(outer_cv_loop, function(outer, outer_idx) {
         list(outer_iter = outer_idx,
-             inner_iter = inner_iter_idx,
-             inner_train_idx = inner_iter$training,
-             inner_test_idx = inner_iter$test)
-      })
-    }))
-  
-  names(inner_cv_iterations) <- 
-    paste0(as.character(purrr::map_int(inner_cv_iterations, "outer_iter")),
-           "_", 
-           as.character(purrr::map_int(inner_cv_iterations, "inner_iter")))
-  
-  list(outer = outer_cv_iterations,
-       inner = inner_cv_iterations)
+                 outer_train = outer$training,
+                 outer_test = outer$test)
+    })
+    names(outer_cv_iterations) <- as.character(purrr::map_int(outer_cv_iterations, "outer_iter"))
+    
+    inner_cv_iterations <- purrr::flatten(
+        purrr::imap(outer_cv_loop, function(outer, outer_idx) {
+            calib_idx <- outer$training
+            blind_idx <- outer$test
+            inner_cv <- random_subsampling(sample_idx = calib_idx,
+                                           iterations = internal_val$iterations,
+                                           test_size = internal_val$test_size,
+                                           keep_together = keep_together_data[calib_idx])
+            purrr::imap(inner_cv, function(inner_iter, inner_iter_idx) {
+                list(outer_iter = outer_idx,
+                         inner_iter = inner_iter_idx,
+                         inner_train_idx = inner_iter$training,
+                         inner_test_idx = inner_iter$test)
+            })
+        }))
+    
+    names(inner_cv_iterations) <- 
+        paste0(as.character(purrr::map_int(inner_cv_iterations, "outer_iter")),
+                     "_", 
+                     as.character(purrr::map_int(inner_cv_iterations, "inner_iter")))
+    
+    list(outer = outer_cv_iterations,
+         inner = inner_cv_iterations)
 }
 
 
@@ -174,45 +174,45 @@ split_build_perform <- function(train_test_subset,
                                 identity_column = NULL,
                                 train_evaluate_model,
                                 ...) {
-  x_all <- nmr_data(dataset)
-  y_all <- nmr_meta_get_column(dataset, column = y_column)
-  if (!is.null(identity_column)) {
-    identity_all <- nmr_meta_get_column(dataset, column = identity_column)
-  } else {
-    identity_all <- NULL
-  }
-  
-  # Split
-  train_idx <- train_test_subset[[1]]
-  test_idx <- train_test_subset[[2]]
-  
-  x_train <- x_all[train_idx,, drop = FALSE]
-  y_train <- y_all[train_idx]
-  if (!is.null(identity_all)) {
-    identity_train <- identity_all[train_idx]
-  } else {
-    identity_train <- NULL
-  }
-  
-  x_test <- x_all[test_idx,, drop = FALSE]
-  y_test <- y_all[test_idx]
-  if (!is.null(identity_all)) {
-    identity_test <- identity_all[test_idx]
-  } else {
-    identity_test <- NULL
-  }
-  
-  # Build & performance:
-  train_evaluate_model(x_train = x_train, y_train = y_train, identity_train = identity_train,
-                       x_test = x_test, y_test = y_test, identity_test = identity_test, ...)
+    x_all <- nmr_data(dataset)
+    y_all <- nmr_meta_get_column(dataset, column = y_column)
+    if (!is.null(identity_column)) {
+        identity_all <- nmr_meta_get_column(dataset, column = identity_column)
+    } else {
+        identity_all <- NULL
+    }
+    
+    # Split
+    train_idx <- train_test_subset[[1]]
+    test_idx <- train_test_subset[[2]]
+    
+    x_train <- x_all[train_idx,, drop = FALSE]
+    y_train <- y_all[train_idx]
+    if (!is.null(identity_all)) {
+        identity_train <- identity_all[train_idx]
+    } else {
+        identity_train <- NULL
+    }
+    
+    x_test <- x_all[test_idx,, drop = FALSE]
+    y_test <- y_all[test_idx]
+    if (!is.null(identity_all)) {
+        identity_test <- identity_all[test_idx]
+    } else {
+        identity_test <- NULL
+    }
+    
+    # Build & performance:
+    train_evaluate_model(x_train = x_train, y_train = y_train, identity_train = identity_train,
+                         x_test = x_test, y_test = y_test, identity_test = identity_test, ...)
 }
 
 
 
 #' Do cross-validation
 #' @param train_test_subsets A list of length the number of cross-validation iterations.
-#'   Each list item should have two elements, first the train indices and second the test indices
-#'  
+#'     Each list item should have two elements, first the train indices and second the test indices
+#'    
 #' @inheritParams nmr_data_analysis
 #' @inheritParams new_nmr_data_analysis_method
 #' @param train_evaluate_model_args_iter A named list. The names are valid `train_evaluate_model` arguments. Each list element is a vector.
@@ -221,30 +221,26 @@ split_build_perform <- function(train_test_subset,
 #' @noRd
 do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
                   train_test_subsets, train_evaluate_model_args_iter = NULL, ...) {
-  if (show_progress_bar(length(train_test_subsets) > 5)) {
-    prgrs <- TRUE
-  } else {
-    prgrs <- FALSE
-  }
-  output <- furrr::future_pmap(
-    c(list(train_test_subset = train_test_subsets),
-      train_evaluate_model_args_iter),
-    split_build_perform,
-    dataset = dataset, 
-    y_column = y_column,
-    identity_column = identity_column,
-    train_evaluate_model = train_evaluate_model,
-    ...,
-    .progress = prgrs,
-    .options = furrr::future_options(globals = character(0),
-                                     packages = character(0)))
-  names(output) <- names(train_test_subsets)
-  output
+    if (show_progress_bar(length(train_test_subsets) > 5)) {
+        prgrs <- TRUE
+    } else {
+        prgrs <- FALSE
+    }
+    output <- furrr::future_pmap(
+        c(list(train_test_subset = train_test_subsets),
+            train_evaluate_model_args_iter),
+        split_build_perform,
+        dataset = dataset, 
+        y_column = y_column,
+        identity_column = identity_column,
+        train_evaluate_model = train_evaluate_model,
+        ...,
+        .progress = prgrs,
+        .options = furrr::future_options(globals = character(0),
+                                         packages = character(0)))
+    names(output) <- names(train_test_subsets)
+    output
 }
-
-
-
-
 
 
 #' Data analysis
@@ -261,11 +257,11 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
 #' 
 #' @param dataset An [nmr_dataset_family] object
 #' @param y_column A string with the name of the y column (present in the
-#'  metadata of the dataset)
+#'    metadata of the dataset)
 #' @param identity_column `NULL` or a string with the name of the identity column (present in the
-#'  metadata of the dataset).
+#'    metadata of the dataset).
 #' @param external_val,internal_val A list with two elements: `iterations` and `test_size`.
-#'  See [random_subsampling] for further details
+#'    See [random_subsampling] for further details
 #' @param data_analysis_method An [nmr_data_analysis_method] object
 #' @return A list with the following elements:
 #' 
@@ -282,31 +278,30 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
 #' num_samples <- 32 # use an even number in this example
 #' num_peaks <- 20
 #' metadata <- data.frame(
-#'   NMRExperiment = as.character(1:num_samples),
-#'   Condition = rep(c("A", "B"), times = num_samples/2),
-#'   stringsAsFactors = FALSE
+#'     NMRExperiment = as.character(1:num_samples),
+#'     Condition = rep(c("A", "B"), times = num_samples/2),
+#'     stringsAsFactors = FALSE
 #' )
 #' 
 #' ### The matrix with peaks
 #' peak_means <- runif(n = num_peaks, min = 300, max = 600)
 #' peak_sd <- runif(n = num_peaks, min = 30, max = 60)
 #' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
-#'                       mu = peak_means, sd = peak_sd)
+#'                                             mu = peak_means, sd = peak_sd)
 #' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
 #' 
 #' ## Artificial differences depending on the condition:
 #' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
-#'   peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+#'     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
 #' 
 #' peak_matrix[metadata$Condition == "A", "Peak6"] <- 
-#'   peak_matrix[metadata$Condition == "A", "Peak6"] - 60
-#'   
+#'     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+#'     
 #' ### The nmr_dataset_peak_table
 #' peak_table <- new_nmr_dataset_peak_table(
-#'   peak_table = peak_matrix,
-#'   metadata = list(external = metadata)
+#'     peak_table = peak_matrix,
+#'     metadata = list(external = metadata)
 #' )
-#' print(peak_table)
 #' 
 #' ## We will use a double cross validation, splitting the samples with random
 #' ## subsampling both in the external and internal validation.
@@ -315,12 +310,12 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
 #' ## The best model will be selected based on the area under the ROC curve
 #' methodology <- plsda_auroc_vip_method(ncomp = 3)
 #' model <- nmr_data_analysis(
-#'   peak_table,
-#'   y_column = "Condition",
-#'   identity_column = NULL,
-#'   external_val = list(iterations = 3, test_size = 0.25),
-#'   internal_val = list(iterations = 3, test_size = 0.25),
-#'   data_analysis_method = methodology
+#'     peak_table,
+#'     y_column = "Condition",
+#'     identity_column = NULL,
+#'     external_val = list(iterations = 3, test_size = 0.25),
+#'     internal_val = list(iterations = 3, test_size = 0.25),
+#'     data_analysis_method = methodology
 #' )
 #' ## Area under ROC for each outer cross-validation iteration:
 #' print(model$outer_cv_results_digested$auroc)
@@ -335,65 +330,65 @@ nmr_data_analysis <- function(dataset,
                               external_val,
                               internal_val,
                               data_analysis_method) {
-  
-  train_evaluate_model <- data_analysis_method[["train_evaluate_model"]]
-  train_evaluate_model_params_inner <- data_analysis_method[["train_evaluate_model_params_inner"]]
-  choose_best_inner <- data_analysis_method[["choose_best_inner"]]
-  train_evaluate_model_params_outer <- data_analysis_method[["train_evaluate_model_params_outer"]]
-  train_evaluate_model_digest_outer <- data_analysis_method[["train_evaluate_model_digest_outer"]]
-  
-  # Prepare double cross-validation splits:
-  train_test_blind_subsets <- split_double_cv(dataset,
-                                              keep_together = identity_column,
-                                              external_val = external_val,
-                                              internal_val = internal_val)
-  
-  # These are ALL the inner cross-validation iterations:
-  train_test_subsets_inner <- purrr::map(train_test_blind_subsets$inner,
-                                         ~ .[c("inner_train_idx", "inner_test_idx")])
-  
-  # We run the train_evaluate_model function for each of the inner CV.
-  inner_cv_results <- do.call(
-    what = do_cv,
-    args = c(list(dataset = dataset,
-                  y_column = y_column,
-                  identity_column = identity_column,
-                  train_evaluate_model = train_evaluate_model,
-                  train_test_subsets = train_test_subsets_inner),
-             train_evaluate_model_params_inner))
-  
-  # We choose the best hyper-parameters for each inner cross-validation:
-  inner_cv_results_digested <- choose_best_inner(inner_cv_results)
-  
-  # Prepare the indices for the final outer cv models:
-  train_test_subsets_outer <- purrr::map(train_test_blind_subsets$outer,
-                                         ~ .[c("outer_train", "outer_test")])
-  
-  # Compute the outer cv models
-  outer_cv_results <- do.call(
-    what = do_cv,
-    args = c(list(dataset = dataset,
-                  y_column = y_column,
-                  identity_column = identity_column,
-                  train_evaluate_model = train_evaluate_model,
-                  train_test_subsets = train_test_subsets_outer,
-                  train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args
-    ),
-    train_evaluate_model_params_outer
+    
+    train_evaluate_model <- data_analysis_method[["train_evaluate_model"]]
+    train_evaluate_model_params_inner <- data_analysis_method[["train_evaluate_model_params_inner"]]
+    choose_best_inner <- data_analysis_method[["choose_best_inner"]]
+    train_evaluate_model_params_outer <- data_analysis_method[["train_evaluate_model_params_outer"]]
+    train_evaluate_model_digest_outer <- data_analysis_method[["train_evaluate_model_digest_outer"]]
+    
+    # Prepare double cross-validation splits:
+    train_test_blind_subsets <- split_double_cv(dataset,
+                                                keep_together = identity_column,
+                                                external_val = external_val,
+                                                internal_val = internal_val)
+    
+    # These are ALL the inner cross-validation iterations:
+    train_test_subsets_inner <- purrr::map(train_test_blind_subsets$inner,
+                                           ~ .[c("inner_train_idx", "inner_test_idx")])
+    
+    # We run the train_evaluate_model function for each of the inner CV.
+    inner_cv_results <- do.call(
+        what = do_cv,
+        args = c(list(dataset = dataset,
+                      y_column = y_column,
+                      identity_column = identity_column,
+                      train_evaluate_model = train_evaluate_model,
+                      train_test_subsets = train_test_subsets_inner),
+                 train_evaluate_model_params_inner))
+    
+    # We choose the best hyper-parameters for each inner cross-validation:
+    inner_cv_results_digested <- choose_best_inner(inner_cv_results)
+    
+    # Prepare the indices for the final outer cv models:
+    train_test_subsets_outer <- purrr::map(train_test_blind_subsets$outer,
+                                           ~ .[c("outer_train", "outer_test")])
+    
+    # Compute the outer cv models
+    outer_cv_results <- do.call(
+        what = do_cv,
+        args = c(list(dataset = dataset,
+                      y_column = y_column,
+                      identity_column = identity_column,
+                      train_evaluate_model = train_evaluate_model,
+                      train_test_subsets = train_test_subsets_outer,
+                      train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args
+                      ),
+        train_evaluate_model_params_outer
+        )
     )
-  )
-  
-  # Digest the results:
-  outer_cv_results_dig <- train_evaluate_model_digest_outer(outer_cv_results)
-  
-  # Give output:
-  list(
-    train_test_partitions = train_test_blind_subsets,
-    inner_cv_results = inner_cv_results,
-    inner_cv_results_digested = inner_cv_results_digested,
-    outer_cv_results = outer_cv_results,
-    outer_cv_results_digested = outer_cv_results_dig
-  )
+    
+    # Digest the results:
+    outer_cv_results_dig <- train_evaluate_model_digest_outer(outer_cv_results)
+    
+    # Give output:
+    list(
+        train_test_partitions = train_test_blind_subsets,
+        inner_cv_results = inner_cv_results,
+        inner_cv_results_digested = inner_cv_results_digested,
+        outer_cv_results = outer_cv_results,
+        outer_cv_results_digested = outer_cv_results_dig
+    )
 }
 
 
@@ -401,7 +396,7 @@ nmr_data_analysis <- function(dataset,
 #' 
 #' @param train_evaluate_model A function. The `train_evaluate_model` must have the following signature:
 #' 
-#'     function(x_train, y_train, identity_train, x_test, y_test, identity_test, ...)
+#'         function(x_train, y_train, identity_train, x_test, y_test, identity_test, ...)
 #'
 #' The `x_train` and `y_train` (and their test counterparts) are self-explanatory.
 #' 
@@ -413,27 +408,28 @@ nmr_data_analysis <- function(dataset,
 #' The `...` arguments are free to be defined for each `train_evaluate_model`.
 #' 
 #' @param train_evaluate_model_params_inner,train_evaluate_model_params_outer A list with additional
-#'   arguments to pass to `train_evaluate_model` either in the inner cv loop or in the outer cv loop.
-#'  
+#'     arguments to pass to `train_evaluate_model` either in the inner cv loop or in the outer cv loop.
+#'    
 #' @param choose_best_inner A function with a single argument:
 #' 
 #'     function(inner_cv_results)
 #' 
-#'  The argument is a list of `train_evaluate_model` outputs.
-#'  The return value of must be a list with at least an element named `train_evaluate_model_args`.
-#'  `train_evaluate_model_args` must be a named list.
-#'  
-#'      - Each element must be named as one of the `train_evaluate_model` arguments.
-#'      - Each element must be a vector as long as the number of outer cross-validations.
-#'      - The values of each vector must be the values that the `train_evaluate_model` argument must take on each outer cross-validation iteration
-#'  Additional list elements can be returned and will be given back to the user
+#'    The argument is a list of `train_evaluate_model` outputs.
+#'    The return value of must be a list with at least an element named `train_evaluate_model_args`.
+#'    `train_evaluate_model_args` must be a named list.
+#'    
+#'    - Each element must be named as one of the `train_evaluate_model` arguments.
+#'    - Each element must be a vector as long as the number of outer cross-validations.
+#'    - The values of each vector must be the values that the `train_evaluate_model` 
+#'    argument must take on each outer cross-validation iteration
+#'    Additional list elements can be returned and will be given back to the user
 #' 
 #' @param train_evaluate_model_digest_outer A function with a single argument:
 #' 
-#'     function(outer_cv_results)
+#'    function(outer_cv_results)
 #' 
-#'  The argument is a list of `train_evaluate_model` outputs in outer cross-validation.
-#'  The return value is returned by `nmr_data_analysis`
+#'    The argument is a list of `train_evaluate_model` outputs in outer cross-validation.
+#'    The return value is returned by `nmr_data_analysis`
 #'
 #' @return An object encapsulating the method dependent functions that can be used with [nmr_data_analysis]
 #' @name nmr_data_analysis_method
@@ -443,26 +439,78 @@ new_nmr_data_analysis_method <- function(train_evaluate_model,
                                          choose_best_inner,
                                          train_evaluate_model_params_outer,
                                          train_evaluate_model_digest_outer) {
-  out <- list(train_evaluate_model = train_evaluate_model,
-              train_evaluate_model_params_inner = train_evaluate_model_params_inner,
-              choose_best_inner = choose_best_inner,
-              train_evaluate_model_params_outer = train_evaluate_model_params_outer,
-              train_evaluate_model_digest_outer = train_evaluate_model_digest_outer)
-  class(out) <- "nmr_data_analysis_method"
-  out
+    out <- list(train_evaluate_model = train_evaluate_model,
+                            train_evaluate_model_params_inner = train_evaluate_model_params_inner,
+                            choose_best_inner = choose_best_inner,
+                            train_evaluate_model_params_outer = train_evaluate_model_params_outer,
+                            train_evaluate_model_digest_outer = train_evaluate_model_digest_outer)
+    class(out) <- "nmr_data_analysis_method"
+    out
 }
 
 #' Permutation test
 #'
 #' Make permutations with data and default settings from an nmr_data_analysis_method
-#'
+#' 
+#' @param nPerm number of permutations
+#' 
+#' @inheritParams nmr_data_analysis
+#' 
 #' @importFrom doParallel registerDoParallel
 #' @return A permutation matrix with permuted values
+#' @name permutation_test_model
 #' @export
 #' @examples
-#' \dontrun{
-#' P = permutation_test_model(model)
-#' }
+#' # Data analysis for a table of integrated peaks
+#' 
+#' ## Generate an artificial nmr_dataset_peak_table:
+#' ### Generate artificial metadata:
+#' num_samples <- 32 # use an even number in this example
+#' num_peaks <- 20
+#' metadata <- data.frame(
+#'     NMRExperiment = as.character(1:num_samples),
+#'     Condition = rep(c("A", "B"), times = num_samples/2),
+#'     stringsAsFactors = FALSE
+#' )
+#' 
+#' ### The matrix with peaks
+#' peak_means <- runif(n = num_peaks, min = 300, max = 600)
+#' peak_sd <- runif(n = num_peaks, min = 30, max = 60)
+#' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
+#'                                             mu = peak_means, sd = peak_sd)
+#' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+#' 
+#' ## Artificial differences depending on the condition:
+#' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+#' 
+#' peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+#'     
+#' ### The nmr_dataset_peak_table
+#' peak_table <- new_nmr_dataset_peak_table(
+#'     peak_table = peak_matrix,
+#'     metadata = list(external = metadata)
+#' )
+#' 
+#' methodology <- plsda_auroc_vip_method(ncomp = 3)
+#' model <- nmr_data_analysis(
+#'     peak_table,
+#'     y_column = "Condition",
+#'     identity_column = NULL,
+#'     external_val = list(iterations = 3, test_size = 0.25),
+#'     internal_val = list(iterations = 3, test_size = 0.25),
+#'     data_analysis_method = methodology
+#' )
+#' 
+#' p = permutation_test_model(peak_table,
+#'                            y_column = "Condition",
+#'                            identity_column = NULL,
+#'                            external_val = list(iterations = 3, test_size = 0.25),
+#'                            internal_val = list(iterations = 3, test_size = 0.25),
+#'                            data_analysis_method = methodology, 
+#'                            nPerm = 10)
+#'                            
 permutation_test_model = function (dataset,
                                    y_column,
                                    identity_column, 
@@ -471,145 +519,155 @@ permutation_test_model = function (dataset,
                                    data_analysis_method,
                                    nPerm = 50)
 {
-  cl = parallel::makeCluster(parallel::detectCores() - 1)
-  doParallel::registerDoParallel(cl)
-  
-  startTime=proc.time()[3]
-  permMatrix=matrix(ncol=3,nrow=nPerm)
-  colnames(permMatrix)=c('Min','Mid','Max') #No se porque tiene tres
-  dataset_perm <- dataset
-  y_all <- nmr_meta_get_column(dataset, column = y_column)
-  for (p in 1:nPerm) {
-    cat('\n permutation ',p,' of ',nPerm,'\n',sep = '')
+    chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
+    if (nzchar(chk) && chk == "TRUE") {
+        # use 2 cores in CRAN/Travis/AppVeyor
+        num_workers <- 2L
+    } else {
+        # use all cores in devtools::test()
+        num_workers <- parallel::detectCores() - 1
+    }
     
-    #Permutar columna y_colum del dataset
-    YPerm=sample(y_all)
-    dataset_perm[["metadata"]][["external"]][[y_column]] <- YPerm
-    # y_test <- nmr_meta_get_column(dataset_perm, column = y_column)
-    # print(sum(y_test!=y_all))
-    permMod=nmr_data_analysis(dataset_perm,
-                              y_column = y_column,
-                              identity_column = identity_column,
-                              external_val = external_val,
-                              internal_val = internal_val,
-                              data_analysis_method = data_analysis_method)
+    cl = parallel::makeCluster(num_workers)
+    doParallel::registerDoParallel(cl)
     
-    # I will use the mean of the auc of the outer_cv for the test static
-    test_stat = mean(permMod$outer_cv_results_digested$auroc$auc)
-    
-    # De que modelo cojo la predicción?
-    # hay external_val$iterations modelos
-    
-    # Classify predictions
-    # classPred = permMod$outer_cv_results$`1`$perf$predict
-    #TODO classPred es una matriz
-    #3 months after surgery       preop
-    #Obs0_0001s             0.47028786  0.52971214
-    #Obs0_0002s             0.47891706  0.52108294
-    #miss = sum(classPred!=y_all)
+    startTime=proc.time()[3]
+    permMatrix=matrix(ncol=1,nrow=nPerm)
+    #colnames(permMatrix)=c('Min','Mid','Max')
+    dataset_perm <- dataset
+    y_all <- nmr_meta_get_column(dataset, column = y_column)
+    for (p in 1:nPerm) {
+        cat('\n permutation ',p,' of ',nPerm,'\n',sep = '')
+        
+        #Permutar columna y_colum del dataset
+        YPerm=sample(y_all)
+        dataset_perm[["metadata"]][["external"]][[y_column]] <- YPerm
+        # y_test <- nmr_meta_get_column(dataset_perm, column = y_column)
+        # print(sum(y_test!=y_all))
+        permMod=nmr_data_analysis(dataset_perm,
+                                  y_column = y_column,
+                                  identity_column = identity_column,
+                                  external_val = external_val,
+                                  internal_val = internal_val,
+                                  data_analysis_method = data_analysis_method)
+        
+        # I will use the mean of the auc of the outer_cv for the test static
+        test_stat = mean(permMod$outer_cv_results_digested$auroc$auc)
+        
+        # De que modelo cojo la predicción?
+        # hay external_val$iterations modelos
+        
+        # Classify predictions
+        # classPred = permMod$outer_cv_results$`1`$perf$predict
+        #TODO classPred es una matriz
+        #3 months after surgery             preop
+        #Obs0_0001s                         0.47028786    0.52971214
+        #Obs0_0002s                         0.47891706    0.52108294
+        #miss = sum(classPred!=y_all)
 
-    permMatrix[p,1] = test_stat
-    nowTime=proc.time()[3]
-    timePerRep=(nowTime-startTime)/p
-    timeLeft=(timePerRep*(nPerm-p))/60
-    cat('\nEstimated time left:',timeLeft,'mins\n\n')
-  }
+        permMatrix[p,1] = test_stat
+        nowTime=proc.time()[3]
+        timePerRep=(nowTime-startTime)/p
+        timeLeft=(timePerRep*(nPerm-p))/60
+        cat('\nEstimated time left:',timeLeft,'mins\n\n')
+    }
 
-  
-#   # Classify predictions
-#   miss=numeric(3)
-#   yClass=data.frame(Y)
-#   for (mo in 1:3) {
-#     classPred=factor(apply(yPred[[mo]],1,function(x) levels(Y)[which.max(x)]),levels=levels(Y))
-#     miss[mo]=sum(classPred!=Y)
-#     yClass[,mo]=classPred
-#   }
-#   names(miss)=colnames(yClass)=c('min','mid','max')
-#   rownames(yClass)=paste(1:nSamp,ID,sep='_ID')
-#   # Report
-#   modelReturn$yClass=yClass
-#   modelReturn$miss=miss
-#   modelReturn$auc=auc
-# } else if (ML) {
-#   modelReturn$yClass=apply(yPred,2,function(x) ifelse(x>0,1,-1))
-#   modelReturn$miss=apply(modelReturn$yClass,2,function(x) sum(x!=Y))
-#   modelReturn$auc=apply(yPred,2,function(x) roc(Y,x)$auc)
-#   colnames(modelReturn$yClass)=names(modelReturn$miss)=names(modelReturn$auc)=c('min','mid','max')
-#   rownames(modelReturn$yClass)=paste(1:nSamp,ID,sep='_ID')
-# }
-
-  parallel::stopCluster(cl)
-  return (permMatrix)
+    parallel::stopCluster(cl)
+    return (permMatrix)
 }
 
 #' Permutation test plot
 #'
 #' Plot permutation test using actual model and permutated models
 #'
-#'
+#' @param nmr_data_analysis_model A nmr_data_analysis_model
+#' @param permMatrix A permutation fitness outcome from permutation_test_model
+#' @param xlab optional xlabel
+#' @param xlim optional x-range
+#' @param ylim otional y-range
+#' @param breaks optional custom histogram breaks (defaults to 'sturges')
+#' @param main optional plot title (or TRUE for autoname)
+#' 
+#' @importFrom graphics axis hist lines text
+#' @importFrom stats median pt sd
 #' @return A plot with the comparison between the actual model versus the permuted models
+#' @name permutation_test_plot
 #' @export
 #' @examples
-#'\dontrun{
-#' # 1.Build a model with the X data from your nmr object and your class:
-#' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
-#' Y = nmr_peak_table_completed$Timepoint)
-#'
-#'
-#' # 2.Model performance
-#' confusion_matrix(MVObj)
-#'
-#' # 3.Plotting the model
-#' MUVR_model_plot(MVObj)
-#'
-#' # 4.Permutation test
-#' permutations <- permutation_test_model(MVObj, nPerm = 50)
-#'
-#' # 5.Plotting permutation test results
-#' permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
-#'
-#' # 6.p-Value
-#' p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
-#'
-#' # 7.Significant variables
-#' VIPs <- model_VIP(MVObj)
-#'
-#' # 8.Identification
-#' results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
-#'}
-permutation_test_plot = function (MVObj,
+#'# Data analysis for a table of integrated peaks
+#' 
+#' ## Generate an artificial nmr_dataset_peak_table:
+#' ### Generate artificial metadata:
+#' num_samples <- 32 # use an even number in this example
+#' num_peaks <- 20
+#' metadata <- data.frame(
+#'     NMRExperiment = as.character(1:num_samples),
+#'     Condition = rep(c("A", "B"), times = num_samples/2),
+#'     stringsAsFactors = FALSE
+#' )
+#' 
+#' ### The matrix with peaks
+#' peak_means <- runif(n = num_peaks, min = 300, max = 600)
+#' peak_sd <- runif(n = num_peaks, min = 30, max = 60)
+#' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
+#'                                             mu = peak_means, sd = peak_sd)
+#' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+#' 
+#' ## Artificial differences depending on the condition:
+#' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+#' 
+#' peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+#'     
+#' ### The nmr_dataset_peak_table
+#' peak_table <- new_nmr_dataset_peak_table(
+#'     peak_table = peak_matrix,
+#'     metadata = list(external = metadata)
+#' )
+#' 
+#' methodology <- plsda_auroc_vip_method(ncomp = 3)
+#' model <- nmr_data_analysis(
+#'     peak_table,
+#'     y_column = "Condition",
+#'     identity_column = NULL,
+#'     external_val = list(iterations = 3, test_size = 0.25),
+#'     internal_val = list(iterations = 3, test_size = 0.25),
+#'     data_analysis_method = methodology
+#' )
+#' 
+#' p = permutation_test_model(peak_table,
+#'                            y_column = "Condition",
+#'                            identity_column = NULL,
+#'                            external_val = list(iterations = 3, test_size = 0.25),
+#'                            internal_val = list(iterations = 3, test_size = 0.25),
+#'                            data_analysis_method = methodology, 
+#'                            nPerm = 10)
+#'                            
+#' permutation_test_plot(model, p)
+#' 
+permutation_test_plot = function (nmr_data_analysis_model, 
                                   permMatrix,
-                                  model = "mid",
-                                  type = type,
-                                  pos,
-                                  xlab = "Number of misclassifications",
+                                  xlab = "AUCs",
                                   xlim,
                                   ylim = NULL,
                                   breaks = "Sturges",
                                   main = "Permutation test")
 {
-  
-  # plot permutation
-  ms1=modCB$miss[permModPref]/2
-  p1Emp=ecdf(H1/2)(ms1) # Empirical
-  p1Stud=pt((ms1-(mean(H1)/2))/sd(H1/2),(length(H1)-1)) # Students
-  hist(H1/2,axes=F,ylim=c(0,50),xlim=c(0,11),xlab='Misclassifications',main='')
-  axis(1,pos=0)
-  axis(2,pos=0)
-  lines(rep(ms1,2),c(0,40),lty=5,col=2, lwd=2)
-  text(0.3,40,paste('p=',signif(p1Stud,3),sep=''),pos=3)# cambio posicion donde pinta el valor p para que quede cuadrado.
-  
-  
-  MUVR::permutationPlot(
-    MVObj,
-    permMatrix,
-    model,
-    type = type,
-    pos = pos,
-    xlab = xlab,
-    xlim = xlim,
-    ylim = ylim,
-    breaks = breaks,
-    main = main
-  )
+    
+    h0=permMatrix[,1]
+    if(missing(xlim)) {
+        xlim=c(0,1)
+    }
+    h=hist(permMatrix,breaks,xlim=xlim,ylim=ylim,axes=F,xlab=xlab,freq=FALSE,main=main)
+    h2=max(h$density)*.75
+    axis(1,pos=0)
+    axis(2,pos=0,las=1)
+    
+    actual = mean(nmr_data_analysis_model$outer_cv_results_digested$auroc$auc)
+    lines(rep(actual,2),c(0,h2))
+    p=pt((actual-mean(h0))/sd(h0),df=length(h0)-1)
+    pP=ifelse(actual<median(h0), p, 1-p)
+
+    text(h2,pos=2,labels=paste('p=',signif(pP,4),sep=''))
 }
