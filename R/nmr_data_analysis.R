@@ -536,7 +536,7 @@ permutation_test_model = function (dataset,
     #colnames(permMatrix)=c('Min','Mid','Max')
     dataset_perm <- dataset
     y_all <- nmr_meta_get_column(dataset, column = y_column)
-    for (p in 1:nPerm) {
+    for (p in seq_len(nPerm)) {
         cat('\n permutation ',p,' of ',nPerm,'\n',sep = '')
         
         #Permutar columna y_colum del dataset
@@ -659,7 +659,7 @@ permutation_test_plot = function (nmr_data_analysis_model,
     if(missing(xlim)) {
         xlim=c(0,1)
     }
-    h=hist(permMatrix,breaks,xlim=xlim,ylim=ylim,axes=F,xlab=xlab,freq=FALSE,main=main)
+    h=hist(permMatrix,breaks,xlim=xlim,ylim=ylim,axes=FALSE,xlab=xlab,freq=FALSE,main=main)
     h2=max(h$density)*.75
     axis(1,pos=0)
     axis(2,pos=0,las=1)

@@ -43,6 +43,7 @@ Depends: R (>= 4.0)
 Imports:
  utils,
  graphics,
+ stats,
  signal (>= 0.7-6),
  assertthat (>= 0.2.0),
  rlang (>= 0.3.0.1),
