@@ -52,6 +52,82 @@ ppm_VIP_vector <- function(VIPs) {
     return(ppm_to_assign)
 }
 
+#' Deprecated function
+#' @seealso nmr_data_analysis
+#' @export
+rdCV_PLS_RF <- function(X,
+                        Y,
+                        ID,
+                        scale = TRUE,
+                        nRep = 10,
+                        nOuter = 5,
+                        nInner,
+                        varRatio = 0.75,
+                        DA = FALSE,
+                        fitness = "MISS",
+                        method = "PLS",
+                        nCompMax,
+                        methParam,
+                        ML = FALSE,
+                        modReturn = FALSE,
+                        logg = FALSE,
+                        parallel = TRUE){
+    .Defunct("nmr_data_analysis")
+}
+
+
+#' Deprecated function
+#' @export
+MUVR_model_plot = function (MVObj,
+                            model = "mid",
+                            factCols,
+                            sampLabels,
+                            ylim = NULL) {
+    .Defunct()
+}
+
+#' Deprecated function
+#' @export
+model_VIP = function(MVObj, model = "mid") {
+    .Defunct()
+}   
+
+#' Deprecated function
+#' @export
+p_value_perm = function (model_actual, permutation_object) {
+    .Defunct()
+}   
+
+#' Deprecated function
+#' @export
+confusion_matrix = function(MVObj, model = "mid") {
+    .Defunct()
+}   
+
+#' Deprecated function
+#' @export
+rdCV_PLS_RF_ML = function (nmr_peak_table,
+                           label,
+                           scale = TRUE,
+                           nRep = 10,
+                           nOuter = 5,
+                           nInner,
+                           varRatio = 0.75,
+                           DA = FALSE,
+                           fitness = "MISS",
+                           method = "PLS",
+                           ML = TRUE,
+                           modReturn = FALSE,
+                           logg = FALSE,
+                           parallel = TRUE){
+    .Defunct()
+}   
+
+#' Deprecated function
+#' @export
+AUC_model <- function (MVObj) {
+    .Defunct()
+}   
 
 ##################################################################################
 ## MUVR related funtions, excluded because of bioconductor incompatibility      ##
