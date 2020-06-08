@@ -553,7 +553,6 @@ permutation_test_model = function (dataset,
         #Permutar columna y_colum del dataset
         YPerm=sample(y_all)
         dataset_perm[["metadata"]][["external"]][[y_column]] <- YPerm
-        # y_test <- nmr_meta_get_column(dataset_perm, column = y_column)
         # print(sum(y_test!=y_all))
         permMod=nmr_data_analysis(dataset_perm,
                                   y_column = y_column,
@@ -562,19 +561,8 @@ permutation_test_model = function (dataset,
                                   internal_val = internal_val,
                                   data_analysis_method = data_analysis_method)
         
-        # I will use the mean of the auc of the outer_cv for the test static
+        # I will use the mean of the auc of all the outer_cv for the test static
         test_stat = mean(permMod$outer_cv_results_digested$auroc$auc)
-        
-        # De que modelo cojo la predicción?
-        # hay external_val$iterations modelos
-        
-        # Classify predictions
-        # classPred = permMod$outer_cv_results$`1`$perf$predict
-        #TODO classPred es una matriz
-        #3 months after surgery             preop
-        #Obs0_0001s                         0.47028786    0.52971214
-        #Obs0_0002s                         0.47891706    0.52108294
-        #miss = sum(classPred!=y_all)
 
         permMatrix[p,1] = test_stat
         nowTime=proc.time()[3]
@@ -675,10 +663,16 @@ permutation_test_plot = function (nmr_data_analysis_model,
     axis(1,pos=0)
     axis(2,pos=0,las=1)
     
-    actual = mean(nmr_data_analysis_model$outer_cv_results_digested$auroc$auc)
-    lines(rep(actual,2),c(0,h2))
-    p=pt((actual-mean(h0))/sd(h0),df=length(h0)-1)
-    pP=ifelse(actual<median(h0), p, 1-p)
-
-    text(h2,pos=2,labels=paste('p=',signif(pP,4),sep=''))
+    model_auc = mean(nmr_data_analysis_model$outer_cv_results_digested$auroc$auc)
+    lines(rep(model_auc,2),c(0,h2))
+    
+    p=ecdf(h0)(model_auc) # Empirical
+    #p1Stud=pt((model_auc-(mean(h0)/2))/sd(h0/2),(length(h0)-1)) # Students
+  
+    pP=ifelse(model_auc<median(h0), p, 1-p)
+    if(pP<1/length(h0)){
+      text(h2,pos=2,labels=paste('p<',signif(1/length(h0),4),sep=''))
+    } else {
+      text(h2,pos=2,labels=paste('p=',signif(pP,4),sep=''))
+    }
 }
