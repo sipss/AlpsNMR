@@ -668,8 +668,11 @@ permutation_test_plot = function (nmr_data_analysis_model,
     
     p=ecdf(h0)(model_auc) # Empirical
     #p1Stud=pt((model_auc-(mean(h0)/2))/sd(h0/2),(length(h0)-1)) # Students
-  
-    pP=ifelse(model_auc<median(h0), p, 1-p)
+    
+    # warning: sometimes the auc of the permutation is NaN
+    h0_median <- apply(permMatrix,2,function(x) median(na.omit(x)))
+    
+    pP=ifelse(model_auc<h0_median, p, 1-p)
     if(pP<1/length(h0)){
       text(h2,pos=2,labels=paste('p<',signif(1/length(h0),4),sep=''))
     } else {
