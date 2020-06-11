@@ -81,7 +81,7 @@ random_subsampling <- function(sample_idx,
             test_samples <- base::setdiff(sample_idx, train_samples)
             output[[i]] <- list(training = train_samples,
                                 test = test_samples)
-            if (length(train_samples) == 0 | length(test_samples) == 0) {
+            if (length(train_samples) == 0 || length(test_samples) == 0) {
               stop("Error in random_subsampling, set of cero length: increase number of samples of the lowest set")
             }
         }
@@ -94,7 +94,7 @@ random_subsampling <- function(sample_idx,
             train_samples <- base::setdiff(sample_idx, test_samples)
             output[[i]] <- list(training = train_samples,
                                 test = test_samples)
-            if (length(train_samples) == 0 | length(test_samples) == 0) {
+            if (length(train_samples) == 0 || length(test_samples) == 0) {
               stop("Error in random_subsampling, set of cero length: increase number of samples of the lowest set")
             }
         }
@@ -574,7 +574,7 @@ permutation_test_model = function (dataset,
 #' @param main optional plot title (or TRUE for autoname)
 #' 
 #' @importFrom graphics axis hist lines text
-#' @importFrom stats median pt sd
+#' @importFrom stats median pt sd ecdf na.omit
 #' @return A plot with the comparison between the actual model versus the permuted models
 #' @name permutation_test_plot
 #' @export

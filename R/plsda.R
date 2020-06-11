@@ -129,7 +129,7 @@ callback_plsda_auroc_vip <- function(x_train, y_train, identity_train, x_test, y
 #' 
 #' @param auc_threshold Threshold on the increment of AUC. Increasing the number of
 #' latent variables must increase the AUC at least by this threshold.
-#'
+#' 
 #' @return The actual function to compute the best number of latent variables according to a threshold on the increment of AUC
 #' @noRd
 fun_choose_best_ncomp_auc_threshold <- function(auc_threshold = 0.05) {
