@@ -80,7 +80,10 @@ random_subsampling <- function(sample_idx,
             train_samples <- sample_idx[keep_together %in% groups_train]
             test_samples <- base::setdiff(sample_idx, train_samples)
             output[[i]] <- list(training = train_samples,
-                                                    test = test_samples)
+                                test = test_samples)
+            if (length(train_samples) == 0 | length(test_samples) == 0) {
+              stop("Error in random_subsampling, set of cero length: increase number of samples of the lowest set")
+            }
         }
     } else {
         groups_keep_together <- unique(keep_together)
@@ -90,7 +93,10 @@ random_subsampling <- function(sample_idx,
             test_samples <- sample_idx[keep_together %in% groups_test]
             train_samples <- base::setdiff(sample_idx, test_samples)
             output[[i]] <- list(training = train_samples,
-                                                    test = test_samples)
+                                test = test_samples)
+            if (length(train_samples) == 0 | length(test_samples) == 0) {
+              stop("Error in random_subsampling, set of cero length: increase number of samples of the lowest set")
+            }
         }
     }
     return(output)
@@ -229,11 +235,12 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
     } else {
         prgrs <- FALSE
     }
+
     output <- furrr::future_pmap(
         c(list(train_test_subset = train_test_subsets),
             train_evaluate_model_args_iter),
         split_build_perform,
-        dataset = dataset, 
+        dataset = dataset,
         y_column = y_column,
         identity_column = identity_column,
         train_evaluate_model = train_evaluate_model,
@@ -345,14 +352,6 @@ nmr_data_analysis <- function(dataset,
                                                 keep_together = identity_column,
                                                 external_val = external_val,
                                                 internal_val = internal_val)
-    
-    if(length(train_test_blind_subsets$inner) 
-       < data_analysis_method$train_evaluate_model_params_inner$ncomp*10 ||
-       length(train_test_blind_subsets$outer) 
-       < data_analysis_method$train_evaluate_model_params_inner$ncomp*10){
-        warning("Recommended number of samples is at least 10 times the number
-                of components evaluated")
-    }
     
     # These are ALL the inner cross-validation iterations:
     train_test_subsets_inner <- purrr::map(train_test_blind_subsets$inner,
@@ -530,18 +529,6 @@ permutation_test_model = function (dataset,
                                    data_analysis_method,
                                    nPerm = 50)
 {
-    chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
-    if (nzchar(chk) && chk == "TRUE") {
-        # use 2 cores in CRAN/Travis/AppVeyor
-        num_workers <- 2L
-    } else {
-        # use all cores in devtools::test()
-        num_workers <- parallel::detectCores() - 1
-    }
-    
-    cl = parallel::makeCluster(num_workers)
-    doParallel::registerDoParallel(cl)
-    
     startTime=proc.time()[3]
     permMatrix=matrix(ncol=1,nrow=nPerm)
     #colnames(permMatrix)=c('Min','Mid','Max')
@@ -571,7 +558,6 @@ permutation_test_model = function (dataset,
         cat('\nEstimated time left:',timeLeft,'mins\n\n')
     }
 
-    parallel::stopCluster(cl)
     return (permMatrix)
 }
 

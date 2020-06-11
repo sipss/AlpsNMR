@@ -101,15 +101,16 @@ callback_plsda_auroc_vip <- function(x_train, y_train, identity_train, x_test, y
                                                                          ncomp, return_model = FALSE, return_auroc = TRUE,
                                                                          return_auroc_full = FALSE, return_vip = FALSE) {
     plsda_model <- plsda_build(x_train, y_train, identity_train, ncomp = max(ncomp))
-    out <- list(model = NULL, auroc = NULL, auroc_full = NULL, vip = NULL, perf = NULL)
+    out <- list(model = NULL, auroc = NULL, auroc_full = NULL, vip = NULL)
     if (isTRUE(return_model)) {
         out$model <- plsda_model
+        out$model$X_test <- x_test
+        out$model$Y_test <- y_test
     }
     if (isTRUE(return_auroc) || isTRUE(return_auroc_full)) {
         aurocs <- plsda_auroc(plsda_model, x_test, y_test, identity_test)
         if (isTRUE(return_auroc)) {
             out$auroc <- aurocs$aucs
-
         }
         if (isTRUE(return_auroc_full)) {
             out$auroc_full <- aurocs$aucs_full
@@ -150,18 +151,41 @@ fun_choose_best_ncomp_auc_threshold <- function(auc_threshold = 0.05) {
         tidyr::separate("outer_inner",
                         into = c("cv_outer_iteration", "cv_inner_iteration"),
                         convert = TRUE)
+    
     # There is a more elegant way to do this.
     nlv <- model_performances %>%
         dplyr::group_by(.data$cv_outer_iteration, .data$cv_inner_iteration) %>%
         dplyr::arrange(.data$cv_outer_iteration, .data$cv_inner_iteration, .data$ncomp) %>%
-        dplyr::mutate(auc_diff = ifelse(is.na(dplyr::lag(.data$auc)), .data$auc, .data$auc - dplyr::lag(.data$auc))) %>%
-        dplyr::mutate(auc_limit_cumany = dplyr::cumall(.data$auc_diff > !!auc_threshold)) %>%
-        dplyr::mutate(auc_limit_cumanyd = .data$auc_limit_cumany == TRUE & dplyr::lead(.data$auc_limit_cumany) == FALSE) %>% 
-        dplyr::filter(.data$auc_limit_cumanyd == TRUE) %>%
-        dplyr::select(-.data$auc_limit_cumany, -.data$auc_limit_cumanyd) %>%
-        dplyr::ungroup() %>%
-        dplyr::group_by(.data$cv_outer_iteration) %>%
-        dplyr::summarise(ncomp = round(stats::median(.data$ncomp)))
+        # For each internal validation iteration,
+        #  auc_dif: compute the diff of the auc as we increase the number of components:
+        #  auc_diff_above_thres: whether the auc_diff is above our threshold
+        #  still_improving: TRUE if all the previous improvements and this one are above our threshold, FALSE otherwise
+        #  good_ncomp: TRUE if the model is still_improving in this ncomp, but does not further improve in larger ncomps
+        dplyr::mutate(
+            auc_diff = .data$auc - dplyr::lag(.data$auc, default = 0),
+            auc_diff_above_thres = .data$auc_diff > !!auc_threshold,
+            still_improving = dplyr::cumall(auc_diff_above_thres),
+            good_ncomp = (.data$still_improving == TRUE &
+                              dplyr::lead(.data$still_improving, default=FALSE) == FALSE)
+        ) %>%
+        # We only keep the good number of latent variables for each trained model:
+        dplyr::filter(.data$good_ncomp == TRUE) %>%
+        dplyr::ungroup()
+    
+    # Choose a single ncomp for each outer iteration, by getting the median of all the best ncomp
+    # in its internal validation:
+    nlv <- nlv %>%
+        dplyr::select(c("cv_outer_iteration", "ncomp")) %>%
+        dplyr::group_by(cv_outer_iteration) %>%
+        # The median of all the good_ncomp of the inner iterations for each outer iteration:
+        dplyr::summarise(ncomp = round(stats::median(.data$ncomp))) %>%
+        dplyr::ungroup()
+    
+    # Sanity check:
+    if (nrow(nlv) != length(unique(model_performances$cv_outer_iteration))) {
+        print(nlv)
+        stop("Unexpected error. The number of latent variables could not be determined. Please report this.")
+    }
     
     plot_to_choose_nlv <- ggplot2::ggplot(model_performances) + 
         ggplot2::geom_line(ggplot2::aes(x = .data$ncomp, y = .data$auc,
