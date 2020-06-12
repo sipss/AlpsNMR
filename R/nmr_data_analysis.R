@@ -31,8 +31,7 @@
 #' @examples
 #' random_subsampling(1:100, iterations = 4, test_size = 0.25)
 #' 
-#' subject_id <- c("Alice", "Bob", "Alice", "Bob")
-#' replicate <- c(1, 1, 2, 2)
+#' subject_id <- c("Alice", "Bob", "Charlie", "Eve")
 #' random_subsampling(1:4, iterations = 2, test_size = 0.25, keep_together = subject_id)
 #' 
 #' @export
