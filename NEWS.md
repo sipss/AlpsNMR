@@ -1,6 +1,8 @@
 # AlpsNMR 2.5.9002 (2020-05-25)
 
 - Changes to pass BiocCheck
+- Added permutation test and permutation test plot to
+  `nmr_data_analysis`
 
 # AlpsNMR 2.4.9002 (2020-05-13)
 
