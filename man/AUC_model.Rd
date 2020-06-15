@@ -2,10 +2,17 @@
 % Please edit documentation in R/Classifier_MUVR.R
 \name{AUC_model}
 \alias{AUC_model}
-\title{Deprecated function}
+\title{Deprecated function
+Extracts AUC value}
 \usage{
 AUC_model(MVObj)
 }
+\arguments{
+\item{MVObj}{a MUVR model}
+}
+\value{
+the AUC value of the middle model
+}
 \description{
-Deprecated function
+The function extracts the AUC value from the middle \code{MUVR} model
 }

@@ -2,10 +2,21 @@
 % Please edit documentation in R/Classifier_MUVR.R
 \name{confusion_matrix}
 \alias{confusion_matrix}
-\title{Deprecated function}
+\title{Deprecated function
+Confusion matrix of the MUVR model}
 \usage{
 confusion_matrix(MVObj, model = "mid")
 }
+\arguments{
+\item{MVObj}{A MUVR object (classification analysis)}
+
+\item{model}{min, mid or max model}
+}
+\value{
+A confusion matrix of the model comparing actual vs predicted class
+}
 \description{
-Deprecated function
+After creating a model with the \code{rdCV_PLS_RF} function, you can run
+\code{confusion_matrix} on the model to make a confusion matrix from MUVR. This
+gives information about the model performance (e.g. classification rate).
 }

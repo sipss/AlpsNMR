@@ -24,9 +24,103 @@ rdCV_PLS_RF(
   parallel = TRUE
 )
 }
+\arguments{
+\item{X}{Predictor variables. NB: Variables (columns) must have names/unique identifiers. NAs not allowed in data. For multilevel, only the positive half of the difference matrix is specified.}
+
+\item{Y}{Response vector (Dependent variable). For classification, a factor (or character) variable should be used. For multilevel, Y is calculated automatically.}
+
+\item{ID}{Subject identifier (for sampling by subject; Assumption of independence if not specified)}
+
+\item{scale}{If TRUE, the predictor variable matrix is scaled to unit variance for PLS modelling.}
+
+\item{nRep}{Number of repetitions of double CV. (Defaults to 5)}
+
+\item{nOuter}{Number of outer CV loop segments. (Defaults to 6)}
+
+\item{nInner}{Number of inner CV loop segments. (Defaults to nOuter-1)}
+
+\item{varRatio}{Ratio of variables to include in subsequent inner loop iteration. (Defaults to 0.75)}
+
+\item{DA}{Boolean for Classification (discriminant analysis) (By default, if Y is numeric -> DA=FALSE. If Y is factor (or character) -> DA=TRUE)}
+
+\item{fitness}{Fitness function for model tuning (choose either 'AUROC' or 'MISS' (default) for classification; or 'RMSEP' (default) for regression.)}
+
+\item{method}{Multivariate method. Supports 'PLS' and 'RF' (default)}
+
+\item{nCompMax}{Option to choose max number of PLS components (default is 5)}
+
+\item{methParam}{List with parameter settings for specified MV method (see function code for details)}
+
+\item{ML}{Boolean for multilevel analysis (defaults to FALSE)}
+
+\item{modReturn}{Boolean for returning outer segment models (defaults to FALSE). Setting modReturn=TRUE is required for making MUVR predictions using predMV().}
+
+\item{logg}{Boolean for whether to sink model progressions to `log.txt`}
+
+\item{parallel}{Boolean for whether to perform `foreach` parallel processing (Requires a registered parallel backend; Defaults to `TRUE`)}
+}
+\value{
+a MUVR model containing selection parameters, validation and fitness
+}
 \description{
 Deprecated function
 }
+\references{
+Shi,L. et al. (2018) Variable selection and validation in multivariate modelling. Bioinformatics.
+}
 \seealso{
 nmr_data_analysis
+Feature selection and validation in multivariate analysis
+
+Statistical analysis and feature selection in a repeated double
+cross-validation frame based on the partial least squares (PLS) or random
+forest (RF) analyses using an algorithm for multivariate modelling with
+minimally biased variable selection (MUVR) from the \code{MUVR} package. If your
+work with a \code{nmr_peak_table} object from AlpsNMR, first you need to extract
+the X data from the main nmr_dataset object (e.g. your peak table) with the
+\code{nmr_data} function, otherwise you would try to set a list on the X. You also
+need to set the class from this object, or just set it from another Y vector.
+
+Other nmr_dataset_1D functions: 
+\code{\link{[.nmr_dataset_1D}()},
+\code{\link{computes_peak_width_ppm}()},
+\code{\link{file_lister}()},
+\code{\link{files_to_rDolphin_blood}()},
+\code{\link{files_to_rDolphin_cell}()},
+\code{\link{files_to_rDolphin_urine}()},
+\code{\link{format.nmr_dataset_1D}()},
+\code{\link{get_integration_with_metada}},
+\code{\link{is.nmr_dataset_1D}()},
+\code{\link{load_and_save_functions}},
+\code{\link{new_nmr_dataset_1D}()},
+\code{\link{nmr_align_find_ref}()},
+\code{\link{nmr_align}()},
+\code{\link{nmr_baseline_removal}()},
+\code{\link{nmr_baseline_threshold}()},
+\code{\link{nmr_detect_peaks_plot}()},
+\code{\link{nmr_detect_peaks_tune_snr}()},
+\code{\link{nmr_detect_peaks}()},
+\code{\link{nmr_exclude_region}()},
+\code{\link{nmr_integrate_peak_positions}()},
+\code{\link{nmr_integrate_regions}()},
+\code{\link{nmr_interpolate_1D}()},
+\code{\link{nmr_meta_add}()},
+\code{\link{nmr_meta_export}()},
+\code{\link{nmr_meta_get_column}()},
+\code{\link{nmr_meta_get}()},
+\code{\link{nmr_normalize}()},
+\code{\link{nmr_pca_build_model}()},
+\code{\link{nmr_pca_outliers_filter}()},
+\code{\link{nmr_pca_outliers_plot}()},
+\code{\link{nmr_pca_outliers_robust}()},
+\code{\link{nmr_pca_outliers}()},
+\code{\link{nmr_ppm_resolution}()},
+\code{\link{plot.nmr_dataset_1D}()},
+\code{\link{plot_webgl}()},
+\code{\link{print.nmr_dataset_1D}()},
+\code{\link{rdCV_PLS_RF_ML}()},
+\code{\link{save_files_to_rDolphin}()},
+\code{\link{to_ChemoSpec}()},
+\code{\link{validate_nmr_dataset}()}
 }
+\concept{nmr_dataset_1D functions}

@@ -2,10 +2,20 @@
 % Please edit documentation in R/Classifier_MUVR.R
 \name{model_VIP}
 \alias{model_VIP}
-\title{Deprecated function}
+\title{Deprecated function
+Model VIP values}
 \usage{
 model_VIP(MVObj, model = "mid")
 }
+\arguments{
+\item{MVObj}{a MUVR model}
+
+\item{model}{Which model to use ("min", "mid" (default), or "max")}
+}
+\value{
+a data frame with the order, name and average rank of selected variables
+}
 \description{
-Deprecated function
+Once, the MVObj is created and validated, this function extracts autoselected
+ranked variables from the model (MUVR object). See \code{rdCV_PLS_RF} function.
 }

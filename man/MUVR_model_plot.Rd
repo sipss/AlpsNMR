@@ -2,10 +2,28 @@
 % Please edit documentation in R/Classifier_MUVR.R
 \name{MUVR_model_plot}
 \alias{MUVR_model_plot}
-\title{Deprecated function}
+\title{Deprecated function
+Model plot}
 \usage{
 MUVR_model_plot(MVObj, model = "mid", factCols, sampLabels, ylim = NULL)
 }
+\arguments{
+\item{MVObj}{An `MVobject` obtained from the MVWrap function}
+
+\item{model}{What type of model to plot ('min', 'mid' or 'max'). Defaults to 'mid'.}
+
+\item{factCols}{An optional vector with colors for the factor levels (in the same order as the levels)}
+
+\item{sampLabels}{Sample labels (optional; implemented for classification)}
+
+\item{ylim}{Optional for imposing y-limits for regression and classification analysis}
+}
+\value{
+A plot with the model performance
+}
 \description{
-Deprecated function
+Plot the model (a \code{MUVR} object) obtained from \code{rdCV_PLS_RF} function. For
+more information about the multivariate modelling with minimally biased
+variable selection (MUVR) from the \code{MUVR} package, see Shi et al., 2018 (DOI:
+10.1093/bioinformatics/bty710).
 }
