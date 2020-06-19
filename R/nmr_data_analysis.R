@@ -401,6 +401,189 @@ nmr_data_analysis <- function(dataset,
 }
 
 
+#' Bootstrap and permutation over PLS-VIP
+#' 
+#' Bootstrap and permutation over PLS-VIP on AlpsNMR can be performed on both 
+#' [nmr_dataset_1D] full spectra as well as [nmr_dataset_peak_table] peak tables.
+#' 
+#' Use of the bootstrap and permutation methods for a more robust
+#' variable importance in the projection metric for partial least
+#' squares regression
+#' 
+#' @param dataset An [nmr_dataset_family] object
+#' @param y_column A string with the name of the y column (present in the
+#'    metadata of the dataset)
+#' @param identity_column `NULL` or a string with the name of the identity column (present in the
+#'    metadata of the dataset).
+#' @param external_val,internal_val A list with two elements: `iterations` and `test_size`.
+#'    See [random_subsampling] for further details
+#' @param data_analysis_method An [nmr_data_analysis_method] object
+#' @return A list with the following elements:
+#' 
+#' - `train_test_partitions`: A list with the indices used in train and test on each of the cross-validation iterations
+#' - `inner_cv_results`: The output returned by `train_evaluate_model` on each inner cross-validation
+#' - `inner_cv_results_digested`: The output returned by `choose_best_inner`.
+#' - `outer_cv_results`: The output returned by `train_evaluate_model` on each outer cross-validation
+#' - `outer_cv_results_digested`: The output returned by `train_evaluate_model_digest_outer`.
+#' @examples 
+#' # Data analysis for a table of integrated peaks
+#' 
+#' ## Generate an artificial nmr_dataset_peak_table:
+#' ### Generate artificial metadata:
+#' num_samples <- 32 # use an even number in this example
+#' num_peaks <- 20
+#' metadata <- data.frame(
+#'     NMRExperiment = as.character(1:num_samples),
+#'     Condition = rep(c("A", "B"), times = num_samples/2),
+#'     stringsAsFactors = FALSE
+#' )
+#' 
+#' ### The matrix with peaks
+#' peak_means <- runif(n = num_peaks, min = 300, max = 600)
+#' peak_sd <- runif(n = num_peaks, min = 30, max = 60)
+#' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
+#'                                             mu = peak_means, sd = peak_sd)
+#' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+#' 
+#' ## Artificial differences depending on the condition:
+#' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+#' 
+#' peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+#'     
+#' ### The nmr_dataset_peak_table
+#' peak_table <- new_nmr_dataset_peak_table(
+#'     peak_table = peak_matrix,
+#'     metadata = list(external = metadata)
+#' )
+#' 
+#' ## We will use a double cross validation, splitting the samples with random
+#' ## subsampling both in the external and internal validation.
+#' ## The classification model will be a PLSDA, exploring at maximum 3 latent
+#' ## variables.
+#' ## The best model will be selected based on the area under the ROC curve
+#' methodology <- plsda_auroc_vip_method(ncomp = 3)
+#' model <- nmr_data_analysis(
+#'     peak_table,
+#'     y_column = "Condition",
+#'     identity_column = NULL,
+#'     external_val = list(iterations = 3, test_size = 0.25),
+#'     internal_val = list(iterations = 3, test_size = 0.25),
+#'     data_analysis_method = methodology
+#' )
+#' ## Area under ROC for each outer cross-validation iteration:
+#' print(model$outer_cv_results_digested$auroc)
+#' ## Rank Product of the Variable Importance in the Projection
+#' ## (Lower means more important)
+#' print(sort(model$outer_cv_results_digested$vip_rankproducts))
+#' 
+#' @export
+#' #TODO document
+bp_VIP_analysis <- function(dataset,
+                            train_index,
+                            y_column,
+                            ncomp,
+                            nbootstrap = 10) {
+
+    x_all <- dataset$peak_table
+    y_all <- nmr_meta_get_column(dataset, column = y_column)
+    x_train <- x_all[train_index,, drop = FALSE]
+    y_train <- y_all[train_index]
+    x_test <- x_all[-train_index,, drop = FALSE]
+    y_test <- y_all[-train_index]
+
+    
+    pls_vip_score_diff <- c()
+    # Bootstrap with replacement nbootstraps datasets
+    for (i in seq_len(nbootstrap)) {
+        #Parece haber un problema de memoria cuando hay observaciones con nombres repetidos
+        #dataset_perm <- sample(dataset, dataset$num_samples, rep = TRUE)
+        
+        index <- sample(1:nrow(x_train),nrow(x_train), rep = TRUE)
+        x_train_boots <- x_train[index,]
+        y_train_boots <- y_train[index]
+        
+        # Fit PLS model
+        model <-
+            plsda_build(
+                x = x_train_boots,
+                y = y_train_boots,
+                identity = NULL,
+                ncomp = ncomp
+            )
+        
+        # Permutation of variables
+        colnames_perm <- sample(colnames(x_train_boots))
+        x_train_boots <- x_train_boots[, colnames_perm]
+        
+        # Refit model with permuted variables
+        model_perm <-
+            plsda_build(
+                x = x_train_boots,
+                y = y_train_boots,
+                identity = NULL,
+                ncomp = ncomp
+            )
+        
+        # VIPs extraction
+        vips <- AlpsNMR:::plsda_vip(model)
+        vips_perm <- AlpsNMR:::plsda_vip(model_perm)
+        
+        # PLS-VIP score difference
+        names_vip <- rownames(vips)
+        vips_perm <- vips_perm[names_vip, ]
+        pls_vip_score_diff[[i]] <- vips - vips_perm
+    }
+    pls_vip_score_diff
+    
+    n <- nrow(pls_vip_score_diff[[1]])
+    names <- rownames(pls_vip_score_diff[[1]])
+    pls_vip_sd <- matrix(nrow = n, ncol = ncomps)
+    pls_vip_mean <- matrix(nrow = n, ncol = ncomps)
+    pls_vip_nsd <- matrix(nrow = n, ncol = ncomps)
+    error <- matrix(nrow = n, ncol = ncomps)
+    lower_bound <- matrix(nrow = n, ncol = ncomps)
+    importan_vips <- c()
+    #Standard desviation
+    for (j in seq_len(ncomps)){
+        for (k in seq_len(n)){
+            element <- lapply(pls_vip_score_diff, `[`, k, j)
+            pls_vip_sd[k, j] <- sd(unlist(element))
+            pls_vip_mean[k, j] <- mean(unlist(element))
+            pls_vip_nsd[k, j] <- pls_vip_sd[k, j] / pls_vip_mean[k, j]
+            error[k, j] <-
+                qt(0.975, df = n - 1) * pls_vip_nsd[k, j] / sqrt(n)
+            lower_bound[k,j] <- pls_vip_mean[k,j] - error[k,j]
+        }
+        importan_vips <- append(importan_vips, names[lower_bound[,j] > error[,j]])
+    }
+    importan_vips <- unique(importan_vips)
+    #relevant_vip <- names[lower_bound[,1] > 0 & lower_bound[,2] > 0 & lower_bound[,3] > 0]
+    #importan_vips
+    
+    # Building a model with just the important vips to check performance
+    # Spliting test
+    index <- sample(1:nrow(x_test),nrow(x_test)*0.75, rep = FALSE)
+    x_train_selected <- x_test[index, importan_vips]
+    y_train_selected <- y_test[index]
+    x_test_selected <- x_test[-index, importan_vips]
+    y_test_selected <- y_test[-index]
+    
+    model_test <- plsda_build(
+        x = x_train_selected,
+        y = y_train_selected,
+        identity = NULL,
+        ncomp = ncomp
+    )
+    aucroc <- plsda_auroc(model_test, x_test_selected, y_test_selected, NULL)
+    
+    #Return important vips and auc performance
+    list(vips = importan_vips,
+         aucroc = aucroc)
+}
+
+
 #' Create method for NMR data analysis
 #' 
 #' @param train_evaluate_model A function. The `train_evaluate_model` must have the following signature:
