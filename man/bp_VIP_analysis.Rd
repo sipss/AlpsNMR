@@ -4,30 +4,34 @@
 \alias{bp_VIP_analysis}
 \title{Bootstrap and permutation over PLS-VIP}
 \usage{
-bp_VIP_analysis(dataset, train_index, y_column, ncomp, nbootstrap = 10)
+bp_VIP_analysis(dataset, train_index, y_column, ncomp, nbootstrap = 300)
 }
 \arguments{
 \item{dataset}{An \link{nmr_dataset_family} object}
 
+\item{train_index}{set of index used to generate the bootstrap datasets}
+
 \item{y_column}{A string with the name of the y column (present in the
 metadata of the dataset)}
 
-\item{identity_column}{\code{NULL} or a string with the name of the identity column (present in the
-metadata of the dataset).}
+\item{ncomp}{number of components used in the plsda models}
 
-\item{external_val, internal_val}{A list with two elements: \code{iterations} and \code{test_size}.
-See \link{random_subsampling} for further details}
-
-\item{data_analysis_method}{An \link{nmr_data_analysis_method} object}
+\item{nbootstrap}{number of bootstrap dataset}
 }
 \value{
 A list with the following elements:
 \itemize{
-\item \code{train_test_partitions}: A list with the indices used in train and test on each of the cross-validation iterations
-\item \code{inner_cv_results}: The output returned by \code{train_evaluate_model} on each inner cross-validation
-\item \code{inner_cv_results_digested}: The output returned by \code{choose_best_inner}.
-\item \code{outer_cv_results}: The output returned by \code{train_evaluate_model} on each outer cross-validation
-\item \code{outer_cv_results_digested}: The output returned by \code{train_evaluate_model_digest_outer}.
+\item \code{vips}: A list with the important vips selected
+\item \code{pls_vip}: Pls-VIPs of every bootstrap
+\item \code{pls_vip_perm}: Pls-VIPs of every bootstrap with permuted variables
+\item \code{pls_vip_score_diff}: Differences of \code{pls_vip} and \code{pls_vip_permuted}
+\item \code{mean}: Mean of the differences normaliced by its standard desviation
+\item \code{sd}: Standard desviation of the difereces bettwen vips and permuted vips
+\item `nsd``: Normaliced estandar desviation of the difereces bettwen vips and permuted vips
+\item \code{error}: error spected in a t distribution
+\item \code{lower_bound}: lower bound of the confidence interval
+\item \code{upper_bound}: upper bound of the confidence interval
+\item \code{aucroc}: Auroc measures for validation of the method
 }
 }
 \description{
@@ -82,7 +86,7 @@ model <- nmr_data_analysis(
     peak_table,
     y_column = "Condition",
     identity_column = NULL,
-    external_val = list(iterations = 3, test_size = 0.25),
+    external_val = list(iterations = 1, test_size = 0.25),
     internal_val = list(iterations = 3, test_size = 0.25),
     data_analysis_method = methodology
 )
@@ -92,4 +96,17 @@ print(model$outer_cv_results_digested$auroc)
 ## (Lower means more important)
 print(sort(model$outer_cv_results_digested$vip_rankproducts))
 
+## The number of components for the bootstrap models is selected 
+ncomps <- model$outer_cv_results$`1`$model$ncomp
+train_index <- model$train_test_partitions$outer$`1`$outer_train
+
+# Bootstrap and permutation for VIP selection
+bp_VIPS <- bp_VIP_analysis(nmr_peak_table, # Data to be analized
+                           train_index,
+                           y_column = "Condition", # Label
+                           ncomp = ncomps,
+                           nbootstrap = 100)
+
+aucs <- max(bp_VIPS$aucroc$aucs$auc)
+message("AUC of the Bootstrap and permutation ", aucs)
 }
