@@ -7,14 +7,15 @@
 plsda_build <- function(x, y, identity, ncomp) {
     plsda_model <- NULL
     tryCatch({
-        suppressMessages(
-            utils::capture.output({
-                plsda_model <- mixOmics::plsda(
-                    X = x, Y = y, ncomp = ncomp,
-                    scale = TRUE, multilevel = identity
-                )
-            })
-        )
+        suppressMessages(utils::capture.output({
+            plsda_model <- mixOmics::plsda(
+                X = x,
+                Y = y,
+                ncomp = ncomp,
+                scale = TRUE,
+                multilevel = identity
+            )
+        }))
     }, error = function(e) {
         message("Error building PLSDA, continuing")
     })
@@ -27,37 +28,52 @@ plsda_build <- function(x, y, identity, ncomp) {
 #' @param x_test the x test set
 #' @param y_test the y test class to predict
 #' @param identity_test the multilevel variable in [mixOmics::plsda]
-#' @return A list with two elements: 
+#' @return A list with two elements:
 #'    - `aucs`: A data frame with two columns: `ncomp` (the number of components) and
 #'        `auc` the area under roc curve for that number of components. For multiclass problems
 #'        the AUC returned is the mean of all the one-vs-other AUCs.
 #'    - `aucs_full`: A list of matrices, as returned by [mixOmics::auroc].
 #' @noRd
-plsda_auroc <- function(plsda_model, x_test, y_test, identity_test) {
-    aucs <- numeric(0L)
-    aucs_full <- list()
-    tryCatch({
-        suppressMessages(
-            utils::capture.output({
-                roc <- mixOmics::auroc(plsda_model, newdata = x_test,
-                                                             outcome.test = y_test,
-                                                             multilevel = identity_test,
-                                                             plot = FALSE)
-            })
+plsda_auroc <-
+    function(plsda_model,
+             x_test,
+             y_test,
+             identity_test) {
+        aucs <- numeric(0L)
+        aucs_full <- list()
+        tryCatch({
+            suppressMessages(utils::capture.output({
+                roc <- mixOmics::auroc(
+                    plsda_model,
+                    newdata = x_test,
+                    outcome.test = y_test,
+                    multilevel = identity_test,
+                    plot = FALSE
+                )
+            }))
+            aucs <- purrr::map_dbl(roc, function(x)
+                mean(x[, "AUC"]))
+            aucs_full <- roc
+        }, error = function(e) {
+            message("Error in auroc estimation, continuing")
+        })
+        
+        ncomps <-
+            as.integer(gsub(
+                pattern = "Comp(.*)",
+                replacement = "\\1",
+                x = names(aucs)
+            ))
+        
+        list(
+            aucs = data.frame(
+                ncomp = ncomps,
+                auc = aucs,
+                stringsAsFactors = FALSE
+            ),
+            aucs_full = aucs_full
         )
-        aucs <- purrr::map_dbl(roc, function(x) mean(x[, "AUC"]))
-        aucs_full <- roc
-    }, error = function(e) {
-        message("Error in auroc estimation, continuing")
-    })
-    
-    ncomps <- as.integer(gsub(pattern = "Comp(.*)", replacement = "\\1", x = names(aucs)))
-    
-    list(aucs = data.frame(ncomp = ncomps,
-                                                 auc = aucs,
-                                                 stringsAsFactors = FALSE),
-             aucs_full = aucs_full)
-}
+    }
 
 #' Compute the variable importance in the projection
 #' @param plsda_model A mixOmics plsda model
@@ -66,11 +82,9 @@ plsda_auroc <- function(plsda_model, x_test, y_test, identity_test) {
 plsda_vip <- function(plsda_model) {
     vip <- NULL
     tryCatch({
-        suppressMessages(
-            utils::capture.output({
-                vip <- mixOmics::vip(object = plsda_model)
-            })
-        )
+        suppressMessages(utils::capture.output({
+            vip <- mixOmics::vip(object = plsda_model)
+        }))
     }, error = function(e) {
         message("Error in vip, continuing")
     })
@@ -91,50 +105,67 @@ plsda_vip <- function(plsda_model) {
 #' @param return_auroc A logical.
 #' @param return_auroc_full A logical.
 #' @param return_vip A logical.
-#' 
-#' 
+#'
+#'
 #' For multiclass problems the AUC returned is the mean of all the one-vs-other AUCs.
 #'
 #' @return A list with the model, the area under the roc curve and the VIP items.
 #' @noRd
-callback_plsda_auroc_vip <- function(x_train, y_train, identity_train, x_test, y_test, identity_test,
-                                                                         ncomp, return_model = FALSE, return_auroc = TRUE,
-                                                                         return_auroc_full = FALSE, return_vip = FALSE) {
-    plsda_model <- plsda_build(x_train, y_train, identity_train, ncomp = max(ncomp))
-    out <- list(model = NULL, auroc = NULL, auroc_full = NULL, vip = NULL)
-    if (isTRUE(return_model)) {
-        out$model <- plsda_model
-        out$model$X_test <- x_test
-        out$model$Y_test <- y_test
-    }
-    if (isTRUE(return_auroc) || isTRUE(return_auroc_full)) {
-        aurocs <- plsda_auroc(plsda_model, x_test, y_test, identity_test)
-        if (isTRUE(return_auroc)) {
-            out$auroc <- aurocs$aucs
+callback_plsda_auroc_vip <-
+    function(x_train,
+             y_train,
+             identity_train,
+             x_test,
+             y_test,
+             identity_test,
+             ncomp,
+             return_model = FALSE,
+             return_auroc = TRUE,
+             return_auroc_full = FALSE,
+             return_vip = FALSE) {
+        plsda_model <-
+            plsda_build(x_train, y_train, identity_train, ncomp = max(ncomp))
+        out <-
+            list(
+                model = NULL,
+                auroc = NULL,
+                auroc_full = NULL,
+                vip = NULL
+            )
+        if (isTRUE(return_model)) {
+            out$model <- plsda_model
+            out$model$X_test <- x_test
+            out$model$Y_test <- y_test
         }
-        if (isTRUE(return_auroc_full)) {
-            out$auroc_full <- aurocs$aucs_full
+        if (isTRUE(return_auroc) || isTRUE(return_auroc_full)) {
+            aurocs <- plsda_auroc(plsda_model, x_test, y_test, identity_test)
+            if (isTRUE(return_auroc)) {
+                out$auroc <- aurocs$aucs
+            }
+            if (isTRUE(return_auroc_full)) {
+                out$auroc_full <- aurocs$aucs_full
+            }
         }
+        
+        if (isTRUE(return_vip)) {
+            vip <- plsda_vip(plsda_model)
+            out$vip <- vip
+        }
+        out
     }
-    
-    if (isTRUE(return_vip)) {
-        vip <- plsda_vip(plsda_model)
-        out$vip <- vip
-    }
-    out
-}
 
 
 #' Callback to choose the best number of latent variables based on the AUC threshold
-#' 
+#'
 #' @param auc_threshold Threshold on the increment of AUC. Increasing the number of
 #' latent variables must increase the AUC at least by this threshold.
-#' 
+#'
 #' @return The actual function to compute the best number of latent variables according to a threshold on the increment of AUC
 #' @noRd
-fun_choose_best_ncomp_auc_threshold <- function(auc_threshold = 0.05) {
+fun_choose_best_ncomp_auc_threshold <-
+    function(auc_threshold = 0.05) {
     force(auc_threshold)
-    
+        
     # Choose best number of latent variables based on a threshold on the auc increment.
     #' @param inner_cv_results A list of elements returned by [callback_plsda_auroc_vip]
     #' @return A list with:
@@ -143,79 +174,107 @@ fun_choose_best_ncomp_auc_threshold <- function(auc_threshold = 0.05) {
     #'    - `num_latent_var`: A data frame with the number of latent variables chosen for each outer cross-validation
     #'    - `diagnostic_plot`: A plot showing the evolution of the AUC vs the number of latent variables for each iteration
     #'    - `diagnostic_box_plot`: Same as the `diagnostic_plot` but using box plots
-    #'    - `model_performances`: A data frame with the AUC model performances 
+    #'    - `model_performances`: A data frame with the AUC model performances
     function(inner_cv_results) {
-    model_performances <- inner_cv_results %>%
-        purrr::map("auroc") %>%
-        purrr::map_dfr(~ ., .id = "outer_inner") %>%
-        tidyr::separate("outer_inner",
-                        into = c("cv_outer_iteration", "cv_inner_iteration"),
-                        convert = TRUE)
-    
-    # There is a more elegant way to do this.
-    nlv <- model_performances %>%
-        dplyr::group_by(.data$cv_outer_iteration, .data$cv_inner_iteration) %>%
-        dplyr::arrange(.data$cv_outer_iteration, .data$cv_inner_iteration, .data$ncomp) %>%
-        # For each internal validation iteration,
-        #  auc_dif: compute the diff of the auc as we increase the number of components:
-        #  auc_diff_above_thres: whether the auc_diff is above our threshold
-        #  still_improving: TRUE if all the previous improvements and this one are above our threshold, FALSE otherwise
-        #  good_ncomp: TRUE if the model is still_improving in this ncomp, but does not further improve in larger ncomps
-        dplyr::mutate(
-            auc_diff = .data$auc - dplyr::lag(.data$auc, default = 0),
-            auc_diff_above_thres = .data$auc_diff > !!auc_threshold,
-            still_improving = dplyr::cumall(auc_diff_above_thres),
-            good_ncomp = (.data$still_improving == TRUE &
-                              dplyr::lead(.data$still_improving, default=FALSE) == FALSE)
-        ) %>%
-        # We only keep the good number of latent variables for each trained model:
-        dplyr::filter(.data$good_ncomp == TRUE) %>%
-        dplyr::ungroup()
-    
-    # Choose a single ncomp for each outer iteration, by getting the median of all the best ncomp
-    # in its internal validation:
-    nlv <- nlv %>%
-        dplyr::select(c("cv_outer_iteration", "ncomp")) %>%
-        dplyr::group_by(cv_outer_iteration) %>%
-        # The median of all the good_ncomp of the inner iterations for each outer iteration:
-        dplyr::summarise(ncomp = round(stats::median(.data$ncomp))) %>%
-        dplyr::ungroup()
-    
-    # Sanity check:
-    if (nrow(nlv) != length(unique(model_performances$cv_outer_iteration))) {
-        print(nlv)
-        stop("Unexpected error. The number of latent variables could not be determined. Please report this.")
-    }
-    
-    plot_to_choose_nlv <- ggplot2::ggplot(model_performances) + 
-        ggplot2::geom_line(ggplot2::aes(x = .data$ncomp, y = .data$auc,
-                                        color = as.character(.data$cv_inner_iteration))) +
-        ggplot2::geom_vline(data = nlv, mapping = ggplot2::aes(xintercept = .data$ncomp), color = "red") +
-        ggplot2::scale_x_continuous(name = "Number of latent variables", breaks = function(limits) {
-            seq(from = 1, to = max(limits))
-        }) +
-        ggplot2::scale_y_continuous(name = "Area Under ROC") +
-        ggplot2::facet_wrap(~cv_outer_iteration) + 
-        ggplot2::guides(colour = "none")
-    
-    class_compare <- names(inner_cv_results)
-    auroc_tables <- inner_cv_results %>%
-        purrr::map("auroc") %>%
-        purrr::map2(class_compare, function(auroc, group_name) {
-            auroc %>% dplyr::select(.data$auc) %>% dplyr::mutate(Group = !!group_name)
-        })
-    
-    toplot <- do.call(rbind, c(auroc_tables, list(stringsAsFactors = FALSE)))
-    box_plot <- ggplot2::ggplot(toplot) + 
-        ggplot2::geom_boxplot(ggplot2::aes(x = .data$Group, y = .data$auc, fill = .data$Group), show.legend = FALSE) +
-        ggplot2::scale_x_discrete(name = "Model") +
-        ggplot2::scale_y_continuous(name = "Area under ROC")
-    
-    list(train_evaluate_model_args = list(ncomp = nlv$ncomp),
-             num_latent_var = nlv,
-             diagnostic_plot = plot_to_choose_nlv,
-             diagnostic_box_plot = box_plot,
-             model_performances = model_performances)
+        model_performances <- inner_cv_results %>%
+            purrr::map("auroc") %>%
+            purrr::map_dfr(~ ., .id = "outer_inner") %>%
+            tidyr::separate(
+                "outer_inner",
+                into = c("cv_outer_iteration", "cv_inner_iteration"),
+                convert = TRUE
+            )
+        
+        # There is a more elegant way to do this.
+        nlv <- model_performances %>%
+            dplyr::group_by(.data$cv_outer_iteration, .data$cv_inner_iteration) %>%
+            dplyr::arrange(.data$cv_outer_iteration,
+                           .data$cv_inner_iteration,
+                           .data$ncomp) %>%
+            # For each internal validation iteration,
+            #  auc_dif: compute the diff of the auc as we increase the number of components:
+            #  auc_diff_above_thres: whether the auc_diff is above our threshold
+            #  still_improving: TRUE if all the previous improvements and this one are above our threshold, FALSE otherwise
+            #  good_ncomp: TRUE if the model is still_improving in this ncomp, but does not further improve in larger ncomps
+            dplyr::mutate(
+                auc_diff = .data$auc - dplyr::lag(.data$auc, default = 0),
+                auc_diff_above_thres = .data$auc_diff > !!auc_threshold,
+                still_improving = dplyr::cumall(auc_diff_above_thres),
+                good_ncomp = (
+                    .data$still_improving == TRUE &
+                        dplyr::lead(.data$still_improving, default =
+                                        FALSE) == FALSE
+                )
+            ) %>%
+            # We only keep the good number of latent variables for each trained model:
+            dplyr::filter(.data$good_ncomp == TRUE) %>%
+            dplyr::ungroup()
+        
+        # Choose a single ncomp for each outer iteration, by getting the median of all the best ncomp
+        # in its internal validation:
+        nlv <- nlv %>%
+            dplyr::select(c("cv_outer_iteration", "ncomp")) %>%
+            dplyr::group_by(cv_outer_iteration) %>%
+            # The median of all the good_ncomp of the inner iterations for each outer iteration:
+            dplyr::summarise(ncomp = round(stats::median(.data$ncomp))) %>%
+            dplyr::ungroup()
+        
+        # Sanity check:
+        if (nrow(nlv) != length(unique(model_performances$cv_outer_iteration))) {
+            print(nlv)
+            stop(
+                "Unexpected error. The number of latent variables could not be determined. Please report this."
+            )
+        }
+        
+        plot_to_choose_nlv <-
+            ggplot2::ggplot(model_performances) +
+            ggplot2::geom_line(ggplot2::aes(
+                x = .data$ncomp,
+                y = .data$auc,
+                color = as.character(.data$cv_inner_iteration)
+            )) +
+            ggplot2::geom_vline(
+                data = nlv,
+                mapping = ggplot2::aes(xintercept = .data$ncomp),
+                color = "red"
+            ) +
+            ggplot2::scale_x_continuous(
+                name = "Number of latent variables",
+                breaks = function(limits) {
+                    seq(from = 1, to = max(limits))
+                }
+            ) +
+            ggplot2::scale_y_continuous(name = "Area Under ROC") +
+            ggplot2::facet_wrap(~ cv_outer_iteration) +
+            ggplot2::guides(colour = "none")
+        
+        class_compare <- names(inner_cv_results)
+        auroc_tables <- inner_cv_results %>%
+            purrr::map("auroc") %>%
+            purrr::map2(class_compare, function(auroc, group_name) {
+                auroc %>% dplyr::select(.data$auc) %>% dplyr::mutate(Group = !!group_name)
+            })
+        
+        toplot <-
+            do.call(rbind, c(auroc_tables, list(stringsAsFactors = FALSE)))
+        box_plot <- ggplot2::ggplot(toplot) +
+            ggplot2::geom_boxplot(ggplot2::aes(
+                x = .data$Group,
+                y = .data$auc,
+                fill = .data$Group
+            ),
+            show.legend = FALSE) +
+            ggplot2::scale_x_discrete(name = "Model") +
+            ggplot2::scale_y_continuous(name = "Area under ROC")
+        
+        list(
+            train_evaluate_model_args = list(ncomp = nlv$ncomp),
+            num_latent_var = nlv,
+            diagnostic_plot = plot_to_choose_nlv,
+            diagnostic_box_plot = box_plot,
+            model_performances = model_performances
+        )
     }
 }
 
@@ -226,7 +285,7 @@ fun_choose_best_ncomp_auc_threshold <- function(auc_threshold = 0.05) {
 callback_outer_cv_auroc_vip <- function(outer_cv_results) {
     auroc <- outer_cv_results %>%
         purrr::map("auroc") %>%
-        purrr::map_dfr(~ ., .id = "cv_outer_iteration") %>%
+        purrr::map_dfr( ~ ., .id = "cv_outer_iteration") %>%
         dplyr::mutate(cv_outer_iteration = as.integer(.data$cv_outer_iteration)) %>%
         dplyr::group_by(.data$cv_outer_iteration) %>%
         dplyr::filter(.data$ncomp == max(.data$ncomp)) %>%
@@ -241,13 +300,17 @@ callback_outer_cv_auroc_vip <- function(outer_cv_results) {
             vip_vec
         })
     
-    vip_ranks <- do.call(cbind, purrr::map(vip_vectors, ~rank(-.)))
+    vip_ranks <- do.call(cbind, purrr::map(vip_vectors, ~ rank(-.)))
     
-    vip_rp <- apply(vip_ranks, 1, function(x) exp(mean(log(x)))) # geom mean (RankProducts)
+    vip_rp <-
+        apply(vip_ranks, 1, function(x)
+            exp(mean(log(x)))) # geom mean (RankProducts)
     
-    list(auroc = auroc,
-         vip_vectors = vip_vectors,
-         vip_rankproducts = vip_rp)
+    list(
+        auroc = auroc,
+        vip_vectors = vip_vectors,
+        vip_rankproducts = vip_rp
+    )
 }
 
 
@@ -255,16 +318,16 @@ callback_outer_cv_auroc_vip <- function(outer_cv_results) {
 #' @param ncomp Max. number of latent variables to explore in the PLSDA analysis
 #' @param auc_increment_threshold Choose the number of latent variables when the
 #' AUC does not increment more than this threshold.
-#' 
-#' @return Returns an object to be used with [nmr_data_analysis] to perform a (optionally 
+#'
+#' @return Returns an object to be used with [nmr_data_analysis] to perform a (optionally
 #' multilevel) PLS-DA model, using the area under the ROC curve as figure of
 #' merit to determine the optimum number of latent variables.
-#' 
-#' 
+#'
+#'
 #' @export
-#' @examples 
+#' @examples
 #' method <- plsda_auroc_vip_method(3)
-#' 
+#'
 plsda_auroc_vip_method <- function(ncomp, auc_increment_threshold = 0.05) {
     new_nmr_data_analysis_method(
         train_evaluate_model = callback_plsda_auroc_vip,
@@ -293,7 +356,7 @@ plsda_auroc_vip_method <- function(ncomp, auc_increment_threshold = 0.05) {
 #'
 #' @return A plot of the AUC for each method
 #' @export
-#' @examples 
+#' @examples
 #' \dontrun{
 #' method <- plsda_auroc_vip_method(3)
 #' #analisis missed
@@ -313,9 +376,61 @@ plsda_auroc_vip_compare <- function(...) {
             auroc %>% dplyr::select(.data$auc) %>% dplyr::mutate(Group = !!group_name)
         })
     
-    toplot <- do.call(rbind, c(auroc_tables, list(stringsAsFactors = FALSE)))
-    ggplot2::ggplot(toplot) + 
-        ggplot2::geom_boxplot(ggplot2::aes(x = .data$Group, y = .data$auc, fill = .data$Group), show.legend = FALSE) +
+    toplot <-
+        do.call(rbind, c(auroc_tables, list(stringsAsFactors = FALSE)))
+    ggplot2::ggplot(toplot) +
+        ggplot2::geom_boxplot(ggplot2::aes(
+            x = .data$Group,
+            y = .data$auc,
+            fill = .data$Group
+        ),
+        show.legend = FALSE) +
         ggplot2::scale_x_discrete(name = "Model") +
         ggplot2::scale_y_continuous(name = "Area under ROC")
+}
+
+#' Plot PLSDA predictions
+#'
+#' @param plsda_model A mixOmics plsda model
+#'
+#' @return A plot of the samples
+#' @export
+#' @examples
+#' \dontrun{
+#' plot_plsda_samples(model)
+#' }
+plot_plsda_samples <- function(model) {
+    # Predictions of test set
+    predictions <- predict(model, newdata = model$X_test)
+    
+    # Individuals plot
+    if(model$ncomp == 1){
+        # This is needed if the model only have one component
+        ploty <- plotIndiv(model, comp = c(1, 1))
+        tr_y = ploty$graph$data$x
+        te_y = predictions$variates[, 1]
+    } else {
+        ploty <- plotIndiv(model)
+        tr_y = ploty$graph$data$y
+        te_y = predictions$variates[, 2]
+    }
+    
+    tr_data <- data.frame(x = ploty$graph$data$x,
+                          y = tr_y,
+                          label = paste("train ", ploty$graph$data$group))
+    te_data <- data.frame(x = predictions$variates[,1],
+                          y = te_y,
+                          label = paste("test ", model$Y_test))
+    
+    ggplot2::ggplot(data = tr_data,
+                    aes(x,
+                        y,
+                        group = "train",
+                        shape = label,
+                        fill = label,
+                        colour = label
+                    )) + ggplot2::geom_point() +
+        geom_point(data = te_data, aes(group = "test")) + ggtitle("PLS-DA") +
+        labs(y = ploty$graph$labels$y,
+             x = ploty$graph$labels$x)
 }
