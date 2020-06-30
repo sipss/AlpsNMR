@@ -24,10 +24,7 @@ A list with the following elements:
 \item \code{vips}: A list with the important vips selected
 \item \code{pls_vip}: Pls-VIPs of every bootstrap
 \item \code{pls_vip_perm}: Pls-VIPs of every bootstrap with permuted variables
-\item \code{pls_vip_score_diff}: Differences of \code{pls_vip} and \code{pls_vip_permuted}
-\item \code{mean}: Mean of the differences normaliced by its standard desviation
-\item \code{sd}: Standard desviation of the difereces bettwen vips and permuted vips
-\item `nsd``: Normaliced estandar desviation of the difereces bettwen vips and permuted vips
+\item \code{pls_vip_score_diff}: Differences of \code{pls_vip} and \code{pls_vip_perm}
 \item \code{error}: error spected in a t distribution
 \item \code{lower_bound}: lower bound of the confidence interval
 \item \code{upper_bound}: upper bound of the confidence interval

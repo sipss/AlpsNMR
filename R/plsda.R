@@ -394,6 +394,7 @@ plsda_auroc_vip_compare <- function(...) {
 #' @param plsda_model A mixOmics plsda model
 #'
 #' @return A plot of the samples
+#' @importFrom mixOmics mixOmics
 #' @export
 #' @examples
 #' \dontrun{
@@ -406,11 +407,11 @@ plot_plsda_samples <- function(model) {
     # Individuals plot
     if(model$ncomp == 1){
         # This is needed if the model only have one component
-        ploty <- plotIndiv(model, comp = c(1, 1))
+        ploty <- mixOmics::plotIndiv(model, comp = c(1, 1))
         tr_y = ploty$graph$data$x
         te_y = predictions$variates[, 1]
     } else {
-        ploty <- plotIndiv(model)
+        ploty <- mixOmics::plotIndiv(model)
         tr_y = ploty$graph$data$y
         te_y = predictions$variates[, 2]
     }
@@ -423,14 +424,16 @@ plot_plsda_samples <- function(model) {
                           label = paste("test ", model$Y_test))
     
     ggplot2::ggplot(data = tr_data,
-                    aes(x,
+                    ggplot2::aes(
+                        x,
                         y,
                         group = "train",
                         shape = label,
                         fill = label,
                         colour = label
                     )) + ggplot2::geom_point() +
-        geom_point(data = te_data, aes(group = "test")) + ggtitle("PLS-DA") +
-        labs(y = ploty$graph$labels$y,
+        ggplot2::geom_point(data = te_data, ggplot2::aes(group = "test")) + 
+        ggplot2::ggtitle("PLS-DA") +
+        ggplot2::labs(y = ploty$graph$labels$y,
              x = ploty$graph$labels$x)
 }
