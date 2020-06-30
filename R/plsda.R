@@ -408,32 +408,51 @@ plot_plsda_samples <- function(model) {
     if(model$ncomp == 1){
         # This is needed if the model only have one component
         ploty <- mixOmics::plotIndiv(model, comp = c(1, 1))
-        tr_y = ploty$graph$data$x
-        te_y = predictions$variates[, 1]
+        
+        tr_data <- data.frame(x = ploty$graph$data$x,
+                              label = paste("train ", ploty$graph$data$group))
+        te_data <- data.frame(x = predictions$variates[,1],
+                              label = paste("test ", model$Y_test))
+        
+        ggplot2::ggplot(data = tr_data, ggplot2::aes(x, fill = label)) +
+            ggplot2::geom_histogram(alpha = .5, bins = 10,
+                                    position="identity") +
+            ggplot2::geom_histogram(data = te_data, 
+                                    ggplot2::aes(color = label),
+                                    fill = "white",
+                                    alpha = 0.1,
+                                    position="identity",
+                                    bins = 10) + 
+            ggplot2::ggtitle("PLS-DA") +
+            ggplot2::labs(x = ploty$graph$labels$x) +
+            ggplot2::theme_bw()
+        
     } else {
         ploty <- mixOmics::plotIndiv(model)
         tr_y = ploty$graph$data$y
         te_y = predictions$variates[, 2]
+        
+        
+        tr_data <- data.frame(x = ploty$graph$data$x,
+                              y = tr_y,
+                              label = paste("train ", ploty$graph$data$group))
+        te_data <- data.frame(x = predictions$variates[,1],
+                              y = te_y,
+                              label = paste("test ", model$Y_test))
+        
+        ggplot2::ggplot(data = tr_data,
+                        ggplot2::aes(
+                            x,
+                            y,
+                            group = "train",
+                            shape = label,
+                            fill = label,
+                            colour = label
+                        )) + ggplot2::geom_point() +
+            ggplot2::geom_point(data = te_data, ggplot2::aes(group = "test")) + 
+            ggplot2::ggtitle("PLS-DA") +
+            ggplot2::labs(y = ploty$graph$labels$y,
+                          x = ploty$graph$labels$x) +
+            ggplot2::theme_bw()
     }
-    
-    tr_data <- data.frame(x = ploty$graph$data$x,
-                          y = tr_y,
-                          label = paste("train ", ploty$graph$data$group))
-    te_data <- data.frame(x = predictions$variates[,1],
-                          y = te_y,
-                          label = paste("test ", model$Y_test))
-    
-    ggplot2::ggplot(data = tr_data,
-                    ggplot2::aes(
-                        x,
-                        y,
-                        group = "train",
-                        shape = label,
-                        fill = label,
-                        colour = label
-                    )) + ggplot2::geom_point() +
-        ggplot2::geom_point(data = te_data, ggplot2::aes(group = "test")) + 
-        ggplot2::ggtitle("PLS-DA") +
-        ggplot2::labs(y = ploty$graph$labels$y,
-             x = ploty$graph$labels$x)
 }
