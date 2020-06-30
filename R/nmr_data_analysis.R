@@ -579,9 +579,12 @@ bp_VIP_analysis <- function(dataset,
         lower_bound[k] <- boots_vip[k] - error[k]
         upper_bound[k] <- boots_vip[k] + error[k]
     }
-    # TODO error si no hay important vips seleccionados
+    
     importan_vips <- names[lower_bound > qt(0.975, df = nbootstrap - 1)]
-
+    if (length(importan_vips) == 0) {
+        stop("Error in bp_VIP_analysis, none of the variables are selected as important:\n
+             try increasing the number of bootstraps")
+    }
     
     # Building a model with just the important vips to check performance
     # Spliting test
