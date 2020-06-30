@@ -421,6 +421,7 @@ nmr_data_analysis <- function(dataset,
 #' - `vips`: A list with the important vips selected
 #' - `pls_vip`: Pls-VIPs of every bootstrap
 #' - `pls_vip_perm`: Pls-VIPs of every bootstrap with permuted variables
+#' - `pls_mean`: Pls-VIPs normaliced differences means
 #' - `pls_vip_score_diff`: Differences of `pls_vip` and `pls_vip_perm`
 #' - `error`: error spected in a t distribution
 #' - `lower_bound`: lower bound of the confidence interval
@@ -604,6 +605,7 @@ bp_VIP_analysis <- function(dataset,
     list(vips = importan_vips,
          pls_vip = pls_vip[orden,,drop=FALSE],
          pls_vip_perm = pls_vip_perm_score[orden,,drop=FALSE],
+         pls_mean = boots_vip[orden,,drop=FALSE],
          pls_vip_score_diff = pls_vip_score_diff[orden,,drop=FALSE],
          error = error[orden,,drop=FALSE],
          lower_bound = lower_bound[orden,,drop=FALSE],
