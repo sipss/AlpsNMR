@@ -391,7 +391,7 @@ plsda_auroc_vip_compare <- function(...) {
 
 #' Plot PLSDA predictions
 #'
-#' @param plsda_model A mixOmics plsda model
+#' @param model A mixOmics plsda model
 #'
 #' @return A plot of the samples
 #' @importFrom mixOmics mixOmics

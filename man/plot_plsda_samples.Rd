@@ -7,7 +7,7 @@
 plot_plsda_samples(model)
 }
 \arguments{
-\item{plsda_model}{A mixOmics plsda model}
+\item{model}{A mixOmics plsda model}
 }
 \value{
 A plot of the samples

@@ -486,7 +486,7 @@ nmr_data_analysis <- function(dataset,
 #' train_index <- model$train_test_partitions$outer$`1`$outer_train
 #' 
 #' # Bootstrap and permutation for VIP selection
-#' bp_VIPS <- bp_VIP_analysis(nmr_peak_table, # Data to be analized
+#' bp_VIPS <- bp_VIP_analysis(peak_table, # Data to be analized
 #'                            train_index,
 #'                            y_column = "Condition", # Label
 #'                            ncomp = ncomps,

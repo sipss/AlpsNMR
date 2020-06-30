@@ -24,6 +24,7 @@ A list with the following elements:
 \item \code{vips}: A list with the important vips selected
 \item \code{pls_vip}: Pls-VIPs of every bootstrap
 \item \code{pls_vip_perm}: Pls-VIPs of every bootstrap with permuted variables
+\item \code{pls_mean}: Pls-VIPs normaliced differences means
 \item \code{pls_vip_score_diff}: Differences of \code{pls_vip} and \code{pls_vip_perm}
 \item \code{error}: error spected in a t distribution
 \item \code{lower_bound}: lower bound of the confidence interval
@@ -98,7 +99,7 @@ ncomps <- model$outer_cv_results$`1`$model$ncomp
 train_index <- model$train_test_partitions$outer$`1`$outer_train
 
 # Bootstrap and permutation for VIP selection
-bp_VIPS <- bp_VIP_analysis(nmr_peak_table, # Data to be analized
+bp_VIPS <- bp_VIP_analysis(peak_table, # Data to be analized
                            train_index,
                            y_column = "Condition", # Label
                            ncomp = ncomps,
