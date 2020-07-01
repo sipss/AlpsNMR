@@ -444,13 +444,17 @@ plot_plsda_samples <- function(model) {
         data <- rbind(tr_data, te_data)
         
         ggplot2::ggplot(data = data,
-                        ggplot2::aes(x, y,
-                                     colour = group,
-                                     shape = label)) +
-            ggplot2::geom_point(size = 2) +
+                        ggplot2::aes(shape = label,
+                                     col = group
+                        )) +
+            ggplot2::geom_hline(yintercept=0, linetype="dashed", 
+                                color = "black", size=0.5) +
+            ggplot2::geom_vline(xintercept=0, linetype="dashed", 
+                                color = "black", size=0.5) +
+            ggplot2::geom_point(ggplot2::aes(x, y), size = 2) +
             ggplot2::ggtitle("PLS-DA") +
             ggplot2::labs(y = ploty$graph$labels$y,
                           x = ploty$graph$labels$x) +
-            ggplot2::theme_bw()
+            ggplot2::theme_bw() 
     }
 }
