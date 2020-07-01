@@ -435,21 +435,19 @@ plot_plsda_samples <- function(model) {
         
         tr_data <- data.frame(x = ploty$graph$data$x,
                               y = tr_y,
-                              label = paste("train ", ploty$graph$data$group))
+                              label= ploty$graph$data$group,
+                              group = "train ")
         te_data <- data.frame(x = predictions$variates[,1],
                               y = te_y,
-                              label = paste("test ", model$Y_test))
+                              label= model$Y_test,
+                              group = "test ")
+        data <- rbind(tr_data, te_data)
         
-        ggplot2::ggplot(data = tr_data,
-                        ggplot2::aes(
-                            x,
-                            y,
-                            group = "train",
-                            shape = label,
-                            fill = label,
-                            colour = label
-                        )) + ggplot2::geom_point() +
-            ggplot2::geom_point(data = te_data, ggplot2::aes(group = "test")) + 
+        ggplot2::ggplot(data = data,
+                        ggplot2::aes(x, y,
+                                     colour = group,
+                                     shape = label)) +
+            ggplot2::geom_point(size = 2) +
             ggplot2::ggtitle("PLS-DA") +
             ggplot2::labs(y = ploty$graph$labels$y,
                           x = ploty$graph$labels$x) +
