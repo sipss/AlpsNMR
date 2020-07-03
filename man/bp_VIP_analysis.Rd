@@ -21,7 +21,8 @@ metadata of the dataset)}
 \value{
 A list with the following elements:
 \itemize{
-\item \code{vips}: A list with the important vips selected
+\item \code{important_vips}: A list with the important vips selected
+\item \code{relevant_vips}: List of vips with some relevance
 \item \code{pls_vip}: Pls-VIPs of every bootstrap
 \item \code{pls_vip_perm}: Pls-VIPs of every bootstrap with permuted variables
 \item \code{pls_mean}: Pls-VIPs normaliced differences means

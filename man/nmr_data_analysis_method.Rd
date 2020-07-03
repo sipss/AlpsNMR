@@ -56,3 +56,7 @@ An object encapsulating the method dependent functions that can be used with \li
 \description{
 Create method for NMR data analysis
 }
+\examples{
+help(new_nmr_data_analysis_method)
+
+}

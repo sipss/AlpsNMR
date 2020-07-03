@@ -418,7 +418,8 @@ nmr_data_analysis <- function(dataset,
 #' @param nbootstrap number of bootstrap dataset
 #' @return A list with the following elements:
 #' 
-#' - `vips`: A list with the important vips selected
+#' - `important_vips`: A list with the important vips selected
+#' - `relevant_vips`: List of vips with some relevance
 #' - `pls_vip`: Pls-VIPs of every bootstrap
 #' - `pls_vip_perm`: Pls-VIPs of every bootstrap with permuted variables
 #' - `pls_mean`: Pls-VIPs normaliced differences means
@@ -428,6 +429,7 @@ nmr_data_analysis <- function(dataset,
 #' - `upper_bound`: upper bound of the confidence interval
 #' - `aucroc`: Auroc measures for validation of the method
 #' 
+#' @importFrom stats qt
 #' @examples 
 #' # Data analysis for a table of integrated peaks
 #' 
@@ -511,17 +513,140 @@ bp_VIP_analysis <- function(dataset,
     
     n <- dim(x_all)[2]
     names <- colnames(x_all)
+    if (length(names) == 0) {
+        stop("Error in bp_VIP_analysis, the dataset peak_table don't have colnames.")
+    }    
+
+    # # Bootstrap with replacement nbootstraps datasets
+    # # Begin parallel processing
+    # plan(multiprocess)
+    # results <- furrr::future_map(seq_len(nbootstrap), function(i) {
+    #     index <- sample(1:nrow(x_train),nrow(x_train), rep = TRUE)
+    #     x_train_boots <- x_train[index,]
+    #     y_train_boots <- y_train[index]
+    # 
+    #     # Fit PLS model
+    #     model <-
+    #         plsda_build(
+    #             x = x_train_boots,
+    #             y = y_train_boots,
+    #             identity = NULL,
+    #             ncomp = ncomp
+    #         )
+    #     # VIPs per component extraction
+    #     pls_vip_comps <- plsda_vip(model)
+    #     # Sum contributions of VIPs to each component
+    #     pls_vip <- sqrt(rowSums(pls_vip_comps^2)/ncomp)
+    # 
+    #     # Permutation of variables
+    #     for (j in seq_len(n)) {
+    #         random_pos <- sample(seq_len(n), 1)
+    #         x_train_boots_perm <- x_train_boots
+    #         x_train_boots_perm[,j] <- x_train_boots[, random_pos]
+    # 
+    #         # Refit model with permuted variables
+    #         model_perm <-
+    #             plsda_build(
+    #                 x = x_train_boots_perm,
+    #                 y = y_train_boots,
+    #                 identity = NULL,
+    #                 ncomp = ncomp
+    #             )
+    #         # VIPs per component extraction
+    #         pls_vip_comps_perm <- plsda_vip(model_perm)
+    #         # Sum contributions of VIPs to each component
+    #         pls_vip_perm[,j] <- sqrt(rowSums(pls_vip_comps_perm^2)/ncomp)
+    #     }
+    # 
+    #     # bootsrapped and randomly permuted PLS-VIPs
+    #     pls_vip_perm_score <- colSums(pls_vip_perm)/n
+    #     # bootsrapped and randomly permuted standard desviation
+    #     #pls_vip_perm_sd <- sqrt(sum((pls_vip_perm - pls_vip_perm_score) ^ 2) / (nbootstrap - 1))
+    #     # bootsrapped and randomly permuted difference
+    #     pls_vip_score_diff <- pls_vip - pls_vip_perm_score
+    #     list(pls_vip = pls_vip,
+    #          pls_vip_perm = pls_vip_perm,
+    #          pls_vip_perm_score = pls_vip_perm_score,
+    #          pls_vip_score_diff = pls_vip_score_diff)
+    # })
+    # 
+    # # Transform list results to data frame
+    # results_df <- as.data.frame(do.call(rbind, results), stringsAsFactors=FALSE)
+    # pls_vip <- as.data.frame(do.call(rbind, results_df$pls_vip), stringsAsFactors=FALSE)
+    # pls_vip_perm <- as.data.frame(do.call(rbind, results_df$pls_vip_perm), stringsAsFactors=FALSE)
+    # pls_vip_perm_score <- as.data.frame(do.call(rbind, results_df$pls_vip_perm_score), stringsAsFactors=FALSE)
+    # pls_vip_score_diff <- as.data.frame(do.call(rbind, results_df$pls_vip_score_diff), stringsAsFactors=FALSE)
+    # 
+    # # Normalization of the difference vector for each variable to
+    # # its corresponding standard deviation and construct
+    # # 95% confidence intervals around the differences
+    # boots_vip <- matrix(nrow = n, dimnames = list(names))
+    # boots_vip_sd <- matrix(nrow = n, dimnames = list(names))
+    # error <- matrix(nrow = n, dimnames = list(names))
+    # lower_bound <- matrix(nrow = n, dimnames = list(names))
+    # upper_bound <- matrix(nrow = n, dimnames = list(names))
+    # for (k in seq_len(n)){
+    #     element <- pls_vip_score_diff[,k] / sd(pls_vip_score_diff[,k])
+    #     boots_vip[k] <- sum(element)/nbootstrap
+    #     boots_vip_sd[k] <- sqrt(sum((element - boots_vip[k])^2)/(nbootstrap-1))
+    #     error[k] <- qt(0.975, df = nbootstrap - 1) * boots_vip_sd[k]
+    #     lower_bound[k] <- boots_vip[k] - error[k]
+    #     upper_bound[k] <- boots_vip[k] + error[k]
+    # }
+    # 
+    # important_vips <- names[lower_bound > qt(0.975, df = nbootstrap - 1)]
+    # relevant_vips <- names[lower_bound <= qt(0.975, df = nbootstrap - 1) & lower_bound > 0]
+    # if (length(important_vips) == 0) {
+    #     if (length(relevant_vips) == 0) {
+    #         stop("Error in bp_VIP_analysis, none of the variables seems relevant:\n
+    #          try increasing the number of bootstraps")
+    #     }
+    #     warning("No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps")
+    # }
+    # 
+    # # Building a model with just the important vips to check performance
+    # # Spliting test
+    # index <- sample(1:nrow(x_test),nrow(x_test)*0.75, rep = FALSE)
+    # x_train_selected <- x_test[index, important_vips]
+    # y_train_selected <- y_test[index]
+    # x_test_selected <- x_test[-index, important_vips]
+    # y_test_selected <- y_test[-index]
+    # 
+    # model_test <- plsda_build(
+    #     x = x_train_selected,
+    #     y = y_train_selected,
+    #     identity = NULL,
+    #     ncomp = ncomp
+    # )
+    # aucroc <- plsda_auroc(model_test, x_test_selected, y_test_selected, NULL)
+    # 
+    # # To return it ordered by mean of the normalized vectors
+    # orden <- order(boots_vip, decreasing = TRUE)
+    # #Return important vips and auc performance
+    # list(important_vips = important_vips,
+    #      relevant_vips = relevant_vips,
+    #      pls_vip = pls_vip[orden,,drop=FALSE],
+    #      pls_vip_perm = pls_vip_perm_score[orden,,drop=FALSE],
+    #      pls_mean = boots_vip[orden,,drop=FALSE],
+    #      pls_vip_score_diff = pls_vip_score_diff[orden,,drop=FALSE],
+    #      error = error[orden,,drop=FALSE],
+    #      lower_bound = lower_bound[orden,,drop=FALSE],
+    #      upper_bound = upper_bound[orden,,drop=FALSE],
+    #      aucroc = aucroc)
+    
+    
     pls_vip <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
     pls_vip_perm <- matrix(nrow = n, ncol = n, dimnames = list(names, NULL))
     pls_vip_perm_score <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
     pls_vip_perm_sd <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
     pls_vip_score_diff <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL)) # Bootstrap with replacement nbootstraps datasets
+    
     # Bootstrap with replacement nbootstraps datasets
     for (i in seq_len(nbootstrap)) {
         index <- sample(1:nrow(x_train),nrow(x_train), rep = TRUE)
         x_train_boots <- x_train[index,]
         y_train_boots <- y_train[index]
-        
+
         # Fit PLS model
         model <-
             plsda_build(
@@ -534,13 +659,13 @@ bp_VIP_analysis <- function(dataset,
         pls_vip_comps <- plsda_vip(model)
         # Sum contributions of VIPs to each component
         pls_vip[,i] <- sqrt(rowSums(pls_vip_comps^2)/ncomp)
-        
+
         # Permutation of variables
         for (j in seq_len(n)) {
             random_pos <- sample(seq_len(n), 1)
             x_train_boots_perm <- x_train_boots
             x_train_boots_perm[,j] <- x_train_boots[, random_pos]
-            
+
             # Refit model with permuted variables
             model_perm <-
                 plsda_build(
@@ -554,15 +679,15 @@ bp_VIP_analysis <- function(dataset,
             # Sum contributions of VIPs to each component
             pls_vip_perm[,j] <- sqrt(rowSums(pls_vip_comps_perm^2)/ncomp)
         }
-        
+
         # bootsrapped and randomly permuted PLS-VIPs
         pls_vip_perm_score[,i] <- colSums(pls_vip_perm)/n
         # bootsrapped and randomly permuted standard desviation
-        pls_vip_perm_sd[,i] <- sqrt(sum((pls_vip_perm - pls_vip_perm_score[,i]) ^ 2) / (nbootstrap - 1))
+        #pls_vip_perm_sd[,i] <- sqrt(sum((pls_vip_perm - pls_vip_perm_score[,i]) ^ 2) / (nbootstrap - 1))
         # bootsrapped and randomly permuted difference
         pls_vip_score_diff[,i] <- pls_vip[,i] - pls_vip_perm_score[,i]
     }
-    
+
     # Normalization of the difference vector for each variable to
     # its corresponding standard deviation and construct
     # 95% confidence intervals around the differences
@@ -580,18 +705,22 @@ bp_VIP_analysis <- function(dataset,
         upper_bound[k] <- boots_vip[k] + error[k]
     }
     
-    importan_vips <- names[lower_bound > qt(0.975, df = nbootstrap - 1)]
-    if (length(importan_vips) == 0) {
-        stop("Error in bp_VIP_analysis, none of the variables are selected as important:\n
+    important_vips <- names[lower_bound > qt(0.975, df = nbootstrap - 1)]
+    relevant_vips <- names[lower_bound <= qt(0.975, df = nbootstrap - 1) & lower_bound > 0]
+    if (length(important_vips) == 0) {
+        if (length(relevant_vips) == 0) {
+            stop("Error in bp_VIP_analysis, none of the variables seems relevant:\n
              try increasing the number of bootstraps")
+        }
+        warning("No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps")
     }
     
     # Building a model with just the important vips to check performance
     # Spliting test
     index <- sample(1:nrow(x_test),nrow(x_test)*0.75, rep = FALSE)
-    x_train_selected <- x_test[index, importan_vips]
+    x_train_selected <- x_test[index, important_vips]
     y_train_selected <- y_test[index]
-    x_test_selected <- x_test[-index, importan_vips]
+    x_test_selected <- x_test[-index, important_vips]
     y_test_selected <- y_test[-index]
     
     model_test <- plsda_build(
@@ -605,7 +734,8 @@ bp_VIP_analysis <- function(dataset,
     # To return it ordered by mean of the normalized vectors
     orden <- order(boots_vip, decreasing = TRUE)
     #Return important vips and auc performance
-    list(vips = importan_vips,
+    list(important_vips = important_vips,
+         relevant_vips = relevant_vips,
          pls_vip = pls_vip[orden,,drop=FALSE],
          pls_vip_perm = pls_vip_perm_score[orden,,drop=FALSE],
          pls_mean = boots_vip[orden,,drop=FALSE],
@@ -659,6 +789,9 @@ bp_VIP_analysis <- function(dataset,
 #' @return An object encapsulating the method dependent functions that can be used with [nmr_data_analysis]
 #' @name nmr_data_analysis_method
 #' @export
+#' @examples 
+#' help(new_nmr_data_analysis_method)
+#' 
 new_nmr_data_analysis_method <- function(train_evaluate_model,
                                          train_evaluate_model_params_inner,
                                          choose_best_inner,
@@ -681,7 +814,6 @@ new_nmr_data_analysis_method <- function(train_evaluate_model,
 #' 
 #' @inheritParams nmr_data_analysis
 #' 
-#' @importFrom doParallel registerDoParallel
 #' @return A permutation matrix with permuted values
 #' @name permutation_test_model
 #' @export
