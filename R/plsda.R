@@ -414,7 +414,7 @@ plsda_auroc_vip_method <- function(ncomp, auc_increment_threshold = 0.05) {
 #'     data_analysis_method = methodology2
 #' )
 #' 
-#' plsda_auroc_vip_compare(model1, model2)
+#' plsda_auroc_vip_compare(model1 = model1, model2 = model2)
 #' 
 plsda_auroc_vip_compare <- function(...) {
     dots <- list(...)
