@@ -73,6 +73,6 @@ model2 <- nmr_data_analysis(
     data_analysis_method = methodology2
 )
 
-plsda_auroc_vip_compare(model1, model2)
+plsda_auroc_vip_compare(model1 = model1, model2 = model2)
 
 }
