@@ -508,7 +508,12 @@ plot_plsda_samples <- function(model) {
     # Individuals plot
     if(model$ncomp == 1){
         # This is needed if the model only have one component
+        # Hidding the plot
+        t = tempfile()
+        pdf(file=t)
         ploty <- mixOmics::plotIndiv(model, comp = c(1, 1))
+        dev.off()
+        file.remove(t)
         
         tr_data <- data.frame(x = ploty$graph$data$x,
                               label = paste("train ", ploty$graph$data$group))
@@ -529,7 +534,13 @@ plot_plsda_samples <- function(model) {
             ggplot2::theme_bw()
         
     } else {
+        # Hidding the plot
+        t = tempfile()
+        pdf(file=t)
         ploty <- mixOmics::plotIndiv(model)
+        dev.off()
+        file.remove(t)
+        
         tr_y = ploty$graph$data$y
         te_y = predictions$variates[, 2]
         
