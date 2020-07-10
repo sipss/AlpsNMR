@@ -424,6 +424,7 @@ nmr_data_analysis <- function(dataset,
 #' - `pls_vip_perm`: Pls-VIPs of every bootstrap with permuted variables
 #' - `pls_mean`: Pls-VIPs normaliced differences means
 #' - `pls_vip_score_diff`: Differences of `pls_vip` and `pls_vip_perm`
+#' - `pls_models`: pls models of the diferent bootstraps
 #' - `error`: error spected in a t distribution
 #' - `lower_bound`: lower bound of the confidence interval
 #' - `upper_bound`: upper bound of the confidence interval
@@ -516,131 +517,14 @@ bp_VIP_analysis <- function(dataset,
     if (length(names) == 0) {
         stop("Error in bp_VIP_analysis, the dataset peak_table don't have colnames.")
     }    
-
-    # # Bootstrap with replacement nbootstraps datasets
-    # # Begin parallel processing
-    # plan(multiprocess)
-    # results <- furrr::future_map(seq_len(nbootstrap), function(i) {
-    #     index <- sample(1:nrow(x_train),nrow(x_train), rep = TRUE)
-    #     x_train_boots <- x_train[index,]
-    #     y_train_boots <- y_train[index]
-    # 
-    #     # Fit PLS model
-    #     model <-
-    #         plsda_build(
-    #             x = x_train_boots,
-    #             y = y_train_boots,
-    #             identity = NULL,
-    #             ncomp = ncomp
-    #         )
-    #     # VIPs per component extraction
-    #     pls_vip_comps <- plsda_vip(model)
-    #     # Sum contributions of VIPs to each component
-    #     pls_vip <- sqrt(rowSums(pls_vip_comps^2)/ncomp)
-    # 
-    #     # Permutation of variables
-    #     for (j in seq_len(n)) {
-    #         random_pos <- sample(seq_len(n), 1)
-    #         x_train_boots_perm <- x_train_boots
-    #         x_train_boots_perm[,j] <- x_train_boots[, random_pos]
-    # 
-    #         # Refit model with permuted variables
-    #         model_perm <-
-    #             plsda_build(
-    #                 x = x_train_boots_perm,
-    #                 y = y_train_boots,
-    #                 identity = NULL,
-    #                 ncomp = ncomp
-    #             )
-    #         # VIPs per component extraction
-    #         pls_vip_comps_perm <- plsda_vip(model_perm)
-    #         # Sum contributions of VIPs to each component
-    #         pls_vip_perm[,j] <- sqrt(rowSums(pls_vip_comps_perm^2)/ncomp)
-    #     }
-    # 
-    #     # bootsrapped and randomly permuted PLS-VIPs
-    #     pls_vip_perm_score <- colSums(pls_vip_perm)/n
-    #     # bootsrapped and randomly permuted standard desviation
-    #     #pls_vip_perm_sd <- sqrt(sum((pls_vip_perm - pls_vip_perm_score) ^ 2) / (nbootstrap - 1))
-    #     # bootsrapped and randomly permuted difference
-    #     pls_vip_score_diff <- pls_vip - pls_vip_perm_score
-    #     list(pls_vip = pls_vip,
-    #          pls_vip_perm = pls_vip_perm,
-    #          pls_vip_perm_score = pls_vip_perm_score,
-    #          pls_vip_score_diff = pls_vip_score_diff)
-    # })
-    # 
-    # # Transform list results to data frame
-    # results_df <- as.data.frame(do.call(rbind, results), stringsAsFactors=FALSE)
-    # pls_vip <- as.data.frame(do.call(rbind, results_df$pls_vip), stringsAsFactors=FALSE)
-    # pls_vip_perm <- as.data.frame(do.call(rbind, results_df$pls_vip_perm), stringsAsFactors=FALSE)
-    # pls_vip_perm_score <- as.data.frame(do.call(rbind, results_df$pls_vip_perm_score), stringsAsFactors=FALSE)
-    # pls_vip_score_diff <- as.data.frame(do.call(rbind, results_df$pls_vip_score_diff), stringsAsFactors=FALSE)
-    # 
-    # # Normalization of the difference vector for each variable to
-    # # its corresponding standard deviation and construct
-    # # 95% confidence intervals around the differences
-    # boots_vip <- matrix(nrow = n, dimnames = list(names))
-    # boots_vip_sd <- matrix(nrow = n, dimnames = list(names))
-    # error <- matrix(nrow = n, dimnames = list(names))
-    # lower_bound <- matrix(nrow = n, dimnames = list(names))
-    # upper_bound <- matrix(nrow = n, dimnames = list(names))
-    # for (k in seq_len(n)){
-    #     element <- pls_vip_score_diff[,k] / sd(pls_vip_score_diff[,k])
-    #     boots_vip[k] <- sum(element)/nbootstrap
-    #     boots_vip_sd[k] <- sqrt(sum((element - boots_vip[k])^2)/(nbootstrap-1))
-    #     error[k] <- qt(0.975, df = nbootstrap - 1) * boots_vip_sd[k]
-    #     lower_bound[k] <- boots_vip[k] - error[k]
-    #     upper_bound[k] <- boots_vip[k] + error[k]
-    # }
-    # 
-    # important_vips <- names[lower_bound > qt(0.975, df = nbootstrap - 1)]
-    # relevant_vips <- names[lower_bound <= qt(0.975, df = nbootstrap - 1) & lower_bound > 0]
-    # if (length(important_vips) == 0) {
-    #     if (length(relevant_vips) == 0) {
-    #         stop("Error in bp_VIP_analysis, none of the variables seems relevant:\n
-    #          try increasing the number of bootstraps")
-    #     }
-    #     warning("No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps")
-    # }
-    # 
-    # # Building a model with just the important vips to check performance
-    # # Spliting test
-    # index <- sample(1:nrow(x_test),nrow(x_test)*0.75, rep = FALSE)
-    # x_train_selected <- x_test[index, important_vips]
-    # y_train_selected <- y_test[index]
-    # x_test_selected <- x_test[-index, important_vips]
-    # y_test_selected <- y_test[-index]
-    # 
-    # model_test <- plsda_build(
-    #     x = x_train_selected,
-    #     y = y_train_selected,
-    #     identity = NULL,
-    #     ncomp = ncomp
-    # )
-    # aucroc <- plsda_auroc(model_test, x_test_selected, y_test_selected, NULL)
-    # 
-    # # To return it ordered by mean of the normalized vectors
-    # orden <- order(boots_vip, decreasing = TRUE)
-    # #Return important vips and auc performance
-    # list(important_vips = important_vips,
-    #      relevant_vips = relevant_vips,
-    #      pls_vip = pls_vip[orden,,drop=FALSE],
-    #      pls_vip_perm = pls_vip_perm_score[orden,,drop=FALSE],
-    #      pls_mean = boots_vip[orden,,drop=FALSE],
-    #      pls_vip_score_diff = pls_vip_score_diff[orden,,drop=FALSE],
-    #      error = error[orden,,drop=FALSE],
-    #      lower_bound = lower_bound[orden,,drop=FALSE],
-    #      upper_bound = upper_bound[orden,,drop=FALSE],
-    #      aucroc = aucroc)
-    
     
     pls_vip <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
     pls_vip_perm <- matrix(nrow = n, ncol = n, dimnames = list(names, NULL))
     pls_vip_perm_score <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
     pls_vip_perm_sd <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
     pls_vip_score_diff <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL)) # Bootstrap with replacement nbootstraps datasets
-    
+    pls_models <- list()
+
     # Bootstrap with replacement nbootstraps datasets
     for (i in seq_len(nbootstrap)) {
         index <- sample(1:nrow(x_train),nrow(x_train), rep = TRUE)
@@ -686,6 +570,7 @@ bp_VIP_analysis <- function(dataset,
         #pls_vip_perm_sd[,i] <- sqrt(sum((pls_vip_perm - pls_vip_perm_score[,i]) ^ 2) / (nbootstrap - 1))
         # bootsrapped and randomly permuted difference
         pls_vip_score_diff[,i] <- pls_vip[,i] - pls_vip_perm_score[,i]
+        pls_models[[i]] <- model
     }
 
     # Normalization of the difference vector for each variable to
@@ -740,12 +625,166 @@ bp_VIP_analysis <- function(dataset,
          pls_vip_perm = pls_vip_perm_score[orden,,drop=FALSE],
          pls_mean = boots_vip[orden,,drop=FALSE],
          pls_vip_score_diff = pls_vip_score_diff[orden,,drop=FALSE],
+         pls_models = pls_models,
          error = error[orden,,drop=FALSE],
          lower_bound = lower_bound[orden,,drop=FALSE],
          upper_bound = upper_bound[orden,,drop=FALSE],
          aucroc = aucroc)
 }
 
+
+#' K-fold bootstrap and permutation over PLS-VIP
+#' 
+#' Bootstrap and permutation over PLS-VIP on AlpsNMR can be performed on both 
+#' [nmr_dataset_1D] full spectra as well as [nmr_dataset_peak_table] peak tables.
+#' 
+#' Use of the bootstrap and permutation methods for a more robust
+#' variable importance in the projection metric for partial least
+#' squares regression, in a k-fold cross validation
+#' 
+#' @param dataset An [nmr_dataset_family] object
+#' @param y_column A string with the name of the y column (present in the
+#'    metadata of the dataset)
+#' @param k Number of folds, recomended between 4 to 10
+#' @param ncomp_max number of maximun components to consider
+#' @param nbootstrap number of bootstrap dataset
+#' @return A list with the following elements:
+#' 
+#' - `important_vips`: A list with the important vips selected
+#' - `relevant_vips`: List of vips with some relevance
+#' - `vip_means`: Means of the vips scores
+#' - `vip_score_plot`: plot of the vips scores
+#' - `kfold_resuls`: results of the k [bp_VIP_analysis]
+#' 
+#' @export
+#' @examples 
+#' # Data analysis for a table of integrated peaks
+#' 
+#' ## Generate an artificial nmr_dataset_peak_table:
+#' ### Generate artificial metadata:
+#' num_samples <- 32 # use an even number in this example
+#' num_peaks <- 20
+#' metadata <- data.frame(
+#'     NMRExperiment = as.character(1:num_samples),
+#'     Condition = rep(c("A", "B"), times = num_samples/2),
+#'     stringsAsFactors = FALSE
+#' )
+#' 
+#' ### The matrix with peaks
+#' peak_means <- runif(n = num_peaks, min = 300, max = 600)
+#' peak_sd <- runif(n = num_peaks, min = 30, max = 60)
+#' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
+#'                                             mu = peak_means, sd = peak_sd)
+#' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+#' 
+#' ## Artificial differences depending on the condition:
+#' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+#' 
+#' peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+#'     
+#' ### The nmr_dataset_peak_table
+#' peak_table <- new_nmr_dataset_peak_table(
+#'     peak_table = peak_matrix,
+#'     metadata = list(external = metadata)
+#' )
+#' 
+#' We will use bootstrap and permutation method for VIPs selection 
+#' in a a k-fold cross validation 
+#' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
+#'                            y_column = "Condition", # Label
+#'                            k = 4,
+#'                            nbootstrap = 100)
+#'
+#' message("Selected VIPs are: ", bp_results$importarn_vips)
+#' 
+bp_kfold_VIP_analysis <- function(dataset,
+                            y_column,
+                            k = 4,
+                            ncomp_max = 10,
+                            nbootstrap = 300) {
+
+    if (k < 1) {
+        stop("K must be greater than 1")
+    }
+    
+    # Extract data and split for train and test
+    x_all <- dataset$peak_table
+    y_all <- nmr_meta_get_column(dataset, column = y_column)
+    
+    # pls model to chose number of components
+    methodology <- plsda_auroc_vip_method(ncomp = ncomp_max, auc_increment_threshold = 0.01)
+    model <- nmr_data_analysis(dataset, # Data to be analized
+                               y_column = y_column, # Label
+                               identity_column = NULL,
+                               external_val = list(iterations = 2, 
+                                                   test_size = 0.25),
+                               internal_val = list(iterations = 3, 
+                                                   test_size = 0.25),
+                               data_analysis_method = methodology
+    )
+
+    # The number of components for the bootstrap models is selected 
+    ncomps <- max(model$outer_cv_results$`1`$model$ncomp,
+                  model$outer_cv_results$`2`$model$ncomp)
+    
+    # Random and spliting
+    x <- seq_len(length(y_all))
+    index <- sample(x, replace = FALSE)
+    x_all <- x_all[index,]
+    y_all <- y_all[index]
+    
+    # Split data for k-fold
+    k_fold_split <- split(x, x%%k)
+    k_fold_index <- list()
+    for(i in seq_len(k)){
+        k_fold_index[[i]] <- seq_len(length(y_all))[-k_fold_split[[i]]]
+    }
+    # Paralellization
+    numcores <- detectCores()
+    if(numcores > k){numcores <- k}
+    cl <- makeCluster(numcores)
+    clusterExport(cl, c("dataset", "y_column", "ncomps", "nbootstrap"), envir=environment())
+    results <- parallel::parLapply(cl, k_fold_index, function(index) {
+        bp_VIP_analysis(
+            dataset,
+            index,
+            y_column = y_column,
+            ncomp = ncomps,
+            nbootstrap = nbootstrap
+        )
+    })
+    stopCluster(cl)
+    
+    # Join the vips of the different folds
+    means <- sapply(results, "[", "pls_mean")
+    names_order <- sort(rownames(means[[1]]))
+    ordered_means <- matrix(nrow = k, ncol = length(names_order), dimnames = list(NULL, names_order))
+    for(i in seq_len(k)){
+        ordered_means[i,] <- means[[i]][order(rownames(means[[i]]))]
+    }
+    ordered_means <- colSums(ordered_means)/k
+    vip_means <- ordered_means[order(ordered_means, decreasing = TRUE)]
+    
+    #Selection of vips
+    error <- results[[1]]$error
+    important_vips <- vip_means[vip_means-2*error > 0]
+    relevant_vips <- vip_means[vip_means-error > 0]
+    
+    # Plot of the scores
+    lower <- vip_means[length(vip_means)] - error
+    upper <- vip_means[1] + error
+    p <- plot(vip_means, ylim=range(lower,upper)) +
+    segments(seq_along(vip_means),vip_means - error,seq_along(vip_means),vip_means + error) +
+    abline(h=qt(0.975, df = nbootstrap - 1))
+    
+    list(important_vips = important_vips,
+         relevant_vips = relevant_vips,
+         vip_means = vip_means,
+         vip_score_plot = p,
+         kfold_results = results)    
+}
 
 #' Create method for NMR data analysis
 #' 
