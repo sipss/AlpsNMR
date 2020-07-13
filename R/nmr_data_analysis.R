@@ -742,10 +742,10 @@ bp_kfold_VIP_analysis <- function(dataset,
         k_fold_index[[i]] <- seq_len(length(y_all))[-k_fold_split[[i]]]
     }
     # Paralellization
-    numcores <- detectCores()
+    numcores <- parallel::detectCores()
     if(numcores > k){numcores <- k}
-    cl <- makeCluster(numcores)
-    clusterExport(cl, c("dataset", "y_column", "ncomps", "nbootstrap"), envir=environment())
+    cl <- parallel::makeCluster(numcores)
+    parallel::clusterExport(cl, c("dataset", "y_column", "ncomps", "nbootstrap"), envir=environment())
     results <- parallel::parLapply(cl, k_fold_index, function(index) {
         bp_VIP_analysis(
             dataset,
@@ -755,7 +755,7 @@ bp_kfold_VIP_analysis <- function(dataset,
             nbootstrap = nbootstrap
         )
     })
-    stopCluster(cl)
+    parallel::stopCluster(cl)
     
     # Join the vips of the different folds
     means <- sapply(results, "[", "pls_mean")
@@ -773,11 +773,24 @@ bp_kfold_VIP_analysis <- function(dataset,
     relevant_vips <- vip_means[vip_means-error > 0]
     
     # Plot of the scores
-    lower <- vip_means[length(vip_means)] - error
-    upper <- vip_means[1] + error
-    p <- plot(vip_means, ylim=range(lower,upper)) +
-    segments(seq_along(vip_means),vip_means - error,seq_along(vip_means),vip_means + error) +
-    abline(h=qt(0.975, df = nbootstrap - 1))
+    x <- seq_len(length(vip_means))
+    p <- ggplot2::ggplot() +
+        ggplot2::geom_segment(
+            mapping = ggplot2::aes(
+                x = x,
+                y = vip_means - error,
+                xend = x,
+                yend = vip_means + error
+            ),
+            arrow = NULL
+        ) +
+        ggplot2::geom_point(mapping = ggplot2::aes(x = x, y = vip_means),
+                            shape = 21,
+                            fill = "white") +
+        ggplot2::geom_hline(yintercept = qt(0.975, df = nbootstrap - 1)) +
+        ggplot2::ggtitle("BP-VIP") +
+        ggplot2::labs(x = "Variables", y = "Scores") +
+        ggplot2::theme_bw()
     
     list(important_vips = important_vips,
          relevant_vips = relevant_vips,
