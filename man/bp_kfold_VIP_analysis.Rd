@@ -4,13 +4,7 @@
 \alias{bp_kfold_VIP_analysis}
 \title{K-fold bootstrap and permutation over PLS-VIP}
 \usage{
-bp_kfold_VIP_analysis(
-  dataset,
-  y_column,
-  k = 4,
-  ncomp_max = 10,
-  nbootstrap = 300
-)
+bp_kfold_VIP_analysis(dataset, y_column, k = 4, ncomp = 3, nbootstrap = 300)
 }
 \arguments{
 \item{dataset}{An \link{nmr_dataset_family} object}
@@ -20,7 +14,7 @@ metadata of the dataset)}
 
 \item{k}{Number of folds, recomended between 4 to 10}
 
-\item{ncomp_max}{number of maximun components to consider}
+\item{ncomp}{number of components for the bootstrap models}
 
 \item{nbootstrap}{number of bootstrap dataset}
 }
@@ -29,6 +23,8 @@ A list with the following elements:
 \itemize{
 \item \code{important_vips}: A list with the important vips selected
 \item \code{relevant_vips}: List of vips with some relevance
+\item \code{vip_means}: Means of the vips scores
+\item \code{vip_score_plot}: plot of the vips scores
 \item \code{kfold_resuls}: results of the k \link{bp_VIP_analysis}
 }
 }

@@ -31,7 +31,7 @@ A list with the following elements:
 \item \code{error}: error spected in a t distribution
 \item \code{lower_bound}: lower bound of the confidence interval
 \item \code{upper_bound}: upper bound of the confidence interval
-\item \code{aucroc}: Auroc measures for validation of the method
+\item \code{final_model}: Final plsda auroc model for validation
 }
 }
 \description{

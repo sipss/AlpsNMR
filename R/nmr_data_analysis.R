@@ -428,7 +428,6 @@ nmr_data_analysis <- function(dataset,
 #' - `error`: error spected in a t distribution
 #' - `lower_bound`: lower bound of the confidence interval
 #' - `upper_bound`: upper bound of the confidence interval
-#' - `aucroc`: Auroc measures for validation of the method
 #' 
 #' @importFrom stats qt
 #' @examples 
@@ -509,8 +508,6 @@ bp_VIP_analysis <- function(dataset,
     y_all <- nmr_meta_get_column(dataset, column = y_column)
     x_train <- x_all[train_index,, drop = FALSE]
     y_train <- y_all[train_index]
-    x_test <- x_all[-train_index,, drop = FALSE]
-    y_test <- y_all[-train_index]
     
     n <- dim(x_all)[2]
     names <- colnames(x_all)
@@ -600,21 +597,24 @@ bp_VIP_analysis <- function(dataset,
         warning("No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps")
     }
     
-    # Building a model with just the important vips to check performance
-    # Spliting test
-    index <- sample(1:nrow(x_test),nrow(x_test)*0.75, rep = FALSE)
-    x_train_selected <- x_test[index, important_vips]
-    y_train_selected <- y_test[index]
-    x_test_selected <- x_test[-index, important_vips]
-    y_test_selected <- y_test[-index]
-    
-    model_test <- plsda_build(
-        x = x_train_selected,
-        y = y_train_selected,
-        identity = NULL,
-        ncomp = ncomp
-    )
-    aucroc <- plsda_auroc(model_test, x_test_selected, y_test_selected, NULL)
+    # # Building a model with just the important vips to check performance
+    # metadata <- dataset[["metadata"]][["external"]]
+    # reduced_dataset <-
+    #     new_nmr_dataset_peak_table(x_all[-train_index, important_vips, drop = FALSE], 
+    #                                list(external = metadata[-train_index, ]))
+    # 
+    # # Plsda auroc method to check performance
+    # methodology <- plsda_auroc_vip_method(ncomp = ncomp, auc_increment_threshold = 0.01)
+    # final_model <- nmr_data_analysis(
+    #     reduced_dataset,
+    #     y_column = y_column,
+    #     identity_column = NULL,
+    #     external_val = list(iterations = 1,
+    #                         test_size = 0.25),
+    #     internal_val = list(iterations = 3,
+    #                         test_size = 0.25),
+    #     data_analysis_method = methodology
+    # )
     
     # To return it ordered by mean of the normalized vectors
     orden <- order(boots_vip, decreasing = TRUE)
@@ -628,8 +628,7 @@ bp_VIP_analysis <- function(dataset,
          pls_models = pls_models,
          error = error[orden,,drop=FALSE],
          lower_bound = lower_bound[orden,,drop=FALSE],
-         upper_bound = upper_bound[orden,,drop=FALSE],
-         aucroc = aucroc)
+         upper_bound = upper_bound[orden,,drop=FALSE])
 }
 
 
@@ -646,7 +645,7 @@ bp_VIP_analysis <- function(dataset,
 #' @param y_column A string with the name of the y column (present in the
 #'    metadata of the dataset)
 #' @param k Number of folds, recomended between 4 to 10
-#' @param ncomp_max number of maximun components to consider
+#' @param ncomp number of components for the bootstrap models
 #' @param nbootstrap number of bootstrap dataset
 #' @return A list with the following elements:
 #' 
@@ -702,7 +701,7 @@ bp_VIP_analysis <- function(dataset,
 bp_kfold_VIP_analysis <- function(dataset,
                             y_column,
                             k = 4,
-                            ncomp_max = 10,
+                            ncomp = 3,
                             nbootstrap = 300) {
 
     if (k < 1) {
@@ -712,22 +711,6 @@ bp_kfold_VIP_analysis <- function(dataset,
     # Extract data and split for train and test
     x_all <- dataset$peak_table
     y_all <- nmr_meta_get_column(dataset, column = y_column)
-    
-    # pls model to chose number of components
-    methodology <- plsda_auroc_vip_method(ncomp = ncomp_max, auc_increment_threshold = 0.01)
-    model <- nmr_data_analysis(dataset, # Data to be analized
-                               y_column = y_column, # Label
-                               identity_column = NULL,
-                               external_val = list(iterations = 2, 
-                                                   test_size = 0.25),
-                               internal_val = list(iterations = 3, 
-                                                   test_size = 0.25),
-                               data_analysis_method = methodology
-    )
-
-    # The number of components for the bootstrap models is selected 
-    ncomps <- max(model$outer_cv_results$`1`$model$ncomp,
-                  model$outer_cv_results$`2`$model$ncomp)
     
     # Random and spliting
     x <- seq_len(length(y_all))
@@ -745,13 +728,13 @@ bp_kfold_VIP_analysis <- function(dataset,
     numcores <- parallel::detectCores()
     if(numcores > k){numcores <- k}
     cl <- parallel::makeCluster(numcores)
-    parallel::clusterExport(cl, c("dataset", "y_column", "ncomps", "nbootstrap"), envir=environment())
+    parallel::clusterExport(cl, c("dataset", "y_column", "ncomp", "nbootstrap"), envir=environment())
     results <- parallel::parLapply(cl, k_fold_index, function(index) {
         bp_VIP_analysis(
             dataset,
             index,
             y_column = y_column,
-            ncomp = ncomps,
+            ncomp = ncomp,
             nbootstrap = nbootstrap
         )
     })
