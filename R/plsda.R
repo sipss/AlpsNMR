@@ -17,7 +17,7 @@ plsda_build <- function(x, y, identity, ncomp) {
             )
         }))
     }, error = function(e) {
-        message("Error building PLSDA, continuing")
+        stop("Error building PLSDA: ", e)
     })
     plsda_model
 }
@@ -55,7 +55,7 @@ plsda_auroc <-
                 mean(x[, "AUC"]))
             aucs_full <- roc
         }, error = function(e) {
-            message("Error in auroc estimation, continuing")
+            stop("Error in auroc estimation: ", e)
         })
         
         ncomps <-

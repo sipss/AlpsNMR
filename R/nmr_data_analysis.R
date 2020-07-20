@@ -425,6 +425,7 @@ nmr_data_analysis <- function(dataset,
 #' - `pls_mean`: Pls-VIPs normaliced differences means
 #' - `pls_vip_score_diff`: Differences of `pls_vip` and `pls_vip_perm`
 #' - `pls_models`: pls models of the diferent bootstraps
+#' - `pls_perm_models`: pls permuted models of the diferent bootstraps
 #' - `error`: error spected in a t distribution
 #' - `lower_bound`: lower bound of the confidence interval
 #' - `upper_bound`: upper bound of the confidence interval
@@ -521,13 +522,16 @@ bp_VIP_analysis <- function(dataset,
     pls_vip_perm_sd <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
     pls_vip_score_diff <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL)) # Bootstrap with replacement nbootstraps datasets
     pls_models <- list()
-
+    pls_perm_models <- list()
+    
     # Bootstrap with replacement nbootstraps datasets
     for (i in seq_len(nbootstrap)) {
         index <- sample(1:nrow(x_train),nrow(x_train), rep = TRUE)
         x_train_boots <- x_train[index,]
         y_train_boots <- y_train[index]
-
+        # Remove rownames, because if they are repeated, plsda fails
+        rownames(x_train_boots) <- c()
+        
         # Fit PLS model
         model <-
             plsda_build(
@@ -568,6 +572,7 @@ bp_VIP_analysis <- function(dataset,
         # bootsrapped and randomly permuted difference
         pls_vip_score_diff[,i] <- pls_vip[,i] - pls_vip_perm_score[,i]
         pls_models[[i]] <- model
+        pls_perm_models[[i]] <- model_perm
     }
 
     # Normalization of the difference vector for each variable to
@@ -626,6 +631,7 @@ bp_VIP_analysis <- function(dataset,
          pls_mean = boots_vip[orden,,drop=FALSE],
          pls_vip_score_diff = pls_vip_score_diff[orden,,drop=FALSE],
          pls_models = pls_models,
+         pls_perm_models = pls_perm_models,
          error = error[orden,,drop=FALSE],
          lower_bound = lower_bound[orden,,drop=FALSE],
          upper_bound = upper_bound[orden,,drop=FALSE])
@@ -704,8 +710,8 @@ bp_kfold_VIP_analysis <- function(dataset,
                             ncomp = 3,
                             nbootstrap = 300) {
 
-    if (k < 1) {
-        stop("K must be greater than 1")
+    if (k <= 1) {
+        stop("K must be integer greater than 1")
     }
     
     # Extract data and split for train and test
