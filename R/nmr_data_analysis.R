@@ -695,8 +695,8 @@ bp_VIP_analysis <- function(dataset,
 #'     metadata = list(external = metadata)
 #' )
 #' 
-#' We will use bootstrap and permutation method for VIPs selection 
-#' in a a k-fold cross validation 
+#' ## We will use bootstrap and permutation method for VIPs selection 
+#' ## in a a k-fold cross validation 
 #' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
 #'                            y_column = "Condition", # Label
 #'                            k = 4,
