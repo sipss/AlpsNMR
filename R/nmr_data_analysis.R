@@ -596,7 +596,7 @@ bp_VIP_analysis <- function(dataset,
     relevant_vips <- names[lower_bound <= qt(0.975, df = nbootstrap - 1) & lower_bound > 0]
     if (length(important_vips) == 0) {
         if (length(relevant_vips) == 0) {
-            stop("Error in bp_VIP_analysis, none of the variables seems relevant:\n
+            warning("Error in bp_VIP_analysis, none of the variables seems relevant:\n
              try increasing the number of bootstraps")
         }
         warning("No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps")
@@ -730,8 +730,16 @@ bp_kfold_VIP_analysis <- function(dataset,
     for(i in seq_len(k)){
         k_fold_index[[i]] <- seq_len(length(y_all))[-k_fold_split[[i]]]
     }
+    
     # Paralellization
-    numcores <- parallel::detectCores()
+    chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
+    if (nzchar(chk) && chk == "TRUE") {
+        # use 2 cores in CRAN/Travis/AppVeyor
+        numcores <- 2L
+    } else {
+        # use all cores in devtools::test()
+        numcores <- parallel::detectCores()
+    }
     if(numcores > k){numcores <- k}
     cl <- parallel::makeCluster(numcores)
     parallel::clusterExport(cl, c("dataset", "y_column", "ncomp", "nbootstrap"), envir=environment())
