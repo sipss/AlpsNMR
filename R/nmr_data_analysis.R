@@ -529,6 +529,8 @@ bp_VIP_analysis <- function(dataset,
         index <- sample(1:nrow(x_train),nrow(x_train), rep = TRUE)
         x_train_boots <- x_train[index,]
         y_train_boots <- y_train[index]
+        #TODO if y_train_boots only have one class, plsda models give error
+        # put some warning or solve it somehow?
         # Remove rownames, because if they are repeated, plsda fails
         rownames(x_train_boots) <- c()
         
@@ -567,8 +569,6 @@ bp_VIP_analysis <- function(dataset,
 
         # bootsrapped and randomly permuted PLS-VIPs
         pls_vip_perm_score[,i] <- colSums(pls_vip_perm)/n
-        # bootsrapped and randomly permuted standard desviation
-        #pls_vip_perm_sd[,i] <- sqrt(sum((pls_vip_perm - pls_vip_perm_score[,i]) ^ 2) / (nbootstrap - 1))
         # bootsrapped and randomly permuted difference
         pls_vip_score_diff[,i] <- pls_vip[,i] - pls_vip_perm_score[,i]
         pls_models[[i]] <- model
@@ -601,25 +601,6 @@ bp_VIP_analysis <- function(dataset,
         }
         warning("No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps")
     }
-    
-    # # Building a model with just the important vips to check performance
-    # metadata <- dataset[["metadata"]][["external"]]
-    # reduced_dataset <-
-    #     new_nmr_dataset_peak_table(x_all[-train_index, important_vips, drop = FALSE], 
-    #                                list(external = metadata[-train_index, ]))
-    # 
-    # # Plsda auroc method to check performance
-    # methodology <- plsda_auroc_vip_method(ncomp = ncomp, auc_increment_threshold = 0.01)
-    # final_model <- nmr_data_analysis(
-    #     reduced_dataset,
-    #     y_column = y_column,
-    #     identity_column = NULL,
-    #     external_val = list(iterations = 1,
-    #                         test_size = 0.25),
-    #     internal_val = list(iterations = 3,
-    #                         test_size = 0.25),
-    #     data_analysis_method = methodology
-    # )
     
     # To return it ordered by mean of the normalized vectors
     orden <- order(boots_vip, decreasing = TRUE)
@@ -657,6 +638,7 @@ bp_VIP_analysis <- function(dataset,
 #' 
 #' - `important_vips`: A list with the important vips selected
 #' - `relevant_vips`: List of vips with some relevance
+#' - `wilcoxon_vips`: List of vips that pass a wilcoxon test
 #' - `vip_means`: Means of the vips scores
 #' - `vip_score_plot`: plot of the vips scores
 #' - `kfold_resuls`: results of the k [bp_VIP_analysis]
@@ -789,8 +771,24 @@ bp_kfold_VIP_analysis <- function(dataset,
         ggplot2::labs(x = "Variables", y = "Scores") +
         ggplot2::theme_bw()
     
+    ## Wilcoxon test
+    num_var <- dim(results[[1]]$pls_vip)[1]
+    wt <- matrix(nrow = k, ncol = num_var)
+    wt_vips <- list()
+    for(i in seq_len(k)) {
+        for (j in seq_len(num_var)) {
+            x <- results[[i]]$pls_vip[j, ]
+            y <- results[[i]]$pls_vip_perm[j, ]
+            #wt_object <- wilcox.test(x, y, paired = TRUE, alternative = "two.sided")
+            wt_object <- wilcox.test(x, y, paired = TRUE, alternative = "greater")
+            wt[i,j] <- wt_object$p.value
+        }
+        wt_vips[[i]] <- rownames(results[[i]]$pls_vip)[wt[i,]<0.05]
+    }
+    
     list(important_vips = important_vips,
          relevant_vips = relevant_vips,
+         wilcoxon_vips = unique(unlist(wt_vips)),
          vip_means = vip_means,
          vip_score_plot = p,
          kfold_results = results)    
@@ -1060,4 +1058,126 @@ permutation_test_plot = function (nmr_data_analysis_model,
     } else {
       text(h2,pos=2,labels=paste('p=',signif(pP,4),sep=''))
     }
+}
+
+#' Models stability plot
+#'
+#' Plot stability among models of the external cross validation
+#'
+#' @param nmr_data_analysis_model A nmr_data_analysis_model
+#' 
+#' @return A plot of models stability
+#' @name models_stability_plot
+#' @export
+#' @examples
+#'# Data analysis for a table of integrated peaks
+#' 
+#' ## Generate an artificial nmr_dataset_peak_table:
+#' ### Generate artificial metadata:
+#' num_samples <- 32 # use an even number in this example
+#' num_peaks <- 20
+#' metadata <- data.frame(
+#'     NMRExperiment = as.character(1:num_samples),
+#'     Condition = rep(c("A", "B"), times = num_samples/2),
+#'     stringsAsFactors = FALSE
+#' )
+#' 
+#' ### The matrix with peaks
+#' peak_means <- runif(n = num_peaks, min = 300, max = 600)
+#' peak_sd <- runif(n = num_peaks, min = 30, max = 60)
+#' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
+#'                                             mu = peak_means, sd = peak_sd)
+#' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+#' 
+#' ## Artificial differences depending on the condition:
+#' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+#' 
+#' peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+#'     
+#' ### The nmr_dataset_peak_table
+#' peak_table <- new_nmr_dataset_peak_table(
+#'     peak_table = peak_matrix,
+#'     metadata = list(external = metadata)
+#' )
+#' 
+#' methodology <- plsda_auroc_vip_method(ncomp = 3)
+#' model <- nmr_data_analysis(
+#'     peak_table,
+#'     y_column = "Condition",
+#'     identity_column = NULL,
+#'     external_val = list(iterations = 3, test_size = 0.25),
+#'     internal_val = list(iterations = 3, test_size = 0.25),
+#'     data_analysis_method = methodology
+#' )
+#' 
+#' models_stability_plot(model)
+#' 
+models_stability_plot = function (model)
+{
+    # Loadings of the models
+    ex_n = length(model$outer_cv_results)
+    max_ncomp = 0
+    for (n in seq_len(ex_n)) {
+        if (model$outer_cv_results[[n]]$model$ncomp > max_ncomp) {
+            max_ncomp = model$outer_cv_results[[n]]$model$ncomp
+        }
+    }
+    
+    loadings_sp <-
+        matrix(nrow = ex_n * max_ncomp, ncol = ex_n * max_ncomp)
+    labelsX <- list()
+    for (n in seq_len(max_ncomp)) {
+        for (m in seq_len(max_ncomp)) {
+            for (i in seq_len(ex_n)) {
+                for (j in seq_len(ex_n)) {
+                    tryCatch({
+                        loadings_sp[(n - 1) * ex_n + i, (m - 1) * ex_n + j] <-
+                            (
+                                model$outer_cv_results[[i]]$model$loadings$X[, n] %*% model$outer_cv_results[[j]]$model$loadings$X[, m]
+                            )[1, 1]
+                        labelsX[[(n - 1) * ex_n + i]] <-
+                            paste("M", i, "- LV", n)
+                    }, error = function(e) {
+                    })
+                }
+            }
+        }
+    }
+    #deleting na cows and cols
+    loadings_sp <-
+        loadings_sp[, colSums(is.na(loadings_sp)) != nrow(loadings_sp)]
+    loadings_sp <-
+        loadings_sp[rowSums(is.na(loadings_sp)) != ncol(loadings_sp), ]
+    #rotate results
+    loadings_sp <- t(loadings_sp[nrow(loadings_sp):1, , drop = FALSE])
+    melted_loadings_sp <- reshape2::melt(loadings_sp)
+    
+    ggplot2::ggplot(melted_loadings_sp, ggplot2::aes(x = Var1, y = Var2, fill =
+                                                         value)) +
+        ggplot2::geom_tile() + ggplot2::coord_equal() + ggplot2::theme_bw() +
+        ggplot2::scale_fill_distiller(palette = "Blues",
+                                      direction = 1,
+                                      na.value = "white") +
+        ggplot2::guides(fill = FALSE) + # removing legend for `fill`
+        ggplot2::labs(title = "Stability among models") + # using a title instead
+        ggplot2::geom_text(
+            ggplot2::aes(
+                label = round(value, digits = 3),
+                color = ifelse(value > 0.5, 1, 0)
+            ),
+            size = 3,
+            show.legend = FALSE
+        ) +
+        ggplot2::scale_x_discrete(limits = unlist(labelsX)) +
+        ggplot2::scale_y_discrete(limits = rev(unlist(labelsX))) +
+        ggplot2::labs(x = "Model - Latent variable", 
+                      y = "Model - Latent variable") +
+        ggplot2::theme(axis.text.x = element_text(
+            angle = 45,
+            vjust = 1,
+            hjust = 1
+        ),
+        text = element_text(size = 10))
 }

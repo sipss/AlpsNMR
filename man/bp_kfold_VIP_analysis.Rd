@@ -23,6 +23,7 @@ A list with the following elements:
 \itemize{
 \item \code{important_vips}: A list with the important vips selected
 \item \code{relevant_vips}: List of vips with some relevance
+\item \code{wilcoxon_vips}: List of vips that pass a wilcoxon test
 \item \code{vip_means}: Means of the vips scores
 \item \code{vip_score_plot}: plot of the vips scores
 \item \code{kfold_resuls}: results of the k \link{bp_VIP_analysis}

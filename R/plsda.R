@@ -446,8 +446,9 @@ plsda_auroc_vip_compare <- function(...) {
 #' Plot PLSDA predictions
 #'
 #' @param model A mixOmics plsda model
+#' @param plot A boolean that indicate if results are plotted or not
 #'
-#' @return A plot of the samples
+#' @return A plot of the samples or a ggplot object
 #' @importFrom stats predict
 #' @importFrom mixOmics mixOmics
 #' @export
@@ -499,9 +500,9 @@ plsda_auroc_vip_compare <- function(...) {
 #'     data_analysis_method = methodology
 #' )
 #' 
-#' #plot_plsda_samples(model)
+#' #plot_plsda_samples(model$outer_cv_results[[1]]$model)
 #' 
-plot_plsda_samples <- function(model) {
+plot_plsda_samples <- function(model, plot = TRUE) {
     # Predictions of test set
     predictions <- predict(model, newdata = model$X_test)
     
@@ -520,7 +521,7 @@ plot_plsda_samples <- function(model) {
         te_data <- data.frame(x = predictions$variates[,1],
                               label = paste("test ", model$Y_test))
         
-        ggplot2::ggplot(data = tr_data, ggplot2::aes(x, fill = label)) +
+        plsda_plot <- ggplot2::ggplot(data = tr_data, ggplot2::aes(x, fill = label)) +
             ggplot2::geom_histogram(alpha = .5, bins = 10,
                                     position="identity") +
             ggplot2::geom_histogram(data = te_data, 
@@ -555,7 +556,7 @@ plot_plsda_samples <- function(model) {
                               group = "test ")
         data <- rbind(tr_data, te_data)
         
-        ggplot2::ggplot(data = data,
+        plsda_plot <- ggplot2::ggplot(data = data,
                         ggplot2::aes(shape = group,
                                      col = label
                         )) +
@@ -568,5 +569,150 @@ plot_plsda_samples <- function(model) {
             ggplot2::labs(y = ploty$graph$labels$y,
                           x = ploty$graph$labels$x) +
             ggplot2::theme_bw()  
+    }
+    if(plot){
+        plsda_plot
+    } else {
+        return(plsda_plot)
+    }
+}
+
+#' Multi PLDSA model plot predictions
+#'
+#' @param model A nmr_data_analysis_model
+#' @param plot A boolean that indicate if results are plotted or not
+#'
+#' @return A plot of the results or a ggplot object
+#' @importFrom stats predict
+#' @importFrom mixOmics mixOmics
+#' @export
+#' @examples
+#' #' # Data analysis for a table of integrated peaks
+#' 
+#' ## Generate an artificial nmr_dataset_peak_table:
+#' ### Generate artificial metadata:
+#' num_samples <- 32 # use an even number in this example
+#' num_peaks <- 20
+#' metadata <- data.frame(
+#'     NMRExperiment = as.character(1:num_samples),
+#'     Condition = rep(c("A", "B"), times = num_samples/2),
+#'     stringsAsFactors = FALSE
+#' )
+#' 
+#' ### The matrix with peaks
+#' peak_means <- runif(n = num_peaks, min = 300, max = 600)
+#' peak_sd <- runif(n = num_peaks, min = 30, max = 60)
+#' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
+#'                                             mu = peak_means, sd = peak_sd)
+#' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+#' 
+#' ## Artificial differences depending on the condition:
+#' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+#' 
+#' peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+#'     
+#' ### The nmr_dataset_peak_table
+#' peak_table <- new_nmr_dataset_peak_table(
+#'     peak_table = peak_matrix,
+#'     metadata = list(external = metadata)
+#' )
+#' 
+#' ## We will use a double cross validation, splitting the samples with random
+#' ## subsampling both in the external and internal validation.
+#' ## The classification model will be a PLSDA, exploring at maximum 3 latent
+#' ## variables.
+#' ## The best model will be selected based on the area under the ROC curve
+#' methodology <- plsda_auroc_vip_method(ncomp = 1)
+#' model <- nmr_data_analysis(
+#'     peak_table,
+#'     y_column = "Condition",
+#'     identity_column = NULL,
+#'     external_val = list(iterations = 2, test_size = 0.25),
+#'     internal_val = list(iterations = 2, test_size = 0.25),
+#'     data_analysis_method = methodology
+#' )
+#' 
+#' #plot_plsda_multimodel(model)
+#' 
+plot_plsda_multimodel <- function(model, plot = TRUE) {
+    
+    n_models = length(model$outer_cv_results)
+    min_ncomp = model$outer_cv_results[[1]]$model$ncomp
+    for (n in seq_len(n_models)) {
+        if (model$outer_cv_results[[n]]$model$ncomp < min_ncomp) {
+            min_ncomp = model$outer_cv_results[[n]]$model$ncomp
+        }
+    }
+    
+    tr_data <- data.frame()
+    te_data <- data.frame()
+    # Hidding the plots
+    t = tempfile()
+    pdf(file=t)
+    for(i in seq_len(n_models)){
+        # Predictions of test set
+        predictions <- predict(model$outer_cv_results[[i]]$model, newdata = model$outer_cv_results[[i]]$model$X_test)
+        # Individuals plot
+        if(min_ncomp == 1){
+            # This is needed if the model only have one component
+            ploty <- mixOmics::plotIndiv(model$outer_cv_results[[i]]$model, comp = c(1, 1))
+            tr_data <- rbind(tr_data, data.frame(x = ploty$graph$data$x,
+                                  label = paste("train ", ploty$graph$data$group)))
+            te_data <- rbind(te_data, data.frame(x = predictions$variates[,1],
+                                  label = paste("test ", model$outer_cv_results[[i]]$model$Y_test)))
+        } else {
+            ploty <- mixOmics::plotIndiv(model$outer_cv_results[[i]]$model)
+            tr_y <- ploty$graph$data$y
+            te_y <- predictions$variates[, 2]
+            tr_data <- rbind(tr_data, data.frame(x = ploty$graph$data$x,
+                                  y = tr_y,
+                                  label= ploty$graph$data$group,
+                                  group = "train "))
+            te_data <- rbind(te_data, data.frame(x = predictions$variates[,1],
+                                  y = te_y,
+                                  label= model$outer_cv_results[[i]]$model$Y_test,
+                                  group = "test "))
+        }
+    }
+    dev.off()
+    file.remove(t)
+    
+    # Individuals plot
+    if(min_ncomp == 1){
+        # This is needed if the model only have one component
+        plsda_plot <- ggplot2::ggplot(data = tr_data, ggplot2::aes(x, fill = label)) +
+            ggplot2::geom_histogram(alpha = .5, bins = 10,
+                                    position="identity") +
+            ggplot2::geom_histogram(data = te_data, 
+                                    ggplot2::aes(color = label),
+                                    fill = "white",
+                                    alpha = 0.1,
+                                    position="identity",
+                                    bins = 10) + 
+            ggplot2::ggtitle("PLS-DA") +
+            ggplot2::labs(x = "Latent variable 1") +
+            ggplot2::theme_bw()
+    } else {
+        data <- rbind(tr_data, te_data)
+        plsda_plot <- ggplot2::ggplot(data = data,
+                                      ggplot2::aes(shape = group,
+                                                   col = label
+                                      )) +
+            ggplot2::geom_hline(yintercept=0, linetype="dashed", 
+                                color = "black", size=0.5) +
+            ggplot2::geom_vline(xintercept=0, linetype="dashed", 
+                                color = "black", size=0.5) +
+            ggplot2::geom_point(ggplot2::aes(x, y), size = 1.5) +
+            ggplot2::ggtitle("PLS-DA") +
+            ggplot2::labs(y = "Latent variable 2",
+                          x = "Latent variable 1") +
+            ggplot2::theme_bw()  
+    }
+    if(plot){
+        plsda_plot
+    } else {
+        return(plsda_plot)
     }
 }
