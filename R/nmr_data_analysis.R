@@ -751,6 +751,21 @@ bp_kfold_VIP_analysis <- function(dataset,
     important_vips <- vip_means[vip_means-2*error > 0]
     relevant_vips <- vip_means[vip_means-error > 0]
     
+    ## Wilcoxon test
+    num_var <- dim(results[[1]]$pls_vip)[1]
+    wt <- matrix(nrow = k, ncol = num_var)
+    wt_vips <- list()
+    for(i in seq_len(k)) {
+        for (j in seq_len(num_var)) {
+            x <- results[[i]]$pls_vip[j, ]
+            y <- results[[i]]$pls_vip_perm[j, ]
+            #wt_object <- wilcox.test(x, y, paired = TRUE, alternative = "two.sided")
+            wt_object <- wilcox.test(x, y, paired = TRUE, alternative = "greater")
+            wt[i,j] <- wt_object$p.value
+        }
+        wt_vips[[i]] <- rownames(results[[i]]$pls_vip)[wt[i,]<0.05]
+    }
+    
     # Plot of the scores
     x <- seq_len(length(vip_means))
     p <- ggplot2::ggplot() +
@@ -770,21 +785,6 @@ bp_kfold_VIP_analysis <- function(dataset,
         ggplot2::ggtitle("BP-VIP") +
         ggplot2::labs(x = "Variables", y = "Scores") +
         ggplot2::theme_bw()
-    
-    ## Wilcoxon test
-    num_var <- dim(results[[1]]$pls_vip)[1]
-    wt <- matrix(nrow = k, ncol = num_var)
-    wt_vips <- list()
-    for(i in seq_len(k)) {
-        for (j in seq_len(num_var)) {
-            x <- results[[i]]$pls_vip[j, ]
-            y <- results[[i]]$pls_vip_perm[j, ]
-            #wt_object <- wilcox.test(x, y, paired = TRUE, alternative = "two.sided")
-            wt_object <- wilcox.test(x, y, paired = TRUE, alternative = "greater")
-            wt[i,j] <- wt_object$p.value
-        }
-        wt_vips[[i]] <- rownames(results[[i]]$pls_vip)[wt[i,]<0.05]
-    }
     
     list(important_vips = important_vips,
          relevant_vips = relevant_vips,
