@@ -1174,10 +1174,10 @@ models_stability_plot = function (model)
         ggplot2::scale_y_discrete(limits = rev(unlist(labelsX))) +
         ggplot2::labs(x = "Model - Latent variable", 
                       y = "Model - Latent variable") +
-        ggplot2::theme(axis.text.x = element_text(
+        ggplot2::theme(axis.text.x = ggplot2::element_text(
             angle = 45,
             vjust = 1,
             hjust = 1
         ),
-        text = element_text(size = 10))
+        text = ggplot2::element_text(size = 10))
 }
