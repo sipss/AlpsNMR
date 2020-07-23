@@ -7,7 +7,7 @@
 models_stability_plot(model)
 }
 \arguments{
-\item{nmr_data_analysis_model}{A nmr_data_analysis_model}
+\item{model}{A nmr_data_analysis_model}
 }
 \value{
 A plot of models stability

@@ -1064,7 +1064,7 @@ permutation_test_plot = function (nmr_data_analysis_model,
 #'
 #' Plot stability among models of the external cross validation
 #'
-#' @param nmr_data_analysis_model A nmr_data_analysis_model
+#' @param model A nmr_data_analysis_model
 #' 
 #' @return A plot of models stability
 #' @name models_stability_plot
