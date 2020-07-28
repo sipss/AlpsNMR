@@ -7,7 +7,7 @@
 models_stability_plot_bootstrap(bp_results)
 }
 \arguments{
-\item{list}{bp_kfold_VIP_analysis results}
+\item{bp_results}{bp_kfold_VIP_analysis results}
 }
 \value{
 A plot of models stability

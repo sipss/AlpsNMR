@@ -1324,7 +1324,7 @@ models_stability_plot_plsda = function (model)
 #'
 #' Plot stability among models of the external cross validation
 #'
-#' @param list bp_kfold_VIP_analysis results
+#' @param bp_results bp_kfold_VIP_analysis results
 #' 
 #' @return A plot of models stability
 #' @name models_stability_plot_bootstrap
