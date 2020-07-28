@@ -422,10 +422,15 @@ nmr_data_analysis <- function(dataset,
 #' - `relevant_vips`: List of vips with some relevance
 #' - `pls_vip`: Pls-VIPs of every bootstrap
 #' - `pls_vip_perm`: Pls-VIPs of every bootstrap with permuted variables
-#' - `pls_mean`: Pls-VIPs normaliced differences means
+#' - `pls_vip_means`: Pls-VIPs normaliced differences means
 #' - `pls_vip_score_diff`: Differences of `pls_vip` and `pls_vip_perm`
 #' - `pls_models`: pls models of the diferent bootstraps
 #' - `pls_perm_models`: pls permuted models of the diferent bootstraps
+#' - `classif_rate`: classification rate of the bootstrap models
+#' - `general_model`: pls model trained with all train data
+#' - `general_CR`: classification rate of the `general_model`
+#' - `vips_model`: pls model trained with vips selection over all train data
+#' - `vips_CR`: classification rate of the `vips_model`
 #' - `error`: error spected in a t distribution
 #' - `lower_bound`: lower bound of the confidence interval
 #' - `upper_bound`: upper bound of the confidence interval
@@ -523,14 +528,20 @@ bp_VIP_analysis <- function(dataset,
     pls_vip_score_diff <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL)) # Bootstrap with replacement nbootstraps datasets
     pls_models <- list()
     pls_perm_models <- list()
+    CR <- list()
     
     # Bootstrap with replacement nbootstraps datasets
     for (i in seq_len(nbootstrap)) {
         index <- sample(1:nrow(x_train),nrow(x_train), rep = TRUE)
         x_train_boots <- x_train[index,]
         y_train_boots <- y_train[index]
-        #TODO if y_train_boots only have one class, plsda models give error
-        # put some warning or solve it somehow?
+        #if y_train_boots only have one class, plsda models give error
+        #warning the user about possible solutions
+        if (unique(y_train_boots) == 1) {
+            warning("Error in bp_VIP_analysis, bootstrap with only one class.\n
+                 this can happen if the number of samples is low. Try to use k=2\n
+                 or increase the number of samples")
+        }
         # Remove rownames, because if they are repeated, plsda fails
         rownames(x_train_boots) <- c()
         
@@ -546,7 +557,11 @@ bp_VIP_analysis <- function(dataset,
         pls_vip_comps <- plsda_vip(model)
         # Sum contributions of VIPs to each component
         pls_vip[,i] <- sqrt(rowSums(pls_vip_comps^2)/ncomp)
-
+        # Measure the classification rate (CR) of the bootstrap model
+        y_test <- y_train[-index]
+        perf <- mixOmics::perf(model, newdata = x_train[-index,])
+        CR[[i]] <- mean(perf$class$max.dist[,,-1] == y_test)
+                 
         # Permutation of variables
         for (j in seq_len(n)) {
             random_pos <- sample(seq_len(n), 1)
@@ -593,7 +608,7 @@ bp_VIP_analysis <- function(dataset,
     }
     
     important_vips <- names[lower_bound > qt(0.975, df = nbootstrap - 1)]
-    relevant_vips <- names[lower_bound <= qt(0.975, df = nbootstrap - 1) & lower_bound > 0]
+    relevant_vips <- names[lower_bound > 0]
     if (length(important_vips) == 0) {
         if (length(relevant_vips) == 0) {
             warning("Error in bp_VIP_analysis, none of the variables seems relevant:\n
@@ -602,6 +617,36 @@ bp_VIP_analysis <- function(dataset,
         warning("No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps")
     }
     
+    # Chequing performance
+    x_test <- x_all[-train_index,, drop = FALSE]
+    y_test <- y_all[-train_index]
+    # Fit PLS model
+    general_model <-
+        plsda_build(
+            x = x_train,
+            y = y_train,
+            identity = NULL,
+            ncomp = ncomp
+        )
+    # Measure the classification rate (CR) of the fold
+    perf <- mixOmics::perf(general_model, newdata = x_test)
+    general_CR <- mean(perf$class$max.dist[,,-1] == y_test)
+    
+    # Chequing performance of selected vips
+    x_train_reduced <- x_all[train_index, important_vips, drop = FALSE]
+    x_test_reduced <- x_all[-train_index, important_vips, drop = FALSE]
+    # Fit PLS model
+    vips_model <-
+        plsda_build(
+            x = x_train_reduced,
+            y = y_train,
+            identity = NULL,
+            ncomp = ncomp
+        )
+    # Measure the classification rate (CR) of the fold
+    perf <- mixOmics::perf(vips_model, newdata = x_test_reduced)
+    vips_CR  <- mean(perf$class$max.dist[,,-1] == y_test)
+    
     # To return it ordered by mean of the normalized vectors
     orden <- order(boots_vip, decreasing = TRUE)
     #Return important vips and auc performance
@@ -609,10 +654,15 @@ bp_VIP_analysis <- function(dataset,
          relevant_vips = relevant_vips,
          pls_vip = pls_vip[orden,,drop=FALSE],
          pls_vip_perm = pls_vip_perm_score[orden,,drop=FALSE],
-         pls_mean = boots_vip[orden,,drop=FALSE],
+         pls_vip_means = boots_vip[orden,,drop=FALSE],
          pls_vip_score_diff = pls_vip_score_diff[orden,,drop=FALSE],
          pls_models = pls_models,
          pls_perm_models = pls_perm_models,
+         classif_rate = CR,
+         general_model = general_model,
+         general_CR = general_CR,
+         vips_model = vips_model,
+         vips_CR = vips_CR,
          error = error[orden,,drop=FALSE],
          lower_bound = lower_bound[orden,,drop=FALSE],
          upper_bound = upper_bound[orden,,drop=FALSE])
@@ -642,6 +692,7 @@ bp_VIP_analysis <- function(dataset,
 #' - `vip_means`: Means of the vips scores
 #' - `vip_score_plot`: plot of the vips scores
 #' - `kfold_resuls`: results of the k [bp_VIP_analysis]
+#' - `kfold_index`: list of index of partitions of the folds
 #' 
 #' @export
 #' @examples 
@@ -736,8 +787,8 @@ bp_kfold_VIP_analysis <- function(dataset,
     })
     parallel::stopCluster(cl)
     
-    # Join the vips of the different folds
-    means <- sapply(results, "[", "pls_mean")
+    # Mean of the vips of the different folds for the plot
+    means <- sapply(results, "[", "pls_vip_means")
     names_order <- sort(rownames(means[[1]]))
     ordered_means <- matrix(nrow = k, ncol = length(names_order), dimnames = list(NULL, names_order))
     for(i in seq_len(k)){
@@ -745,11 +796,11 @@ bp_kfold_VIP_analysis <- function(dataset,
     }
     ordered_means <- colSums(ordered_means)/k
     vip_means <- ordered_means[order(ordered_means, decreasing = TRUE)]
-    
-    #Selection of vips
     error <- results[[1]]$error
-    important_vips <- vip_means[vip_means-2*error > 0]
-    relevant_vips <- vip_means[vip_means-error > 0]
+    
+    # Selection based on the means (deprecated, now ussing intersection of the vips)
+    # important_vips <- vip_means[vip_means-2*error > 0]
+    # relevant_vips <- vip_means[vip_means-error > 0]
     
     ## Wilcoxon test
     num_var <- dim(results[[1]]$pls_vip)[1]
@@ -786,13 +837,100 @@ bp_kfold_VIP_analysis <- function(dataset,
         ggplot2::labs(x = "Variables", y = "Scores") +
         ggplot2::theme_bw()
     
-    list(important_vips = important_vips,
-         relevant_vips = relevant_vips,
+    # Reporting the intersection of the vips of the different folds
+    list(important_vips = Reduce(intersect, (sapply(results, "[", "important_vips"))),
+         relevant_vips = Reduce(intersect, (sapply(results, "[", "relevant_vips"))),
          wilcoxon_vips = unique(unlist(wt_vips)),
          vip_means = vip_means,
          vip_score_plot = p,
-         kfold_results = results)    
+         kfold_results = results,
+         kfold_index = k_fold_index)    
 }
+
+
+#' Plot vip scores of bootstrap
+#'
+#' @param vip_means vips means values of bootstraps
+#' @param error error tolerated, calculated in the bootstrap
+#' @param nbootstrap number of bootstraps realiced
+#' @param plot A boolean that indicate if results are plotted or not
+#'
+#' @return A plot of the results or a ggplot object
+#' @export
+#' @examples
+#' # Data analysis for a table of integrated peaks
+#' 
+#' ## Generate an artificial nmr_dataset_peak_table:
+#' ### Generate artificial metadata:
+#' num_samples <- 32 # use an even number in this example
+#' num_peaks <- 20
+#' metadata <- data.frame(
+#'     NMRExperiment = as.character(1:num_samples),
+#'     Condition = rep(c("A", "B"), times = num_samples/2),
+#'     stringsAsFactors = FALSE
+#' )
+#' 
+#' ### The matrix with peaks
+#' peak_means <- runif(n = num_peaks, min = 300, max = 600)
+#' peak_sd <- runif(n = num_peaks, min = 30, max = 60)
+#' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
+#'                                             mu = peak_means, sd = peak_sd)
+#' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+#' 
+#' ## Artificial differences depending on the condition:
+#' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+#' 
+#' peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+#'     
+#' ### The nmr_dataset_peak_table
+#' peak_table <- new_nmr_dataset_peak_table(
+#'     peak_table = peak_matrix,
+#'     metadata = list(external = metadata)
+#' )
+#' 
+#' ## We will use bootstrap and permutation method for VIPs selection 
+#' ## in a a k-fold cross validation 
+#' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
+#'                            y_column = "Condition", # Label
+#'                            k = 4,
+#'                            nbootstrap = 100)
+#'
+#' message("Selected VIPs are: ", bp_results$importarn_vips)
+#' 
+#' plot_vip_scores(bp_results$kfold_results[[1]]$pls_vip_means, 
+#'                 bp_results$kfold_results[[1]]$error[1],
+#'                 nbootstrap = 100)
+#' 
+plot_vip_scores <- function(vip_means, error, nbootstrap, plot = TRUE) {
+    
+    # Plot of the scores
+    x <- seq_len(length(vip_means))
+    vip_score_plot <- ggplot2::ggplot() +
+        ggplot2::geom_segment(
+            mapping = ggplot2::aes(
+                x = x,
+                y = vip_means - error,
+                xend = x,
+                yend = vip_means + error
+            ),
+            arrow = NULL
+        ) +
+        ggplot2::geom_point(mapping = ggplot2::aes(x = x, y = vip_means),
+                            shape = 21,
+                            fill = "white") +
+        ggplot2::geom_hline(yintercept = qt(0.975, df = nbootstrap - 1)) +
+        ggplot2::ggtitle("BP-VIP") +
+        ggplot2::labs(x = "Variables", y = "Scores") +
+        ggplot2::theme_bw()
+    if(plot){
+        vip_score_plot
+    } else {
+        return(vip_score_plot)
+    }
+}
+
 
 #' Create method for NMR data analysis
 #' 
@@ -1067,7 +1205,7 @@ permutation_test_plot = function (nmr_data_analysis_model,
 #' @param model A nmr_data_analysis_model
 #' 
 #' @return A plot of models stability
-#' @name models_stability_plot
+#' @name models_stability_plot_plsda
 #' @export
 #' @examples
 #'# Data analysis for a table of integrated peaks
@@ -1112,9 +1250,9 @@ permutation_test_plot = function (nmr_data_analysis_model,
 #'     data_analysis_method = methodology
 #' )
 #' 
-#' models_stability_plot(model)
+#' models_stability_plot_plsda(model)
 #' 
-models_stability_plot = function (model)
+models_stability_plot_plsda = function (model)
 {
     # Loadings of the models
     ex_n = length(model$outer_cv_results)
@@ -1180,4 +1318,231 @@ models_stability_plot = function (model)
             hjust = 1
         ),
         text = ggplot2::element_text(size = 10))
+}
+
+#' Models stability plot
+#'
+#' Plot stability among models of the external cross validation
+#'
+#' @param list bp_kfold_VIP_analysis results
+#' 
+#' @return A plot of models stability
+#' @name models_stability_plot_bootstrap
+#' @export
+#' @examples
+#'# Data analysis for a table of integrated peaks
+#' 
+#' ## Generate an artificial nmr_dataset_peak_table:
+#' ### Generate artificial metadata:
+#' num_samples <- 32 # use an even number in this example
+#' num_peaks <- 20
+#' metadata <- data.frame(
+#'     NMRExperiment = as.character(1:num_samples),
+#'     Condition = rep(c("A", "B"), times = num_samples/2),
+#'     stringsAsFactors = FALSE
+#' )
+#' 
+#' ### The matrix with peaks
+#' peak_means <- runif(n = num_peaks, min = 300, max = 600)
+#' peak_sd <- runif(n = num_peaks, min = 30, max = 60)
+#' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
+#'                                             mu = peak_means, sd = peak_sd)
+#' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+#' 
+#' ## Artificial differences depending on the condition:
+#' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+#' 
+#' peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+#'     
+#' ### The nmr_dataset_peak_table
+#' peak_table <- new_nmr_dataset_peak_table(
+#'     peak_table = peak_matrix,
+#'     metadata = list(external = metadata)
+#' )
+#' 
+#' ## We will use bootstrap and permutation method for VIPs selection 
+#' ## in a a k-fold cross validation 
+#' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
+#'                            y_column = "Condition", # Label
+#'                            k = 4,
+#'                            nbootstrap = 100)
+#'
+#' message("Selected VIPs are: ", bp_results$importarn_vips)
+#' 
+#' models_stability_plot_bootstrap(bp_results)
+#' 
+models_stability_plot_bootstrap = function (bp_results)
+{
+    # Loadings of the models
+    n_models = length(bp_results$kfold_results)
+    max_ncomp = bp_results$kfold_results[[1]]$general_model$ncomp
+    
+    loadings_sp <-
+        matrix(nrow = n_models * max_ncomp, ncol = n_models * max_ncomp)
+    labelsX <- list()
+    for (n in seq_len(max_ncomp)) {
+        for (m in seq_len(max_ncomp)) {
+            for (i in seq_len(n_models)) {
+                for (j in seq_len(n_models)) {
+                    tryCatch({
+                        loadings_sp[(n - 1) * n_models + i, (m - 1) * n_models + j] <-
+                            (
+                                bp_results$kfold_results[[i]]$general_model$loadings$X[, n] %*% bp_results$kfold_results[[j]]$general_model$loadings$X[, m]
+                            )[1, 1]
+                        labelsX[[(n - 1) * n_models + i]] <-
+                            paste("M", i, "- LV", n)
+                    }, error = function(e) {
+                    })
+                }
+            }
+        }
+    }
+    #deleting na cows and cols
+    loadings_sp <-
+        loadings_sp[, colSums(is.na(loadings_sp)) != nrow(loadings_sp)]
+    loadings_sp <-
+        loadings_sp[rowSums(is.na(loadings_sp)) != ncol(loadings_sp), ]
+    #rotate results
+    loadings_sp <- t(loadings_sp[nrow(loadings_sp):1, , drop = FALSE])
+    melted_loadings_sp <- reshape2::melt(loadings_sp)
+    
+    ggplot2::ggplot(melted_loadings_sp, ggplot2::aes(x = Var1, y = Var2, fill =
+                                                         value)) +
+        ggplot2::geom_tile() + ggplot2::coord_equal() + ggplot2::theme_bw() +
+        ggplot2::scale_fill_distiller(palette = "Blues",
+                                      direction = 1,
+                                      na.value = "white") +
+        ggplot2::guides(fill = FALSE) + # removing legend for `fill`
+        ggplot2::labs(title = "Stability among models") + # using a title instead
+        ggplot2::geom_text(
+            ggplot2::aes(
+                label = round(value, digits = 3),
+                color = ifelse(value > 0.5, 1, 0)
+            ),
+            size = 3,
+            show.legend = FALSE
+        ) +
+        ggplot2::scale_x_discrete(limits = unlist(labelsX)) +
+        ggplot2::scale_y_discrete(limits = rev(unlist(labelsX))) +
+        ggplot2::labs(x = "Model - Latent variable", 
+                      y = "Model - Latent variable") +
+        ggplot2::theme(axis.text.x = ggplot2::element_text(
+            angle = 45,
+            vjust = 1,
+            hjust = 1
+        ),
+        text = ggplot2::element_text(size = 10))
+}
+
+#' Bootstrap plot predictions
+#'
+#' @param list bp_kfold_VIP_analysis results
+#' @param dataset An [nmr_dataset_family] object
+#' @param y_column A string with the name of the y column (present in the
+#' metadata of the dataset)
+#' @param plot A boolean that indicate if results are plotted or not
+#'
+#' @return A plot of the results or a ggplot object
+#' @importFrom stats predict
+#' @importFrom mixOmics mixOmics
+#' @export
+#' @examples
+#' #' # Data analysis for a table of integrated peaks
+#' 
+#' ## Generate an artificial nmr_dataset_peak_table:
+#' ### Generate artificial metadata:
+#' num_samples <- 32 # use an even number in this example
+#' num_peaks <- 20
+#' metadata <- data.frame(
+#'     NMRExperiment = as.character(1:num_samples),
+#'     Condition = rep(c("A", "B"), times = num_samples/2),
+#'     stringsAsFactors = FALSE
+#' )
+#' 
+#' ### The matrix with peaks
+#' peak_means <- runif(n = num_peaks, min = 300, max = 600)
+#' peak_sd <- runif(n = num_peaks, min = 30, max = 60)
+#' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
+#'                                             mu = peak_means, sd = peak_sd)
+#' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+#' 
+#' ## Artificial differences depending on the condition:
+#' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
+#' 
+#' peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+#'     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
+#'     
+#' ### The nmr_dataset_peak_table
+#' peak_table <- new_nmr_dataset_peak_table(
+#'     peak_table = peak_matrix,
+#'     metadata = list(external = metadata)
+#' )
+#' 
+#' ## We will use bootstrap and permutation method for VIPs selection 
+#' ## in a a k-fold cross validation 
+#' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
+#'                            y_column = "Condition", # Label
+#'                            k = 4,
+#'                            nbootstrap = 100)
+#'
+#' message("Selected VIPs are: ", bp_results$importarn_vips)
+#' 
+#' plot_bootstrap_multimodel(bp_results)
+#' 
+plot_bootstrap_multimodel <- function(bp_results, dataset, y_column, plot = TRUE) {
+    
+    n_models = length(bp_results$kfold_results)
+    ncomp = bp_results$kfold_results[[1]]$general_model$ncomp
+    # Extract data and split for train and test
+    x_all <- dataset$peak_table
+    y_all <- nmr_meta_get_column(dataset, column = y_column)
+    te_data <- data.frame()
+    for(i in seq_len(n_models)){
+        # Predictions of test set
+        predictions <- predict(bp_results$kfold_results[[i]]$general_model, newdata = x_all[-bp_results$kfold_index[[i]],, drop = FALSE])
+        # Individuals plot
+        if(ncomp == 1){
+            te_data <- rbind(te_data, data.frame(x = predictions$variates[,1],
+                                                 label = paste("test ", y_all[-bp_results$kfold_index[[i]]])))
+        } else {
+            te_y <- predictions$variates[, 2]
+            te_data <- rbind(te_data, data.frame(x = predictions$variates[,1],
+                                                 y = te_y,
+                                                 label= y_all[-bp_results$kfold_index[[i]]],
+                                                 group = "test "))
+        }
+    }
+    
+    # Individuals plot
+    if(ncomp == 1){
+        # This is needed if the model only have one component
+        plsda_plot <- ggplot2::ggplot(data = te_data, ggplot2::aes(x, fill = label)) +
+            ggplot2::geom_histogram(alpha = .5, bins = 10,
+                                    position="identity") +
+            ggplot2::ggtitle("PLS-DA") +
+            ggplot2::labs(x = "Latent variable 1") +
+            ggplot2::theme_bw()
+    } else {
+        plsda_plot <- ggplot2::ggplot(data = te_data,
+                                      ggplot2::aes(shape = group,
+                                                   col = label
+                                      )) +
+            ggplot2::geom_hline(yintercept=0, linetype="dashed", 
+                                color = "black", size=0.5) +
+            ggplot2::geom_vline(xintercept=0, linetype="dashed", 
+                                color = "black", size=0.5) +
+            ggplot2::geom_point(ggplot2::aes(x, y), size = 1.5) +
+            ggplot2::ggtitle("PLS-DA") +
+            ggplot2::labs(y = "Latent variable 2",
+                          x = "Latent variable 1") +
+            ggplot2::theme_bw()  
+    }
+    if(plot){
+        plsda_plot
+    } else {
+        return(plsda_plot)
+    }
 }

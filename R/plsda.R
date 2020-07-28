@@ -653,7 +653,8 @@ plot_plsda_multimodel <- function(model, plot = TRUE) {
     pdf(file=t)
     for(i in seq_len(n_models)){
         # Predictions of test set
-        predictions <- predict(model$outer_cv_results[[i]]$model, newdata = model$outer_cv_results[[i]]$model$X_test)
+        predictions <- predict(model$outer_cv_results[[i]]$model,
+                               newdata = model$outer_cv_results[[i]]$model$X_test)
         # Individuals plot
         if(min_ncomp == 1){
             # This is needed if the model only have one component

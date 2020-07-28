@@ -25,10 +25,15 @@ A list with the following elements:
 \item \code{relevant_vips}: List of vips with some relevance
 \item \code{pls_vip}: Pls-VIPs of every bootstrap
 \item \code{pls_vip_perm}: Pls-VIPs of every bootstrap with permuted variables
-\item \code{pls_mean}: Pls-VIPs normaliced differences means
+\item \code{pls_vip_means}: Pls-VIPs normaliced differences means
 \item \code{pls_vip_score_diff}: Differences of \code{pls_vip} and \code{pls_vip_perm}
 \item \code{pls_models}: pls models of the diferent bootstraps
 \item \code{pls_perm_models}: pls permuted models of the diferent bootstraps
+\item \code{classif_rate}: classification rate of the bootstrap models
+\item \code{general_model}: pls model trained with all train data
+\item \code{general_CR}: classification rate of the \code{general_model}
+\item \code{vips_model}: pls model trained with vips selection over all train data
+\item \code{vips_CR}: classification rate of the \code{vips_model}
 \item \code{error}: error spected in a t distribution
 \item \code{lower_bound}: lower bound of the confidence interval
 \item \code{upper_bound}: upper bound of the confidence interval
