@@ -30,8 +30,8 @@ plsda_build <- function(x, y, identity, ncomp) {
 #' @param identity_test the multilevel variable in [mixOmics::plsda]
 #' @return A list with two elements:
 #'    - `aucs`: A data frame with two columns: `ncomp` (the number of components) and
-#'        `auc` the area under roc curve for that number of components. For multiclass problems
-#'        the AUC returned is the mean of all the one-vs-other AUCs.
+#'       `auc` the area under roc curve for that number of components. For multiclass problems
+#'       the AUC returned is the mean of all the one-vs-other AUCs.
 #'    - `aucs_full`: A list of matrices, as returned by [mixOmics::auroc].
 #' @noRd
 plsda_auroc <-
