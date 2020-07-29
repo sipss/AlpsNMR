@@ -219,13 +219,13 @@ fun_choose_best_ncomp_auc_threshold <-
             dplyr::summarise(ncomp = round(stats::median(.data$ncomp))) %>%
             dplyr::ungroup()
         
-        # Sanity check:
-        if (nrow(nlv) != length(unique(model_performances$cv_outer_iteration))) {
-            print(nlv)
-            stop(
-                "Unexpected error. The number of latent variables could not be determined. Please report this."
-            )
-        }
+        # If a given outer iteration has such bad performance that no number of latent 
+        # variables passes the threshold, keep the simplest model (ncomp = 1)
+        nlv <- tidyr::complete(
+            nlv,
+            cv_outer_iteration = sort(unique(model_performances$cv_outer_iteration)),
+            fill = list(ncomp = 1)
+        )
         
         plot_to_choose_nlv <-
             ggplot2::ggplot(model_performances) +
@@ -445,7 +445,8 @@ plsda_auroc_vip_compare <- function(...) {
 
 #' Plot PLSDA predictions
 #'
-#' @param model A mixOmics plsda model
+#' @param model A plsda model
+#' @param newdata newdata to predict, if not included model$X_test will be used
 #' @param plot A boolean that indicate if results are plotted or not
 #'
 #' @return A plot of the samples or a ggplot object
@@ -502,9 +503,13 @@ plsda_auroc_vip_compare <- function(...) {
 #' 
 #' #plot_plsda_samples(model$outer_cv_results[[1]]$model)
 #' 
-plot_plsda_samples <- function(model, plot = TRUE) {
+plot_plsda_samples <- function(model, newdata = NULL, plot = TRUE) {
     # Predictions of test set
-    predictions <- predict(model, newdata = model$X_test)
+    if(is.null(newdata)){
+        predictions <- predict(model, newdata = model$X_test)
+    } else {
+        predictions <- predict(model, newdata = newdata)
+    }
     
     # Individuals plot
     if(model$ncomp == 1){

@@ -7,14 +7,14 @@
 plot_bootstrap_multimodel(bp_results, dataset, y_column, plot = TRUE)
 }
 \arguments{
+\item{bp_results}{bp_kfold_VIP_analysis results}
+
 \item{dataset}{An \link{nmr_dataset_family} object}
 
 \item{y_column}{A string with the name of the y column (present in the
 metadata of the dataset)}
 
 \item{plot}{A boolean that indicate if results are plotted or not}
-
-\item{list}{bp_kfold_VIP_analysis results}
 }
 \value{
 A plot of the results or a ggplot object
@@ -23,7 +23,7 @@ A plot of the results or a ggplot object
 Bootstrap plot predictions
 }
 \examples{
-#' # Data analysis for a table of integrated peaks
+# Data analysis for a table of integrated peaks
 
 ## Generate an artificial nmr_dataset_peak_table:
 ### Generate artificial metadata:
@@ -64,6 +64,6 @@ bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
 
 message("Selected VIPs are: ", bp_results$importarn_vips)
 
-plot_bootstrap_multimodel(bp_results)
+plot_bootstrap_multimodel(bp_results, peak_table, "Condition")
 
 }

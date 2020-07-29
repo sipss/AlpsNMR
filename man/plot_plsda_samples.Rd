@@ -4,10 +4,12 @@
 \alias{plot_plsda_samples}
 \title{Plot PLSDA predictions}
 \usage{
-plot_plsda_samples(model, plot = TRUE)
+plot_plsda_samples(model, newdata = NULL, plot = TRUE)
 }
 \arguments{
-\item{model}{A mixOmics plsda model}
+\item{model}{A plsda model}
+
+\item{newdata}{newdata to predict, if not included model$X_test will be used}
 
 \item{plot}{A boolean that indicate if results are plotted or not}
 }

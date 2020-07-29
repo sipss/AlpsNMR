@@ -410,6 +410,7 @@ nmr_data_analysis <- function(dataset,
 #' variable importance in the projection metric for partial least
 #' squares regression
 #' 
+#' @name bp_VIP_analysis
 #' @param dataset An [nmr_dataset_family] object
 #' @param train_index set of index used to generate the bootstrap datasets
 #' @param y_column A string with the name of the y column (present in the
@@ -505,6 +506,7 @@ bp_VIP_analysis <- function(dataset,
                             ncomp,
                             nbootstrap = 300) {
 
+    
     # Extract data and split for train and test
     x_all <- dataset$peak_table
     y_all <- nmr_meta_get_column(dataset, column = y_column)
@@ -541,8 +543,8 @@ bp_VIP_analysis <- function(dataset,
                  this can happen if the number of samples is low. Try to use k=2\n
                  or increase the number of samples")
         }
-        # Remove rownames, because if they are repeated, plsda fails
-        rownames(x_train_boots) <- c()
+        # Rename rownames, because if they are repeated, plsda fails
+        rownames(x_train_boots) <- paste0("Sample", 1:dim(x_train_boots)[1])
         
         # Fit PLS model
         model <-
@@ -607,13 +609,6 @@ bp_VIP_analysis <- function(dataset,
     
     important_vips <- names[lower_bound > qt(0.975, df = nbootstrap - 1)]
     relevant_vips <- names[lower_bound > 0]
-    if (length(important_vips) == 0) {
-        if (length(relevant_vips) == 0) {
-            warning("Error in bp_VIP_analysis, none of the variables seems relevant:\n
-             try increasing the number of bootstraps")
-        }
-        warning("No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps")
-    }
     
     # Chequing performance
     # Fit PLS model
@@ -628,20 +623,32 @@ bp_VIP_analysis <- function(dataset,
     perf <- mixOmics::perf(general_model, newdata = x_test)
     general_CR <- 1 - perf$error.rate$overall[1]
     
-    # Chequing performance of selected vips
-    x_train_reduced <- x_all[train_index, important_vips, drop = FALSE]
-    x_test_reduced <- x_all[-train_index, important_vips, drop = FALSE]
-    # Fit PLS model
-    vips_model <-
-        plsda_build(
-            x = x_train_reduced,
-            y = y_train,
-            identity = NULL,
-            ncomp = ncomp
-        )
-    # Measure the classification rate (CR) of the fold
-    perf <- mixOmics::perf(vips_model, newdata = x_test_reduced)
-    vips_CR  <- 1 - perf$error.rate$overall[1]
+    if (length(important_vips) == 0) {
+        if (length(relevant_vips) == 0) {
+            warning("Error in bp_VIP_analysis, none of the variables seems relevant:\n
+             try increasing the number of bootstraps")
+        }
+        warning("No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps")
+        vips_model <- NULL
+        vips_CR <- 0
+    } else {
+        # Chequing performance of selected vips
+        x_train_reduced <-
+            as.matrix(x_all[train_index, important_vips, drop = FALSE])
+        x_test_reduced <-
+            as.matrix(x_all[-train_index, important_vips, drop = FALSE])
+        # Fit PLS model
+        vips_model <-
+            plsda_build(
+                x = x_train_reduced,
+                y = y_train,
+                identity = NULL,
+                ncomp = ncomp
+            )
+        # Measure the classification rate (CR) of the fold
+        perf <- mixOmics::perf(vips_model, newdata = x_test_reduced)
+        vips_CR  <- 1 - perf$error.rate$overall[1]
+    }
     
     # To return it ordered by mean of the normalized vectors
     orden <- order(boots_vip, decreasing = TRUE)
@@ -674,6 +681,7 @@ bp_VIP_analysis <- function(dataset,
 #' variable importance in the projection metric for partial least
 #' squares regression, in a k-fold cross validation
 #' 
+#' @name bp_kfold_VIP_analysis
 #' @param dataset An [nmr_dataset_family] object
 #' @param y_column A string with the name of the y column (present in the
 #'    metadata of the dataset)
@@ -710,6 +718,7 @@ bp_VIP_analysis <- function(dataset,
 #' peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
 #'                                             mu = peak_means, sd = peak_sd)
 #' colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
+#' rownames(peak_matrix) <- paste0("Sample", 1:num_samples)
 #' 
 #' ## Artificial differences depending on the condition:
 #' peak_matrix[metadata$Condition == "A", "Peak2"] <- 
@@ -728,8 +737,8 @@ bp_VIP_analysis <- function(dataset,
 #' ## in a a k-fold cross validation 
 #' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
 #'                            y_column = "Condition", # Label
-#'                            k = 4,
-#'                            nbootstrap = 100)
+#'                            k = 3,
+#'                            nbootstrap = 10)
 #'
 #' message("Selected VIPs are: ", bp_results$importarn_vips)
 #' 
@@ -770,7 +779,7 @@ bp_kfold_VIP_analysis <- function(dataset,
         numcores <- parallel::detectCores()
     }
     if(numcores > k){numcores <- k}
-    cl <- parallel::makeCluster(numcores, outfile = "C:/Users/hgracia/Desktop/IBEC/test.txt")
+    cl <- parallel::makeCluster(numcores)
     parallel::clusterExport(cl, c("dataset", "y_column", "ncomp", "nbootstrap"), envir=environment())
     results <- parallel::parLapply(cl, k_fold_index, function(index) {
         bp_VIP_analysis(
@@ -1434,18 +1443,19 @@ models_stability_plot_bootstrap = function (bp_results)
 
 #' Bootstrap plot predictions
 #'
-#' @param list bp_kfold_VIP_analysis results
+#' @param bp_results bp_kfold_VIP_analysis results
 #' @param dataset An [nmr_dataset_family] object
 #' @param y_column A string with the name of the y column (present in the
 #' metadata of the dataset)
 #' @param plot A boolean that indicate if results are plotted or not
 #'
+#' @name plot_bootstrap_multimodel
 #' @return A plot of the results or a ggplot object
 #' @importFrom stats predict
 #' @importFrom mixOmics mixOmics
 #' @export
 #' @examples
-#' #' # Data analysis for a table of integrated peaks
+#' # Data analysis for a table of integrated peaks
 #' 
 #' ## Generate an artificial nmr_dataset_peak_table:
 #' ### Generate artificial metadata:
@@ -1486,7 +1496,7 @@ models_stability_plot_bootstrap = function (bp_results)
 #'
 #' message("Selected VIPs are: ", bp_results$importarn_vips)
 #' 
-#' plot_bootstrap_multimodel(bp_results)
+#' plot_bootstrap_multimodel(bp_results, peak_table, "Condition")
 #' 
 plot_bootstrap_multimodel <- function(bp_results, dataset, y_column, plot = TRUE) {
     
