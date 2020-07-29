@@ -436,6 +436,7 @@ nmr_data_analysis <- function(dataset,
 #' - `upper_bound`: upper bound of the confidence interval
 #' 
 #' @importFrom stats qt
+#' @importFrom stats wilcox.test
 #' @examples 
 #' # Data analysis for a table of integrated peaks
 #' 
@@ -485,9 +486,6 @@ nmr_data_analysis <- function(dataset,
 #' )
 #' ## Area under ROC for each outer cross-validation iteration:
 #' print(model$outer_cv_results_digested$auroc)
-#' ## Rank Product of the Variable Importance in the Projection
-#' ## (Lower means more important)
-#' print(sort(model$outer_cv_results_digested$vip_rankproducts))
 #' 
 #' ## The number of components for the bootstrap models is selected 
 #' ncomps <- model$outer_cv_results$`1`$model$ncomp
@@ -496,12 +494,10 @@ nmr_data_analysis <- function(dataset,
 #' # Bootstrap and permutation for VIP selection
 #' bp_VIPS <- bp_VIP_analysis(peak_table, # Data to be analized
 #'                            train_index,
-#'                            y_column = "Condition", # Label
+#'                            y_column = "Condition",
 #'                            ncomp = ncomps,
 #'                            nbootstrap = 100)
 #'
-#' aucs <- max(bp_VIPS$aucroc$aucs$auc)
-#' message("AUC of the Bootstrap and permutation ", aucs)
 #' @export
 bp_VIP_analysis <- function(dataset,
                             train_index,
@@ -514,6 +510,9 @@ bp_VIP_analysis <- function(dataset,
     y_all <- nmr_meta_get_column(dataset, column = y_column)
     x_train <- x_all[train_index,, drop = FALSE]
     y_train <- y_all[train_index]
+    # For check performance
+    x_test <- x_all[-train_index,, drop = FALSE]
+    y_test <- y_all[-train_index]
     
     n <- dim(x_all)[2]
     names <- colnames(x_all)
@@ -532,12 +531,12 @@ bp_VIP_analysis <- function(dataset,
     
     # Bootstrap with replacement nbootstraps datasets
     for (i in seq_len(nbootstrap)) {
-        index <- sample(1:nrow(x_train),nrow(x_train), rep = TRUE)
+        index <- sample(1:nrow(x_train),nrow(x_train), replace = TRUE)
         x_train_boots <- x_train[index,]
         y_train_boots <- y_train[index]
         #if y_train_boots only have one class, plsda models give error
         #warning the user about possible solutions
-        if (unique(y_train_boots) == 1) {
+        if (length(unique(y_train_boots)) == 1) {
             warning("Error in bp_VIP_analysis, bootstrap with only one class.\n
                  this can happen if the number of samples is low. Try to use k=2\n
                  or increase the number of samples")
@@ -558,9 +557,8 @@ bp_VIP_analysis <- function(dataset,
         # Sum contributions of VIPs to each component
         pls_vip[,i] <- sqrt(rowSums(pls_vip_comps^2)/ncomp)
         # Measure the classification rate (CR) of the bootstrap model
-        y_test <- y_train[-index]
-        perf <- mixOmics::perf(model, newdata = x_train[-index,])
-        CR[[i]] <- mean(perf$class$max.dist[,,-1] == y_test)
+        perf <- mixOmics::perf(model, newdata = x_test)
+        CR[[i]] <- 1 - perf$error.rate$overall[1]
                  
         # Permutation of variables
         for (j in seq_len(n)) {
@@ -618,8 +616,6 @@ bp_VIP_analysis <- function(dataset,
     }
     
     # Chequing performance
-    x_test <- x_all[-train_index,, drop = FALSE]
-    y_test <- y_all[-train_index]
     # Fit PLS model
     general_model <-
         plsda_build(
@@ -630,7 +626,7 @@ bp_VIP_analysis <- function(dataset,
         )
     # Measure the classification rate (CR) of the fold
     perf <- mixOmics::perf(general_model, newdata = x_test)
-    general_CR <- mean(perf$class$max.dist[,,-1] == y_test)
+    general_CR <- 1 - perf$error.rate$overall[1]
     
     # Chequing performance of selected vips
     x_train_reduced <- x_all[train_index, important_vips, drop = FALSE]
@@ -645,7 +641,7 @@ bp_VIP_analysis <- function(dataset,
         )
     # Measure the classification rate (CR) of the fold
     perf <- mixOmics::perf(vips_model, newdata = x_test_reduced)
-    vips_CR  <- mean(perf$class$max.dist[,,-1] == y_test)
+    vips_CR  <- 1 - perf$error.rate$overall[1]
     
     # To return it ordered by mean of the normalized vectors
     orden <- order(boots_vip, decreasing = TRUE)
@@ -774,7 +770,7 @@ bp_kfold_VIP_analysis <- function(dataset,
         numcores <- parallel::detectCores()
     }
     if(numcores > k){numcores <- k}
-    cl <- parallel::makeCluster(numcores)
+    cl <- parallel::makeCluster(numcores, outfile = "C:/Users/hgracia/Desktop/IBEC/test.txt")
     parallel::clusterExport(cl, c("dataset", "y_column", "ncomp", "nbootstrap"), envir=environment())
     results <- parallel::parLapply(cl, k_fold_index, function(index) {
         bp_VIP_analysis(
@@ -1302,10 +1298,10 @@ models_stability_plot_plsda = function (model)
         ggplot2::labs(title = "Stability among models") + # using a title instead
         ggplot2::geom_text(
             ggplot2::aes(
-                label = round(value, digits = 3),
+                label = round(value, digits = 2),
                 color = ifelse(value > 0.5, 1, 0)
             ),
-            size = 3,
+            size = 2.5,
             show.legend = FALSE
         ) +
         ggplot2::scale_x_discrete(limits = unlist(labelsX)) +
@@ -1418,10 +1414,10 @@ models_stability_plot_bootstrap = function (bp_results)
         ggplot2::labs(title = "Stability among models") + # using a title instead
         ggplot2::geom_text(
             ggplot2::aes(
-                label = round(value, digits = 3),
+                label = round(value, digits = 2),
                 color = ifelse(value > 0.5, 1, 0)
             ),
-            size = 3,
+            size = 2.5,
             show.legend = FALSE
         ) +
         ggplot2::scale_x_discrete(limits = unlist(labelsX)) +

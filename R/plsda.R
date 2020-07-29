@@ -585,6 +585,8 @@ plot_plsda_samples <- function(model, plot = TRUE) {
 #' @return A plot of the results or a ggplot object
 #' @importFrom stats predict
 #' @importFrom mixOmics mixOmics
+#' @importFrom grDevices dev.off
+#' @importFrom grDevices pdf
 #' @export
 #' @examples
 #' #' # Data analysis for a table of integrated peaks

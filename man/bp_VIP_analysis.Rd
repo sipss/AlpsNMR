@@ -97,9 +97,6 @@ model <- nmr_data_analysis(
 )
 ## Area under ROC for each outer cross-validation iteration:
 print(model$outer_cv_results_digested$auroc)
-## Rank Product of the Variable Importance in the Projection
-## (Lower means more important)
-print(sort(model$outer_cv_results_digested$vip_rankproducts))
 
 ## The number of components for the bootstrap models is selected 
 ncomps <- model$outer_cv_results$`1`$model$ncomp
@@ -108,10 +105,8 @@ train_index <- model$train_test_partitions$outer$`1`$outer_train
 # Bootstrap and permutation for VIP selection
 bp_VIPS <- bp_VIP_analysis(peak_table, # Data to be analized
                            train_index,
-                           y_column = "Condition", # Label
+                           y_column = "Condition",
                            ncomp = ncomps,
                            nbootstrap = 100)
 
-aucs <- max(bp_VIPS$aucroc$aucs$auc)
-message("AUC of the Bootstrap and permutation ", aucs)
 }
