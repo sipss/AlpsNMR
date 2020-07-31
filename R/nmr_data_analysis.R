@@ -789,7 +789,7 @@ bp_kfold_VIP_analysis <- function(dataset,
         numcores <- parallel::detectCores()
     }
     if(numcores > k){numcores <- k}
-    cl <- parallel::makeCluster(numcores, outfile = "C:/Users/hgracia/Desktop/IBEC/test.txt")
+    cl <- parallel::makeCluster(numcores)
     parallel::clusterExport(cl, c("dataset", "y_column", "ncomp", "nbootstrap"), envir=environment())
     results <- parallel::parLapply(cl, k_fold_index, function(index) {
         bp_VIP_analysis(
