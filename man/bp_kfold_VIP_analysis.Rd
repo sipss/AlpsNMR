@@ -44,7 +44,7 @@ squares regression, in a k-fold cross validation
 
 ## Generate an artificial nmr_dataset_peak_table:
 ### Generate artificial metadata:
-num_samples <- 32 # use an even number in this example
+num_samples <- 64 # use an even number in this example
 num_peaks <- 20
 metadata <- data.frame(
     NMRExperiment = as.character(1:num_samples),

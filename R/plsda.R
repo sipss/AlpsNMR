@@ -526,11 +526,12 @@ plot_plsda_samples <- function(model, newdata = NULL, plot = TRUE) {
         te_data <- data.frame(x = predictions$variates[,1],
                               label = paste("test ", model$Y_test))
         
-        plsda_plot <- ggplot2::ggplot(data = tr_data, ggplot2::aes(x, fill = label)) +
+        plsda_plot <- ggplot2::ggplot(data = tr_data, ggplot2::aes(.data[["x"]], 
+                                                                   fill = .data[["label"]])) +
             ggplot2::geom_histogram(alpha = .5, bins = 10,
                                     position="identity") +
             ggplot2::geom_histogram(data = te_data, 
-                                    ggplot2::aes(color = label),
+                                    ggplot2::aes(color = .data[["label"]]),
                                     fill = "white",
                                     alpha = 0.1,
                                     position="identity",
@@ -562,14 +563,14 @@ plot_plsda_samples <- function(model, newdata = NULL, plot = TRUE) {
         data <- rbind(tr_data, te_data)
         
         plsda_plot <- ggplot2::ggplot(data = data,
-                        ggplot2::aes(shape = group,
-                                     col = label
+                        ggplot2::aes(shape = .data[["group"]],
+                                     col = .data[["label"]]
                         )) +
             ggplot2::geom_hline(yintercept=0, linetype="dashed", 
                                 color = "black", size=0.5) +
             ggplot2::geom_vline(xintercept=0, linetype="dashed", 
                                 color = "black", size=0.5) +
-            ggplot2::geom_point(ggplot2::aes(x, y), size = 1.5) +
+            ggplot2::geom_point(ggplot2::aes(.data[["x"]], .data[["y"]]), size = 1.5) +
             ggplot2::ggtitle("PLS-DA") +
             ggplot2::labs(y = ploty$graph$labels$y,
                           x = ploty$graph$labels$x) +
@@ -690,11 +691,11 @@ plot_plsda_multimodel <- function(model, plot = TRUE) {
     # Individuals plot
     if(min_ncomp == 1){
         # This is needed if the model only have one component
-        plsda_plot <- ggplot2::ggplot(data = tr_data, ggplot2::aes(x, fill = label)) +
+        plsda_plot <- ggplot2::ggplot(data = tr_data, ggplot2::aes(.data[["x"]], fill = .data[["label"]])) +
             ggplot2::geom_histogram(alpha = .5, bins = 10,
                                     position="identity") +
             ggplot2::geom_histogram(data = te_data, 
-                                    ggplot2::aes(color = label),
+                                    ggplot2::aes(color = .data[["label"]]),
                                     fill = "white",
                                     alpha = 0.1,
                                     position="identity",
@@ -705,14 +706,14 @@ plot_plsda_multimodel <- function(model, plot = TRUE) {
     } else {
         data <- rbind(tr_data, te_data)
         plsda_plot <- ggplot2::ggplot(data = data,
-                                      ggplot2::aes(shape = group,
-                                                   col = label
+                                      ggplot2::aes(shape = .data[["group"]],
+                                                   col = .data[["label"]]
                                       )) +
             ggplot2::geom_hline(yintercept=0, linetype="dashed", 
                                 color = "black", size=0.5) +
             ggplot2::geom_vline(xintercept=0, linetype="dashed", 
                                 color = "black", size=0.5) +
-            ggplot2::geom_point(ggplot2::aes(x, y), size = 1.5) +
+            ggplot2::geom_point(ggplot2::aes(.data[["x"]], .data[["y"]]), size = 1.5) +
             ggplot2::ggtitle("PLS-DA") +
             ggplot2::labs(y = "Latent variable 2",
                           x = "Latent variable 1") +

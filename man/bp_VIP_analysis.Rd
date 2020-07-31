@@ -107,6 +107,6 @@ bp_VIPS <- bp_VIP_analysis(peak_table, # Data to be analized
                            train_index,
                            y_column = "Condition",
                            ncomp = ncomps,
-                           nbootstrap = 100)
+                           nbootstrap = 10)
 
 }

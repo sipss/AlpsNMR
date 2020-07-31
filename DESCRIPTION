@@ -44,6 +44,7 @@ Imports:
  utils,
  graphics,
  stats,
+ grDevices,
  signal (>= 0.7-6),
  assertthat (>= 0.2.0),
  rlang (>= 0.3.0.1),
