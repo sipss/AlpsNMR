@@ -199,7 +199,7 @@ fun_choose_best_ncomp_auc_threshold <-
             dplyr::mutate(
                 auc_diff = .data$auc - dplyr::lag(.data$auc, default = 0),
                 auc_diff_above_thres = .data$auc_diff > !!auc_threshold,
-                still_improving = dplyr::cumall(auc_diff_above_thres),
+                still_improving = dplyr::cumall(.data$auc_diff_above_thres),
                 good_ncomp = (
                     .data$still_improving == TRUE &
                         dplyr::lead(.data$still_improving, default =
@@ -214,7 +214,7 @@ fun_choose_best_ncomp_auc_threshold <-
         # in its internal validation:
         nlv <- nlv %>%
             dplyr::select(c("cv_outer_iteration", "ncomp")) %>%
-            dplyr::group_by(cv_outer_iteration) %>%
+            dplyr::group_by(.data$cv_outer_iteration) %>%
             # The median of all the good_ncomp of the inner iterations for each outer iteration:
             dplyr::summarise(ncomp = round(stats::median(.data$ncomp))) %>%
             dplyr::ungroup()
