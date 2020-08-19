@@ -15,34 +15,36 @@
 #'     `nmr_identify_regions_urine`
 #' @export
 #'
-#' @examples
-#'\dontrun{
-#' # 1.Build a model with the X data from your nmr object and your class:
-#' MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
-#' Y = nmr_peak_table_completed$Timepoint)
+#' @examples 
+#' message("MUVR is not compatible with Bioconductor, 
+#' use bp_kfold_VIP_analysis method instead")
 #'
+#' ## Example of MUVR usage
+#' # 1.Build a model with the X data from your nmr object and your class:
+#' #MVObj <- rdCV_PLS_RF(nmr_data(nmr_peak_table),
+#' #Y = nmr_peak_table_completed$Timepoint)
 #'
 #' # 2.Model performance
-#' confusion_matrix(MVObj)
+#' #confusion_matrix(MVObj)
 #'
 #' # 3.Plotting the model
-#' MUVR_model_plot(MVObj)
+#' #MUVR_model_plot(MVObj)
 #'
 #' # 4.Permutation test
-#' permutations <- permutation_test_model(MVObj, nPerm = 50)
+#' #permutations <- permutation_test_model(MVObj, nPerm = 50)
 #'
 #' # 5.Plotting permutation test results
-#' permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
+#' #permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")
 #'
 #' # 6.p-Value
-#' p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
+#' #p.value <- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])
 #'
 #' # 7.Significant variables
-#' VIPs <- model_VIP(MVObj)
+#' #VIPs <- model_VIP(MVObj)
 #'
 #' # 8.Identification
-#' results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
-#'}
+#' #results <- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))
+#'
 ppm_VIP_vector <- function(VIPs) {
     ppm_to_assign = tidyr::separate(VIPs,
                                     col = "name",
@@ -69,6 +71,9 @@ ppm_VIP_vector <- function(VIPs) {
 #' @inheritParams MUVR::MUVR
 #'
 #' @export
+#' @examples 
+#' message("MUVR is not compatible with Bioconductor, 
+#' use bp_kfold_VIP_analysis method instead")
 #' @return a MUVR model containing selection parameters, validation and fitness
 #' @references Shi,L. et al. (2018) Variable selection and validation in multivariate modelling. Bioinformatics.
 rdCV_PLS_RF <- function(X,
@@ -104,6 +109,9 @@ rdCV_PLS_RF <- function(X,
 #'
 #' @return A plot with the model performance
 #' @export
+#' @examples 
+#' message("MUVR is not compatible with Bioconductor, 
+#' use bp_kfold_VIP_analysis method instead")
 MUVR_model_plot = function (MVObj,
                             model = "mid",
                             factCols,
@@ -122,6 +130,9 @@ MUVR_model_plot = function (MVObj,
 #' @param MVObj a MUVR model
 #' @return a data frame with the order, name and average rank of selected variables
 #' @export
+#' @examples 
+#' message("MUVR is not compatible with Bioconductor, 
+#' use bp_kfold_VIP_analysis method instead")
 model_VIP = function(MVObj, model = "mid") {
     .Defunct()
 }   
@@ -140,6 +151,9 @@ model_VIP = function(MVObj, model = "mid") {
 #'     the model performance and the null hypothesis distribution from permutation
 #'     test test
 #' @export
+#' @examples 
+#' message("MUVR is not compatible with Bioconductor, 
+#' use bp_kfold_VIP_analysis method instead")
 p_value_perm = function (model_actual, permutation_object) {
     .Defunct()
 }   
@@ -155,6 +169,9 @@ p_value_perm = function (model_actual, permutation_object) {
 #'
 #' @return A confusion matrix of the model comparing actual vs predicted class
 #' @export
+#' @examples 
+#' message("MUVR is not compatible with Bioconductor, 
+#' use bp_kfold_VIP_analysis method instead")
 confusion_matrix = function(MVObj, model = "mid") {
     .Defunct()
 }   
@@ -178,6 +195,9 @@ confusion_matrix = function(MVObj, model = "mid") {
 #' @inheritParams MUVR::MUVR
 #'
 #' @export
+#' @examples 
+#' message("MUVR is not compatible with Bioconductor, 
+#' use bp_kfold_VIP_analysis method instead")
 #' @return a MUVR model containing selection parameters, validation and fitness
 #' @references Shi,L. et al. (2018) Variable selection and validation in multivariate modelling. Bioinformatics.
 rdCV_PLS_RF_ML = function (nmr_peak_table,
@@ -206,6 +226,9 @@ rdCV_PLS_RF_ML = function (nmr_peak_table,
 #'
 #' @return the AUC value of the middle model
 #' @export
+#' @examples 
+#' message("MUVR is not compatible with Bioconductor, 
+#' use bp_kfold_VIP_analysis method instead")
 AUC_model <- function (MVObj) {
     .Defunct()
 }   

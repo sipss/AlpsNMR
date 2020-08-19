@@ -132,41 +132,7 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #'
 #' @inherit nmr_integrate_regions return
 #' @export
-#' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#'
-#' # 1.Peak detection in the dataset.
-#' peak_data <- nmr_detect_peaks(nmr_dataset,
-#'                               nDivRange_ppm = 0.1, # Size of detection segments
-#'                               scales = seq(1, 16, 2),
-#'                               baselineThresh = 0, # Minimum peak intensity
-#'                               SNR.Th = 4) # Signal to noise ratio
-#'
-#' # 2.Find the reference spectrum to align with.
-#' NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
-#'
-#' # 3.Spectra alignment using the ref spectrum and a maximum alignment shift
-#' nmr_dataset <- nmr_align(nmr_dataset, # the dataset
-#'                          peak_data, # detected peaks
-#'                          NMRExp_ref = NMRExp_ref, # ref spectrum
-#'                          maxShift_ppm = 0.0015, # max alignment shift
-#'                          acceptLostPeak = FALSE) # lost peaks
-#'
-#' # 4.PEAK INTEGRATION (please, consider previous normalization step).
-#' # First we take the peak table from the reference spectrum
-#' peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
-#'
-#' # Then we integrate spectra considering the peaks from the ref spectrum
-#' nmr_peak_table <- nmr_integrate_peak_positions(
-#'                       samples = nmr_dataset,
-#'                       peak_pos_ppm = peak_data_ref$ppm,
-#'                       peak_width_ppm = NULL)
-#'
-#' #If you wanted the final peak table before machine learning you can run
-#' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
-#' 
+#' @rdname Peak_detection
 #' @family peak integration functions
 #' @family nmr_dataset_1D functions
 nmr_integrate_peak_positions <- function(samples,
@@ -193,39 +159,7 @@ nmr_integrate_peak_positions <- function(samples,
 #' @param integration_object A [nmr_dataset] object
 #' @return Get integrals with metadata from `integrate peak positions`
 #' @name get_integration_with_metada
-#' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#'
-#' # 1.Peak detection in the dataset.
-#' peak_data <- nmr_detect_peaks(nmr_dataset,
-#'                               nDivRange_ppm = 0.1, # Size of detection segments
-#'                               scales = seq(1, 16, 2),
-#'                               baselineThresh = 0, # Minimum peak intensity
-#'                               SNR.Th = 4) # Signal to noise ratio
-#'
-#' # 2.Find the reference spectrum to align with.
-#' NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
-#'
-#' # 3.Spectra alignment using the ref spectrum and a maximum alignment shift
-#' nmr_dataset <- nmr_align(nmr_dataset, # the dataset
-#'                          peak_data, # detected peaks
-#'                          NMRExp_ref = NMRExp_ref, # ref spectrum
-#'                          maxShift_ppm = 0.0015, # max alignment shift
-#'                          acceptLostPeak = FALSE) # lost peaks
-#'
-#' # 4.PEAK INTEGRATION (please, consider previous normalization step).
-#' # First we take the peak table from the reference spectrum
-#' peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
-#'
-#' # Then we integrate spectra considering the peaks from the ref spectrum
-#' nmr_peak_table <- nmr_integrate_peak_positions(
-#'                       samples = nmr_dataset,
-#'                       peak_pos_ppm = peak_data_ref$ppm,
-#'                       peak_width_ppm = 0.006)
-#'                       
-#' peak_table_integration = get_integration_with_metadata(nmr_peak_table)
+#' @rdname Peak_detection
 #' @export
 #'
 #' @family peak integration functions

@@ -44,6 +44,7 @@ Imports:
  utils,
  graphics,
  stats,
+ grDevices,
  signal (>= 0.7-6),
  assertthat (>= 0.2.0),
  rlang (>= 0.3.0.1),
@@ -71,7 +72,6 @@ Imports:
  future (>= 1.10.0),
  ggplot2 (>= 3.1.0),
  baseline (>= 1.2-1),
- doParallel (>= 1.0.14),
  zip (>= 2.0.4),
  tidyselect (>= 0.2.5)
 Suggests:

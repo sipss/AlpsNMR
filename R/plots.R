@@ -15,9 +15,9 @@
 #' @export
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' plot(dataset_1D)
+#' #dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' #dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' #plot(dataset_1D)
 #' 
 plot.nmr_dataset_1D <- function(x,
                                 NMRExperiment = NULL,
@@ -220,9 +220,9 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #' @export
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' html_plot <- plot_webgl(dataset_1D, "html_plot.html")
+#' #dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' #dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' #html_plot <- plot_webgl(dataset_1D, "html_plot.html")
 #' 
 plot_webgl <- function(nmr_dataset, html_filename, ...) {
     plt <- plot(nmr_dataset, ...)

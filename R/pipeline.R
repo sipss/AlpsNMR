@@ -1,3 +1,63 @@
+#' Pipelines
+#'
+#' @name Pipelines
+#' @examples
+#' ## Example of pipeline usage
+#' ## There are differet ways of load the dataset
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' #excel_file <- system.file("dataset-demo", 
+#' #                          "dummy_metadata.xlsx", 
+#' #                          package = "AlpsNMR")
+#' #output_dir <- tempdir()
+#' 
+#' ## Load samples with pipes
+#' #pipe_load_samples(dir_to_demo_dataset,
+#' #                  glob = "*.zip",
+#' #                  output_dir = "../pipe_output")
+#' 
+#' ## Another way to load it
+#' #nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' 
+#' ## Saving the dataset in a .rds file
+#' #nmr_dataset_rds <- tempfile(fileext = ".rds")
+#' #nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
+#' 
+#' ## Interpolation
+#' #pipe_interpolate_1D(nmr_dataset_rds, 
+#' #                    axis = c(min = -0.5, max = 10, by = 2.3E-4), 
+#' #                    output_dir)
+#'                     
+#' ## Get the new path, based in output_dir
+#' #nmr_dataset_rds <- paste(output_dir, "\\", "nmr_dataset.rds", sep = "", collapse = NULL)
+#' 
+#' ## Adding metadata to samples
+#' #pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
+#' #                  excel_file = excel_file)
+#' 
+#' ## Filtering samples
+#' #conditions <- 'SubjectID == "Ana"'
+#' #pipe_filter_samples(nmr_dataset_rds, conditions, output_dir)
+#' 
+#' ## Outlier detection
+#' #pipe_outlier_detection(nmr_dataset_rds, output_dir)
+#' 
+#' ## Exclude regions
+#' #exclude_regions <- list(water = c(5.1, 4.5))
+#' #pipe_exclude_regions(nmr_dataset_rds, exclude_regions, output_dir)
+#' 
+#' ## peak aling
+#' #pipe_peakdet_align(nmr_dataset_rds, output_dir = output_dir)
+#' 
+#' ## peak integration
+#' #pipe_peak_integration(nmr_dataset_rds, 
+#' #                      peak_det_align_dir = output_dir,
+#' #                      peak_width_ppm = 0.006, output_dir)
+#' 
+#' ## Normalization   
+#' #pipe_normalization(nmr_dataset_rds, output_dir = output_dir)
+#' 
+NULL
+
 #' Pipeline: Load NMR samples
 #'
 #' @family pipeline functions
@@ -9,12 +69,7 @@
 #' @return This function saves the result to the output directory
 #' @export
 #'
-#' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' pipe_load_samples(dir_to_demo_dataset,
-#'                   glob = "*.zip",
-#'                   output_dir = "./pipe_output")
-#' 
+#' @rdname Pipelines
 pipe_load_samples <- function(samples_dir,
                               glob = "*0",
                               output_dir = NULL) {
@@ -66,21 +121,7 @@ pipe_load_samples <- function(samples_dir,
 #'
 #' @return This function saves the result to the output directory
 #' @export
-#'
-#' @examples
-#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", 
-#'                           "dummy_metadata.xlsx", 
-#'                           package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
-#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' nmr_dataset_rds <- tempfile(fileext = ".rds")
-#' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
-#' output_dir <- tempdir()
-#' pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
-#'                                     excel_file = excel_file)
-#' # Check out: output_dir
+#' @rdname Pipelines
 #' 
 pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
   # DT is used in the Rmd file, so we require it to be installed now.
@@ -114,18 +155,7 @@ pipe_add_metadata <- function(nmr_dataset_rds, excel_file, output_dir) {
 #'
 #' @return This function saves the result to the output directory
 #' @export
-#' @examples
-#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", 
-#'                           "dummy_metadata.xlsx", 
-#'                           package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset_rds <- tempfile(fileext = ".rds")
-#' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
-#' output_dir <- tempdir()
-#' pipe_interpolate_1D(nmr_dataset_rds, 
-#'                     axis = c(min = -0.5, max = 10, by = 2.3E-4), 
-#'                     output_dir)
+#' @rdname Pipelines
 #' 
 pipe_interpolate_1D <- function(nmr_dataset_rds, axis, output_dir) {
   message("Starting pipe_interpolate_1D at ", Sys.time())
@@ -153,7 +183,6 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis, output_dir) {
   message("Ending pipe_interpolate_1D at ", Sys.time())
 }
 
-
 #' Pipeline: Exclude regions
 #'
 #' @family pipeline functions
@@ -162,20 +191,7 @@ pipe_interpolate_1D <- function(nmr_dataset_rds, axis, output_dir) {
 #'
 #' @return This function saves the result to the output directory
 #' @export
-#' @examples
-#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", 
-#'                           "dummy_metadata.xlsx", 
-#'                           package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
-#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' nmr_dataset_rds <- tempfile(fileext = ".rds")
-#' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
-#' exclude_regions <- list(water = c(5.1, 4.5))
-#' output_dir <- tempdir()
-#' pipe_exclude_regions(nmr_dataset_rds, exclude_regions, output_dir)
-#' 
+#' @rdname Pipelines
 pipe_exclude_regions <- function(nmr_dataset_rds,
                                  exclude,
                                  output_dir) {
@@ -217,18 +233,7 @@ pipe_exclude_regions <- function(nmr_dataset_rds,
 #'
 #' @return This function saves the result to the output directory
 #' @export
-#' @examples
-#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", 
-#'                           "dummy_metadata.xlsx", 
-#'                           package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
-#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' nmr_dataset_rds <- tempfile(fileext = ".rds")
-#' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
-#' output_dir <- tempdir()
-#' pipe_outlier_detection(nmr_dataset_rds, output_dir)
+#' @rdname Pipelines
 #' 
 pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)    {
   message("Starting pipe_outlier_detection at ", Sys.time())
@@ -314,19 +319,7 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)    {
 #'
 #' @export
 #' @family pipeline functions
-#' @examples
-#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", 
-#'                           "dummy_metadata.xlsx", 
-#'                           package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
-#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' nmr_dataset_rds <- tempfile(fileext = ".rds")
-#' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
-#' output_dir <- tempdir()
-#' conditions <- 'NMRExperiment == "10"'
-#' pipe_filter_samples(nmr_dataset_rds, conditions, output_dir)
+#' @rdname Pipelines
 #' 
 pipe_filter_samples <- function(nmr_dataset_rds,
                                 conditions,
@@ -377,18 +370,7 @@ pipe_filter_samples <- function(nmr_dataset_rds,
 #' @family pipeline functions
 #' @family peak detection functions
 #' @family alignment functions
-#' @examples
-#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", 
-#'                           "dummy_metadata.xlsx", 
-#'                           package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
-#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' nmr_dataset_rds <- tempfile(fileext = ".rds")
-#' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
-#' output_dir <- tempdir()
-#' pipe_peakdet_align(nmr_dataset_rds, output_dir = output_dir)
+#' @rdname Pipelines
 #' 
 pipe_peakdet_align <- function(nmr_dataset_rds,
                                nDivRange_ppm = 0.1,
@@ -465,21 +447,7 @@ pipe_peakdet_align <- function(nmr_dataset_rds,
 #' @export
 #' @family pipeline functions
 #' @family peak integration functions
-#' @examples
-#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", 
-#'                           "dummy_metadata.xlsx", 
-#'                           package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
-#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' nmr_dataset_rds <- tempfile(fileext = ".rds")
-#' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
-#' output_dir <- tempdir()
-#' pipe_peakdet_align(nmr_dataset_rds, output_dir = output_dir)
-#' pipe_peak_integration(nmr_dataset_rds, 
-#'                       peak_det_align_dir = output_dir,
-#'                       peak_width_ppm = 0.006, output_dir)
+#' @rdname Pipelines
 #' 
 pipe_peak_integration <- function(nmr_dataset_rds,
                                   peak_det_align_dir,
@@ -539,18 +507,7 @@ pipe_peak_integration <- function(nmr_dataset_rds,
 #'
 #' @family pipeline functions
 #' @export
-#' @examples
-#' dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' excel_file <- system.file("dataset-demo", 
-#'                           "dummy_metadata.xlsx", 
-#'                           package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' nmr_dataset <- nmr_interpolate_1D(nmr_dataset, 
-#'                                   axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' nmr_dataset_rds <- tempfile(fileext = ".rds")
-#' nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
-#' output_dir <- tempdir()
-#' pipe_normalization(nmr_dataset_rds, output_dir = output_dir)
+#' @rdname Pipelines
 #' 
 pipe_normalization <- function(nmr_dataset_rds,
                                internal_calibrant = NULL,

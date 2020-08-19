@@ -19,14 +19,12 @@ Build list of regions for peak integration
 }
 \seealso{
 Other peak detection functions: 
+\code{\link{Pipelines}},
 \code{\link{nmr_baseline_threshold}()},
-\code{\link{nmr_detect_peaks_plot}()},
-\code{\link{nmr_detect_peaks_tune_snr}()},
-\code{\link{nmr_detect_peaks}()},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},
 \code{\link{nmr_integrate_regions}()},
-\code{\link{pipe_pakdet_align}}
+\code{\link{validate_nmr_dataset_peak_table}()}
 }
 \concept{peak detection functions}

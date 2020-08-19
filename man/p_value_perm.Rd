@@ -22,3 +22,7 @@ test test
 The fucntion calculates the cumulative (1-tailed) probability of 'actual'
 belonging to 'h0' (\code{permutation_object} from the \code{permutation_test_model} function).
 }
+\examples{
+message("MUVR is not compatible with Bioconductor, 
+use bp_kfold_VIP_analysis method instead")
+}

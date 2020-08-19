@@ -27,3 +27,7 @@ more information about the multivariate modelling with minimally biased
 variable selection (MUVR) from the \code{MUVR} package, see Shi et al., 2018 (DOI:
 10.1093/bioinformatics/bty710).
 }
+\examples{
+message("MUVR is not compatible with Bioconductor, 
+use bp_kfold_VIP_analysis method instead")
+}

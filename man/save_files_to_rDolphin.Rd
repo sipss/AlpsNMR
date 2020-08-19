@@ -35,6 +35,7 @@ save_files_to_rDolphin(files_rDolphin, output_directory)
 }
 \seealso{
 Other import/export functions: 
+\code{\link{Pipelines}},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
@@ -44,7 +45,6 @@ Other import/export functions:
 \code{\link{nmr_read_bruker_fid}()},
 \code{\link{nmr_read_samples}()},
 \code{\link{nmr_zip_bruker_samples}()},
-\code{\link{pipe_load_samples}()},
 \code{\link{save_profiling_output}()},
 \code{\link{to_ChemoSpec}()}
 
@@ -56,19 +56,13 @@ Other nmr_dataset_1D functions:
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
 \code{\link{format.nmr_dataset_1D}()},
-\code{\link{get_integration_with_metada}},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset_1D}()},
 \code{\link{nmr_align_find_ref}()},
-\code{\link{nmr_align}()},
 \code{\link{nmr_baseline_removal}()},
 \code{\link{nmr_baseline_threshold}()},
-\code{\link{nmr_detect_peaks_plot}()},
-\code{\link{nmr_detect_peaks_tune_snr}()},
-\code{\link{nmr_detect_peaks}()},
 \code{\link{nmr_exclude_region}()},
-\code{\link{nmr_integrate_peak_positions}()},
 \code{\link{nmr_integrate_regions}()},
 \code{\link{nmr_interpolate_1D}()},
 \code{\link{nmr_meta_add}()},
@@ -88,6 +82,7 @@ Other nmr_dataset_1D functions:
 \code{\link{rdCV_PLS_RF_ML}()},
 \code{\link{rdCV_PLS_RF}()},
 \code{\link{to_ChemoSpec}()},
+\code{\link{validate_nmr_dataset_peak_table}()},
 \code{\link{validate_nmr_dataset}()}
 
 Other to_rDolphin_blood functions: 
