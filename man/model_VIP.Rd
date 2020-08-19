@@ -19,3 +19,7 @@ a data frame with the order, name and average rank of selected variables
 Once, the MVObj is created and validated, this function extracts autoselected
 ranked variables from the model (MUVR object). See \code{rdCV_PLS_RF} function.
 }
+\examples{
+message("MUVR is not compatible with Bioconductor, 
+use bp_kfold_VIP_analysis method instead")
+}

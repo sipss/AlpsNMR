@@ -20,3 +20,7 @@ After creating a model with the \code{rdCV_PLS_RF} function, you can run
 \code{confusion_matrix} on the model to make a confusion matrix from MUVR. This
 gives information about the model performance (e.g. classification rate).
 }
+\examples{
+message("MUVR is not compatible with Bioconductor, 
+use bp_kfold_VIP_analysis method instead")
+}

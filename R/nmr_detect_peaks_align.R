@@ -1,5 +1,57 @@
 #' Peak detection for NMR
 #'
+#' @name Peak_detection
+#' @examples
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#'
+#' sample_10 <- filter(dataset_1D, NMRExperiment == "10")
+#'
+#' # 1.Peak detection in the dataset.
+#' peak_data <- nmr_detect_peaks(dataset_1D,
+#'                               nDivRange_ppm = 0.1, # Size of detection segments
+#'                               scales = seq(1, 16, 2),
+#'                               baselineThresh = 0, # Minimum peak intensity
+#'                               SNR.Th = 4) # Signal to noise ratio
+#'
+#' #nmr_detect_peaks_plot(sample_10, peak_data, "NMRExp_ref")
+#' 
+#' peaks_detected <- nmr_detect_peaks_tune_snr(sample_10, 
+#'                                             SNR_thresholds = seq(from = 2, 
+#'                                             to = 3, by = 0.5))
+#'
+#' 
+#' # 2.Find the reference spectrum to align with.
+#' NMRExp_ref <- nmr_align_find_ref(dataset_1D, peak_data)
+#'
+#' # 3.Spectra alignment using the ref spectrum and a maximum alignment shift
+#' nmr_dataset <- nmr_align(dataset_1D, # the dataset
+#'                          peak_data, # detected peaks
+#'                          NMRExp_ref = NMRExp_ref, # ref spectrum
+#'                          maxShift_ppm = 0.0015, # max alignment shift
+#'                          acceptLostPeak = FALSE) # lost peaks
+#'                          
+#' # 4.PEAK INTEGRATION (please, consider previous normalization step).
+#' # First we take the peak table from the reference spectrum
+#' peak_data_ref <- filter(peak_data, NMRExperiment == NMRExp_ref)
+#'
+#' # Then we integrate spectra considering the peaks from the ref spectrum
+#' nmr_peak_table <- nmr_integrate_peak_positions(
+#'                       samples = nmr_dataset,
+#'                       peak_pos_ppm = peak_data_ref$ppm,
+#'                       peak_width_ppm = NULL)
+#'
+#' validate_nmr_dataset_peak_table(nmr_peak_table)
+#' 
+#' #If you wanted the final peak table before machine learning you can run
+#' nmr_peak_table_completed <- get_integration_with_metadata(nmr_peak_table)
+#' 
+NULL
+
+
+#' Peak detection for NMR
+#'
 #' The function detects peaks on an [nmr_dataset_1D] object, using
 #' [speaq::detectSpecPeaks]. `detectSpecPeaks` divides the whole spectra into
 #' smaller segments and uses [MassSpecWavelet::peakDetectionCWT] for peak
@@ -19,20 +71,9 @@
 #' @inheritParams speaq::detectSpecPeaks
 #' @return A data frame with the NMRExperiment, the sample index, the position
 #'     in ppm and index and the peak intensity
-#' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#'
-#' # 1.Peak detection in the dataset.
-#' peak_data <- nmr_detect_peaks(dataset_1D,
-#'                               nDivRange_ppm = 0.1, # Size of detection segments
-#'                               scales = seq(1, 16, 2),
-#'                               baselineThresh = 0, # Minimum peak intensity
-#'                               SNR.Th = 4) # Signal to noise ratio
-#'
+#' 
 #' @export
-#'
+#' @rdname Peak_detection
 nmr_detect_peaks <- function(nmr_dataset,
                              nDivRange_ppm = 0.1,
                              scales = seq(1, 16, 2),
@@ -129,17 +170,7 @@ nmr_detect_peaks <- function(nmr_dataset,
 #' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
 #' @export
 #' @return Plot peak detection results
-#' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' # 1.Peak detection in the dataset.
-#' peak_data <- nmr_detect_peaks(dataset_1D,
-#'                               nDivRange_ppm = 0.1, # Size of detection segments
-#'                               scales = seq(1, 16, 2),
-#'                               baselineThresh = 0, # Minimum peak intensity
-#'                               SNR.Th = 4) # Signal to noise ratio
-#' nmr_detect_peaks_plot(dataset_1D, peak_data, "NMRExp_ref")
+#' @rdname Peak_detection
 #' 
 #' @family peak detection functions
 #' @family nmr_dataset_1D functions
@@ -246,14 +277,7 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #' @family peak detection functions
 #' @family nmr_dataset_1D functions
 #' @export
-#' @examples 
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, 
-#'                                                    max = 10, by = 2.3E-4))
-#' peaks_detected <- nmr_detect_peaks_tune_snr(dataset_1D, 
-#'                                             SNR_thresholds = seq(from = 2, 
-#'                                             to = 3, by = 0.5))
+#' @rdname Peak_detection
 #'
 nmr_detect_peaks_tune_snr <-
     function(ds,
@@ -357,29 +381,10 @@ nmr_detect_peaks_tune_snr <-
 #' @param maxShift_ppm The maximum shift allowed, in ppm
 #' @param NMRExp_ref NMRExperiment of the reference to use for alignment
 #' @inheritParams speaq::dohCluster
-#' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' # 1.Peak detection in the dataset.
-#' peak_data <- nmr_detect_peaks(dataset_1D,
-#'                               nDivRange_ppm = 0.1, # Size of detection segments
-#'                               scales = seq(1, 16, 2),
-#'                               baselineThresh = 0, # Minimum peak intensity
-#'                               SNR.Th = 4) # Signal to noise ratio
 #' 
-#' # 2.Find the reference spectrum to align with.
-#' NMRExp_ref <- nmr_align_find_ref(dataset_1D, peak_data)
-#'
-#' # 3.Spectra alignment using the ref spectrum and a maximum alignment shift
-#' nmr_dataset <- nmr_align(dataset_1D, # the dataset
-#'                          peak_data, # detected peaks
-#'                          NMRExp_ref = NMRExp_ref, # ref spectrum
-#'                          maxShift_ppm = 0.0015, # max alignment shift
-#'                          acceptLostPeak = FALSE) # lost peaks
-#'                          
 #' @return An [nmr_dataset_1D], with the spectra aligned
 #' @export
+#' @rdname Peak_detection
 #' @family peak alignment functions
 #' @family nmr_dataset_1D functions
 nmr_align <- function(nmr_dataset,

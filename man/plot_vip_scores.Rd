@@ -26,7 +26,7 @@ Plot vip scores of bootstrap
 
 ## Generate an artificial nmr_dataset_peak_table:
 ### Generate artificial metadata:
-num_samples <- 32 # use an even number in this example
+num_samples <- 64 # use an even number in this example
 num_peaks <- 20
 metadata <- data.frame(
     NMRExperiment = as.character(1:num_samples),
@@ -56,15 +56,15 @@ peak_table <- new_nmr_dataset_peak_table(
 
 ## We will use bootstrap and permutation method for VIPs selection 
 ## in a a k-fold cross validation 
-bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
-                           y_column = "Condition", # Label
-                           k = 4,
-                           nbootstrap = 10)
+#bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
+#                           y_column = "Condition", # Label
+#                           k = 3,
+#                           nbootstrap = 10)
 
-message("Selected VIPs are: ", bp_results$importarn_vips)
+#message("Selected VIPs are: ", bp_results$importarn_vips)
 
-plot_vip_scores(bp_results$kfold_results[[1]]$vip_means, 
-                bp_results$kfold_results[[1]]$error[1],
-                nbootstrap = 10)
+#plot_vip_scores(bp_results$kfold_results[[1]]$vip_means, 
+#                bp_results$kfold_results[[1]]$error[1],
+#                nbootstrap = 10)
 
 }

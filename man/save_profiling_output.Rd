@@ -35,6 +35,7 @@ save_profiling_output(targeted_profiling, output_directory)
 }
 \seealso{
 Other import/export functions: 
+\code{\link{Pipelines}},
 \code{\link{files_to_rDolphin_blood}()},
 \code{\link{files_to_rDolphin_cell}()},
 \code{\link{files_to_rDolphin_urine}()},
@@ -44,7 +45,6 @@ Other import/export functions:
 \code{\link{nmr_read_bruker_fid}()},
 \code{\link{nmr_read_samples}()},
 \code{\link{nmr_zip_bruker_samples}()},
-\code{\link{pipe_load_samples}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ChemoSpec}()}
 

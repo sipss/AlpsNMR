@@ -58,6 +58,6 @@ model <- nmr_data_analysis(
     data_analysis_method = methodology
 )
 
-models_stability_plot_plsda(model)
+#models_stability_plot_plsda(model)
 
 }

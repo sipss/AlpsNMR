@@ -363,12 +363,12 @@ nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
 #' @family nmr_dataset_1D functions
 #' @importFrom rlang .data
 #' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' model <- nmr_pca_build_model(dataset_1D)
-#' outliers_info <- nmr_pca_outliers(dataset_1D, model)
-#' nmr_pca_outliers_plot(dataset_1D, outliers_info)
+#' #dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' #dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' #dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' #model <- nmr_pca_build_model(dataset_1D)
+#' #outliers_info <- nmr_pca_outliers(dataset_1D, model)
+#' #nmr_pca_outliers_plot(dataset_1D, outliers_info)
 #' 
 nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
     outlier_info <- pca_outliers[["outlier_info"]]

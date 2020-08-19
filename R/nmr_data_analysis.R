@@ -907,16 +907,16 @@ bp_kfold_VIP_analysis <- function(dataset,
 #' 
 #' ## We will use bootstrap and permutation method for VIPs selection 
 #' ## in a a k-fold cross validation 
-#' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
-#'                            y_column = "Condition", # Label
-#'                            k = 3,
-#'                            nbootstrap = 10)
+#' #bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
+#' #                           y_column = "Condition", # Label
+#' #                           k = 3,
+#' #                           nbootstrap = 10)
 #'
-#' message("Selected VIPs are: ", bp_results$importarn_vips)
+#' #message("Selected VIPs are: ", bp_results$importarn_vips)
 #' 
-#' plot_vip_scores(bp_results$kfold_results[[1]]$vip_means, 
-#'                 bp_results$kfold_results[[1]]$error[1],
-#'                 nbootstrap = 10)
+#' #plot_vip_scores(bp_results$kfold_results[[1]]$vip_means, 
+#' #                bp_results$kfold_results[[1]]$error[1],
+#' #                nbootstrap = 10)
 #' 
 plot_vip_scores <- function(vip_means, error, nbootstrap, plot = TRUE) {
     
@@ -1265,7 +1265,7 @@ permutation_test_plot = function (nmr_data_analysis_model,
 #'     data_analysis_method = methodology
 #' )
 #' 
-#' models_stability_plot_plsda(model)
+#' #models_stability_plot_plsda(model)
 #' 
 models_stability_plot_plsda = function (model)
 {
@@ -1379,14 +1379,14 @@ models_stability_plot_plsda = function (model)
 #' 
 #' ## We will use bootstrap and permutation method for VIPs selection 
 #' ## in a a k-fold cross validation 
-#' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
-#'                            y_column = "Condition", # Label
-#'                            k = 3,
-#'                            nbootstrap = 10)
+#' #bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
+#' #                           y_column = "Condition", # Label
+#' #                           k = 3,
+#' #                           nbootstrap = 10)
 #'
-#' message("Selected VIPs are: ", bp_results$importarn_vips)
+#' #message("Selected VIPs are: ", bp_results$importarn_vips)
 #' 
-#' models_stability_plot_bootstrap(bp_results)
+#' #models_stability_plot_bootstrap(bp_results)
 #' 
 models_stability_plot_bootstrap = function (bp_results)
 {
@@ -1499,14 +1499,14 @@ models_stability_plot_bootstrap = function (bp_results)
 #' 
 #' ## We will use bootstrap and permutation method for VIPs selection 
 #' ## in a a k-fold cross validation 
-#' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
-#'                            y_column = "Condition", # Label
-#'                            k = 3,
-#'                            nbootstrap = 10)
+#' #bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
+#' #                           y_column = "Condition", # Label
+#' #                           k = 3,
+#' #                           nbootstrap = 10)
 #'
-#' message("Selected VIPs are: ", bp_results$importarn_vips)
+#' #message("Selected VIPs are: ", bp_results$importarn_vips)
 #' 
-#' plot_bootstrap_multimodel(bp_results, peak_table, "Condition")
+#' #plot_bootstrap_multimodel(bp_results, peak_table, "Condition")
 #' 
 plot_bootstrap_multimodel <- function(bp_results, dataset, y_column, plot = TRUE) {
     
