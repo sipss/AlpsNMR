@@ -1,3 +1,9 @@
+# AlpsNMR 2.99.0 (2020-08-24)
+
+- Added bootstrap and permutation method and some plots
+  related to it
+- Minor modifications for bioconductor submision
+
 # AlpsNMR 2.5.9002 (2020-05-25)
 
 - Changes to pass BiocCheck
