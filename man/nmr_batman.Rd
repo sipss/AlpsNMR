@@ -64,19 +64,16 @@ bopts <- nmr_batman_options()
 dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-# nmr_batman_export_dataset(dataset_1D)
+#nmr_batman_export_dataset(dataset_1D)
 
-# deleting batman file to avoid error if exist
-file.remove("BatmanInput/multi_data_user.csv")
-multi_data_user_hmdb <- nmr_batman_multi_data_user_hmdb()
+message("Use of multi_data_user_hmdb")
+#multi_data_user_hmdb <- nmr_batman_multi_data_user_hmdb()
 hmdb <- NULL
-utils::data("hmdb", package = "AlpsNMR", envir = environment())
-# hmdb <- nmr_batman_multi_data_user(hmbd)
+#utils::data("hmdb", package = "AlpsNMR", envir = environment())
+#hmdb <- nmr_batman_multi_data_user(hmbd)
 
-# deleting batman file to avoid error if exist
-file.remove("BatmanInput/metabolitesList.csv")
 metabolite_names <- c("alanine", "glucose")
-metabolite_names <- nmr_batman_metabolites_list(metabolite_names)
+#metabolite_names <- nmr_batman_metabolites_list(metabolite_names)
 
 }
 \seealso{

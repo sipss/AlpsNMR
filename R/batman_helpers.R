@@ -242,7 +242,7 @@ batman_get_full_filename <- function(batman_dir, filename) {
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' # nmr_batman_export_dataset(dataset_1D)
+#' #nmr_batman_export_dataset(dataset_1D)
 #'
 nmr_batman_export_dataset <- function(nmr_dataset,
                                       batman_dir = "BatmanInput",
@@ -262,9 +262,8 @@ nmr_batman_export_dataset <- function(nmr_dataset,
 #' @rdname nmr_batman
 #' @export
 #' @examples
-#' # deleting batman file to avoid error if exist
-#' file.remove("BatmanInput/multi_data_user.csv")
-#' multi_data_user_hmdb <- nmr_batman_multi_data_user_hmdb()
+#' message("Use of multi_data_user_hmdb")
+#' #multi_data_user_hmdb <- nmr_batman_multi_data_user_hmdb()
 nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput",
                                             filename = "multi_data_user.csv") {
     hmdb <- NULL
@@ -279,8 +278,8 @@ nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput",
 #' @export
 #' @examples
 #' hmdb <- NULL
-#' utils::data("hmdb", package = "AlpsNMR", envir = environment())
-#' # hmdb <- nmr_batman_multi_data_user(hmbd)
+#' #utils::data("hmdb", package = "AlpsNMR", envir = environment())
+#' #hmdb <- nmr_batman_multi_data_user(hmbd)
 #'
 nmr_batman_multi_data_user <- function(multiplet_table,
                                        batman_dir = "BatmanInput",
@@ -332,10 +331,8 @@ nmr_batman_multi_data_user <- function(multiplet_table,
 #' @rdname nmr_batman
 #' @export
 #' @examples
-#' # deleting batman file to avoid error if exist
-#' file.remove("BatmanInput/metabolitesList.csv")
 #' metabolite_names <- c("alanine", "glucose")
-#' metabolite_names <- nmr_batman_metabolites_list(metabolite_names)
+#' #metabolite_names <- nmr_batman_metabolites_list(metabolite_names)
 #'
 nmr_batman_metabolites_list <- function(metabolite_names,
                                         batman_dir = "BatmanInput",

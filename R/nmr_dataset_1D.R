@@ -182,7 +182,7 @@ format.nmr_dataset_1D <- function(x, ...) {
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' nmr_export_data_1r(dataset_1D, "exported_nmr_dataset")
+#' #nmr_export_data_1r(dataset_1D, "exported_nmr_dataset")
 nmr_export_data_1r <- function(nmr_dataset, filename) {
     # FIXME: remove me (nmr_data() covers for this)
     assert_that(is.nmr_dataset_1D(nmr_dataset), msg = "An nmr_dataset_1D should be given")
