@@ -1,6 +1,5 @@
-# AlpsNMR 0.99.1 (2020-08-25)
+# AlpsNMR 2.99.1 (2020-08-25)
 
-- Version change as new package for Bioconductor
 - AlpsNMR.Rproj added to gitignore
 - Modified examples to avoid create files in main package folder
 
