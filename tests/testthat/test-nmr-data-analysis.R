@@ -1,6 +1,6 @@
 ## Prepare demo dataset
 prepare_dataset <- function() {
-  # 16 artificial samples created based on the 4 demo samples
+  # 12 artificial samples created based on the 3 demo samples
   MeOH_plasma_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
   MeOH_plasma_extraction_xlsx <- file.path(MeOH_plasma_extraction_dir, "dummy_metadata.xlsx")
   exp_subj_id <- readxl::read_excel(MeOH_plasma_extraction_xlsx, sheet = 1)
@@ -15,7 +15,7 @@ prepare_dataset <- function() {
   dataset <- nmr_baseline_removal(dataset, lambda = 6, p = 0.01)
   dataset <- nmr_normalize(dataset, method = "area")
   metadata <- nmr_meta_get(dataset, groups = "external")
-  metadata$Group <- c("A", "B", "B", "A")
+  metadata$Group <- c("A", "B", "B")
   dataset <- nmr_meta_add(dataset, metadata[,c("NMRExperiment", "Group")])
   # Artificially create a larger dataset
   larger_metadata <- rbind(metadata, metadata, metadata, metadata)
