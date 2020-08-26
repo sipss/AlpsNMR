@@ -1,4 +1,4 @@
-# AlpsNMR 0.99.2 (2020-08-26)
+# AlpsNMR 2.99.2 (2020-08-26)
 
 - AlpsNMR.Rproj removed from git repository
 - Reduced demo dataset to avoid package size > 5 MB
