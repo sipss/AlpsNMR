@@ -516,11 +516,19 @@ bp_VIP_analysis <- function(dataset,
     x_test <- x_all[-train_index,, drop = FALSE]
     y_test <- y_all[-train_index]
     
+    if (length(unique(y_train)) == 1) {
+        stop("Only one class in train set, increase number of samples")
+    }
+    if (length(unique(y_test)) == 1) {
+        stop("Only one class in test set, increase number of samples")
+    }
+    
     n <- dim(x_all)[2]
     names <- colnames(x_all)
+    #some checks
     if (length(names) == 0) {
         stop("Error in bp_VIP_analysis, the dataset peak_table don't have colnames.")
-    }    
+    }
     
     pls_vip <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
     pls_vip_perm <- matrix(nrow = n, ncol = n, dimnames = list(names, NULL))
@@ -536,13 +544,19 @@ bp_VIP_analysis <- function(dataset,
         index <- sample(seq_len(nrow(x_train)),nrow(x_train), replace = TRUE)
         x_train_boots <- x_train[index,]
         y_train_boots <- y_train[index]
+        
         #if y_train_boots only have one class, plsda models give error
-        #warning the user about possible solutions
         if (length(unique(y_train_boots)) == 1) {
-            warning("Error in bp_VIP_analysis, bootstrap with only one class.\n
-                 this can happen if the number of samples is low. Try to use k=2\n
-                 or increase the number of samples")
+            #Replace the first element for the first element of another class
+            for(i in seq_len(y_train)){
+                if (y_train[i] != y_train_boots[1]){
+                    y_train_boots[1] = y_train[i]
+                    x_train_boots[1] = x_train[i]
+                    break
+                }
+            }
         }
+        
         # Rename rownames, because if they are repeated, plsda fails
         rownames(x_train_boots) <- paste0("Sample", seq_len(dim(x_train_boots)[1]))
         
@@ -623,41 +637,68 @@ bp_VIP_analysis <- function(dataset,
     perf <- mixOmics::perf(general_model, newdata = x_test)
     general_CR <- 1 - perf$error.rate$overall[1]
     
+    
     if (length(important_vips) == 0) {
         if (length(relevant_vips) == 0) {
-            warning("Error in bp_VIP_analysis, none of the variables seems relevant:\n
-             try increasing the number of bootstraps")
+            warning(
+                "Error in bp_VIP_analysis, none of the variables seems relevant:\n
+             try increasing the number of bootstraps"
+            )
         }
-        warning("No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps")
+        warning(
+            "No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps"
+        )
         vips_model <- NULL
         vips_CR <- 0
     } else {
         # Chequing performance of selected vips
         if (length(important_vips) == 1) {
-            # error if the are only one importan vip, we use relevants instead
-            x_train_reduced <-
-                as.matrix(x_all[train_index, relevant_vips, drop = FALSE])
-            x_test_reduced <-
-                as.matrix(x_all[-train_index, relevant_vips, drop = FALSE])
+            if (length(relevant_vips) == 1) {
+                warning(
+                    "Only one VIP ranked as important and relevant, you can try again with more bootstraps"
+                )
+                vips_model <- NULL
+                vips_CR <- 0
+            } else {
+                # if the are only one importan vip, we use relevants instead
+                x_train_reduced <-
+                    as.matrix(x_all[train_index, relevant_vips, drop = FALSE])
+                x_test_reduced <-
+                    as.matrix(x_all[-train_index, relevant_vips, drop = FALSE])
+                
+                # Fit PLS model
+                vips_model <-
+                    plsda_build(
+                        x = x_train_reduced,
+                        y = y_train,
+                        identity = NULL,
+                        ncomp = ncomp
+                    )
+                
+                # Measure the classification rate (CR) of the fold
+                perf <-
+                    mixOmics::perf(vips_model, newdata = x_test_reduced)
+                vips_CR  <- 1 - perf$error.rate$overall[1]
+            }
         } else {
-        x_train_reduced <-
-            as.matrix(x_all[train_index, important_vips, drop = FALSE])
-        x_test_reduced <-
-            as.matrix(x_all[-train_index, important_vips, drop = FALSE])
+            x_train_reduced <-
+                as.matrix(x_all[train_index, important_vips, drop = FALSE])
+            x_test_reduced <-
+                as.matrix(x_all[-train_index, important_vips, drop = FALSE])
+            
+            # Fit PLS model
+            vips_model <-
+                plsda_build(
+                    x = x_train_reduced,
+                    y = y_train,
+                    identity = NULL,
+                    ncomp = ncomp
+                )
+            
+            # Measure the classification rate (CR) of the fold
+            perf <- mixOmics::perf(vips_model, newdata = x_test_reduced)
+            vips_CR  <- 1 - perf$error.rate$overall[1]
         }
-        
-        # Fit PLS model
-        vips_model <-
-            plsda_build(
-                x = x_train_reduced,
-                y = y_train,
-                identity = NULL,
-                ncomp = ncomp
-            )
-        
-        # Measure the classification rate (CR) of the fold
-        perf <- mixOmics::perf(vips_model, newdata = x_test_reduced)
-        vips_CR  <- 1 - perf$error.rate$overall[1]
     }
     
     # To return it ordered by mean of the normalized vectors
@@ -765,6 +806,9 @@ bp_kfold_VIP_analysis <- function(dataset,
     # Extract data and split for train and test
     x_all <- dataset$peak_table
     y_all <- nmr_meta_get_column(dataset, column = y_column)
+    if (length(unique(y_all)) == 1) {
+        stop("Only one class in data set, at least two needed")
+    }
     
     # Random and spliting
     x <- seq_len(length(y_all))
