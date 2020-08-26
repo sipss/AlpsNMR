@@ -622,9 +622,9 @@ read_bruker_pdata <- function(sample_path,
 #' @noRd
 #'
 infer_dim_pulse_nuclei <- function(acqus_list) {
-    output <- list(dimension = NULL,
-                   pulse_sequence = NULL,
-                   nuclei = NULL)
+    output <- list(dimension = NA_integer_,
+                   pulse_sequence = NA_character_,
+                   nuclei = NA_character_)
     # The dimension is easy
     output$dimension <- length(acqus_list)
     
@@ -694,14 +694,14 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
         output$nuclei <-
             paste(acqus_list$acqus[NUCLEI][acqus_list$acqus[NUCLEI] != "off"], collapse = "-")
         
-    } else {
-        warning(
-            "infer_dim_pulse_nuclei: Unknown Pulse Sequence in acqus$EXP field.\n",
-            "Please add the pulse sequence '",
-            experiment_name,
-            "' to infer_dim_pulse_nuclei in R/bruker.R\n"
-        )
-    }
+    } # else {
+    #    warning(
+    #        "infer_dim_pulse_nuclei: Unknown Pulse Sequence in acqus$EXP field.\n",
+    #        "Please add the pulse sequence '",
+    #        experiment_name,
+    #        "' to infer_dim_pulse_nuclei in R/bruker.R\n"
+    #    )
+    #}
     
     return(output)
 }
