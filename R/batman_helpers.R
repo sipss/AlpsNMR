@@ -18,7 +18,7 @@ NULL
 #'
 #' @name hmdb
 #' @docType data
-#' @references \url{hmdb.ca}
+#' @references \url{https://hmdb.ca/}
 #' @keywords data
 NULL
 

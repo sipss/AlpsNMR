@@ -48,7 +48,7 @@ nmr_identify_regions_blood <- function(ppm_to_assign, num_proposed_compounds = 3
 #'
 #' @name HMDB_blood
 #' @docType data
-#' @references \url{hmdb.ca}
+#' @references \url{https://hmdb.ca/}
 #' @keywords data
 NULL
 
@@ -102,7 +102,7 @@ nmr_identify_regions_urine <- function(ppm_to_assign, num_proposed_compounds = 5
 #'
 #' @name HMDB_urine
 #' @docType data
-#' @references \url{hmdb.ca}
+#' @references \url{https://hmdb.ca/}
 #' @keywords data
 NULL
 
@@ -152,7 +152,7 @@ nmr_identify_regions_cell <- function(ppm_to_assign, num_proposed_compounds = 3,
 #'
 #' @name HMDB_cell
 #' @docType data
-#' @references \url{hmdb.ca}
+#' @references \url{https://hmdb.ca/}
 #' @keywords data
 #' 
 NULL

@@ -55,7 +55,7 @@ read_bruker_param <- function(file_name) {
     for (pat_idx in seq_len(nrow(R))) {
         lines_matched <-
             stringr::str_match_all(lines, R[["pattern"]][pat_idx])
-        lines_with_match <- sapply(lines_matched, nrow) > 0
+        lines_with_match <- vapply(lines_matched, FUN=nrow, FUN.VALUE=numeric(1)) > 0
         new_lines_with_match <-
             is.na(type_of_row) & lines_with_match
         type_of_row[new_lines_with_match] <- pat_idx
@@ -361,11 +361,11 @@ read_orig_file <- function(sample_path) {
     }
     orig_lines <- readLines(orig_file)
     lines_split <- strsplit(orig_lines, split = " ", fixed = TRUE)
-    all_names <- sapply(lines_split, function(line)
-        line[[1]])
+    all_names <- vapply(lines_split, FUN=function(line)
+        line[[1]], FUN.VALUE=array)
     all_vals <-
-        sapply(lines_split, function(line)
-            paste0(line[2:length(line)], collapse = " "))
+        vapply(lines_split, FUN=function(line)
+            paste0(line[2:length(line)], collapse = " "), FUN.VALUE=array)
     output <- list()
     output[all_names] <- all_vals
     return(output)
@@ -382,15 +382,15 @@ parse_title_file <- function(title_lines) {
     
     # Case (a): (and empty lines are accepted)
     if (all(number_of_fields_per_line >= 2)) {
-        all_names <- sapply(lines_split, function(line)
-            line[[1]])
-        all_vals <- sapply(lines_split, function(line) {
+        all_names <- vapply(lines_split, FUN=function(line)
+            line[[1]], FUN.VALUE = array)
+        all_vals <- vapply(lines_split, FUN=function(line) {
             value <- paste0(line[2:length(line)], collapse = " ")
             # Remove spaces and ";" at the end of the value, if they are present:
             gsub(pattern = "[\\s;]+$",
                      replacement = "",
                      x = value)
-        })
+        }, FUN.VALUE= array)
         output <- list()
         output[all_names] <- all_vals
         return(output)

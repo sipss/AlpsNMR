@@ -9,10 +9,16 @@ preprocess them.
 It includes functions for region exclusion, normalization, peak detection & integration and
 outlier detection among others. See the package vignette for details.
 
-
 ## Installation
 
-AlpsNMR can be installed with the `devtools` package. For this is needed Rtools and note that it uses packages from
+if (!"BiocManager" %in% rownames(installed.packages()))  
+    install.packages("BiocManager")
+BiocManager::install(c("AlpsNMR")
+
+## Alternative installation
+
+AlpsNMR can be installed with the `devtools` package. For this is needed
+Rtools and note that it uses packages from
 CRAN, from BioConductor and from git repositories:
 
 If you already have Rtools, follow this to install AlspNMR:

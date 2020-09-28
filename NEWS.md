@@ -1,3 +1,15 @@
+# AlpsNMR 2.99.3 (2020-09-21)
+
+- sapply calls changed for vapply
+- Bioconductor installation instructions included
+- MIT license removed
+- LazyData: TRUE removed
+- Excessive print statements removed from vignettes
+- sessionInfo() added to end of vignettes
+- Created inst/script directoy to describe inst/extdata source and
+  creation #TODO falta rellenar el archivo
+- Commented out code removed
+
 # AlpsNMR 2.99.2 (2020-08-26)
 
 - AlpsNMR.Rproj removed from git repository

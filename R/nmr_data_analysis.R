@@ -847,7 +847,8 @@ bp_kfold_VIP_analysis <- function(dataset,
     parallel::stopCluster(cl)
     
     # Mean of the vips of the different folds for the plot
-    means <- sapply(results, "[", "pls_vip_means")
+    means <- vapply(results, FUN="[", FUN.VALUE = c(list), "pls_mean")
+    #means <- sapply(results, "[", "pls_vip_means")
     names_order <- sort(rownames(means[[1]]))
     ordered_means <- matrix(nrow = k, ncol = length(names_order), dimnames = list(NULL, names_order))
     for(i in seq_len(k)){
@@ -897,8 +898,8 @@ bp_kfold_VIP_analysis <- function(dataset,
         ggplot2::theme_bw()
     
     # Reporting the intersection of the vips of the different folds
-    list(important_vips = Reduce(intersect, (sapply(results, "[", "important_vips"))),
-         relevant_vips = Reduce(intersect, (sapply(results, "[", "relevant_vips"))),
+    list(important_vips = Reduce(intersect, (vapply(results, FUN="[", FUN.VALUE = c(list), "important_vips"))),
+         relevant_vips = Reduce(intersect, (vapply(results, FUN="[", FUN.VALUE = c(list), "relevant_vips"))),
          wilcoxon_vips = unique(unlist(wt_vips)),
          vip_means = vip_means,
          vip_score_plot = p,

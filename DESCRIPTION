@@ -1,7 +1,7 @@
 Package: AlpsNMR
 Type: Package
 Title: Automated spectraL Processing System for NMR
-Version: 2.99.2
+Version: 2.99.3
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -38,7 +38,6 @@ Description: Reads Bruker NMR data directories both zipped and unzipped.
  Efficient plotting with 1-D data is also available.
  Basic reading of 1D ACD/Labs exported JDX samples is also available.
 License: MIT + file LICENSE
-LazyData: TRUE
 Depends: R (>= 4.0)
 Imports:
  utils,
