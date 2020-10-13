@@ -97,9 +97,9 @@ model <- nmr_data_analysis(
     data_analysis_method = methodology
 )
 ## Area under ROC for each outer cross-validation iteration:
-print(model$outer_cv_results_digested$auroc)
+model$outer_cv_results_digested$auroc
 ## Rank Product of the Variable Importance in the Projection
 ## (Lower means more important)
-print(sort(model$outer_cv_results_digested$vip_rankproducts))
+sort(model$outer_cv_results_digested$vip_rankproducts)
 
 }

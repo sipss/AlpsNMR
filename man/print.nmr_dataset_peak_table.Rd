@@ -27,7 +27,7 @@ dataset_1D <- nmr_meta_add(dataset_1D, metadata = metadata, by = "NMRExperiment"
 metadata <- list(external = dataset_1D[["metadata"]][["external"]])
 peak_table <- nmr_data(dataset_1D)
 new <- new_nmr_dataset_peak_table(peak_table, metadata)
-print(new)
+new
 }
 \seealso{
 Other nmr_dataset_peak_table functions: 

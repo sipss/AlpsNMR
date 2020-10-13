@@ -1,3 +1,8 @@
+# AlpsNMR 2.99.4 (2020-09-28)
+
+- Warning in plot_interactive function added
+- Suppressed other warnings of plot_interactive function
+
 # AlpsNMR 2.99.3 (2020-09-21)
 
 - sapply calls changed for vapply

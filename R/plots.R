@@ -246,10 +246,23 @@ plot_webgl <- function(nmr_dataset, html_filename, ...) {
 #' # html_plot_interactive <- plot_interactive(plot, "html_plot_interactive.html")
 #' 
 plot_interactive <- function(plt, html_filename) {
-    htmltools::save_html(
-        html = htmltools::as.tags(x = plotly::toWebGL(plt),
-                                  standalone = TRUE),
-        file = html_filename
-    )
+    #Check if lib folder exists
+    libdir <- paste(getwd(), "/lib", sep = "")
+    if(dir.exists(libdir)){
+        # warning user before some contents of lib folder could be destroyed
+        message("warning: lib folder alrready exists, the function plot_interactive will")
+        message("override it. Do yo want to continue? (y/n): ")
+        response <- scan("stdin", character(), n=1)
+        if(response == 'n'){
+            stop("Canceling plot_interactive")
+        }
+    }
+    suppressMessages(utils::capture.output({
+        htmltools::save_html(
+            html = htmltools::as.tags(x = plotly::toWebGL(plt),
+                                      standalone = TRUE),
+            file = html_filename
+        )
+    }))
     html_filename
 }

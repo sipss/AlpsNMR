@@ -50,11 +50,11 @@ the dispersion of the normalization factor for each sample.
 nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 nmr_dataset <- nmr_normalize(nmr_dataset, method = "area")
 norm_dataset <- nmr_normalize(nmr_dataset)
-print(norm_dataset$plot)
+norm_dataset$plot
 nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 nmr_dataset <- nmr_normalize(nmr_dataset, method = "area")
 norm_extra_info <- nmr_normalize_extra_info(nmr_dataset)
-print(norm_extra_info$plot)
+norm_extra_info$plot
 }
 \seealso{
 Other nmr_dataset_1D functions: 

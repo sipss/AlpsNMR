@@ -114,7 +114,7 @@ is.nmr_dataset_peak_table <-
 #' metadata <- list(external = dataset_1D[["metadata"]][["external"]])
 #' peak_table <- nmr_data(dataset_1D)
 #' new <- new_nmr_dataset_peak_table(peak_table, metadata)
-#' print(new)
+#' new
 print.nmr_dataset_peak_table <- function(x, ...) {
     cat(format(x, ...), "\n")
     invisible(x)

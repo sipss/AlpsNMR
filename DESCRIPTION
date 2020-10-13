@@ -1,7 +1,7 @@
 Package: AlpsNMR
 Type: Package
 Title: Automated spectraL Processing System for NMR
-Version: 2.99.3
+Version: 2.99.4
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -37,7 +37,8 @@ Description: Reads Bruker NMR data directories both zipped and unzipped.
  After spectra proccessing, it can apply multivariate analysis on extracted data.
  Efficient plotting with 1-D data is also available.
  Basic reading of 1D ACD/Labs exported JDX samples is also available.
-License: MIT + file LICENSE
+License: MIT
+LazyData: FALSE
 Depends: R (>= 4.0)
 Imports:
  utils,
@@ -81,6 +82,6 @@ Suggests:
     knitr
 biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

@@ -8,6 +8,6 @@
 The Human Metabolome DataBase multiplet table
 }
 \references{
-\url{hmdb.ca}
+\url{https://hmdb.ca/}
 }
 \keyword{data}

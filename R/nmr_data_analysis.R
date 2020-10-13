@@ -327,10 +327,10 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
 #'     data_analysis_method = methodology
 #' )
 #' ## Area under ROC for each outer cross-validation iteration:
-#' print(model$outer_cv_results_digested$auroc)
+#' model$outer_cv_results_digested$auroc
 #' ## Rank Product of the Variable Importance in the Projection
 #' ## (Lower means more important)
-#' print(sort(model$outer_cv_results_digested$vip_rankproducts))
+#' sort(model$outer_cv_results_digested$vip_rankproducts)
 #' 
 #' @export
 nmr_data_analysis <- function(dataset,
@@ -486,7 +486,7 @@ nmr_data_analysis <- function(dataset,
 #'     data_analysis_method = methodology
 #' )
 #' ## Area under ROC for each outer cross-validation iteration:
-#' print(model$outer_cv_results_digested$auroc)
+#' model$outer_cv_results_digested$auroc
 #' 
 #' ## The number of components for the bootstrap models is selected 
 #' ncomps <- model$outer_cv_results$`1`$model$ncomp

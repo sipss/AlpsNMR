@@ -8,6 +8,6 @@
 The Human Metabolome DataBase multiplet table: cell metabolites normally found in NMR-based metabolomics
 }
 \references{
-\url{hmdb.ca}
+\url{https://hmdb.ca/}
 }
 \keyword{data}

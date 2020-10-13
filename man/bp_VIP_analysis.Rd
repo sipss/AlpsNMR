@@ -96,7 +96,7 @@ model <- nmr_data_analysis(
     data_analysis_method = methodology
 )
 ## Area under ROC for each outer cross-validation iteration:
-print(model$outer_cv_results_digested$auroc)
+model$outer_cv_results_digested$auroc
 
 ## The number of components for the bootstrap models is selected 
 ncomps <- model$outer_cv_results$`1`$model$ncomp
