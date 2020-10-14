@@ -847,7 +847,7 @@ bp_kfold_VIP_analysis <- function(dataset,
     parallel::stopCluster(cl)
     
     # Mean of the vips of the different folds for the plot
-    means <- vapply(results, FUN="[", FUN.VALUE = c(list), "pls_mean")
+    means <- vapply(results, FUN="[", FUN.VALUE = c(list), "pls_vip_means")
     #means <- sapply(results, "[", "pls_vip_means")
     names_order <- sort(rownames(means[[1]]))
     ordered_means <- matrix(nrow = k, ncol = length(names_order), dimnames = list(NULL, names_order))
