@@ -36,9 +36,7 @@ dataset_data <- nmr_data(dataset_1D)
 \seealso{
 Other import/export functions: 
 \code{\link{Pipelines}},
-\code{\link{files_to_rDolphin_blood}()},
-\code{\link{files_to_rDolphin_cell}()},
-\code{\link{files_to_rDolphin_urine}()},
+\code{\link{files_to_rDolphin}()},
 \code{\link{load_and_save_functions}},
 \code{\link{nmr_meta_export}()},
 \code{\link{nmr_read_bruker_fid}()},

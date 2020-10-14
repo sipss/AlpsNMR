@@ -24,6 +24,41 @@ rdCV_PLS_RF(
   parallel = TRUE
 )
 }
+\arguments{
+\item{X}{Predictor variables. NB: Variables (columns) must have names/unique identifiers. NAs not allowed in data. For multilevel, only the positive half of the difference matrix is specified.}
+
+\item{Y}{Response vector (Dependent variable). For classification, a factor (or character) variable should be used. For multilevel, Y is calculated automatically.}
+
+\item{ID}{Subject identifier (for sampling by subject; Assumption of independence if not specified)}
+
+\item{scale}{If TRUE, the predictor variable matrix is scaled to unit variance for PLS modelling.}
+
+\item{nRep}{Number of repetitions of double CV. (Defaults to 5)}
+
+\item{nOuter}{Number of outer CV loop segments. (Defaults to 6)}
+
+\item{nInner}{Number of inner CV loop segments. (Defaults to nOuter-1)}
+
+\item{varRatio}{Ratio of variables to include in subsequent inner loop iteration. (Defaults to 0.75)}
+
+\item{DA}{Boolean for Classification (discriminant analysis) (By default, if Y is numeric -> DA=FALSE. If Y is factor (or character) -> DA=TRUE)}
+
+\item{fitness}{Fitness function for model tuning (choose either 'AUROC' or 'MISS' (default) for classification; or 'RMSEP' (default) for regression.)}
+
+\item{method}{Multivariate method. Supports 'PLS' and 'RF' (default)}
+
+\item{nCompMax}{Option to choose max number of PLS components (default is 5)}
+
+\item{methParam}{List with parameter settings for specified MV method (see function code for details)}
+
+\item{ML}{Boolean for multilevel analysis (defaults to FALSE)}
+
+\item{modReturn}{Boolean for returning outer segment models (defaults to FALSE). Setting modReturn=TRUE is required for making MUVR predictions using predMV().}
+
+\item{logg}{Boolean for whether to sink model progressions to `log.txt`}
+
+\item{parallel}{Boolean for whether to perform `foreach` parallel processing (Requires a registered parallel backend; Defaults to `TRUE`)}
+}
 \value{
 a MUVR model containing selection parameters, validation and fitness
 }
@@ -54,9 +89,7 @@ Other nmr_dataset_1D functions:
 \code{\link{[.nmr_dataset_1D}()},
 \code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
-\code{\link{files_to_rDolphin_blood}()},
-\code{\link{files_to_rDolphin_cell}()},
-\code{\link{files_to_rDolphin_urine}()},
+\code{\link{files_to_rDolphin}()},
 \code{\link{format.nmr_dataset_1D}()},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{load_and_save_functions}},

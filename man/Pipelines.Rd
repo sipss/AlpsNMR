@@ -206,9 +206,7 @@ dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 }
 \seealso{
 Other import/export functions: 
-\code{\link{files_to_rDolphin_blood}()},
-\code{\link{files_to_rDolphin_cell}()},
-\code{\link{files_to_rDolphin_urine}()},
+\code{\link{files_to_rDolphin}()},
 \code{\link{load_and_save_functions}},
 \code{\link{nmr_data}()},
 \code{\link{nmr_meta_export}()},

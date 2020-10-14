@@ -1,3 +1,12 @@
+# AlpsNMR 2.99.5 (2020-10-14)
+
+- Bug in bp_kfold_VIP_analysis solved
+- Several packages moved from import to depends
+- Reexport of some functions removed
+- to_rDolphin_blood code reorganized
+- Typos removed from tutorial
+- norm_pqn_diagnostic$norm_factor used in tutorial instead of plot it
+
 # AlpsNMR 2.99.4 (2020-09-28)
 
 - Warning in plot_interactive function added

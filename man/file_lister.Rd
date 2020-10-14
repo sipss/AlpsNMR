@@ -31,9 +31,7 @@ lists_of_samples <- file_lister(dir_to_demo_dataset, "*0")
 Other nmr_dataset_1D functions: 
 \code{\link{[.nmr_dataset_1D}()},
 \code{\link{computes_peak_width_ppm}()},
-\code{\link{files_to_rDolphin_blood}()},
-\code{\link{files_to_rDolphin_cell}()},
-\code{\link{files_to_rDolphin_urine}()},
+\code{\link{files_to_rDolphin}()},
 \code{\link{format.nmr_dataset_1D}()},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{load_and_save_functions}},

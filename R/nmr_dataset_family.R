@@ -68,23 +68,6 @@ validate_nmr_dataset_family <- function(nmr_dataset_family) {
     nmr_dataset_family
 }
 
-
-
-#' @importFrom dplyr filter
-#' @export
-#' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' 
-#' ## example 1
-#' sample_10 <- filter(dataset_1D, NMRExperiment == "10")
-#'
-#' ## example 2
-#' #test_samples <- dataset_1D %>% filter(nmr_peak_table$metadata$external$Group == "placebo")
-#' 
-dplyr::filter
-
 #' Keep samples based on metadata column criteria
 #'
 #' @param .data An [nmr_dataset_family] object

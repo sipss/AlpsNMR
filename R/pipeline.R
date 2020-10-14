@@ -341,8 +341,7 @@ pipe_filter_samples <- function(nmr_dataset_rds,
   
   conditions_expr <- rlang::parse_exprs(conditions)
   
-  nmr_dataset <-
-    AlpsNMR::filter(nmr_dataset, !!!conditions_expr)
+  nmr_dataset <- filter(nmr_dataset, !!!conditions_expr)
   
   
   message("Saving pipe_filter_samples at ", Sys.time())

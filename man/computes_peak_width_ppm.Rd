@@ -29,9 +29,7 @@ Other peak integration functions:
 Other nmr_dataset_1D functions: 
 \code{\link{[.nmr_dataset_1D}()},
 \code{\link{file_lister}()},
-\code{\link{files_to_rDolphin_blood}()},
-\code{\link{files_to_rDolphin_cell}()},
-\code{\link{files_to_rDolphin_urine}()},
+\code{\link{files_to_rDolphin}()},
 \code{\link{format.nmr_dataset_1D}()},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{load_and_save_functions}},
