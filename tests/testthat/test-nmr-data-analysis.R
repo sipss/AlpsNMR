@@ -18,14 +18,14 @@ prepare_dataset <- function() {
   metadata$Group <- c("A", "B", "B")
   dataset <- nmr_meta_add(dataset, metadata[,c("NMRExperiment", "Group")])
   # Artificially create a larger dataset
-  larger_metadata <- rbind(metadata, metadata, metadata, metadata)
+  larger_metadata <- rbind(metadata, metadata, metadata, metadata, metadata)
   
   larger_metadata$NMRExperiment <- as.character(
     seq(from = 10, by = 10, length.out = nrow(larger_metadata))
   )
   dataset <- new_nmr_dataset_1D(
     ppm_axis = dataset$axis,
-    data_1r = rbind(dataset$data_1r, dataset$data_1r, dataset$data_1r, dataset$data_1r),
+    data_1r = rbind(dataset$data_1r, dataset$data_1r, dataset$data_1r, dataset$data_1r, dataset$data_1r),
     metadata = list(external = larger_metadata)
   )
   dataset
@@ -44,7 +44,7 @@ test_that("nmr_data_analysis works", {
     internal_val = list(iterations = 2, test_size = 0.25),
     data_analysis_method = methodology
   )
-  
+  expect_false(isTRUE(all.equal(out, NULL)))
 })
 
 test_that("random subsampling works", {

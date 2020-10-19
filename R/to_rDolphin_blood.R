@@ -85,6 +85,12 @@ files_to_rDolphin = function (nmr_dataset, biological_origin) {
     NMR_spectra = nmr_data(nmr_dataset)
     ROI = NULL
     Parameters = NULL
+    Parameters_blood = NULL
+    ROI_blood = NULL
+    Parameters_cell = NULL
+    ROI_cell = NULL
+    Parameters_urine = NULL
+    ROI_urine = NULL
     if(biological_origin == "blood"){
         utils::data("Parameters_blood",
                     package = "AlpsNMR",

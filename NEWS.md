@@ -6,6 +6,7 @@
 - to_rDolphin_blood code reorganized
 - Typos removed from tutorial
 - norm_pqn_diagnostic$norm_factor used in tutorial instead of plot it
+- Parallel changed for BiocParallel
 
 # AlpsNMR 2.99.4 (2020-09-28)
 
