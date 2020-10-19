@@ -1,3 +1,8 @@
+# AlpsNMR 2.99.6 (2020-10-19)
+
+- Added import/export options form nmr_dataset_1D to SummarizedExperiment
+- Added import/export options form nmr_dataset_peak_table to SummarizedExperiment
+
 # AlpsNMR 2.99.5 (2020-10-14)
 
 - Bug in bp_kfold_VIP_analysis solved

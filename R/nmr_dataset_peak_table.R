@@ -177,3 +177,74 @@ format.nmr_dataset_peak_table <- function(x, ...) {
     validate_nmr_dataset_peak_table(output)
     return(output)
 }
+
+#' Export nmr_dataset_peak_table to SummarizedExperiment
+#'
+#' @param nmr_peak_table An [nmr_dataset_peak_table] object
+#'
+#' @import SummarizedExperiment 
+#' @return SummarizedExperiment object (unmodified)
+#' @export 
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' meta <- file.path(dir_to_demo_dataset, "dummy_metadata.xlsx")
+#' metadata <- readxl::read_excel(meta, sheet = 1)
+#' dataset_1D <- nmr_meta_add(dataset_1D, metadata = metadata, by = "NMRExperiment")
+#' metadata <- list(external = dataset_1D[["metadata"]][["external"]])
+#' peak_table <- nmr_data(dataset_1D)
+#' nmr_peak_table <- new_nmr_dataset_peak_table(peak_table, metadata)
+#' se <- nmr_dataset_peak_table_to_SummarizedExperiment(nmr_peak_table)
+nmr_dataset_peak_table_to_SummarizedExperiment <- function(nmr_peak_table) {
+    assert_that(inherits(nmr_peak_table, "nmr_dataset_peak_table"),
+                msg = "Not an nmr_dataset_peak_table")
+    peak_table <- nmr_peak_table[["peak_table"]]
+    # SummarizedExperiment work trasposed
+    SummarizedExperiment(assays=list(peak_table=peak_table),
+                         metadata = nmr_meta_get(nmr_peak_table),
+                         colData=t(peak_table))
+}
+
+#' Import SummarizedExperiment as mr_dataset_peak_table
+#'
+#' @param se An [SummarizedExperiment] object
+#'
+#' @importFrom SummarizedExperiment metadata colData
+#' @return nmr_dataset_peak_table An [nmr_dataset_peak_table] object (unmodified)
+#' @export 
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' meta <- file.path(dir_to_demo_dataset, "dummy_metadata.xlsx")
+#' metadata <- readxl::read_excel(meta, sheet = 1)
+#' dataset_1D <- nmr_meta_add(dataset_1D, metadata = metadata, by = "NMRExperiment")
+#' metadata <- list(external = dataset_1D[["metadata"]][["external"]])
+#' peak_table <- nmr_data(dataset_1D)
+#' nmr_peak_table <- new_nmr_dataset_peak_table(peak_table, metadata)
+#' se <- nmr_dataset_peak_table_to_SummarizedExperiment(nmr_peak_table)
+#' nmr_peak_table <- SummarizedExperiment_to_nmr_dataset_peak_table(se)
+SummarizedExperiment_to_nmr_dataset_peak_table <- function(se) {
+    meta <- metadata(se)
+    meta_info <-  as.data.frame(matrix(unlist(meta[1:8]), nrow=length(unlist(meta[1]))))
+    colnames(meta_info) <- names(meta[1:8])
+    meta_orig <-  as.data.frame(matrix(unlist(meta[1]), nrow=length(unlist(meta[1]))))
+    colnames(meta_orig) <- names(meta[1])
+    meta_title <-  as.data.frame(matrix(unlist(meta[9]), nrow=length(unlist(meta[1]))))
+    colnames(meta_title) <- names(meta[9])
+    meta_title <- cbind(meta_orig, meta_title)
+    meta_acqus <-  as.data.frame(matrix(unlist(meta[10:247], recursive = FALSE), nrow=length(unlist(meta[1]))))
+    colnames(meta_acqus) <- names(meta[10:247])
+    meta_acqus <- cbind(meta_orig, meta_acqus)
+    meta_procs <-  as.data.frame(matrix(unlist(meta[248:383], recursive = FALSE), nrow=length(unlist(meta[1]))))
+    colnames(meta_procs) <- names(meta[248:383])
+    meta_procs <- cbind(meta_orig, meta_procs)
+    meta_levels <-  as.data.frame(matrix(unlist(meta[384], recursive = FALSE), nrow=length(unlist(meta[1]))))
+    colnames(meta_levels) <- names(meta[384])
+    meta_levels <- cbind(meta_orig, meta_levels)
+    meta_external <- meta_orig
+    nmr_meta <- list(info= meta_info, orig= meta_orig, title= meta_title, aqcus = meta_acqus,
+                     procs= meta_procs, levels= meta_levels, external= meta_external)
+    new_nmr_dataset_peak_table(as.matrix(t(colData(se))), nmr_meta)
+}
