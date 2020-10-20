@@ -14,7 +14,7 @@ outlier detection among others. See the package vignette for details.
 ```r
 if (!"BiocManager" %in% rownames(installed.packages()))  
     install.packages("BiocManager")
-BiocManager::install(c("AlpsNMR")
+BiocManager::install("AlpsNMR")
 ```
 
 ## Alternative installation
