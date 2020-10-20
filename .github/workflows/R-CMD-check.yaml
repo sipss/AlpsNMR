@@ -11,8 +11,8 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@master
       - name: Install dependencies
         run: |
-          Rscript -e 'install.packages(c("remotes", "rcmdcheck", "BiocManager", "covr"))' \
-                  -e "BiocManager::install(c('MassSpecWavelet', 'impute'))" \
+          Rscript -e 'install.packages(c("devtools", "remotes", "rcmdcheck", "BiocManager", "covr"))' \
+                  -e "BiocManager::install(c("MassSpecWavelet", "impute"), update = FALSE)" \
                   -e 'remotes::install_deps(dependencies = TRUE)' \
                   -e 'remotes::install_github("jimhester/pkgdown@github-actions-deploy")'
       - name: Check pkg
@@ -23,5 +23,5 @@ jobs:
       - name: Pkgdown website
         if: success () && github.ref == 'refs/heads/master'
         run: |
-          Rscript -e "remotes::install_local('.')"
+          Rscript -e "devtools::install_github("sipss/AlpsNMR")"
           Rscript -e "pkgdown:::deploy_local(new_process = FALSE, remote_url = 'https://x-access-token:${{secrets.DEPLOY_PAT}}@github.com/${{github.repository}}.git')"
