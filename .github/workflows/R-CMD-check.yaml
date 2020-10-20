@@ -9,8 +9,8 @@ jobs:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/setup-r@master
       - uses: r-lib/actions/setup-pandoc@master
-      - uses: /usr/local/include
-      - uses: /usr/local/lib
+      - name: to solve  fatal error gsl/gsl_vector.h file not found
+        run: brew install gsl
       - name: Install dependencies
         run: |
           Rscript -e 'install.packages(c("devtools", "remotes", "rcmdcheck", "BiocManager", "covr"))' \
