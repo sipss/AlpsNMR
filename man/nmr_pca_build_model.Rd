@@ -24,19 +24,19 @@ nmr_pca_build_model(
 \arguments{
 \item{nmr_dataset}{a \link{nmr_dataset_1D} object}
 
-\item{ncomp}{integer, if data is complete \code{ncomp} decides the number of
+\item{ncomp}{Integer, if data is complete \code{ncomp} decides the number of
 components and associated eigenvalues to display from the \code{pcasvd}
 algorithm and if the data has missing values, \code{ncomp} gives the number
 of components to keep to perform the reconstitution of the data using the
 NIPALS algorithm. If \code{NULL}, function sets \code{ncomp = min(nrow(X),
 ncol(X))}}
 
-\item{center}{a logical value indicating whether the variables should be
-shifted to be zero centered. Alternately, a vector of length equal the
+\item{center}{(Default=TRUE) Logical, whether the variables should be
+shifted to be zero centered. Alternatively, a vector of length equal the
 number of columns of \code{X} can be supplied. The value is passed to
 \code{\link{scale}}.}
 
-\item{scale}{a logical value indicating whether the variables should be
+\item{scale}{(Default=FALSE) Logical indicating whether the variables should be
 scaled to have unit variance before the analysis takes place. The default is
 \code{FALSE} for consistency with \code{prcomp} function, but in general
 scaling is advisable. Alternatively, a vector of length equal the number of

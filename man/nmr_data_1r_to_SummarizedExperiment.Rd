@@ -10,7 +10,7 @@ nmr_data_1r_to_SummarizedExperiment(nmr_dataset)
 \item{nmr_dataset}{An \link{nmr_dataset_1D} object}
 }
 \value{
-SummarizedExperiment An \link{SummarizedExperiment} object (unmodified)
+SummarizedExperiment An SummarizedExperiment object (unmodified)
 }
 \description{
 Export 1D NMR data to SummarizedExperiment

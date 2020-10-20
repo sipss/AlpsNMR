@@ -175,7 +175,8 @@ format.nmr_dataset_1D <- function(x, ...) {
 #'
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #' @param filename The csv filename
-#'
+#' 
+#' @import SummarizedExperiment
 #' @return The nmr_dataset object (unmodified)
 #' @export 
 #' @examples 
@@ -196,8 +197,7 @@ nmr_export_data_1r <- function(nmr_dataset, filename) {
 #'
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #'
-#' @import SummarizedExperiment
-#' @return SummarizedExperiment An [SummarizedExperiment] object (unmodified)
+#' @return SummarizedExperiment An SummarizedExperiment object (unmodified)
 #' @export 
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -208,16 +208,15 @@ nmr_data_1r_to_SummarizedExperiment <- function(nmr_dataset) {
     assert_that(is.nmr_dataset_1D(nmr_dataset), msg = "An nmr_dataset_1D should be given")
     data_1r <- nmr_data(nmr_dataset)
     # SummarizedExperiment work trasposed
-    SummarizedExperiment(assays=list(data_1r=data_1r),
+    SummarizedExperiment::SummarizedExperiment(assays=list(data_1r=data_1r),
                          metadata = nmr_meta_get(nmr_dataset),
                          colData=t(data_1r))
 }
 
 #' Import SummarizedExperiment as 1D NMR data
 #'
-#' @param se An [SummarizedExperiment] object
+#' @param se An SummarizedExperiment object
 #'
-#' @importFrom SummarizedExperiment metadata colData
 #' @return nmr_dataset An [nmr_dataset_1D] object (unmodified)
 #' @export 
 #' @examples 
@@ -227,25 +226,54 @@ nmr_data_1r_to_SummarizedExperiment <- function(nmr_dataset) {
 #' se <- nmr_data_1r_to_SummarizedExperiment(dataset_1D)
 #' dataset_1D <- SummarizedExperiment_to_nmr_data_1r(se)
 SummarizedExperiment_to_nmr_data_1r <- function(se) {
-    meta <- metadata(se)
-    meta_info <-  as.data.frame(matrix(unlist(meta[1:8]), nrow=length(unlist(meta[1]))))
-    colnames(meta_info) <- names(meta[1:8])
-    meta_orig <-  as.data.frame(matrix(unlist(meta[1]), nrow=length(unlist(meta[1]))))
-    colnames(meta_orig) <- names(meta[1])
-    meta_title <-  as.data.frame(matrix(unlist(meta[9]), nrow=length(unlist(meta[1]))))
-    colnames(meta_title) <- names(meta[9])
-    meta_title <- cbind(meta_orig, meta_title)
-    meta_acqus <-  as.data.frame(matrix(unlist(meta[10:247], recursive = FALSE), nrow=length(unlist(meta[1]))))
-    colnames(meta_acqus) <- names(meta[10:247])
-    meta_acqus <- cbind(meta_orig, meta_acqus)
-    meta_procs <-  as.data.frame(matrix(unlist(meta[248:383], recursive = FALSE), nrow=length(unlist(meta[1]))))
-    colnames(meta_procs) <- names(meta[248:383])
-    meta_procs <- cbind(meta_orig, meta_procs)
-    meta_levels <-  as.data.frame(matrix(unlist(meta[384], recursive = FALSE), nrow=length(unlist(meta[1]))))
-    colnames(meta_levels) <- names(meta[384])
-    meta_levels <- cbind(meta_orig, meta_levels)
-    meta_external <- meta_orig
-    nmr_meta <- list(info= meta_info, orig= meta_orig, title= meta_title, aqcus = meta_acqus,
-                           procs= meta_procs, levels= meta_levels, external= meta_external)
-    new_nmr_dataset_1D(as.numeric(colnames(se)), as.matrix(t(colData(se))), nmr_meta)
+    meta <- S4Vectors::metadata(se)
+    
+    col_names <- names(meta)
+    nmr_meta <- list()
+    
+    #Orig, NMRExperiment
+    NMRE <- which(col_names[]=="NMRExperiment")
+    num_NMRE <- length(unlist(meta[NMRE]))
+    meta_orig <- as.data.frame(matrix(unlist(meta[NMRE]), nrow=num_NMRE))
+    colnames(meta_orig) <- names(meta[NMRE])
+    nmr_meta[["orig"]] <- meta_orig
+    meta <- meta[-NMRE]
+    col_names <- col_names[-NMRE]
+    #External
+    col_names_split <- stringr::str_split(col_names, "_", simplify = TRUE)
+    if(dim(col_names_split)[2]<2){
+        #All is considered external
+        meta_external <- as.data.frame(matrix(unlist(meta), nrow=num_NMRE))
+        meta_external <- cbind(meta_orig, meta_external)
+        colnames(meta_external) <- c(colnames(meta_orig), names(meta))
+        nmr_meta[["external"]] <- meta_external
+    } else {
+        external_col <- meta[col_names_split[,2]==""]
+        if(length(external_col)>0){
+            meta_external <- as.data.frame(
+                matrix(unlist(meta[col_names_split[,2]==""]), nrow=num_NMRE))
+            meta_external <- cbind(meta_orig, meta_external)
+            colnames(meta_external) <- c(colnames(meta_orig),
+                                         names(meta[col_names_split[,2]==""]))
+            nmr_meta[["external"]] <- meta_external
+            meta <- meta[!col_names_split[,2]==""]
+            col_names <- col_names[!col_names_split[,2]==""]
+        } else {
+            meta_external <- meta_orig
+            nmr_meta[["external"]] <- meta_external
+        }
+        
+        col_names_split <- stringr::str_split(col_names, "_", simplify = TRUE)
+        df_names <- unique(col_names_split[,1])
+        for(i in seq_len(length(df_names))){
+            num <- which(col_names_split[,1]==df_names[i])
+            meta_df <- as.data.frame(matrix(unlist(meta[num[1]:max(num)],
+                                                   recursive = FALSE), nrow=num_NMRE))
+            colnames(meta_df) <- names(meta[num[1]:max(num)])
+            meta_df <- cbind(meta_orig, meta_df)
+            nmr_meta[[df_names[i]]] <- meta_df
+        }
+    }
+    new_nmr_dataset_1D(as.numeric(colnames(se)), 
+                       as.matrix(t(SummarizedExperiment::colData(se))), nmr_meta)
 }

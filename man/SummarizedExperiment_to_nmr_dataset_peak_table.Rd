@@ -7,7 +7,7 @@
 SummarizedExperiment_to_nmr_dataset_peak_table(se)
 }
 \arguments{
-\item{se}{An \link{SummarizedExperiment} object}
+\item{se}{An SummarizedExperiment object}
 }
 \value{
 nmr_dataset_peak_table An \link{nmr_dataset_peak_table} object (unmodified)

@@ -1,3 +1,7 @@
+# AlpsNMR 2.99.7 (2020-10-19)
+
+- Bugs in import/export functions to SummarizedExperiment solved
+
 # AlpsNMR 2.99.6 (2020-10-19)
 
 - Added import/export options form nmr_dataset_1D to SummarizedExperiment

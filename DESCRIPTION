@@ -1,7 +1,7 @@
 Package: AlpsNMR
 Type: Package
 Title: Automated spectraL Processing System for NMR
-Version: 2.99.6
+Version: 2.99.7
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -71,14 +71,15 @@ Imports:
  baseline (>= 1.2-1),
  zip (>= 2.0.4),
  tidyselect (>= 0.2.5),
- BiocParallel
+ BiocParallel,
+ SummarizedExperiment,
+ S4Vectors
 Suggests:
     DT (>= 0.5),
     testthat (>= 2.0.0),
     plotly (>= 4.7.1),
     ChemoSpec,
-    knitr,
-    SummarizedExperiment
+    knitr
 biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
 RoxygenNote: 7.1.1

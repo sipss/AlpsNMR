@@ -7,7 +7,7 @@
 SummarizedExperiment_to_nmr_data_1r(se)
 }
 \arguments{
-\item{se}{An \link{SummarizedExperiment} object}
+\item{se}{An SummarizedExperiment object}
 }
 \value{
 nmr_dataset An \link{nmr_dataset_1D} object (unmodified)
