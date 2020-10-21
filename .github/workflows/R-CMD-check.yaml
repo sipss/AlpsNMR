@@ -13,7 +13,7 @@ jobs:
         run: brew install gsl
       - name: Install dependencies
         run: |
-          Rscript -e 'install.packages(c("devtools", "remotes", "rcmdcheck", "BiocManager", "covr"))' \
+          Rscript -e 'install.packages(c("remotes", "rcmdcheck", "BiocManager", "covr"))' \
                   -e 'BiocManager::install(c("MassSpecWavelet", "impute"), update = FALSE)' \
                   -e 'remotes::install_deps(dependencies = TRUE)' \
                   -e 'remotes::install_github("jimhester/pkgdown@github-actions-deploy")'
