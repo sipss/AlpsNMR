@@ -1,7 +1,7 @@
 Package: AlpsNMR
 Type: Package
 Title: Automated spectraL Processing System for NMR
-Version: 2.99.8
+Version: 2.99.9
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -26,7 +26,11 @@ Authors@R: c(
            family = "Fernandez",
            email = "lfernandez@ibecbarcelona.eu",
            role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0001-9790-6287"))
+           comment = c(ORCID = "0000-0001-9790-6287")),
+    person(given = "Héctor",
+           family = "Gracia Cabrera",
+           email = "hgracia@ibecbarcelona.eu",
+           role = c("aut"))
     )
 Description: Reads Bruker NMR data directories both zipped and unzipped.
  It provides automated and efficient signal processing for untargeted 

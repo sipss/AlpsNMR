@@ -42,6 +42,7 @@ Authors:
   \item Ivan Montoliu Roura \email{Ivan.MontoliuRoura@rd.nestle.com}
   \item Sergio Oller Moreno \email{soller@ibecbarcelona.eu} (\href{https://orcid.org/0000-0002-8994-1549}{ORCID})
   \item Francisco Madrid Gambin \email{fmadrid@ibecbarcelona.eu} (\href{https://orcid.org/0000-0001-9333-0014}{ORCID})
+  \item Héctor Gracia Cabrera \email{hgracia@ibecbarcelona.eu}
 }
 
 Other contributors:

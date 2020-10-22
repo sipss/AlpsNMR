@@ -863,21 +863,23 @@ nmr_zip_bruker_samples <-
 #' @export
 #' @family import/export functions
 #' @examples 
-#' \dontrun{
-#' Error in file(con, "rb") : no se puede abrir la conexión
 #' fid <- nmr_read_bruker_fid("sample.fid")
-#' }
 nmr_read_bruker_fid <- function(sample_name, endian = "little") {
-    fid_file <- file.path(sample_name, "fid")
-    num_numbers <- file.size(fid_file) / 8
-    fid <-
-        readBin(
-            fid_file,
-            what = "integer",
-            n = num_numbers,
-            size = 4,
-            signed = TRUE,
-            endian = endian
-        )
+    if (file.exists(file.path(sample_name, "fid"))) {
+        fid_file <- file.path(sample_name, "fid")
+        
+        num_numbers <- file.size(fid_file) / 8
+        fid <-
+            readBin(
+                fid_file,
+                what = "integer",
+                n = num_numbers,
+                size = 4,
+                signed = TRUE,
+                endian = endian
+            )
+    } else {
+        fid <- NULL
+    }
     fid
 }

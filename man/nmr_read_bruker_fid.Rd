@@ -18,10 +18,7 @@ A numeric vector with the free induction decay values
 Reads an FID file. This is a very simple function.
 }
 \examples{
-\dontrun{
-Error in file(con, "rb") : no se puede abrir la conexiÃ³n
 fid <- nmr_read_bruker_fid("sample.fid")
-}
 }
 \seealso{
 Other import/export functions: 
