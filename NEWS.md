@@ -1,3 +1,7 @@
+# AlpsNMR 2.99.8 (2020-10-22)
+
+- Deletion of tutorial and download_MTBLS242_demo.R
+
 # AlpsNMR 2.99.7 (2020-10-19)
 
 - Bugs in import/export functions to SummarizedExperiment solved
