@@ -44,7 +44,7 @@ test_that("nmr_data_analysis works", {
     internal_val = list(iterations = 2, test_size = 0.25),
     data_analysis_method = methodology
   )
-  expect_false(isTRUE(all.equal(out, NULL)))
+  expect_false(is.null(out))
 })
 
 test_that("random subsampling works", {
