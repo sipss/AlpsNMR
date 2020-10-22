@@ -1,4 +1,8 @@
-# AlpsNMR 2.99.8 (2020-10-22)
+# AlpsNMR 2.99.91 (2020-10-22)
+
+- test changed
+
+# AlpsNMR 2.99.9 (2020-10-22)
 
 - Added Héctor ass author
 - Bug fix in nmr_read_bruker_fid

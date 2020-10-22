@@ -1,7 +1,7 @@
 Package: AlpsNMR
 Type: Package
 Title: Automated spectraL Processing System for NMR
-Version: 2.99.9
+Version: 2.99.91
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",

@@ -82,15 +82,15 @@ files_to_rDolphin = function (nmr_dataset, biological_origin) {
     colnames(meta_rDolphin) = newcolnames
     meta_rDolphin$type = as.numeric(as.factor(meta_rDolphin$type))
     
-    NMR_spectra = nmr_data(nmr_dataset)
-    ROI = NULL
-    Parameters = NULL
-    Parameters_blood = NULL
-    ROI_blood = NULL
-    Parameters_cell = NULL
-    ROI_cell = NULL
-    Parameters_urine = NULL
-    ROI_urine = NULL
+    NMR_spectra <- nmr_data(nmr_dataset)
+    ROI <- NULL
+    Parameters <- NULL
+    Parameters_blood <- NULL
+    ROI_blood <- NULL
+    Parameters_cell <- NULL
+    ROI_cell <- NULL
+    Parameters_urine <- NULL
+    ROI_urine <- NULL
     if(biological_origin == "blood"){
         utils::data("Parameters_blood",
                     package = "AlpsNMR",
