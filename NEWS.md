@@ -1,3 +1,7 @@
+# AlpsNMR 3.1.0 (2020-10-22)
+
+- Package accepted in bioconductor
+
 # AlpsNMR 2.99.93 (2020-10-22)
 
 - Héctor removed as maintainer to ensure a single point of contact.
