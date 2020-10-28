@@ -1,3 +1,7 @@
+# AlpsNMR 2.99.93 (2020-10-22)
+
+- Héctor removed as maintainer to ensure a single point of contact.
+
 # AlpsNMR 2.99.92 (2020-10-22)
 
 - Héctor added as maintainer
