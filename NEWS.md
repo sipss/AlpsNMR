@@ -1,3 +1,7 @@
+# AlpsNMR 2.99.92 (2020-10-22)
+
+- Héctor added as maintainer
+
 # AlpsNMR 2.99.91 (2020-10-22)
 
 - test changed
