@@ -1,10 +1,6 @@
-# AlpsNMR 3.1.1 (2020-10-22)
+# AlpsNMR 3.0.1 (2020-10-30)
 
 - Release branch 3_12 updated
-
-# AlpsNMR 3.1.0 (2020-10-22)
-
-- Package accepted in bioconductor
 
 # AlpsNMR 2.99.93 (2020-10-22)
 
