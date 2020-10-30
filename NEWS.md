@@ -1,3 +1,7 @@
+# AlpsNMR 3.0.2 (2020-10-30)
+
+- Solved malformed autor field
+
 # AlpsNMR 3.0.1 (2020-10-30)
 
 - Release branch 3_12 updated
