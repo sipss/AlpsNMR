@@ -1,3 +1,7 @@
+# AlpsNMR 3.1.1 (2020-10-30)
+
+- Modified aorder of autor list
+
 # AlpsNMR 3.1.0 (2020-10-22)
 
 - Package accepted in bioconductor
