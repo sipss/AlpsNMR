@@ -114,7 +114,7 @@ convert_field <- function(element) {
     tryCatch({
         # First remove spaces
         cleaned_spaces <- stringr::str_trim(element)
-        if (nchar(cleaned_spaces) == 0) {
+        if (nchar(cleaned_spaces[1]) == 0) {
             return(cleaned_spaces)
         }
         # Then make sure there is a space between numbers (it's apparently optional):

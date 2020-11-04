@@ -1,3 +1,8 @@
+# AlpsNMR 3.1.2 (2020-11-04)
+
+- Bug fix related with Bioconductor Renviron variable
+_R_CHECK_LENGTH_1_CONDITION_
+
 # AlpsNMR 3.1.1 (2020-10-30)
 
 - Modified aorder of autor list
