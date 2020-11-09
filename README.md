@@ -1,5 +1,3 @@
-# AlpsNMR
-
 # AlpsNMR <img src='man/figures/AlpsNMRlogo.png' align="right" height="139" />
 
 [![Build Status](https://github.com/sipss/AlpsNMR/workflows/R-CMD-check/badge.svg?branch=master)](https://github.com/sipss/AlpsNMR/actions/)
