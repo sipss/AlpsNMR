@@ -9,8 +9,6 @@ model_VIP(MVObj, model = "mid")
 }
 \arguments{
 \item{MVObj}{a MUVR model}
-
-\item{model}{Which model to use ("min", "mid" (default), or "max")}
 }
 \value{
 a data frame with the order, name and average rank of selected variables

@@ -1,3 +1,9 @@
+# AlpsNMR 3.0.4 (2020-11-19)
+
+- Added instructions to follow a longer tutorial
+- nmr_pca_outliers_plot modified to show names in all
+  boundaries of the plot
+
 # AlpsNMR 3.0.3 (2020-11-04)
 
 - Bug fix related with Bioconductor Renviron variable

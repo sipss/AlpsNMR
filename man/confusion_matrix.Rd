@@ -7,11 +7,6 @@ Confusion matrix of the MUVR model}
 \usage{
 confusion_matrix(MVObj, model = "mid")
 }
-\arguments{
-\item{MVObj}{A MUVR object (classification analysis)}
-
-\item{model}{min, mid or max model}
-}
 \value{
 A confusion matrix of the model comparing actual vs predicted class
 }
