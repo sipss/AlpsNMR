@@ -383,7 +383,7 @@ nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
     
     pca_outliers_with_meta_only_out <- dplyr::filter(
         pca_outliers_with_meta,
-        .data$Tscores > tscore_crit & .data$QResiduals > qres_crit
+        .data$Tscores > tscore_crit | .data$QResiduals > qres_crit
     )
     
     ggplot2::ggplot(
