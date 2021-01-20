@@ -1,3 +1,6 @@
+# AlpsNMR 3.0.5 (2021-1-20)
+- Bug fix loading bruker files
+
 # AlpsNMR 3.0.4 (2020-11-19)
 
 - Added instructions to follow a longer tutorial
