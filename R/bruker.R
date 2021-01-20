@@ -383,7 +383,7 @@ parse_title_file <- function(title_lines) {
     # Case (a): (and empty lines are accepted)
     if (all(number_of_fields_per_line >= 2)) {
         all_names <- vapply(lines_split, FUN=function(line)
-            line[[1]], FUN.VALUE = array)
+            line[[1]], FUN.VALUE = character(1))
         all_vals <- vapply(lines_split, FUN=function(line) {
             value <- paste0(line[2:length(line)], collapse = " ")
             # Remove spaces and ";" at the end of the value, if they are present:

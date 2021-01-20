@@ -1,3 +1,6 @@
+# AlpsNMR 3.1.4 (2021-1-20)
+- bug fix loading bruker files
+
 # AlpsNMR 3.1.3 (2020-11-19)
 
 - Added instructions to follow a longer tutorial
@@ -11,7 +14,7 @@ _R_CHECK_LENGTH_1_CONDITION_
 
 # AlpsNMR 3.1.1 (2020-10-30)
 
-- Modified aorder of autor list
+- Modified order of autor list
 
 # AlpsNMR 3.1.0 (2020-10-22)
 
