@@ -1,0 +1,8 @@
+pandoc: 2.7.3
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  introduction-to-alpsnmr: introduction-to-alpsnmr.html
+  tutorial_MTBLS242: tutorial_MTBLS242.html
+last_built: 2021-02-24T11:30Z
+

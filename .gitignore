@@ -8,7 +8,6 @@ inst/doc
 .Rprofile
 .RData
 .Ruserdata
-docs/
 vignettes/introduction-to-alpsnmr.R
 vignettes/introduction-to-alpsnmr.html
 .git
