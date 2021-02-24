@@ -5,27 +5,10 @@
 \title{Deprecated function
 Feature selection and validation in MULTILEVEL analysis}
 \usage{
-rdCV_PLS_RF_ML(
-  nmr_peak_table,
-  label,
-  scale = TRUE,
-  nRep = 10,
-  nOuter = 5,
-  nInner,
-  varRatio = 0.75,
-  DA = FALSE,
-  fitness = "MISS",
-  method = "PLS",
-  ML = TRUE,
-  modReturn = FALSE,
-  logg = FALSE,
-  parallel = TRUE
-)
+rdCV_PLS_RF_ML(nmr_peak_table)
 }
 \arguments{
 \item{nmr_peak_table}{an AlpsNMR integration object (2 classes)}
-
-\item{label}{the name of the variable to test (e.g. "Timepoint")}
 }
 \value{
 a MUVR model containing selection parameters, validation and fitness
@@ -42,7 +25,7 @@ especially useful in crossover or longitudinal studies
 requires 2 samples of the same observation).
 }
 \examples{
-message("MUVR is not compatible with Bioconductor, 
+message("Deprecated. MUVR is not compatible with Bioconductor, 
 use bp_kfold_VIP_analysis method instead")
 }
 \references{

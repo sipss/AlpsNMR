@@ -7,6 +7,11 @@ Confusion matrix of the MUVR model}
 \usage{
 confusion_matrix(MVObj, model = "mid")
 }
+\arguments{
+\item{MVObj}{a MUVR model}
+
+\item{model}{What type of model to plot ('min', 'mid' or 'max'). Defaults to 'mid'.}
+}
 \value{
 A confusion matrix of the model comparing actual vs predicted class
 }
@@ -16,6 +21,6 @@ After creating a model with the \code{rdCV_PLS_RF} function, you can run
 gives information about the model performance (e.g. classification rate).
 }
 \examples{
-message("MUVR is not compatible with Bioconductor, 
+message("Deprecated. MUVR is not compatible with Bioconductor, 
 use bp_kfold_VIP_analysis method instead")
 }

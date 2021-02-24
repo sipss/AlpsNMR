@@ -43,31 +43,14 @@ ppm_VIP_vector <- function(VIPs) {
 #' need to set the class from this object, or just set it from another Y vector.
 #'
 #' @family nmr_dataset_1D functions
-#' @inheritParams MUVR::MUVR
-#'
+#' @param nmr_peak_table an AlpsNMR integration object (2 classes)
 #' @export
 #' @examples 
 #' message("Deprecated. MUVR is not compatible with Bioconductor, 
 #' use bp_kfold_VIP_analysis method instead")
 #' @return a MUVR model containing selection parameters, validation and fitness
 #' @references Shi,L. et al. (2018) Variable selection and validation in multivariate modelling. Bioinformatics.
-rdCV_PLS_RF <- function(X,
-                        Y,
-                        ID,
-                        scale = TRUE,
-                        nRep = 10,
-                        nOuter = 5,
-                        nInner,
-                        varRatio = 0.75,
-                        DA = FALSE,
-                        fitness = "MISS",
-                        method = "PLS",
-                        nCompMax,
-                        methParam,
-                        ML = FALSE,
-                        modReturn = FALSE,
-                        logg = FALSE,
-                        parallel = TRUE){
+rdCV_PLS_RF <- function(nmr_peak_table){
     .Defunct("nmr_data_analysis")
 }
 
@@ -79,8 +62,12 @@ rdCV_PLS_RF <- function(X,
 #' more information about the multivariate modelling with minimally biased
 #' variable selection (MUVR) from the `MUVR` package, see Shi et al., 2018 (DOI:
 #' 10.1093/bioinformatics/bty710).
-#'
-#' @inheritParams MUVR::plotMV
+#' 
+#' @param MVObj a MUVR model
+#' @param model What type of model to plot ('min', 'mid' or 'max'). Defaults to 'mid'.
+#' @param factCols An optional vector with colors for the factor levels (in the same order as the levels).
+#' @param sampLabels Sample labels (optional; implemented for classification)
+#' @param ylim 
 #'
 #' @return A plot with the model performance
 #' @export
@@ -101,14 +88,13 @@ MUVR_model_plot = function (MVObj,
 #' Once, the MVObj is created and validated, this function extracts autoselected
 #' ranked variables from the model (MUVR object). See `rdCV_PLS_RF` function.
 #'
-#' @inheritParams MUVR::getVIP
 #' @param MVObj a MUVR model
 #' @return a data frame with the order, name and average rank of selected variables
 #' @export
 #' @examples 
 #' message("Deprecated. MUVR is not compatible with Bioconductor, 
 #' use bp_kfold_VIP_analysis method instead")
-model_VIP = function(MVObj, model = "mid") {
+model_VIP = function(MVObj) {
     .Defunct()
 }   
 
@@ -140,7 +126,8 @@ p_value_perm = function (model_actual, permutation_object) {
 #' `confusion_matrix` on the model to make a confusion matrix from MUVR. This
 #' gives information about the model performance (e.g. classification rate).
 #'
-#' @inheritParams MUVR::confusionMatrix
+#' @param MVObj a MUVR model
+#' @param model What type of model to plot ('min', 'mid' or 'max'). Defaults to 'mid'.
 #'
 #' @return A confusion matrix of the model comparing actual vs predicted class
 #' @export
@@ -166,8 +153,6 @@ confusion_matrix = function(MVObj, model = "mid") {
 #'
 #' @family nmr_dataset_1D functions
 #' @param nmr_peak_table an AlpsNMR integration object (2 classes)
-#' @param label the name of the variable to test (e.g. "Timepoint")
-#' @inheritParams MUVR::MUVR
 #'
 #' @export
 #' @examples 
@@ -175,20 +160,7 @@ confusion_matrix = function(MVObj, model = "mid") {
 #' use bp_kfold_VIP_analysis method instead")
 #' @return a MUVR model containing selection parameters, validation and fitness
 #' @references Shi,L. et al. (2018) Variable selection and validation in multivariate modelling. Bioinformatics.
-rdCV_PLS_RF_ML = function (nmr_peak_table,
-                           label,
-                           scale = TRUE,
-                           nRep = 10,
-                           nOuter = 5,
-                           nInner,
-                           varRatio = 0.75,
-                           DA = FALSE,
-                           fitness = "MISS",
-                           method = "PLS",
-                           ML = TRUE,
-                           modReturn = FALSE,
-                           logg = FALSE,
-                           parallel = TRUE){
+rdCV_PLS_RF_ML = function (nmr_peak_table){
     .Defunct()
 }   
 

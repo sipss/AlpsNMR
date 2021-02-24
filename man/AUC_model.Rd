@@ -17,6 +17,6 @@ the AUC value of the middle model
 The function extracts the AUC value from the middle \code{MUVR} model
 }
 \examples{
-message("MUVR is not compatible with Bioconductor, 
+message("Deprecated. MUVR is not compatible with Bioconductor, 
 use bp_kfold_VIP_analysis method instead")
 }

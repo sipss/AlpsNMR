@@ -4,25 +4,10 @@
 \alias{rdCV_PLS_RF}
 \title{Deprecated function}
 \usage{
-rdCV_PLS_RF(
-  X,
-  Y,
-  ID,
-  scale = TRUE,
-  nRep = 10,
-  nOuter = 5,
-  nInner,
-  varRatio = 0.75,
-  DA = FALSE,
-  fitness = "MISS",
-  method = "PLS",
-  nCompMax,
-  methParam,
-  ML = FALSE,
-  modReturn = FALSE,
-  logg = FALSE,
-  parallel = TRUE
-)
+rdCV_PLS_RF(nmr_peak_table)
+}
+\arguments{
+\item{nmr_peak_table}{an AlpsNMR integration object (2 classes)}
 }
 \value{
 a MUVR model containing selection parameters, validation and fitness
@@ -31,7 +16,7 @@ a MUVR model containing selection parameters, validation and fitness
 Deprecated function
 }
 \examples{
-message("MUVR is not compatible with Bioconductor, 
+message("Deprecated. MUVR is not compatible with Bioconductor, 
 use bp_kfold_VIP_analysis method instead")
 }
 \references{

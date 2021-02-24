@@ -7,6 +7,17 @@ Model plot}
 \usage{
 MUVR_model_plot(MVObj, model = "mid", factCols, sampLabels, ylim = NULL)
 }
+\arguments{
+\item{MVObj}{a MUVR model}
+
+\item{model}{What type of model to plot ('min', 'mid' or 'max'). Defaults to 'mid'.}
+
+\item{factCols}{An optional vector with colors for the factor levels (in the same order as the levels).}
+
+\item{sampLabels}{Sample labels (optional; implemented for classification)}
+
+\item{ylim}{}
+}
 \value{
 A plot with the model performance
 }

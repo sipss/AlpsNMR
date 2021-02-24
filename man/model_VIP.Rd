@@ -5,7 +5,7 @@
 \title{Deprecated function
 Model VIP values}
 \usage{
-model_VIP(MVObj, model = "mid")
+model_VIP(MVObj)
 }
 \arguments{
 \item{MVObj}{a MUVR model}
@@ -18,6 +18,6 @@ Once, the MVObj is created and validated, this function extracts autoselected
 ranked variables from the model (MUVR object). See \code{rdCV_PLS_RF} function.
 }
 \examples{
-message("MUVR is not compatible with Bioconductor, 
+message("Deprecated. MUVR is not compatible with Bioconductor, 
 use bp_kfold_VIP_analysis method instead")
 }
