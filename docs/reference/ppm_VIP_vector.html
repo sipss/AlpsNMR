@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.99.93</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.4</span>
       </span>
     </div>
 
@@ -95,11 +95,11 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/introduction-to-alpsnmr.html">AlpsLCMS Workflow
+      <a href="../articles/introduction-to-alpsnmr.html">AlpsNMR Workflow
 </a>
     </li>
     <li>
-      <a href="../articles/tutorial_MTBLS242.html">AlpsLCMS tutorial
+      <a href="../articles/tutorial_MTBLS242.html">AlpsNMR tutorial
 </a>
     </li>
   </ul>
@@ -162,35 +162,10 @@ This is needed in case that an automated pipeline is applied, connecting the
 output from model_VIP(MVObj) to <code>nmr_identify_regions</code> family functions.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"MUVR is not compatible with Bioconductor, 
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"Deprecated. MUVR is not compatible with Bioconductor, 
 use bp_kfold_VIP_analysis method instead"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>MUVR is not compatible with Bioconductor, </span>
+</div><div class='output co'>#&gt; <span class='message'>Deprecated. MUVR is not compatible with Bioconductor, </span>
 #&gt; <span class='message'>use bp_kfold_VIP_analysis method instead</span></div><div class='input'>
-<span class='co'>## Example of MUVR usage</span>
-<span class='co'># 1.Build a model with the X data from your nmr object and your class:</span>
-<span class='co'>#MVObj &lt;- rdCV_PLS_RF(nmr_data(nmr_peak_table),</span>
-<span class='co'>#Y = nmr_peak_table_completed$Timepoint)</span>
-
-<span class='co'># 2.Model performance</span>
-<span class='co'>#confusion_matrix(MVObj)</span>
-
-<span class='co'># 3.Plotting the model</span>
-<span class='co'>#MUVR_model_plot(MVObj)</span>
-
-<span class='co'># 4.Permutation test</span>
-<span class='co'>#permutations &lt;- permutation_test_model(MVObj, nPerm = 50)</span>
-
-<span class='co'># 5.Plotting permutation test results</span>
-<span class='co'>#permutation_test_plot(MVObj, permutations, model = "Mid", type = "t")</span>
-
-<span class='co'># 6.p-Value</span>
-<span class='co'>#p.value &lt;- p_value_perm(MVObj$miss[["mid"]], permutations[, "Mid"])</span>
-
-<span class='co'># 7.Significant variables</span>
-<span class='co'>#VIPs &lt;- model_VIP(MVObj)</span>
-
-<span class='co'># 8.Identification</span>
-<span class='co'>#results &lt;- nmr_identify_regions_blood(ppm_VIP_vector(VIPs))</span>
 
 </div></pre>
   </div>

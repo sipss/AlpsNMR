@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.99.93</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.4</span>
       </span>
     </div>
 
@@ -54,11 +54,11 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/introduction-to-alpsnmr.html">AlpsLCMS Workflow
+      <a href="../articles/introduction-to-alpsnmr.html">AlpsNMR Workflow
 </a>
     </li>
     <li>
-      <a href="../articles/tutorial_MTBLS242.html">AlpsLCMS tutorial
+      <a href="../articles/tutorial_MTBLS242.html">AlpsNMR tutorial
 </a>
     </li>
   </ul>
@@ -138,15 +138,15 @@ pipeline_example</code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MeOH_plasma_extraction_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span>
 <span class="va">MeOH_plasma_extraction_dir</span>
-<span class="co">#&gt; [1] "C:/Users/fmadrid/AppData/Local/Temp/RtmpyIglvl/temp_libpath8dc4753a2219/AlpsNMR/dataset-demo"</span></code></pre></div>
+<span class="co">#&gt; [1] "C:/Users/fmadrid/Documents/R/R-4.0.4/library/AlpsNMR/dataset-demo"</span></code></pre></div>
 <p>The demo directory includes four samples (zipped) and a dummy Excel metadata file.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="http://fs.r-lib.org/reference/dir_ls.html">dir_ls</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span><span class="op">)</span>
-<span class="co">#&gt; C:/Users/fmadrid/AppData/Local/Temp/RtmpyIglvl/temp_libpath8dc4753a2219/AlpsNMR/dataset-demo/10.zip</span>
-<span class="co">#&gt; C:/Users/fmadrid/AppData/Local/Temp/RtmpyIglvl/temp_libpath8dc4753a2219/AlpsNMR/dataset-demo/20.zip</span>
-<span class="co">#&gt; C:/Users/fmadrid/AppData/Local/Temp/RtmpyIglvl/temp_libpath8dc4753a2219/AlpsNMR/dataset-demo/30.zip</span>
-<span class="co">#&gt; C:/Users/fmadrid/AppData/Local/Temp/RtmpyIglvl/temp_libpath8dc4753a2219/AlpsNMR/dataset-demo/dummy_metadata.xlsx</span>
-<span class="co">#&gt; C:/Users/fmadrid/AppData/Local/Temp/RtmpyIglvl/temp_libpath8dc4753a2219/AlpsNMR/dataset-demo/README.txt</span></code></pre></div>
+<span class="co">#&gt; C:/Users/fmadrid/Documents/R/R-4.0.4/library/AlpsNMR/dataset-demo/10.zip</span>
+<span class="co">#&gt; C:/Users/fmadrid/Documents/R/R-4.0.4/library/AlpsNMR/dataset-demo/20.zip</span>
+<span class="co">#&gt; C:/Users/fmadrid/Documents/R/R-4.0.4/library/AlpsNMR/dataset-demo/30.zip</span>
+<span class="co">#&gt; C:/Users/fmadrid/Documents/R/R-4.0.4/library/AlpsNMR/dataset-demo/dummy_metadata.xlsx</span>
+<span class="co">#&gt; C:/Users/fmadrid/Documents/R/R-4.0.4/library/AlpsNMR/dataset-demo/README.txt</span></code></pre></div>
 <p>Given the name of the dataset, one may guess that the dataset was used to check the Methanol extraction in serum samples. The dummy metadata consists of dummy information, just for the sake of showing how this package can integrate external metadata. The excel file consists of two tidy tables, in two sheets.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MeOH_plasma_extraction_xlsx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, <span class="st">"dummy_metadata.xlsx"</span><span class="op">)</span>
@@ -174,9 +174,9 @@ pipeline_example</code></pre>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">zip_files</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="http://fs.r-lib.org/reference/dir_ls.html">dir_ls</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, glob <span class="op">=</span> <span class="st">"*.zip"</span><span class="op">)</span>
 <span class="va">zip_files</span>
-<span class="co">#&gt; C:/Users/fmadrid/AppData/Local/Temp/RtmpyIglvl/temp_libpath8dc4753a2219/AlpsNMR/dataset-demo/10.zip</span>
-<span class="co">#&gt; C:/Users/fmadrid/AppData/Local/Temp/RtmpyIglvl/temp_libpath8dc4753a2219/AlpsNMR/dataset-demo/20.zip</span>
-<span class="co">#&gt; C:/Users/fmadrid/AppData/Local/Temp/RtmpyIglvl/temp_libpath8dc4753a2219/AlpsNMR/dataset-demo/30.zip</span>
+<span class="co">#&gt; C:/Users/fmadrid/Documents/R/R-4.0.4/library/AlpsNMR/dataset-demo/10.zip</span>
+<span class="co">#&gt; C:/Users/fmadrid/Documents/R/R-4.0.4/library/AlpsNMR/dataset-demo/20.zip</span>
+<span class="co">#&gt; C:/Users/fmadrid/Documents/R/R-4.0.4/library/AlpsNMR/dataset-demo/30.zip</span>
 <span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_read_samples.html">nmr_read_samples</a></span><span class="op">(</span>sample_names <span class="op">=</span> <span class="va">zip_files</span><span class="op">)</span>
 <span class="co">#&gt; Warning: `future_options()` was deprecated in furrr 0.2.0.</span>
 <span class="co">#&gt; Please use `furrr_options()` instead.</span>
@@ -537,8 +537,7 @@ plot_interactive(plt, "plot_region.html")</code></pre>
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] ggplot2_3.3.3   AlpsNMR_2.99.93 magrittr_2.0.1  future_1.21.0  </span>
-<span class="co">#&gt; [5] dplyr_1.0.4    </span>
+<span class="co">#&gt; [1] ggplot2_3.3.3  AlpsNMR_3.0.5  magrittr_2.0.1 future_1.21.0  dplyr_1.0.4   </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
 <span class="co">#&gt;   [1] colorspace_2.0-0            ellipsis_0.3.1             </span>

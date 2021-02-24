@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.99.93</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.4</span>
       </span>
     </div>
 
@@ -95,11 +95,11 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/introduction-to-alpsnmr.html">AlpsLCMS Workflow
+      <a href="../articles/introduction-to-alpsnmr.html">AlpsNMR Workflow
 </a>
     </li>
     <li>
-      <a href="../articles/tutorial_MTBLS242.html">AlpsLCMS tutorial
+      <a href="../articles/tutorial_MTBLS242.html">AlpsNMR tutorial
 </a>
     </li>
   </ul>
@@ -137,96 +137,14 @@
     <p>Deprecated function</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rdCV_PLS_RF</span><span class='op'>(</span>
-  <span class='va'>X</span>,
-  <span class='va'>Y</span>,
-  <span class='va'>ID</span>,
-  scale <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  nRep <span class='op'>=</span> <span class='fl'>10</span>,
-  nOuter <span class='op'>=</span> <span class='fl'>5</span>,
-  <span class='va'>nInner</span>,
-  varRatio <span class='op'>=</span> <span class='fl'>0.75</span>,
-  DA <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  fitness <span class='op'>=</span> <span class='st'>"MISS"</span>,
-  method <span class='op'>=</span> <span class='st'>"PLS"</span>,
-  <span class='va'>nCompMax</span>,
-  <span class='va'>methParam</span>,
-  ML <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  modReturn <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  logg <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  parallel <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>rdCV_PLS_RF</span><span class='op'>(</span><span class='va'>nmr_peak_table</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>X</th>
-      <td><p>Predictor variables. NB: Variables (columns) must have names/unique identifiers. NAs not allowed in data. For multilevel, only the positive half of the difference matrix is specified.</p></td>
-    </tr>
-    <tr>
-      <th>Y</th>
-      <td><p>Response vector (Dependent variable). For classification, a factor (or character) variable should be used. For multilevel, Y is calculated automatically.</p></td>
-    </tr>
-    <tr>
-      <th>ID</th>
-      <td><p>Subject identifier (for sampling by subject; Assumption of independence if not specified)</p></td>
-    </tr>
-    <tr>
-      <th>scale</th>
-      <td><p>If TRUE, the predictor variable matrix is scaled to unit variance for PLS modelling.</p></td>
-    </tr>
-    <tr>
-      <th>nRep</th>
-      <td><p>Number of repetitions of double CV. (Defaults to 5)</p></td>
-    </tr>
-    <tr>
-      <th>nOuter</th>
-      <td><p>Number of outer CV loop segments. (Defaults to 6)</p></td>
-    </tr>
-    <tr>
-      <th>nInner</th>
-      <td><p>Number of inner CV loop segments. (Defaults to nOuter-1)</p></td>
-    </tr>
-    <tr>
-      <th>varRatio</th>
-      <td><p>Ratio of variables to include in subsequent inner loop iteration. (Defaults to 0.75)</p></td>
-    </tr>
-    <tr>
-      <th>DA</th>
-      <td><p>Boolean for Classification (discriminant analysis) (By default, if Y is numeric -&gt; DA=FALSE. If Y is factor (or character) -&gt; DA=TRUE)</p></td>
-    </tr>
-    <tr>
-      <th>fitness</th>
-      <td><p>Fitness function for model tuning (choose either 'AUROC' or 'MISS' (default) for classification; or 'RMSEP' (default) for regression.)</p></td>
-    </tr>
-    <tr>
-      <th>method</th>
-      <td><p>Multivariate method. Supports 'PLS' and 'RF' (default)</p></td>
-    </tr>
-    <tr>
-      <th>nCompMax</th>
-      <td><p>Option to choose max number of PLS components (default is 5)</p></td>
-    </tr>
-    <tr>
-      <th>methParam</th>
-      <td><p>List with parameter settings for specified MV method (see function code for details)</p></td>
-    </tr>
-    <tr>
-      <th>ML</th>
-      <td><p>Boolean for multilevel analysis (defaults to FALSE)</p></td>
-    </tr>
-    <tr>
-      <th>modReturn</th>
-      <td><p>Boolean for returning outer segment models (defaults to FALSE). Setting modReturn=TRUE is required for making MUVR predictions using predMV().</p></td>
-    </tr>
-    <tr>
-      <th>logg</th>
-      <td><p>Boolean for whether to sink model progressions to `log.txt`</p></td>
-    </tr>
-    <tr>
-      <th>parallel</th>
-      <td><p>Boolean for whether to perform `foreach` parallel processing (Requires a registered parallel backend; Defaults to `TRUE`)</p></td>
+      <th>nmr_peak_table</th>
+      <td><p>an AlpsNMR integration object (2 classes)</p></td>
     </tr>
     </table>
 
@@ -284,9 +202,9 @@ need to set the class from this object, or just set it from another Y vector.</p
 <code><a href='validate_nmr_dataset.html'>validate_nmr_dataset</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"MUVR is not compatible with Bioconductor, 
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"Deprecated. MUVR is not compatible with Bioconductor, 
 use bp_kfold_VIP_analysis method instead"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>MUVR is not compatible with Bioconductor, </span>
+</div><div class='output co'>#&gt; <span class='message'>Deprecated. MUVR is not compatible with Bioconductor, </span>
 #&gt; <span class='message'>use bp_kfold_VIP_analysis method instead</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
