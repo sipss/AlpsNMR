@@ -26,10 +26,10 @@ navbar:
       text: Articles
       menu:
       - text: |
-          AlpsLCMS Workflow
+          AlpsNMR Workflow
         href: articles/introduction-to-alpsnmr.html
       - text: |
-          AlpsLCMS tutorial
+          AlpsNMR tutorial
         href: articles/tutorial_MTBLS242.html
     news:
       text: Changelog
