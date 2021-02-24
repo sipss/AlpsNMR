@@ -1,0 +1,16 @@
+Meta
+doc
+inst/doc
+.Rproj.user
+.Rproj.user/*
+.Rhistory
+.Renviron
+.Rprofile
+.RData
+.Ruserdata
+vignettes/introduction-to-alpsnmr.R
+vignettes/introduction-to-alpsnmr.html
+.git
+.github
+AlpsNMR.Rproj
+AlpsNMR.Rproj/*

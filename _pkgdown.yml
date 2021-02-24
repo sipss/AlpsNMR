@@ -1,0 +1,39 @@
+destination: docs
+template:
+  params:
+    bootswatch: cerulean
+authors:
+  Nestlé Institute of Health Sciences:
+    href: https://www.nestleinstitutehealthsciences.com/
+  Institute for Bioengineering of Catalonia:
+    href: http://www.ibecbarcelona.eu/sensingsys
+navbar:
+  structure:
+    left:
+    - home
+    - reference
+    - articles
+    - news
+    right: github
+  components:
+    home:
+      icon: fa-home fa-lg
+      href: index.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    articles:
+      text: Articles
+      menu:
+      - text: |
+          AlpsNMR Workflow
+        href: articles/introduction-to-alpsnmr.html
+      - text: |
+          AlpsNMR tutorial
+        href: articles/tutorial_MTBLS242.html
+    news:
+      text: Changelog
+      href: news/index.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/sipss/AlpsNMR

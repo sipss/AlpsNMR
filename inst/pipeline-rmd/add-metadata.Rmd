@@ -1,0 +1,75 @@
+---
+title: "Loading Metadata Report"
+author: ""
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    df_print: "paged"
+---
+
+```{r add-metadata-setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r add-metadata-libraries}
+# Dependencies
+library(AlpsNMR)
+requireNamespace("purrr")
+requireNamespace("readxl")
+requireNamespace("htmltools")
+requireNamespace("DT")
+```
+
+
+```{r add-metadata-default-values}
+# These should be defined in the environment that calls rmarkdown::render
+if (!exists("nmr_dataset")) {
+  stop("nmr_dataset should be defined before running this notebook")
+  nmr_dataset <- NULL # to make linter happy
+}
+if (!exists("excel_file")) {
+  stop("excel_file should be defined before running this notebook")
+  excel_file <- NULL # to make linter happy
+}
+if (!exists("xlsx_file")) {
+  stop("xlsx_file should be defined before running this notebook")
+  xlsx_file <- NULL # to make linter happy
+}
+if (!exists("nmr_dataset_outfile")) {
+  stop("nmr_dataset_outfile should be defined before running this notebook")
+  nmr_dataset_outfile <- NULL # to make linter happy
+}
+```
+
+
+## xlsx Input files
+
+These are the input metadata tables that will be integrated:
+
+```{r add-metadata-read-input}
+excel_sheets <- readxl::excel_sheets(excel_file)
+excel_dfs <- purrr::map(excel_sheets, ~readxl::read_excel(path = excel_file, sheet = .))
+```
+
+
+```{r add-metadata-print-input}
+excel_dfs %>%
+  purrr::map(DT::datatable) %>%
+  htmltools::tagList()
+```
+
+
+## The added and linked metadata
+
+```{r add-metadata-integrate-metadata}
+nmr_dataset <- nmr_meta_add_tidy_excel(nmr_dataset, excel_file)
+```
+
+```{r add-metadata-print-output}
+nmr_meta_export(nmr_dataset, xlsx_file, groups = "external")
+nmr_dataset_save(nmr_dataset, nmr_dataset_outfile)
+nmr_dataset %>%
+  nmr_meta_get(groups = "external") %>%
+  DT::datatable()
+```
+
