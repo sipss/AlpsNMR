@@ -67,7 +67,7 @@ rdCV_PLS_RF <- function(nmr_peak_table){
 #' @param model What type of model to plot ('min', 'mid' or 'max'). Defaults to 'mid'.
 #' @param factCols An optional vector with colors for the factor levels (in the same order as the levels).
 #' @param sampLabels Sample labels (optional; implemented for classification)
-#' @param ylim 
+#' @param ylim Optional for imposing y-limits for regression and classification analysis
 #'
 #' @return A plot with the model performance
 #' @export
