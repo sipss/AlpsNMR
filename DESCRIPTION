@@ -1,7 +1,7 @@
 Package: AlpsNMR
 Type: Package
 Title: Automated spectraL Processing System for NMR
-Version: 3.0.5
+Version: 3.0.6
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -27,6 +27,11 @@ Authors@R: c(
            family = "Gracia Cabrera",
            email = "hgracia@ibecbarcelona.eu",
            role = c("aut")),
+    person(given = "Santiago",
+           family = "Marco Colás",
+           email = "smarco@ibecbarcelona.eu",
+           role = c("aut"),
+           comment = c(ORCID = "0000-0003-2663-2965")),
     person(given = "Nestlé Institute of Health Sciences",
            role = "cph"),
     person(given = "Institute for Bioengineering of Catalonia",
