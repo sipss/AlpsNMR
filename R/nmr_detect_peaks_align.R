@@ -146,7 +146,7 @@ nmr_detect_peaks <- function(nmr_dataset,
                                   SNR.Th = SNR.Th,
                                   verbose = FALSE,
                                   .progress = prgrs,
-                                  .options = furrr::future_options(globals = character(0L),
+                                  .options = furrr::furrr_options(globals = character(0L),
                                                                    packages = character(0L)))
     
     # peakList <- speaq::detectSpecPeaks(
@@ -301,7 +301,7 @@ nmr_detect_peaks_tune_snr <-
             ),
             #it was baselineThresh = NULL before
             .id = "SNR_threshold",
-            .options = furrr::future_options(globals = character(), packages = character())
+            .options = furrr::furrr_options(globals = character(), packages = character())
         )
         
         peaks_detected$SNR_threshold <-

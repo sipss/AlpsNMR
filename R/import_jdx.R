@@ -258,7 +258,7 @@ read_jdx <- function(file_names, metadata_only = FALSE) {
                                         info
                                     sampl
                                 }, .progress = prog,
-                                .options = furrr::future_options(globals = character(0L),
+                                .options = furrr::furrr_options(globals = character(0L),
                                                                  packages = character(0L)))
     
     return(output)

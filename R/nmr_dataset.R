@@ -250,7 +250,7 @@ nmr_read_samples_bruker <-
                               },
                               ...,
                               .progress = prgrs,
-                              .options = furrr::future_options(globals = character(0),
+                              .options = furrr::furrr_options(globals = character(0),
                                                                packages = character(0)))
         
         # Remove samples that could not be loaded:

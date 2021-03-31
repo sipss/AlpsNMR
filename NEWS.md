@@ -1,3 +1,6 @@
+# AlpsNMR 3.1.5 (2021-3-31)
+- Removed warning about future_options deprecation
+
 # AlpsNMR 3.1.4 (2021-1-20)
 - bug fix loading bruker files
 

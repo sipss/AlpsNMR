@@ -245,7 +245,7 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
         train_evaluate_model = train_evaluate_model,
         ...,
         .progress = prgrs,
-        .options = furrr::future_options(globals = character(0),
+        .options = furrr::furrr_options(globals = character(0),
                                          packages = character(0)))
     names(output) <- names(train_test_subsets)
     output
