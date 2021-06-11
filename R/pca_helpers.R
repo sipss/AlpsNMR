@@ -106,9 +106,11 @@ nmr_pca_scoreplot <- function(nmr_dataset,
                               pca_model,
                               comp = seq_len(2), ...) {
     nmr_metadata <- nmr_meta_get(nmr_dataset)
-    scores <-
-        tibble::as_tibble(pca_model$x, rownames = "NMRExperiment") %>%
-        dplyr::left_join(nmr_metadata, by = "NMRExperiment")
+    scores <- dplyr::left_join(
+        cbind(NMRExperiment = rownames(pca_model$X), as.data.frame(pca_model$X)),
+        nmr_metadata,
+        by = "NMRExperiment"
+    )
     var_percent <- 100 * pca_model$sdev ^ 2 / pca_model$var.tot
     axis_labels <-
         paste0("PC",
@@ -157,7 +159,7 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
     loadings <-
         matrix(0, nrow = length(ppm_axis), ncol = length(comp))
     loadings[attr(pca_model, "nmr_included"),] <-
-        pca_model$rotation[, comp, drop = FALSE]
+        pca_model$loadings$X[, comp, drop = FALSE]
     # loadings[,1] # first loading
     loadings <- as.data.frame(loadings)
     loadings$ppm <- ppm_axis
