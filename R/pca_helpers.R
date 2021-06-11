@@ -106,8 +106,10 @@ nmr_pca_scoreplot <- function(nmr_dataset,
                               pca_model,
                               comp = seq_len(2), ...) {
     nmr_metadata <- nmr_meta_get(nmr_dataset)
+    scores_df <- as.data.frame(pca_model$X)
+    colnames(scores_df) <- paste0("PC", seq_len(ncol(scores_df)))
     scores <- dplyr::left_join(
-        cbind(NMRExperiment = rownames(pca_model$X), as.data.frame(pca_model$X)),
+        cbind(NMRExperiment = rownames(pca_model$X), scores_df),
         nmr_metadata,
         by = "NMRExperiment"
     )
