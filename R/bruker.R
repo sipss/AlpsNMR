@@ -49,13 +49,13 @@ read_bruker_param <- function(file_name) {
         byrow = TRUE
     ), stringsAsFactors = FALSE)
     colnames(R) <- c("pattern", "name")
-    
+
     # Match each pattern to all lines. If there is a match and there was no
     # previous match then save the matching result.
     for (pat_idx in seq_len(nrow(R))) {
         lines_matched <-
             stringr::str_match_all(lines, R[["pattern"]][pat_idx])
-        lines_with_match <- vapply(lines_matched, FUN=nrow, FUN.VALUE=numeric(1)) > 0
+        lines_with_match <- purrr::map_int(lines_matched, nrow) > 0
         new_lines_with_match <-
             is.na(type_of_row) & lines_with_match
         type_of_row[new_lines_with_match] <- pat_idx
@@ -361,11 +361,10 @@ read_orig_file <- function(sample_path) {
     }
     orig_lines <- readLines(orig_file)
     lines_split <- strsplit(orig_lines, split = " ", fixed = TRUE)
-    all_names <- vapply(lines_split, FUN=function(line)
-        line[[1]], FUN.VALUE=array)
-    all_vals <-
-        vapply(lines_split, FUN=function(line)
-            paste0(line[2:length(line)], collapse = " "), FUN.VALUE=array)
+    all_names <- purrr::map_chr(lines_split, 1)
+    all_vals <- purrr::map_chr(lines_split, function(line) {
+        paste0(line[2:length(line)], collapse = " ")
+    })
     output <- list()
     output[all_names] <- all_vals
     return(output)
@@ -377,20 +376,18 @@ parse_title_file <- function(title_lines) {
     #         (b) On each line you find        "Value" (no names)
     # What option do we have? Lets guess:
     lines_split <- strsplit(title_lines, split = " ", fixed = TRUE)
-    number_of_fields_per_line <-
-        vapply(lines_split, length, numeric(1))
-    
+    number_of_fields_per_line <- purrr::map_int(lines_split, length)
+
     # Case (a): (and empty lines are accepted)
     if (all(number_of_fields_per_line >= 2)) {
-        all_names <- vapply(lines_split, FUN=function(line)
-            line[[1]], FUN.VALUE = character(1))
-        all_vals <- vapply(lines_split, FUN=function(line) {
+        all_names <- purrr::map_chr(lines_split, 1)
+        all_vals <- purrr::map_chr(lines_split, function(line) {
             value <- paste0(line[2:length(line)], collapse = " ")
             # Remove spaces and ";" at the end of the value, if they are present:
             gsub(pattern = "[\\s;]+$",
-                     replacement = "",
-                     x = value)
-        }, FUN.VALUE= array)
+                 replacement = "",
+                 x = value)
+        })
         output <- list()
         output[all_names] <- all_vals
         return(output)

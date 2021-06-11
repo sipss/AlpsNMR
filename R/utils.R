@@ -84,13 +84,10 @@ tibble_lists_columns_to_vector_columns <- function(data) {
     ### Step 1: Find which columns have to be converted:
     
     # 1.1 Convert only columns of type "list"
-    to_simplify_cols <- which(vapply(
-        data,
-        FUN = function(x)
-            "list" %in% class(x),
-        FUN.VALUE = logical(1)
-    ))
-    
+    to_simplify_cols <- which(
+        purrr::map_lgl(data, function(x) "list" %in% class(x))
+    )
+
     # 1.1b If there are none, return:
     if (length(to_simplify_cols) == 0) {
         # Restore original colnames
