@@ -284,7 +284,7 @@ nmr_read_samples_bruker <-
         }
 
         nmr_experiment_col <- sample_meta[["info"]][["info_NMRExperiment"]]
-        nmr_experiment_col <- vctrs::vec_as_names(nmr_experiment_col, repair = "unique"
+        nmr_experiment_col <- vctrs::vec_as_names(nmr_experiment_col, repair = "unique")
         sample_meta <- purrr::map(sample_meta,
                                   function(x) {
                                       x %>%
