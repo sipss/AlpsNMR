@@ -1,3 +1,9 @@
+# AlpsNMR 3.1.5.9000 (unreleased)
+- Fix issue with PCA plots not working as expected
+- Ensure NMRExperiment names are not duplicated in a dataset (closes #44)
+- Fix issue with some title file formatting in Bruker samples (closes #46)
+- Remove deprecated and defunct functions (mostly related to MUVR)
+
 # AlpsNMR 3.1.5 (2021-3-31)
 - Removed warning about future_options deprecation
 
@@ -17,7 +23,7 @@ _R_CHECK_LENGTH_1_CONDITION_
 
 # AlpsNMR 3.1.1 (2020-10-30)
 
-- Modified order of autor list
+- Modified order of author list
 
 # AlpsNMR 3.1.0 (2020-10-22)
 
