@@ -259,8 +259,6 @@ Other nmr_dataset_1D functions:
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
 \code{\link{print.nmr_dataset_1D}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ChemoSpec}()},
 \code{\link{validate_nmr_dataset}()}
@@ -312,8 +310,6 @@ Other nmr_dataset_1D functions:
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
 \code{\link{print.nmr_dataset_1D}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ChemoSpec}()},
 \code{\link{validate_nmr_dataset}()}
@@ -356,8 +352,6 @@ Other nmr_dataset_1D functions:
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
 \code{\link{print.nmr_dataset_1D}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ChemoSpec}()},
 \code{\link{validate_nmr_dataset}()}
@@ -398,8 +392,6 @@ Other nmr_dataset_1D functions:
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
 \code{\link{print.nmr_dataset_1D}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ChemoSpec}()},
 \code{\link{validate_nmr_dataset}()}
@@ -441,8 +433,6 @@ Other nmr_dataset_1D functions:
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
 \code{\link{print.nmr_dataset_1D}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ChemoSpec}()},
 \code{\link{validate_nmr_dataset}()}
@@ -484,8 +474,6 @@ Other nmr_dataset_1D functions:
 \code{\link{plot.nmr_dataset_1D}()},
 \code{\link{plot_webgl}()},
 \code{\link{print.nmr_dataset_1D}()},
-\code{\link{rdCV_PLS_RF_ML}()},
-\code{\link{rdCV_PLS_RF}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ChemoSpec}()},
 \code{\link{validate_nmr_dataset}()}

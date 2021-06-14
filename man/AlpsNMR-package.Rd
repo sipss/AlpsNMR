@@ -43,6 +43,7 @@ Authors:
   \item Sergio Oller Moreno \email{soller@ibecbarcelona.eu} (\href{https://orcid.org/0000-0002-8994-1549}{ORCID})
   \item Francisco Madrid Gambin \email{fmadrid@ibecbarcelona.eu} (\href{https://orcid.org/0000-0001-9333-0014}{ORCID})
   \item Héctor Gracia Cabrera \email{hgracia@ibecbarcelona.eu}
+  \item Santiago Marco Colás \email{smarco@ibecbarcelona.eu} (\href{https://orcid.org/0000-0003-2663-2965}{ORCID})
 }
 
 Other contributors:
