@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -90,7 +90,7 @@
       <h1>Introduction to AlpsNMR</h1>
                         <h4 class="author">Sergio Oller, Institute for Bioengineering of Catalonia</h4>
             
-            <h4 class="date">2021-03-31</h4>
+            <h4 class="date">2021-08-03</h4>
       
       
       <div class="hidden name"><code>introduction-to-alpsnmr.Rmd</code></div>
@@ -148,14 +148,14 @@ pipeline_example</code></pre>
 <span id="cb6-2"><a href="#cb6-2"></a>exp_subj_id &lt;-<span class="st"> </span>readxl<span class="op">::</span><span class="kw"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span>(MeOH_plasma_extraction_xlsx, <span class="dt">sheet =</span> <span class="dv">1</span>)</span>
 <span id="cb6-3"><a href="#cb6-3"></a>subj_id_age &lt;-<span class="st"> </span>readxl<span class="op">::</span><span class="kw"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span>(MeOH_plasma_extraction_xlsx, <span class="dt">sheet =</span> <span class="dv">2</span>)</span>
 <span id="cb6-4"><a href="#cb6-4"></a>exp_subj_id</span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co">#&gt; # A tibble: 3 x 3</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
 <span id="cb6-6"><a href="#cb6-6"></a><span class="co">#&gt;   NMRExperiment SubjectID TimePoint</span></span>
 <span id="cb6-7"><a href="#cb6-7"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;    </span></span>
 <span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt; 1 10            Ana       baseline </span></span>
 <span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt; 2 20            Ana       3 months </span></span>
 <span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt; 3 30            Elia      baseline</span></span>
 <span id="cb6-11"><a href="#cb6-11"></a>subj_id_age</span>
-<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#&gt; # A tibble: 2 x 2</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span id="cb6-13"><a href="#cb6-13"></a><span class="co">#&gt;   SubjectID   Age</span></span>
 <span id="cb6-14"><a href="#cb6-14"></a><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;</span></span>
 <span id="cb6-15"><a href="#cb6-15"></a><span class="co">#&gt; 1 Ana          29</span></span>
@@ -176,7 +176,7 @@ pipeline_example</code></pre>
 <span id="cb7-8"><a href="#cb7-8"></a><span class="co">#&gt; An nmr_dataset (3 samples)</span></span></code></pre></div>
 <p>As we have not added any metadata to this dataset, the only column we see is the <code>NMRExperiment</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span>(dataset, <span class="dt">groups =</span> <span class="st">"external"</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="co">#&gt; # A tibble: 3 x 1</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co">#&gt; # A tibble: 3 × 1</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a><span class="co">#&gt;   NMRExperiment</span></span>
 <span id="cb8-4"><a href="#cb8-4"></a><span class="co">#&gt;   &lt;chr&gt;        </span></span>
 <span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt; 1 10           </span></span>
@@ -188,7 +188,7 @@ pipeline_example</code></pre>
 <a href="#adding-metadata" class="anchor"></a>Adding metadata</h1>
 <p>Initally our dataset only has the <code>NMRExperiment</code> column:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span>(dataset, <span class="dt">groups =</span> <span class="st">"external"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="co">#&gt; # A tibble: 3 x 1</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="co">#&gt; # A tibble: 3 × 1</span></span>
 <span id="cb9-3"><a href="#cb9-3"></a><span class="co">#&gt;   NMRExperiment</span></span>
 <span id="cb9-4"><a href="#cb9-4"></a><span class="co">#&gt;   &lt;chr&gt;        </span></span>
 <span id="cb9-5"><a href="#cb9-5"></a><span class="co">#&gt; 1 10           </span></span>
@@ -198,7 +198,7 @@ pipeline_example</code></pre>
 <p>As we already have the <code>NMRExperiment</code> column, we can use it as the merging column (note that both columns have the same column name to match the metadata such as group class, age, BMI…):</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>dataset &lt;-<span class="st"> </span><span class="kw"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span>(dataset, <span class="dt">metadata =</span> exp_subj_id, <span class="dt">by =</span> <span class="st">"NMRExperiment"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="kw"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span>(dataset, <span class="dt">groups =</span> <span class="st">"external"</span>)</span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="co">#&gt; # A tibble: 3 x 3</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
 <span id="cb10-4"><a href="#cb10-4"></a><span class="co">#&gt;   NMRExperiment SubjectID TimePoint</span></span>
 <span id="cb10-5"><a href="#cb10-5"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;    </span></span>
 <span id="cb10-6"><a href="#cb10-6"></a><span class="co">#&gt; 1 10            Ana       baseline </span></span>
@@ -207,7 +207,7 @@ pipeline_example</code></pre>
 <p>If we have info from different files we can match them. For instance, now we have the <code>SubjectID</code> information so we can add the table that adds the <code>SubjectID</code> to the <code>Age</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>dataset &lt;-<span class="st"> </span><span class="kw"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span>(dataset, <span class="dt">metadata =</span> subj_id_age, <span class="dt">by =</span> <span class="st">"SubjectID"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="kw"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span>(dataset, <span class="dt">groups =</span> <span class="st">"external"</span>)</span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="co">#&gt; # A tibble: 3 x 4</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co">#&gt; # A tibble: 3 × 4</span></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="co">#&gt;   NMRExperiment SubjectID TimePoint   Age</span></span>
 <span id="cb11-5"><a href="#cb11-5"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;</span></span>
 <span id="cb11-6"><a href="#cb11-6"></a><span class="co">#&gt; 1 10            Ana       baseline     29</span></span>
@@ -267,7 +267,7 @@ plot_interactive(plt, "plot_region.html")</code></pre>
 <p>Maybe we just want to analyze a subset of the data, e.g., only a class group or a particular gender. We can filter some samples according to their metadata as follows:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>samples_<span class="dv">10</span>_<span class="dv">20</span> &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(dataset, SubjectID <span class="op">==</span><span class="st"> "Ana"</span>)</span>
 <span id="cb17-2"><a href="#cb17-2"></a><span class="kw"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span>(samples_<span class="dv">10</span>_<span class="dv">20</span>, <span class="dt">groups =</span> <span class="st">"external"</span>)</span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="co">#&gt; # A tibble: 2 x 4</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="co">#&gt; # A tibble: 2 × 4</span></span>
 <span id="cb17-4"><a href="#cb17-4"></a><span class="co">#&gt;   NMRExperiment SubjectID TimePoint   Age</span></span>
 <span id="cb17-5"><a href="#cb17-5"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;</span></span>
 <span id="cb17-6"><a href="#cb17-6"></a><span class="co">#&gt; 1 10            Ana       baseline     29</span></span>
@@ -485,13 +485,13 @@ plot_interactive(plt, "plot_region.html")</code></pre>
 <a href="#final-thoughts" class="anchor"></a>Final thoughts</h1>
 <p>This vignette shows many of the features of the package, some features have room for improvement, others are not fully described, and the reader will need to browse the documentation. Hopefully it is a good starting point for using the package.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</span>
-<span id="cb35-2"><a href="#cb35-2"></a><span class="co">#&gt; R version 4.0.4 (2021-02-15)</span></span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="co">#&gt; R version 4.1.0 (2021-05-18)</span></span>
 <span id="cb35-3"><a href="#cb35-3"></a><span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
 <span id="cb35-4"><a href="#cb35-4"></a><span class="co">#&gt; Running under: macOS Catalina 10.15.7</span></span>
 <span id="cb35-5"><a href="#cb35-5"></a><span class="co">#&gt; </span></span>
 <span id="cb35-6"><a href="#cb35-6"></a><span class="co">#&gt; Matrix products: default</span></span>
-<span id="cb35-7"><a href="#cb35-7"></a><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib</span></span>
-<span id="cb35-8"><a href="#cb35-8"></a><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib</span></span>
+<span id="cb35-7"><a href="#cb35-7"></a><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib</span></span>
+<span id="cb35-8"><a href="#cb35-8"></a><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</span></span>
 <span id="cb35-9"><a href="#cb35-9"></a><span class="co">#&gt; </span></span>
 <span id="cb35-10"><a href="#cb35-10"></a><span class="co">#&gt; locale:</span></span>
 <span id="cb35-11"><a href="#cb35-11"></a><span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
@@ -500,66 +500,66 @@ plot_interactive(plt, "plot_region.html")</code></pre>
 <span id="cb35-14"><a href="#cb35-14"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span id="cb35-15"><a href="#cb35-15"></a><span class="co">#&gt; </span></span>
 <span id="cb35-16"><a href="#cb35-16"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb35-17"><a href="#cb35-17"></a><span class="co">#&gt; [1] ggplot2_3.3.3  AlpsNMR_3.1.5  magrittr_2.0.1 future_1.21.0  dplyr_1.0.5   </span></span>
+<span id="cb35-17"><a href="#cb35-17"></a><span class="co">#&gt; [1] ggplot2_3.3.5  AlpsNMR_3.1.5  magrittr_2.0.1 future_1.21.0  dplyr_1.0.7   </span></span>
 <span id="cb35-18"><a href="#cb35-18"></a><span class="co">#&gt; </span></span>
 <span id="cb35-19"><a href="#cb35-19"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span id="cb35-20"><a href="#cb35-20"></a><span class="co">#&gt;   [1] colorspace_2.0-0            ellipsis_0.3.1             </span></span>
+<span id="cb35-20"><a href="#cb35-20"></a><span class="co">#&gt;   [1] colorspace_2.0-2            ellipsis_0.3.2             </span></span>
 <span id="cb35-21"><a href="#cb35-21"></a><span class="co">#&gt;   [3] rprojroot_2.0.2             speaq_2.6.1                </span></span>
-<span id="cb35-22"><a href="#cb35-22"></a><span class="co">#&gt;   [5] corpcor_1.6.9               XVector_0.30.0             </span></span>
-<span id="cb35-23"><a href="#cb35-23"></a><span class="co">#&gt;   [7] GenomicRanges_1.42.0        fs_1.5.0                   </span></span>
-<span id="cb35-24"><a href="#cb35-24"></a><span class="co">#&gt;   [9] rstudioapi_0.13             listenv_0.8.0              </span></span>
-<span id="cb35-25"><a href="#cb35-25"></a><span class="co">#&gt;  [11] furrr_0.2.2                 farver_2.1.0               </span></span>
-<span id="cb35-26"><a href="#cb35-26"></a><span class="co">#&gt;  [13] ggrepel_0.9.1               RSpectra_0.16-0            </span></span>
-<span id="cb35-27"><a href="#cb35-27"></a><span class="co">#&gt;  [15] fansi_0.4.2                 mvtnorm_1.1-1              </span></span>
-<span id="cb35-28"><a href="#cb35-28"></a><span class="co">#&gt;  [17] xml2_1.3.2                  codetools_0.2-18           </span></span>
-<span id="cb35-29"><a href="#cb35-29"></a><span class="co">#&gt;  [19] cachem_1.0.4                impute_1.64.0              </span></span>
-<span id="cb35-30"><a href="#cb35-30"></a><span class="co">#&gt;  [21] knitr_1.31                  mixOmics_6.14.0            </span></span>
-<span id="cb35-31"><a href="#cb35-31"></a><span class="co">#&gt;  [23] itertools_0.1-3             cluster_2.1.0              </span></span>
-<span id="cb35-32"><a href="#cb35-32"></a><span class="co">#&gt;  [25] missForest_1.4              compiler_4.0.4             </span></span>
-<span id="cb35-33"><a href="#cb35-33"></a><span class="co">#&gt;  [27] httr_1.4.2                  assertthat_0.2.1           </span></span>
-<span id="cb35-34"><a href="#cb35-34"></a><span class="co">#&gt;  [29] RcppZiggurat_0.1.6          Matrix_1.3-2               </span></span>
-<span id="cb35-35"><a href="#cb35-35"></a><span class="co">#&gt;  [31] fastmap_1.1.0               cli_2.3.1                  </span></span>
-<span id="cb35-36"><a href="#cb35-36"></a><span class="co">#&gt;  [33] htmltools_0.5.1.1           tools_4.0.4                </span></span>
-<span id="cb35-37"><a href="#cb35-37"></a><span class="co">#&gt;  [35] igraph_1.2.6                qtl_1.48-1                 </span></span>
-<span id="cb35-38"><a href="#cb35-38"></a><span class="co">#&gt;  [37] gtable_0.3.0                glue_1.4.2                 </span></span>
-<span id="cb35-39"><a href="#cb35-39"></a><span class="co">#&gt;  [39] GenomeInfoDbData_1.2.4      reshape2_1.4.4             </span></span>
-<span id="cb35-40"><a href="#cb35-40"></a><span class="co">#&gt;  [41] Rcpp_1.0.6                  limSolve_1.5.6             </span></span>
-<span id="cb35-41"><a href="#cb35-41"></a><span class="co">#&gt;  [43] Biobase_2.50.0              cellranger_1.1.0           </span></span>
-<span id="cb35-42"><a href="#cb35-42"></a><span class="co">#&gt;  [45] pkgdown_1.4.1.9000          vctrs_0.3.7                </span></span>
-<span id="cb35-43"><a href="#cb35-43"></a><span class="co">#&gt;  [47] baseline_1.3-1              iterators_1.0.13           </span></span>
-<span id="cb35-44"><a href="#cb35-44"></a><span class="co">#&gt;  [49] xfun_0.22                   stringr_1.4.0              </span></span>
-<span id="cb35-45"><a href="#cb35-45"></a><span class="co">#&gt;  [51] globals_0.14.0              ps_1.6.0                   </span></span>
-<span id="cb35-46"><a href="#cb35-46"></a><span class="co">#&gt;  [53] rvest_1.0.0                 lpSolve_5.6.15             </span></span>
-<span id="cb35-47"><a href="#cb35-47"></a><span class="co">#&gt;  [55] lifecycle_1.0.0             zlibbioc_1.36.0            </span></span>
-<span id="cb35-48"><a href="#cb35-48"></a><span class="co">#&gt;  [57] MASS_7.3-53                 scales_1.1.1               </span></span>
-<span id="cb35-49"><a href="#cb35-49"></a><span class="co">#&gt;  [59] doSNOW_1.0.19               MatrixGenerics_1.2.1       </span></span>
-<span id="cb35-50"><a href="#cb35-50"></a><span class="co">#&gt;  [61] parallel_4.0.4              SummarizedExperiment_1.20.0</span></span>
-<span id="cb35-51"><a href="#cb35-51"></a><span class="co">#&gt;  [63] MassSpecWavelet_1.56.0      SparseM_1.81               </span></span>
-<span id="cb35-52"><a href="#cb35-52"></a><span class="co">#&gt;  [65] RColorBrewer_1.1-2          yaml_2.2.1                 </span></span>
-<span id="cb35-53"><a href="#cb35-53"></a><span class="co">#&gt;  [67] memoise_2.0.0               gridExtra_2.3              </span></span>
-<span id="cb35-54"><a href="#cb35-54"></a><span class="co">#&gt;  [69] stringi_1.5.3               highr_0.8                  </span></span>
-<span id="cb35-55"><a href="#cb35-55"></a><span class="co">#&gt;  [71] S4Vectors_0.28.1            desc_1.3.0                 </span></span>
-<span id="cb35-56"><a href="#cb35-56"></a><span class="co">#&gt;  [73] pcaPP_1.9-73                foreach_1.5.1              </span></span>
-<span id="cb35-57"><a href="#cb35-57"></a><span class="co">#&gt;  [75] randomForest_4.6-14         BiocGenerics_0.36.0        </span></span>
-<span id="cb35-58"><a href="#cb35-58"></a><span class="co">#&gt;  [77] GenomeInfoDb_1.26.4         rlang_0.4.10               </span></span>
-<span id="cb35-59"><a href="#cb35-59"></a><span class="co">#&gt;  [79] pkgconfig_2.0.3             matrixStats_0.58.0         </span></span>
-<span id="cb35-60"><a href="#cb35-60"></a><span class="co">#&gt;  [81] bitops_1.0-6                evaluate_0.14              </span></span>
-<span id="cb35-61"><a href="#cb35-61"></a><span class="co">#&gt;  [83] lattice_0.20-41             purrr_0.3.4                </span></span>
-<span id="cb35-62"><a href="#cb35-62"></a><span class="co">#&gt;  [85] labeling_0.4.2              Rfast_2.0.1                </span></span>
-<span id="cb35-63"><a href="#cb35-63"></a><span class="co">#&gt;  [87] tidyselect_1.1.0            parallelly_1.24.0          </span></span>
-<span id="cb35-64"><a href="#cb35-64"></a><span class="co">#&gt;  [89] plyr_1.8.6                  R6_2.5.0                   </span></span>
-<span id="cb35-65"><a href="#cb35-65"></a><span class="co">#&gt;  [91] IRanges_2.24.1              snow_0.4-3                 </span></span>
-<span id="cb35-66"><a href="#cb35-66"></a><span class="co">#&gt;  [93] generics_0.1.0              DelayedArray_0.16.3        </span></span>
-<span id="cb35-67"><a href="#cb35-67"></a><span class="co">#&gt;  [95] pillar_1.5.1                withr_2.4.1                </span></span>
-<span id="cb35-68"><a href="#cb35-68"></a><span class="co">#&gt;  [97] RCurl_1.98-1.3              mQTL_1.0                   </span></span>
-<span id="cb35-69"><a href="#cb35-69"></a><span class="co">#&gt;  [99] tibble_3.1.0                crayon_1.4.1               </span></span>
-<span id="cb35-70"><a href="#cb35-70"></a><span class="co">#&gt; [101] rARPACK_0.11-0              utf8_1.2.1                 </span></span>
-<span id="cb35-71"><a href="#cb35-71"></a><span class="co">#&gt; [103] ellipse_0.4.2               rmarkdown_2.7              </span></span>
-<span id="cb35-72"><a href="#cb35-72"></a><span class="co">#&gt; [105] grid_4.0.4                  readxl_1.3.1               </span></span>
-<span id="cb35-73"><a href="#cb35-73"></a><span class="co">#&gt; [107] data.table_1.14.0           digest_0.6.27              </span></span>
-<span id="cb35-74"><a href="#cb35-74"></a><span class="co">#&gt; [109] tidyr_1.1.3                 outliers_0.14              </span></span>
-<span id="cb35-75"><a href="#cb35-75"></a><span class="co">#&gt; [111] signal_0.7-6                stats4_4.0.4               </span></span>
-<span id="cb35-76"><a href="#cb35-76"></a><span class="co">#&gt; [113] munsell_0.5.0               quadprog_1.5-8</span></span></code></pre></div>
+<span id="cb35-22"><a href="#cb35-22"></a><span class="co">#&gt;   [5] corpcor_1.6.9               XVector_0.32.0             </span></span>
+<span id="cb35-23"><a href="#cb35-23"></a><span class="co">#&gt;   [7] GenomicRanges_1.44.0        fs_1.5.0                   </span></span>
+<span id="cb35-24"><a href="#cb35-24"></a><span class="co">#&gt;   [9] listenv_0.8.0               furrr_0.2.3                </span></span>
+<span id="cb35-25"><a href="#cb35-25"></a><span class="co">#&gt;  [11] farver_2.1.0                ggrepel_0.9.1              </span></span>
+<span id="cb35-26"><a href="#cb35-26"></a><span class="co">#&gt;  [13] RSpectra_0.16-0             fansi_0.5.0                </span></span>
+<span id="cb35-27"><a href="#cb35-27"></a><span class="co">#&gt;  [15] mvtnorm_1.1-2               xml2_1.3.2                 </span></span>
+<span id="cb35-28"><a href="#cb35-28"></a><span class="co">#&gt;  [17] codetools_0.2-18            cachem_1.0.5               </span></span>
+<span id="cb35-29"><a href="#cb35-29"></a><span class="co">#&gt;  [19] impute_1.66.0               knitr_1.33                 </span></span>
+<span id="cb35-30"><a href="#cb35-30"></a><span class="co">#&gt;  [21] mixOmics_6.16.3             itertools_0.1-3            </span></span>
+<span id="cb35-31"><a href="#cb35-31"></a><span class="co">#&gt;  [23] cluster_2.1.2               missForest_1.4             </span></span>
+<span id="cb35-32"><a href="#cb35-32"></a><span class="co">#&gt;  [25] compiler_4.1.0              httr_1.4.2                 </span></span>
+<span id="cb35-33"><a href="#cb35-33"></a><span class="co">#&gt;  [27] assertthat_0.2.1            RcppZiggurat_0.1.6         </span></span>
+<span id="cb35-34"><a href="#cb35-34"></a><span class="co">#&gt;  [29] Matrix_1.3-3                fastmap_1.1.0              </span></span>
+<span id="cb35-35"><a href="#cb35-35"></a><span class="co">#&gt;  [31] cli_3.0.1                   htmltools_0.5.1.1          </span></span>
+<span id="cb35-36"><a href="#cb35-36"></a><span class="co">#&gt;  [33] tools_4.1.0                 igraph_1.2.6               </span></span>
+<span id="cb35-37"><a href="#cb35-37"></a><span class="co">#&gt;  [35] qtl_1.48-1                  gtable_0.3.0               </span></span>
+<span id="cb35-38"><a href="#cb35-38"></a><span class="co">#&gt;  [37] glue_1.4.2                  GenomeInfoDbData_1.2.6     </span></span>
+<span id="cb35-39"><a href="#cb35-39"></a><span class="co">#&gt;  [39] reshape2_1.4.4              Rcpp_1.0.7                 </span></span>
+<span id="cb35-40"><a href="#cb35-40"></a><span class="co">#&gt;  [41] limSolve_1.5.6              Biobase_2.52.0             </span></span>
+<span id="cb35-41"><a href="#cb35-41"></a><span class="co">#&gt;  [43] cellranger_1.1.0            pkgdown_1.4.1.9000         </span></span>
+<span id="cb35-42"><a href="#cb35-42"></a><span class="co">#&gt;  [45] vctrs_0.3.8                 baseline_1.3-1             </span></span>
+<span id="cb35-43"><a href="#cb35-43"></a><span class="co">#&gt;  [47] iterators_1.0.13            xfun_0.24                  </span></span>
+<span id="cb35-44"><a href="#cb35-44"></a><span class="co">#&gt;  [49] stringr_1.4.0               globals_0.14.0             </span></span>
+<span id="cb35-45"><a href="#cb35-45"></a><span class="co">#&gt;  [51] rvest_1.0.1                 lpSolve_5.6.15             </span></span>
+<span id="cb35-46"><a href="#cb35-46"></a><span class="co">#&gt;  [53] lifecycle_1.0.0             zlibbioc_1.38.0            </span></span>
+<span id="cb35-47"><a href="#cb35-47"></a><span class="co">#&gt;  [55] MASS_7.3-54                 scales_1.1.1               </span></span>
+<span id="cb35-48"><a href="#cb35-48"></a><span class="co">#&gt;  [57] doSNOW_1.0.19               MatrixGenerics_1.4.0       </span></span>
+<span id="cb35-49"><a href="#cb35-49"></a><span class="co">#&gt;  [59] parallel_4.1.0              SummarizedExperiment_1.22.0</span></span>
+<span id="cb35-50"><a href="#cb35-50"></a><span class="co">#&gt;  [61] MassSpecWavelet_1.58.0      SparseM_1.81               </span></span>
+<span id="cb35-51"><a href="#cb35-51"></a><span class="co">#&gt;  [63] RColorBrewer_1.1-2          yaml_2.2.1                 </span></span>
+<span id="cb35-52"><a href="#cb35-52"></a><span class="co">#&gt;  [65] memoise_2.0.0               gridExtra_2.3              </span></span>
+<span id="cb35-53"><a href="#cb35-53"></a><span class="co">#&gt;  [67] stringi_1.7.3               highr_0.9                  </span></span>
+<span id="cb35-54"><a href="#cb35-54"></a><span class="co">#&gt;  [69] S4Vectors_0.30.0            desc_1.3.0                 </span></span>
+<span id="cb35-55"><a href="#cb35-55"></a><span class="co">#&gt;  [71] pcaPP_1.9-74                foreach_1.5.1              </span></span>
+<span id="cb35-56"><a href="#cb35-56"></a><span class="co">#&gt;  [73] randomForest_4.6-14         BiocGenerics_0.38.0        </span></span>
+<span id="cb35-57"><a href="#cb35-57"></a><span class="co">#&gt;  [75] BiocParallel_1.26.1         GenomeInfoDb_1.28.1        </span></span>
+<span id="cb35-58"><a href="#cb35-58"></a><span class="co">#&gt;  [77] rlang_0.4.11                pkgconfig_2.0.3            </span></span>
+<span id="cb35-59"><a href="#cb35-59"></a><span class="co">#&gt;  [79] matrixStats_0.60.0          bitops_1.0-7               </span></span>
+<span id="cb35-60"><a href="#cb35-60"></a><span class="co">#&gt;  [81] evaluate_0.14               lattice_0.20-44            </span></span>
+<span id="cb35-61"><a href="#cb35-61"></a><span class="co">#&gt;  [83] purrr_0.3.4                 labeling_0.4.2             </span></span>
+<span id="cb35-62"><a href="#cb35-62"></a><span class="co">#&gt;  [85] Rfast_2.0.3                 tidyselect_1.1.1           </span></span>
+<span id="cb35-63"><a href="#cb35-63"></a><span class="co">#&gt;  [87] parallelly_1.27.0           plyr_1.8.6                 </span></span>
+<span id="cb35-64"><a href="#cb35-64"></a><span class="co">#&gt;  [89] R6_2.5.0                    IRanges_2.26.0             </span></span>
+<span id="cb35-65"><a href="#cb35-65"></a><span class="co">#&gt;  [91] snow_0.4-3                  generics_0.1.0             </span></span>
+<span id="cb35-66"><a href="#cb35-66"></a><span class="co">#&gt;  [93] DelayedArray_0.18.0         pillar_1.6.2               </span></span>
+<span id="cb35-67"><a href="#cb35-67"></a><span class="co">#&gt;  [95] withr_2.4.2                 RCurl_1.98-1.3             </span></span>
+<span id="cb35-68"><a href="#cb35-68"></a><span class="co">#&gt;  [97] mQTL_1.0                    tibble_3.1.3               </span></span>
+<span id="cb35-69"><a href="#cb35-69"></a><span class="co">#&gt;  [99] crayon_1.4.1                rARPACK_0.11-0             </span></span>
+<span id="cb35-70"><a href="#cb35-70"></a><span class="co">#&gt; [101] utf8_1.2.2                  ellipse_0.4.2              </span></span>
+<span id="cb35-71"><a href="#cb35-71"></a><span class="co">#&gt; [103] rmarkdown_2.9               grid_4.1.0                 </span></span>
+<span id="cb35-72"><a href="#cb35-72"></a><span class="co">#&gt; [105] readxl_1.3.1                data.table_1.14.0          </span></span>
+<span id="cb35-73"><a href="#cb35-73"></a><span class="co">#&gt; [107] digest_0.6.27               tidyr_1.1.3                </span></span>
+<span id="cb35-74"><a href="#cb35-74"></a><span class="co">#&gt; [109] outliers_0.14               signal_0.7-7               </span></span>
+<span id="cb35-75"><a href="#cb35-75"></a><span class="co">#&gt; [111] stats4_4.1.0                munsell_0.5.0              </span></span>
+<span id="cb35-76"><a href="#cb35-76"></a><span class="co">#&gt; [113] quadprog_1.5-8</span></span></code></pre></div>
 </div>
 <div class="footnotes">
 <hr>

@@ -78,7 +78,7 @@ plotting spectra or further analysis (PCA...)." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -248,7 +248,7 @@ example.</p></td>
 <span class='no'>nmr_dataset</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='nmr_read_samples.html'>nmr_read_samples_dir</a></span>(<span class='no'>dataset</span>)
 
 <span class='co'># At first we just have the NMRExperiment column</span>
-<span class='fu'><a href='nmr_meta_get.html'>nmr_meta_get</a></span>(<span class='no'>nmr_dataset</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='st'>"external"</span>)</div><div class='output co'>#&gt; # A tibble: 3 x 1
+<span class='fu'><a href='nmr_meta_get.html'>nmr_meta_get</a></span>(<span class='no'>nmr_dataset</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='st'>"external"</span>)</div><div class='output co'>#&gt; # A tibble: 3 × 1
 #&gt;   NMRExperiment
 #&gt;   &lt;chr&gt;        
 #&gt; 1 10           
@@ -257,28 +257,28 @@ example.</p></td>
 <span class='no'>dummy_metadata</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"dataset-demo"</span>, <span class='st'>"dummy_metadata.xlsx"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"AlpsNMR"</span>)
 <span class='no'>NMRExp_SubjID</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>readxl</span><span class='kw ns'>::</span><span class='fu'><a href='https://readxl.tidyverse.org/reference/read_excel.html'>read_excel</a></span>(<span class='no'>dummy_metadata</span>, <span class='kw'>sheet</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 
-<span class='no'>NMRExp_SubjID</span></div><div class='output co'>#&gt; # A tibble: 3 x 3
+<span class='no'>NMRExp_SubjID</span></div><div class='output co'>#&gt; # A tibble: 3 × 3
 #&gt;   NMRExperiment SubjectID TimePoint
 #&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;    
 #&gt; 1 10            Ana       baseline 
 #&gt; 2 20            Ana       3 months 
 #&gt; 3 30            Elia      baseline </div><div class='input'><span class='co'># We can link the SubjectID column of the first excel into the dataset</span>
 <span class='no'>nmr_dataset</span> <span class='kw'>&lt;-</span> <span class='fu'>nmr_meta_add</span>(<span class='no'>nmr_dataset</span>, <span class='no'>NMRExp_SubjID</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='st'>"NMRExperiment"</span>)
-<span class='fu'><a href='nmr_meta_get.html'>nmr_meta_get</a></span>(<span class='no'>nmr_dataset</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='st'>"external"</span>)</div><div class='output co'>#&gt; # A tibble: 3 x 3
+<span class='fu'><a href='nmr_meta_get.html'>nmr_meta_get</a></span>(<span class='no'>nmr_dataset</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='st'>"external"</span>)</div><div class='output co'>#&gt; # A tibble: 3 × 3
 #&gt;   NMRExperiment SubjectID TimePoint
 #&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;    
 #&gt; 1 10            Ana       baseline 
 #&gt; 2 20            Ana       3 months 
 #&gt; 3 30            Elia      baseline </div><div class='input'><span class='co'># The second excel can use the SubjectID:</span>
 <span class='no'>SubjID_Age</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>readxl</span><span class='kw ns'>::</span><span class='fu'><a href='https://readxl.tidyverse.org/reference/read_excel.html'>read_excel</a></span>(<span class='no'>dummy_metadata</span>, <span class='kw'>sheet</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='no'>SubjID_Age</span></div><div class='output co'>#&gt; # A tibble: 2 x 2
+<span class='no'>SubjID_Age</span></div><div class='output co'>#&gt; # A tibble: 2 × 2
 #&gt;   SubjectID   Age
 #&gt;   &lt;chr&gt;     &lt;dbl&gt;
 #&gt; 1 Ana          29
 #&gt; 2 Elia          0</div><div class='input'><span class='co'># Add the metadata by its SubjectID:</span>
 <span class='no'>nmr_dataset</span> <span class='kw'>&lt;-</span> <span class='fu'>nmr_meta_add</span>(<span class='no'>nmr_dataset</span>, <span class='no'>SubjID_Age</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='st'>"SubjectID"</span>)
 <span class='co'># The final loaded metadata:</span>
-<span class='fu'><a href='nmr_meta_get.html'>nmr_meta_get</a></span>(<span class='no'>nmr_dataset</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='st'>"external"</span>)</div><div class='output co'>#&gt; # A tibble: 3 x 4
+<span class='fu'><a href='nmr_meta_get.html'>nmr_meta_get</a></span>(<span class='no'>nmr_dataset</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='st'>"external"</span>)</div><div class='output co'>#&gt; # A tibble: 3 × 4
 #&gt;   NMRExperiment SubjectID TimePoint   Age
 #&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
 #&gt; 1 10            Ana       baseline     29
@@ -290,7 +290,7 @@ example.</p></td>
 <span class='no'>nmr_dataset</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='nmr_read_samples.html'>nmr_read_samples_dir</a></span>(<span class='no'>dataset</span>)
 
 <span class='co'># At first we just have the NMRExperiment column</span>
-<span class='fu'><a href='nmr_meta_get.html'>nmr_meta_get</a></span>(<span class='no'>nmr_dataset</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='st'>"external"</span>)</div><div class='output co'>#&gt; # A tibble: 3 x 1
+<span class='fu'><a href='nmr_meta_get.html'>nmr_meta_get</a></span>(<span class='no'>nmr_dataset</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='st'>"external"</span>)</div><div class='output co'>#&gt; # A tibble: 3 × 1
 #&gt;   NMRExperiment
 #&gt;   &lt;chr&gt;        
 #&gt; 1 10           
@@ -300,7 +300,7 @@ example.</p></td>
 
 <span class='no'>nmr_dataset</span> <span class='kw'>&lt;-</span><span class='fu'>nmr_meta_add_tidy_excel</span>(<span class='no'>nmr_dataset</span>, <span class='no'>dummy_metadata</span>)
 <span class='co'># Updated Metadata:</span>
-<span class='fu'><a href='nmr_meta_get.html'>nmr_meta_get</a></span>(<span class='no'>nmr_dataset</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='st'>"external"</span>)</div><div class='output co'>#&gt; # A tibble: 3 x 4
+<span class='fu'><a href='nmr_meta_get.html'>nmr_meta_get</a></span>(<span class='no'>nmr_dataset</span>, <span class='kw'>groups</span> <span class='kw'>=</span> <span class='st'>"external"</span>)</div><div class='output co'>#&gt; # A tibble: 3 × 4
 #&gt;   NMRExperiment SubjectID TimePoint   Age
 #&gt;   &lt;chr&gt;         &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt;
 #&gt; 1 10            Ana       baseline     29
