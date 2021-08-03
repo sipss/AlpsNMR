@@ -206,13 +206,13 @@ to_ChemoSpec <- function(nmr_dataset, desc = "A nmr_dataset") {
     Spectra[[5]] <- rep("black", nmr_dataset$num_samples) # colors
     Spectra[[6]] <- rep(1L, nmr_dataset$num_samples) # sym
     Spectra[[7]] <- rep("a", nmr_dataset$num_samples) # alt.sym
-    Spectra[[8]] <- c("ppm", "a.u.") # units
+    Spectra[[8]] <- c("ppm", "a.u.") # unit
     Spectra[[9]] <- desc # desc
-    
+
     # Clean up and verify
-    
+
     class(Spectra) <- "Spectra"
-    names(Spectra) <- c("freq", "data", "names", "groups", "colors", "sym", "alt.sym", "units", "desc")
+    names(Spectra) <- c("freq", "data", "names", "groups", "colors", "sym", "alt.sym", "unit", "desc")
     ChemoSpec::chkSpectra(Spectra)
     return(Spectra)
 }
