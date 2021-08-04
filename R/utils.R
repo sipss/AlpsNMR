@@ -182,6 +182,7 @@ show_progress_bar <- function(...) {
 #' Convert to ChemoSpec Spectra class
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #' @param desc a description for the dataset
+#' @param group A string with the column name from the metadata that has grouping information
 #' @return A Spectra object from the ChemoSpec package
 #' @export
 #' @family import/export functions
@@ -192,7 +193,7 @@ show_progress_bar <- function(...) {
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' chemo_spectra <- to_ChemoSpec(dataset_1D)
 #' 
-to_ChemoSpec <- function(nmr_dataset, desc = "A nmr_dataset") {
+to_ChemoSpec <- function(nmr_dataset, desc = "A nmr_dataset", group = NULL) {
     if (!requireNamespace("ChemoSpec", quietly = TRUE)) {
         stop("ChemoSpec needed for this function to work. Please install it.",
                  call. = FALSE)
@@ -202,17 +203,21 @@ to_ChemoSpec <- function(nmr_dataset, desc = "A nmr_dataset") {
     Spectra[[1]] <- nmr_dataset$axis
     Spectra[[2]] <- nmr_dataset$data_1r
     Spectra[[3]] <- nmr_dataset$metadata$external$NMRExperiment
-    Spectra[[4]] <- as.factor(rep(NA_character_, nmr_dataset$num_samples)) # groups
+    if (is.null(group)) {
+      Spectra[[4]] <- as.factor(rep(NA_character_, nmr_dataset$num_samples)) # groups
+    } else {
+      Spectra[[4]] <- as.factor(nmr_meta_get_column(nmr_dataset, group))
+    }
     Spectra[[5]] <- rep("black", nmr_dataset$num_samples) # colors
     Spectra[[6]] <- rep(1L, nmr_dataset$num_samples) # sym
     Spectra[[7]] <- rep("a", nmr_dataset$num_samples) # alt.sym
-    Spectra[[8]] <- c("ppm", "a.u.") # units
+    Spectra[[8]] <- c("ppm", "a.u.") # unit
     Spectra[[9]] <- desc # desc
-    
+
     # Clean up and verify
-    
+
     class(Spectra) <- "Spectra"
-    names(Spectra) <- c("freq", "data", "names", "groups", "colors", "sym", "alt.sym", "units", "desc")
+    names(Spectra) <- c("freq", "data", "names", "groups", "colors", "sym", "alt.sym", "unit", "desc")
     ChemoSpec::chkSpectra(Spectra)
     return(Spectra)
 }

@@ -4,12 +4,14 @@
 \alias{to_ChemoSpec}
 \title{Convert to ChemoSpec Spectra class}
 \usage{
-to_ChemoSpec(nmr_dataset, desc = "A nmr_dataset")
+to_ChemoSpec(nmr_dataset, desc = "A nmr_dataset", group = NULL)
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D} object}
 
 \item{desc}{a description for the dataset}
+
+\item{group}{A string with the column name from the metadata that has grouping information}
 }
 \value{
 A Spectra object from the ChemoSpec package
