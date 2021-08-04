@@ -134,7 +134,7 @@
     <p>Convert to ChemoSpec Spectra class</p>
     </div>
 
-    <pre class="usage"><span class='fu'>to_ChemoSpec</span>(<span class='no'>nmr_dataset</span>, <span class='kw'>desc</span> <span class='kw'>=</span> <span class='st'>"A nmr_dataset"</span>)</pre>
+    <pre class="usage"><span class='fu'>to_ChemoSpec</span>(<span class='no'>nmr_dataset</span>, <span class='kw'>desc</span> <span class='kw'>=</span> <span class='st'>"A nmr_dataset"</span>, <span class='kw'>group</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -146,6 +146,10 @@
     <tr>
       <th>desc</th>
       <td><p>a description for the dataset</p></td>
+    </tr>
+    <tr>
+      <th>group</th>
+      <td><p>A string with the column name from the metadata that has grouping information</p></td>
     </tr>
     </table>
 
@@ -204,9 +208,7 @@
     <pre class="examples"><div class='input'><span class='no'>dir_to_demo_dataset</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"dataset-demo"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"AlpsNMR"</span>)
 <span class='no'>dataset</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='nmr_read_samples.html'>nmr_read_samples_dir</a></span>(<span class='no'>dir_to_demo_dataset</span>)
 <span class='no'>dataset_1D</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='nmr_interpolate_1D.html'>nmr_interpolate_1D</a></span>(<span class='no'>dataset</span>, <span class='kw'>axis</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>min</span> <span class='kw'>=</span> -<span class='fl'>0.5</span>, <span class='kw'>max</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>2.3E-4</span>))
-<span class='no'>chemo_spectra</span> <span class='kw'>&lt;-</span> <span class='fu'>to_ChemoSpec</span>(<span class='no'>dataset_1D</span>)</div><div class='output co'>#&gt; <span class='message'>	Additional data was found: units</span></div><div class='output co'>#&gt; <span class='message'>	The length of *units* did not match the number of samples.</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>	&gt;&gt;&gt;  Please check the extra data entries.</span></div><div class='input'>
-</div></pre>
+<span class='no'>chemo_spectra</span> <span class='kw'>&lt;-</span> <span class='fu'>to_ChemoSpec</span>(<span class='no'>dataset_1D</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
