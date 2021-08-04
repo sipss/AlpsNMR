@@ -1,3 +1,9 @@
+# AlpsNMR devel
+- Fix issue with PCA plots not working as expected
+- Ensure NMRExperiment names are not duplicated in a dataset (closes #44)
+- Fix issue with some title file formatting in Bruker samples (closes #46)
+- Export groups in to_ChemoSpec
+
 # AlpsNMR 3.1.5 (2021-3-31)
 - Removed warning about future_options deprecation
 
@@ -17,7 +23,7 @@ _R_CHECK_LENGTH_1_CONDITION_
 
 # AlpsNMR 3.1.1 (2020-10-30)
 
-- Modified order of autor list
+- Modified order of author list
 
 # AlpsNMR 3.1.0 (2020-10-22)
 
