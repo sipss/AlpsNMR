@@ -95,4 +95,3 @@ biocViews: Software, Preprocessing, Visualization, Classification,
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
-PackageStatus: Deprecated
