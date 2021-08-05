@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -43,7 +47,6 @@ list with the files required by to_rDolphin function. Then, it is required
 to save them with the save_files_to_rDolphin. to_rDolphin function will
 read the generated &quot;parameters.csv&quot; file.
 function." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -61,7 +64,7 @@ function." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -146,7 +149,7 @@ read the generated "parameters.csv" file.
 function.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>files_to_rDolphin</span>(<span class='no'>nmr_dataset</span>, <span class='no'>biological_origin</span>)</pre>
+    <pre class="usage"><span class='fu'>files_to_rDolphin</span><span class='op'>(</span><span class='va'>nmr_dataset</span>, <span class='va'>biological_origin</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -184,7 +187,7 @@ function.</p>
 <code><a href='save_profiling_output.html'>save_profiling_output</a>()</code>,
 <code><a href='to_ChemoSpec.html'>to_ChemoSpec</a>()</code></p>
 <p>Other nmr_dataset_1D functions: 
-<code><a href='sub-.nmr_dataset_1D.html'>[.nmr_dataset_1D</a>()</code>,
+<code><a href='[.nmr_dataset_1D.html'>[.nmr_dataset_1D</a>()</code>,
 <code><a href='computes_peak_width_ppm.html'>computes_peak_width_ppm</a>()</code>,
 <code><a href='file_lister.html'>file_lister</a>()</code>,
 <code><a href='format.nmr_dataset_1D.html'>format.nmr_dataset_1D</a>()</code>,
@@ -215,52 +218,48 @@ function.</p>
 <code><a href='rdCV_PLS_RF.html'>rdCV_PLS_RF</a>()</code>,
 <code><a href='save_files_to_rDolphin.html'>save_files_to_rDolphin</a>()</code>,
 <code><a href='to_ChemoSpec.html'>to_ChemoSpec</a>()</code>,
-<code><a href='Peak_detection.html'>validate_nmr_dataset_peak_table</a>()</code>,
+<code><a href='validate_nmr_dataset_peak_table.html'>validate_nmr_dataset_peak_table</a>()</code>,
 <code><a href='validate_nmr_dataset.html'>validate_nmr_dataset</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Set the directory in which rDolphin files will be saved</span>
-<span class='no'>output_dir_10_rDolphin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='no'>your_path</span>, <span class='st'>"10-rDolphin"</span>)
-<span class='kw pkg'>fs</span><span class='kw ns'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/create.html'>dir_create</a></span>(<span class='no'>output_dir_10_rDolphin</span>)
+<span class='va'>output_dir_10_rDolphin</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>your_path</span>, <span class='st'>"10-rDolphin"</span><span class='op'>)</span>
+<span class='fu'>fs</span><span class='fu'>::</span><span class='fu'><a href='http://fs.r-lib.org/reference/create.html'>dir_create</a></span><span class='op'>(</span><span class='va'>output_dir_10_rDolphin</span><span class='op'>)</span>
 
 <span class='co'># Generate the files (for plasma/serum)</span>
-<span class='no'>files_rDolphin</span> <span class='kw'>=</span> <span class='fu'>files_to_rDolphin</span>(<span class='no'>nmr_dataset_0_10_ppm</span>, <span class='no'>blood</span>)
+<span class='va'>files_rDolphin</span> <span class='op'>=</span> <span class='fu'>files_to_rDolphin</span><span class='op'>(</span><span class='va'>nmr_dataset_0_10_ppm</span>, <span class='va'>blood</span><span class='op'>)</span>
 
 <span class='co'># Save the files</span>
-<span class='fu'><a href='save_files_to_rDolphin.html'>save_files_to_rDolphin</a></span>(<span class='no'>files_rDolphin</span>, <span class='no'>output_dir_10_rDolphin</span>)
+<span class='fu'><a href='save_files_to_rDolphin.html'>save_files_to_rDolphin</a></span><span class='op'>(</span><span class='va'>files_rDolphin</span>, <span class='va'>output_dir_10_rDolphin</span><span class='op'>)</span>
 
 <span class='co'># Build the rDolphin object. Do not forget to set the directory</span>
-<span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span>(<span class='no'>output_dir_10_rDolphin</span>)
-<span class='no'>rDolphin_object</span> <span class='kw'>=</span> <span class='fu'>to_rDolphin</span>(<span class='st'>"Parameters.csv"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span><span class='op'>(</span><span class='va'>output_dir_10_rDolphin</span><span class='op'>)</span>
+<span class='va'>rDolphin_object</span> <span class='op'>=</span> <span class='fu'>to_rDolphin</span><span class='op'>(</span><span class='st'>"Parameters.csv"</span><span class='op'>)</span>
 
 <span class='co'># Visualize your spectra</span>
-<span class='fu'>rDolphin_plot</span>(<span class='no'>rDolphin_object</span>)
+<span class='fu'>rDolphin_plot</span><span class='op'>(</span><span class='va'>rDolphin_object</span><span class='op'>)</span>
 
 <span class='co'># Run the main profiling function (it takes a while)</span>
-<span class='no'>targeted_profiling</span> <span class='kw'>=</span> <span class='fu'>Automatic_targeted_profiling</span>(<span class='no'>rDolphin_object</span>)
+<span class='va'>targeted_profiling</span> <span class='op'>=</span> <span class='fu'>Automatic_targeted_profiling</span><span class='op'>(</span><span class='va'>rDolphin_object</span><span class='op'>)</span>
 
 <span class='co'># Save results</span>
-<span class='fu'><a href='save_profiling_output.html'>save_profiling_output</a></span>(<span class='no'>targeted_profiling</span>, <span class='no'>output_dir_10_rDolphin</span>)
+<span class='fu'><a href='save_profiling_output.html'>save_profiling_output</a></span><span class='op'>(</span><span class='va'>targeted_profiling</span>, <span class='va'>output_dir_10_rDolphin</span><span class='op'>)</span>
 
-<span class='fu'>save_profiling_plots</span>(<span class='no'>output_dir_10_rDolphin</span>, <span class='no'>targeted_profiling</span>$<span class='no'>final_output</span>,
-<span class='no'>targeted_profiling</span>$<span class='no'>reproducibility_data</span>)
+<span class='fu'>save_profiling_plots</span><span class='op'>(</span><span class='va'>output_dir_10_rDolphin</span>, <span class='va'>targeted_profiling</span><span class='op'>$</span><span class='va'>final_output</span>,
+<span class='va'>targeted_profiling</span><span class='op'>$</span><span class='va'>reproducibility_data</span><span class='op'>)</span>
 
 <span class='co'>#Additionally, you can run some stats</span>
-<span class='no'>intensities</span> <span class='kw'>=</span> <span class='no'>targeted_profiling</span>$<span class='no'>final_output</span>$<span class='no'>intensity</span>
-<span class='no'>group</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span>(<span class='no'>rDolphin_object</span>$<span class='no'>Metadata</span>$<span class='no'>type</span>)
-<span class='no'>model_PLS</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='rdCV_PLS_RF.html'>rdCV_PLS_RF</a></span>(<span class='kw'>X</span> <span class='kw'>=</span> <span class='no'>intensities</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='no'>group</span>)
-}</div></pre>
+<span class='va'>intensities</span> <span class='op'>=</span> <span class='va'>targeted_profiling</span><span class='op'>$</span><span class='va'>final_output</span><span class='op'>$</span><span class='va'>intensity</span>
+<span class='va'>group</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>rDolphin_object</span><span class='op'>$</span><span class='va'>Metadata</span><span class='op'>$</span><span class='va'>type</span><span class='op'>)</span>
+<span class='va'>model_PLS</span> <span class='op'>&lt;-</span> <span class='fu'><a href='rdCV_PLS_RF.html'>rdCV_PLS_RF</a></span><span class='op'>(</span>X <span class='op'>=</span> <span class='va'>intensities</span>, Y <span class='op'>=</span> <span class='va'>group</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -271,7 +270,7 @@ function.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

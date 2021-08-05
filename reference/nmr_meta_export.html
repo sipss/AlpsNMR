@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,7 +41,6 @@
 
 <meta property="og:title" content="Export Metadata to an Excel file — nmr_meta_export" />
 <meta property="og:description" content="Export Metadata to an Excel file" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -55,7 +58,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -134,11 +137,11 @@
     <p>Export Metadata to an Excel file</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nmr_meta_export</span>(
-  <span class='no'>nmr_dataset</span>,
-  <span class='no'>xlsx_file</span>,
-  <span class='kw'>groups</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"info"</span>, <span class='st'>"orig"</span>, <span class='st'>"title"</span>, <span class='st'>"external"</span>)
-)</pre>
+    <pre class="usage"><span class='fu'>nmr_meta_export</span><span class='op'>(</span>
+  <span class='va'>nmr_dataset</span>,
+  <span class='va'>xlsx_file</span>,
+  groups <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"info"</span>, <span class='st'>"orig"</span>, <span class='st'>"title"</span>, <span class='st'>"external"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -169,7 +172,7 @@ the default for a more generic solution</p></td>
 <code><a href='nmr_meta_get_column.html'>nmr_meta_get_column</a>()</code>,
 <code><a href='nmr_meta_get.html'>nmr_meta_get</a>()</code></p>
 <p>Other nmr_dataset functions: 
-<code><a href='sub-.nmr_dataset.html'>[.nmr_dataset</a>()</code>,
+<code><a href='[.nmr_dataset.html'>[.nmr_dataset</a>()</code>,
 <code><a href='format.nmr_dataset.html'>format.nmr_dataset</a>()</code>,
 <code><a href='load_and_save_functions.html'>load_and_save_functions</a></code>,
 <code><a href='new_nmr_dataset.html'>new_nmr_dataset</a>()</code>,
@@ -182,7 +185,7 @@ the default for a more generic solution</p></td>
 <code><a href='print.nmr_dataset.html'>print.nmr_dataset</a>()</code>,
 <code><a href='validate_nmr_dataset.html'>validate_nmr_dataset</a>()</code></p>
 <p>Other nmr_dataset_1D functions: 
-<code><a href='sub-.nmr_dataset_1D.html'>[.nmr_dataset_1D</a>()</code>,
+<code><a href='[.nmr_dataset_1D.html'>[.nmr_dataset_1D</a>()</code>,
 <code><a href='computes_peak_width_ppm.html'>computes_peak_width_ppm</a>()</code>,
 <code><a href='file_lister.html'>file_lister</a>()</code>,
 <code><a href='files_to_rDolphin.html'>files_to_rDolphin</a>()</code>,
@@ -213,10 +216,10 @@ the default for a more generic solution</p></td>
 <code><a href='rdCV_PLS_RF.html'>rdCV_PLS_RF</a>()</code>,
 <code><a href='save_files_to_rDolphin.html'>save_files_to_rDolphin</a>()</code>,
 <code><a href='to_ChemoSpec.html'>to_ChemoSpec</a>()</code>,
-<code><a href='Peak_detection.html'>validate_nmr_dataset_peak_table</a>()</code>,
+<code><a href='validate_nmr_dataset_peak_table.html'>validate_nmr_dataset_peak_table</a>()</code>,
 <code><a href='validate_nmr_dataset.html'>validate_nmr_dataset</a>()</code></p>
 <p>Other nmr_dataset_peak_table functions: 
-<code><a href='sub-.nmr_dataset_peak_table.html'>[.nmr_dataset_peak_table</a>()</code>,
+<code><a href='[.nmr_dataset_peak_table.html'>[.nmr_dataset_peak_table</a>()</code>,
 <code><a href='format.nmr_dataset_peak_table.html'>format.nmr_dataset_peak_table</a>()</code>,
 <code><a href='is.nmr_dataset_peak_table.html'>is.nmr_dataset_peak_table</a>()</code>,
 <code><a href='load_and_save_functions.html'>load_and_save_functions</a></code>,
@@ -225,7 +228,7 @@ the default for a more generic solution</p></td>
 <code><a href='nmr_meta_get_column.html'>nmr_meta_get_column</a>()</code>,
 <code><a href='nmr_meta_get.html'>nmr_meta_get</a>()</code>,
 <code><a href='print.nmr_dataset_peak_table.html'>print.nmr_dataset_peak_table</a>()</code>,
-<code><a href='Peak_detection.html'>validate_nmr_dataset_peak_table</a>()</code></p>
+<code><a href='validate_nmr_dataset_peak_table.html'>validate_nmr_dataset_peak_table</a>()</code></p>
 <p>Other import/export functions: 
 <code><a href='Pipelines.html'>Pipelines</a></code>,
 <code><a href='files_to_rDolphin.html'>files_to_rDolphin</a>()</code>,
@@ -239,19 +242,16 @@ the default for a more generic solution</p></td>
 <code><a href='to_ChemoSpec.html'>to_ChemoSpec</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>dir_to_demo_dataset</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"dataset-demo"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"AlpsNMR"</span>)
-<span class='no'>dataset</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='nmr_read_samples.html'>nmr_read_samples_dir</a></span>(<span class='no'>dir_to_demo_dataset</span>)
-<span class='co'>#nmr_meta_export(dataset, "metadata.xlsx")</span></div></pre>
-  </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+    <pre class="examples"><div class='input'><span class='va'>dir_to_demo_dataset</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"dataset-demo"</span>, package <span class='op'>=</span> <span class='st'>"AlpsNMR"</span><span class='op'>)</span>
+<span class='va'>dataset</span> <span class='op'>&lt;-</span> <span class='fu'><a href='nmr_read_samples.html'>nmr_read_samples_dir</a></span><span class='op'>(</span><span class='va'>dir_to_demo_dataset</span><span class='op'>)</span>
+<span class='co'>#nmr_meta_export(dataset, "metadata.xlsx")</span>
 
+</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -262,7 +262,7 @@ the default for a more generic solution</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
