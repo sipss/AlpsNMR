@@ -173,10 +173,11 @@ ncol(X))</code></p></td>
     </tr>
     <tr>
       <th>center</th>
-      <td><p>(Default=TRUE) Logical, whether the variables should be
-shifted to be zero centered. Alternatively, a vector of length equal the
-number of columns of <code>X</code> can be supplied. The value is passed to
-<code><a href='https://rdrr.io/r/base/scale.html'>scale</a></code>.</p></td>
+      <td><p>(Default=TRUE) Logical, whether the variables should be shifted
+to be zero centered. Only set to FALSE if data have already been centered.
+Alternatively, a vector of length equal the number of columns of <code>X</code>
+can be supplied. The value is passed to <code><a href='https://rdrr.io/r/base/scale.html'>scale</a></code>. If the data
+contain missing values, columns should be centered for reliable results.</p></td>
     </tr>
     <tr>
       <th>scale</th>
