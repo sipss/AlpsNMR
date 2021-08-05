@@ -16,7 +16,7 @@ MUVR_model_plot(MVObj, model = "mid", factCols, sampLabels, ylim = NULL)
 
 \item{sampLabels}{Sample labels (optional; implemented for classification)}
 
-\item{ylim}{}
+\item{ylim}{Optional for imposing y-limits for regression and classification analysis}
 }
 \value{
 A plot with the model performance
