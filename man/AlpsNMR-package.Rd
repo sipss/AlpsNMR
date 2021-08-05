@@ -35,13 +35,13 @@ my_nmr_dataset <- dataset \%>\%
   plot
 }
 \author{
-\strong{Maintainer}: Luis Fernandez \email{lfernandez@ibecbarcelona.eu} (\href{https://orcid.org/0000-0001-9790-6287}{ORCID})
+\strong{Maintainer}: Sergio Oller Moreno \email{sergioller@gmail.com} (\href{https://orcid.org/0000-0002-8994-1549}{ORCID})
 
 Authors:
 \itemize{
   \item Ivan Montoliu Roura \email{Ivan.MontoliuRoura@rd.nestle.com}
-  \item Sergio Oller Moreno \email{soller@ibecbarcelona.eu} (\href{https://orcid.org/0000-0002-8994-1549}{ORCID})
   \item Francisco Madrid Gambin \email{fmadrid@ibecbarcelona.eu} (\href{https://orcid.org/0000-0001-9333-0014}{ORCID})
+  \item Luis Fernandez \email{lfernandez@ibecbarcelona.eu} (\href{https://orcid.org/0000-0001-9790-6287}{ORCID})
   \item Héctor Gracia Cabrera \email{hgracia@ibecbarcelona.eu}
   \item Santiago Marco Colás \email{smarco@ibecbarcelona.eu} (\href{https://orcid.org/0000-0003-2663-2965}{ORCID})
 }
