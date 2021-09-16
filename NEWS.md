@@ -1,8 +1,11 @@
-# AlpsNMR devel
+# AlpsNMR 3.3.4 (2021-09-16)
+
 - Fix issue with PCA plots not working as expected
 - Ensure NMRExperiment names are not duplicated in a dataset (closes #44)
 - Fix issue with some title file formatting in Bruker samples (closes #46)
 - Export groups in to_ChemoSpec
+- License since AlpsNMR was released has alwayd been MIT
+  as stated in the bioinformatics paper
 
 # AlpsNMR 3.1.5 (2021-3-31)
 - Removed warning about future_options deprecation
