@@ -46,7 +46,7 @@ Description: Reads Bruker NMR data directories both zipped and unzipped.
  After spectra proccessing, it can apply multivariate analysis on extracted data.
  Efficient plotting with 1-D data is also available.
  Basic reading of 1D ACD/Labs exported JDX samples is also available.
-License: file LICENSE
+License: MIT + file LICENSE
 LazyData: FALSE
 Depends: R (>= 4.0), dplyr (>= 0.7.5), future (>= 1.10.0), magrittr (>= 1.5)
 Imports:
