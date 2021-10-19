@@ -182,7 +182,12 @@ split_build_perform <- function(train_test_subset,
     x_all <- nmr_data(dataset)
     y_all <- nmr_meta_get_column(dataset, column = y_column)
     if (is.null(y_all)) {
-      stop(y_column, "column not found in the dataset")
+      rlang::abort(
+        c(
+          "y_column not found",
+          "x" = sprintf('Column "%s" does not exist in the dataset', y_column)
+        )
+      )
     }
     if (!is.null(identity_column)) {
         identity_all <- nmr_meta_get_column(dataset, column = identity_column)
