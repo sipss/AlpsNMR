@@ -135,6 +135,9 @@ nmr_pca_scoreplot <- function(nmr_dataset,
             ggplot2::xlab(axis_labels[xy[1]]) +
             ggplot2::ylab(axis_labels[xy[2]])
     } else {
+        if (!requireNamespace("GGally", quietly = TRUE)) {
+            rlang::abort("Please install the GGally package to plot more than two components at once")
+        }
         gplt <- GGally::ggpairs(
             data = scores,
             mapping = ggplot2::aes(...),
