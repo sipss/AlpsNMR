@@ -180,18 +180,21 @@ show_progress_bar <- function(...) {
 }
 
 progress_bar_new <- function(name, total) {
-  have_pkg_cli <- requireNamespace("cli", quietly = TRUE)
-  if (have_pkg_cli) {
-    return(cli::cli_progress_bar(name = name, total = total))
+  have_pkg_progressr <- requireNamespace("progressr", quietly = TRUE)
+  if (have_pkg_progressr) {
+    return(progressr::progressor(steps = total, message = name))
   }
   # fallback txtprogressbar:
   return(utils::txtProgressBar(min = 0, max = total, style = 3))
 }
 
 progress_bar_update <- function(pb) {
-  have_pkg_cli <- requireNamespace("cli", quietly = TRUE)
-  if (have_pkg_cli) {
-    return(cli::cli_progress_update())
+  have_pkg_progressr <- requireNamespace("progressr", quietly = TRUE)
+  if (have_pkg_progressr) {
+    if (is.null(pb)) {
+      return(NULL)
+    }
+    return(pb())
   }
   if (inherits(pb, "txtProgressBar")) {
     value <- pb$getVal()
@@ -200,9 +203,9 @@ progress_bar_update <- function(pb) {
 }
 
 progress_bar_end <- function(pb) {
-  have_pkg_cli <- requireNamespace("cli", quietly = TRUE)
-  if (have_pkg_cli) {
-    return(cli::cli_progress_done())
+  have_pkg_progressr <- requireNamespace("progressr", quietly = TRUE)
+  if (have_pkg_progressr) {
+    return(invisible(NULL))
   }
   if (inherits(pb, "txtProgressBar")) {
     return(close(pb))

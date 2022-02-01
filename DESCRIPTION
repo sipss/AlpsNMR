@@ -90,7 +90,8 @@ Suggests:
     ChemoSpec,
     knitr,
     zip (>= 2.0.4),
-    curl
+    curl,
+    progressr
 biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
 RoxygenNote: 7.1.2
