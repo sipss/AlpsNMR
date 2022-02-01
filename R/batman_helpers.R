@@ -58,43 +58,45 @@ NULL
 #' @export
 #' @examples
 #' bopts <- nmr_batman_options()
-nmr_batman_options <- function(ppmRange = matrix(
-    c(3.0, 3.1,
-      3.6, 3.7,
-      3.9, 4.0,
-      4.0, 4.1,
-      6.95, 7.05,
-      7.6, 7.7,
-      7.8, 7.9),
-    ncol = 2,
-    byrow = TRUE
-),
-specNo = "1",
-paraProc = 4L,
-negThresh = -0.5,
-scaleFac = 1000000,
-downSamp = 1,
-hiresFlag = 1,
-randSeed = 100025L,
-nItBurnin = 200L,
-nItPostBurnin = 5000L,
-multFile = 2L,
-thinning = 50L,
-cfeFlag = 0,
-nItRerun = 5000L,
-startTemp = 1000,
-specFreq = 600,
-a = 0.00001,
-b = 0.000000001,
-muMean = 1.1,
-muVar = 0.2,
-muVar_prop = 0.002,
-nuMVar = 0.0025,
-nuMVarProp = 0.1,
-tauMean = -0.05,
-tauPrec = 2,
-rdelta = 0.02,
-csFlag = 0) {
+nmr_batman_options <- function(
+    ppmRange = matrix(
+        c(3.0, 3.1,
+          3.6, 3.7,
+          3.9, 4.0,
+          4.0, 4.1,
+          6.95, 7.05,
+          7.6, 7.7,
+          7.8, 7.9),
+        ncol = 2,
+        byrow = TRUE
+    ),
+    specNo = "1",
+    paraProc = 4L,
+    negThresh = -0.5,
+    scaleFac = 1000000,
+    downSamp = 1,
+    hiresFlag = 1,
+    randSeed = 100025L,
+    nItBurnin = 200L,
+    nItPostBurnin = 5000L,
+    multFile = 2L,
+    thinning = 50L,
+    cfeFlag = 0,
+    nItRerun = 5000L,
+    startTemp = 1000,
+    specFreq = 600,
+    a = 0.00001,
+    b = 0.000000001,
+    muMean = 1.1,
+    muVar = 0.2,
+    muVar_prop = 0.002,
+    nuMVar = 0.0025,
+    nuMVarProp = 0.1,
+    tauMean = -0.05,
+    tauPrec = 2,
+    rdelta = 0.02,
+    csFlag = 0
+) {
     # ppmRange:
     ppmRange <- as.matrix(ppmRange)
     stopifnot(ncol(ppmRange) == 2)
@@ -139,9 +141,11 @@ csFlag = 0) {
 #' bopts <- nmr_batman_options()
 #' # nmr_batman_write_options(bopts)
 #' 
-nmr_batman_write_options <- function(bopts,
-                                     batman_dir = "BatmanInput",
-                                     filename = "batmanOptions.txt") {
+nmr_batman_write_options <- function(
+    bopts,
+    batman_dir = "BatmanInput",
+    filename = "batmanOptions.txt"
+) {
     # ppmRange:
     full_filename <-
         batman_get_full_filename(batman_dir, filename)
