@@ -65,18 +65,16 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242") {
   utils::write.table(sample_annot, file = file.path(dest_dir, "sample_annotations.tsv"), sep = "\t", row.names = FALSE)
   
   message("Downloading samples and keeping CPMG spectra, please wait...")
-  pb <- progress::progress_bar$new(
-    total = length(sample_annot$filename),
-    format = "  preparing samples [:bar] :current/:total (:percent) eta: :eta",
+  pb <- progress_bar_new(
+    name = "Preparing samples",
+    total = length(sample_annot$filename)
   )
   dst_rootdir <- file.path(dest_dir, "samples")
   dir.create(dst_rootdir, recursive = TRUE, showWarnings = FALSE)
   purrr::walk(
     sample_annot$filename,
     function(filename_base, url, dst_rootdir, keep_only_CPMG = FALSE, progress_bar = NULL) {
-      if (!is.null(progress_bar)) {
-        progress_bar$tick()
-      }
+      progress_bar_update(pb = pb)
       filename <- paste0(filename_base, ".zip")
       src_url <- file.path(url, filename)
       dst_file <- file.path(dst_rootdir, filename)
@@ -99,5 +97,6 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242") {
     keep_only_CPMG = TRUE,
     progress_bar = pb
   )
+  progress_bar_end(pb)
   sample_annot
 }
