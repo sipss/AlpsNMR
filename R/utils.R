@@ -164,7 +164,7 @@ tibble_lists_columns_to_vector_columns <- function(data) {
     
     # Do the conversion
     data2 <-
-        tidyr::unnest(data, cols = tidyselect::one_of(to_simplify))
+        tidyr::unnest(data, cols = dplyr::all_of(to_simplify))
     data2 <-
         data2[, colnames(data)] # Preserve original column order
     return(data2)
