@@ -78,9 +78,7 @@ Imports:
  ggplot2 (>= 3.1.0),
  baseline (>= 1.2-1),
  vctrs (>= 0.3.0),
- BiocParallel,
- SummarizedExperiment,
- S4Vectors
+ BiocParallel
 Suggests:
     DT (>= 0.5),
     testthat (>= 2.0.0),
@@ -89,7 +87,9 @@ Suggests:
     knitr,
     zip (>= 2.0.4),
     curl,
-    progressr
+    progressr,
+    SummarizedExperiment,
+    S4Vectors
 biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
 RoxygenNote: 7.1.2

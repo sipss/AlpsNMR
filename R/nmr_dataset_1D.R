@@ -189,7 +189,6 @@ format.nmr_dataset_1D <- function(x, ...) {
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #' @param filename The csv filename
 #' 
-#' @import SummarizedExperiment
 #' @return The nmr_dataset object (unmodified)
 #' @export 
 #' @examples 
@@ -221,6 +220,9 @@ nmr_export_data_1r <- function(nmr_dataset, filename) {
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' se <- nmr_data_1r_to_SummarizedExperiment(dataset_1D)
 nmr_data_1r_to_SummarizedExperiment <- function(nmr_dataset) {
+    if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
+        rlang::abort("Please install SummarizedExperiment.")
+    }
     abort_if_not(
         is.nmr_dataset_1D(nmr_dataset), 
         message = "An nmr_dataset_1D should be given"
@@ -245,6 +247,13 @@ nmr_data_1r_to_SummarizedExperiment <- function(nmr_dataset) {
 #' se <- nmr_data_1r_to_SummarizedExperiment(dataset_1D)
 #' dataset_1D <- SummarizedExperiment_to_nmr_data_1r(se)
 SummarizedExperiment_to_nmr_data_1r <- function(se) {
+    if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
+        rlang::abort("Please install the SummarizedExperiment package")
+    }
+    if (!requireNamespace("S4Vectors", quietly = TRUE)) {
+        rlang::abort("Please install the S4Vectors package")
+    }
+    
     meta <- S4Vectors::metadata(se)
     
     col_names <- names(meta)
