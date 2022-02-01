@@ -255,3 +255,9 @@ to_ChemoSpec <- function(nmr_dataset, desc = "A nmr_dataset", group = NULL) {
     ChemoSpec::chkSpectra(Spectra)
     return(Spectra)
 }
+
+
+abort_if_not <- function(condition, ...) {
+    if (!condition)
+        rlang::abort(...)
+}

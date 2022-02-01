@@ -27,39 +27,54 @@ NULL
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' validate_nmr_dataset_family(dataset_1D)
 validate_nmr_dataset_family <- function(nmr_dataset_family) {
-    assert_that(inherits(nmr_dataset_family, "nmr_dataset_family"),
-                            msg = "Not an nmr_dataset_family object")
-    assert_that(is.list(nmr_dataset_family),
-                            msg = "nmr_dataset_family objects are list-like. This object is not")
+    abort_if_not(
+        inherits(nmr_dataset_family, "nmr_dataset_family"),
+        message = "Not an nmr_dataset_family object"
+    )
+    abort_if_not(
+        is.list(nmr_dataset_family),
+        message = "nmr_dataset_family objects are list-like. This object is not"
+    )
     
     num_samples <- nmr_dataset_family[["num_samples"]]
     
-    assert_that("metadata" %in% names(nmr_dataset_family), msg = "Missing acquisition and parameter metadata")
+    abort_if_not(
+        "metadata" %in% names(nmr_dataset_family),
+        message = "Missing acquisition and parameter metadata"
+    )
+
     metadata <- nmr_dataset_family[["metadata"]]
-    assert_that(is.vector(metadata) &
-                                is.list(metadata), msg = "metadata should be a list")
-    assert_that("external" %in% names(metadata),
-                            msg = "$metadata$external should be a data frame")
-    assert_that(all(purrr::map_lgl(metadata, is.data.frame)), msg = "all metadata elements should be data frames")
+    abort_if_not(
+        is.vector(metadata) & is.list(metadata),
+        message = "metadata should be a list"
+    )
+    abort_if_not(
+        "external" %in% names(metadata),
+        message = "$metadata$external should be a data frame"
+    )
+    abort_if_not(
+        all(purrr::map_lgl(metadata, is.data.frame)),
+        message = "all metadata elements should be data frames"
+    )
     for (metad_idx in seq_along(metadata)) {
         metad_name <- names(metadata)[metad_idx]
         metad <- metadata[[metad_idx]]
-        assert_that(
+        abort_if_not(
             nrow(metad) == num_samples,
-            msg = glue::glue(
+            message = glue::glue(
                 "The number of rows of {metad_name} does not match the number of samples"
             )
         )
-        assert_that(
+        abort_if_not(
             "NMRExperiment" %in% colnames(metad),
-            msg = glue::glue_data(
+            message = glue::glue_data(
                 list(metad_name = metad_name),
                 "metadata '{metad_name}' does not include the NMRExperiment column"
             )
         )
-        assert_that(
+        abort_if_not(
             all(metad[["NMRExperiment"]] == metadata[[1]][["NMRExperiment"]]),
-            msg = glue::glue(
+            message = glue::glue(
                 "The NMRExperiment column in {metad_name} is not equal the same column in {names(metadata)[1]}"
             )
         )

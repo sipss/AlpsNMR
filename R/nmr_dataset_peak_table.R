@@ -24,20 +24,28 @@ NULL
 #' @rdname Peak_detection
 validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
     validate_nmr_dataset_family(nmr_dataset_peak_table)
-    assert_that(inherits(nmr_dataset_peak_table, "nmr_dataset_peak_table"),
-                msg = "Not an nmr_dataset_peak_table")
+    abort_if_not(
+        inherits(nmr_dataset_peak_table, "nmr_dataset_peak_table"),
+        message = "Not an nmr_dataset_peak_table"
+    )
     
-    assert_that("peak_table" %in% names(nmr_dataset_peak_table),
-                msg = "nmr_dataset_peak_table must have a peak_table matrix")
+    abort_if_not(
+        "peak_table" %in% names(nmr_dataset_peak_table),
+        message = "nmr_dataset_peak_table must have a peak_table matrix"
+    )
     
     peak_table <- nmr_dataset_peak_table[["peak_table"]]
-    assert_that(is.matrix(peak_table) && is.numeric(peak_table),
-                msg = "peak_table must be a numeric matrix")
+    abort_if_not(
+        is.matrix(peak_table) && is.numeric(peak_table),
+        message = "peak_table must be a numeric matrix"
+    )
     
     num_samples <- nrow(peak_table)
     
-    assert_that(num_samples == nmr_dataset_peak_table[["num_samples"]],
-                msg = "The num_samples value does not match nrow(peak_table)")
+    abort_if_not(
+        num_samples == nmr_dataset_peak_table[["num_samples"]],
+        message = "The num_samples value does not match nrow(peak_table)"
+    )
     
     nmr_dataset_peak_table
 }
@@ -48,7 +56,6 @@ validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
 #' @param metadata A list of data frames with at least the `NMRExperiment` column
 #' @return Creates a new nmr_dataset_peak_table object from scratch
 #' @name new_nmr_dataset_peak_table 
-#' @importFrom assertthat assert_that
 #' @importFrom glue glue
 #' @family nmr_dataset_peak_table functions
 #' @family class helper functions
@@ -196,8 +203,10 @@ format.nmr_dataset_peak_table <- function(x, ...) {
 #' nmr_peak_table <- new_nmr_dataset_peak_table(peak_table, metadata)
 #' se <- nmr_dataset_peak_table_to_SummarizedExperiment(nmr_peak_table)
 nmr_dataset_peak_table_to_SummarizedExperiment <- function(nmr_peak_table) {
-    assert_that(inherits(nmr_peak_table, "nmr_dataset_peak_table"),
-                msg = "Not an nmr_dataset_peak_table")
+    abort_if_not(
+        inherits(nmr_peak_table, "nmr_dataset_peak_table"),
+        message = "Not an nmr_dataset_peak_table"
+    )
     peak_table <- nmr_peak_table[["peak_table"]]
     # SummarizedExperiment work trasposed
     SummarizedExperiment::SummarizedExperiment(assays=list(peak_table=peak_table),

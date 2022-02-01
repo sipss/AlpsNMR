@@ -470,8 +470,10 @@ format.nmr_dataset <- function(x, ...) {
 #' 
 validate_nmr_dataset <- function(samples) {
     validate_nmr_dataset_family(samples)
-    assert_that(inherits(samples, "nmr_dataset"),
-                msg = "Not an nmr_dataset object")
+    abort_if_not(
+        inherits(samples, "nmr_dataset"),
+        message = "Not an nmr_dataset object"
+    )
     samples
 }
 
