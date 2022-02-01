@@ -27,6 +27,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -39,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.4</span>
       </span>
     </div>
 
@@ -77,7 +79,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/sipss/AlpsNMR">
+  <a href="https://github.com/sipss/AlpsNMR" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -95,109 +97,114 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<div id="alpsnmr-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#alpsnmr-" class="anchor"></a>AlpsNMR <img src="reference/figures/AlpsNMRlogo.png" align="right" height="139">
+<div class="section level1">
+<div class="page-header"><h1 id="alpsnmr-">AlpsNMR <img src="reference/figures/AlpsNMRlogo.png" align="right" height="139"><a class="anchor" aria-label="anchor" href="#alpsnmr-"></a>
 </h1></div>
 
 <p><code>AlpsNMR</code> is an R package that can load Bruker and JDX samples as well as preprocess them.</p>
 <p>It includes functions for region exclusion, normalization, peak detection &amp; integration and outlier detection among others. See the package vignette for details.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"BiocManager"</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"AlpsNMR"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"BiocManager"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"AlpsNMR"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="alternative-installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#alternative-installation" class="anchor"></a>Alternative installation</h2>
+<div class="section level2">
+<h2 id="alternative-installation">Alternative installation<a class="anchor" aria-label="anchor" href="#alternative-installation"></a>
+</h2>
 <p>AlpsNMR can be installed with the <code>devtools</code> package. For this is needed Rtools and note that it uses packages from CRAN, from BioConductor and from git repositories:</p>
 <p>If you already have Rtools, follow this to install AlspNMR:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"BiocManager"</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>  
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MassSpecWavelet"</span>, <span class="st">"impute"</span><span class="op">)</span>, update <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  
-<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"devtools"</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>  
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"sipss/AlpsNMR"</span><span class="op">)</span></code></pre></div>
-<p>If you need install Rtools: Follow steps of Rtools website [<a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools web</a>]</p>
+<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"BiocManager"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>  
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MassSpecWavelet"</span>, <span class="st">"impute"</span><span class="op">)</span>, update <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  
+<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"devtools"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>  
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"sipss/AlpsNMR"</span><span class="op">)</span></code></pre></div>
+<p>If you need install Rtools: Follow steps of Rtools website [<a href="https://cran.r-project.org/bin/windows/Rtools/" class="external-link">Rtools web</a>]</p>
 <p>Don’t forget the additional step, Putting Rtools on the PATH.</p>
 <p>Install AlpsNMR:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"BiocManager"</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>  
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MassSpecWavelet"</span>, <span class="st">"impute"</span><span class="op">)</span>, update <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  
-<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"devtools"</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>  
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"sipss/AlpsNMR"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"BiocManager"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>  
+<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MassSpecWavelet"</span>, <span class="st">"impute"</span><span class="op">)</span>, update <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  
+<span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="st">"devtools"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>  
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"sipss/AlpsNMR"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="quick-start" class="section level1">
-<h1 class="hasAnchor">
-<a href="#quick-start" class="anchor"></a>Quick start</h1>
-<p>Checkout the <a href="https://sipss.github.io/AlpsNMR/articles/introduction-to-alpsnmr.html">Introduction to AlpsNMR</a> vignette that shows how to import data and preprocess it using <code>AlpsNMR</code>. See our <a href="https://doi.org/10.1093/bioinformatics/btaa022">publication</a> for further details.</p>
-<p>See also the <a href="https://github.com/sipss/AlpsNMR-Tutorial">tutorial</a> with a real dataset from beginning to end, including all the steps of untargeted metabolomics analysis.</p>
+<div class="section level1">
+<h1 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+</h1>
+<p>Checkout the <a href="https://sipss.github.io/AlpsNMR/articles/introduction-to-alpsnmr.html" class="external-link">Introduction to AlpsNMR</a> vignette that shows how to import data and preprocess it using <code>AlpsNMR</code>. See our <a href="https://doi.org/10.1093/bioinformatics/btaa022" class="external-link">publication</a> for further details.</p>
+<p>See also the <a href="https://github.com/sipss/AlpsNMR-Tutorial" class="external-link">tutorial</a> with a real dataset from beginning to end, including all the steps of untargeted metabolomics analysis.</p>
 </div>
 
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from BIOC at <br><a href="https://www.bioconductor.org/packages/AlpsNMR">https://​www.bioconductor.org/​packages/​AlpsNMR</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
-</ul>
-</div>
-<div class="citation">
-<h2>Citation</h2>
-<ul class="list-unstyled">
-<li><a href="authors.html">Citing AlpsNMR</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Ivan Montoliu Roura <br><small class="roles"> Author </small>  </li>
-<li>Sergio Oller Moreno <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8994-1549" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Francisco Madrid Gambin <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9333-0014" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Luis Fernandez <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9790-6287" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Héctor Gracia Cabrera <br><small class="roles"> Author </small>  </li>
-<li>Santiago Marco Colás <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-2663-2965" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="https://www.bioconductor.org/packages/AlpsNMR" class="external-link">View on Bioconductor</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/sipss/AlpsNMR/actions/"><img src="https://github.com/sipss/AlpsNMR/workflows/R-CMD-check/badge.svg?branch=master" alt="Build Status"></a></li>
-<li><a href="https://codecov.io/github/sipss/AlpsNMR"><img src="https://codecov.io/github/sipss/AlpsNMR/coverage.svg?branch=master" alt="codecov.io"></a></li>
-<li><a href="https://bioconductor.org/checkResults/devel/bioc-LATEST/AlpsNMR/"><img src="https://bioconductor.org/shields/build/devel/bioc/AlpsNMR.svg" alt="Bioc Status"></a></li>
-<li><a href="https://sipss.github.io/AlpsNMR/"><img src="https://img.shields.io/badge/documentation-pkgdown-informational" alt="Documentation"></a></li>
-<li><a href="https://doi.org/10.1093/bioinformatics/btaa022"><img src="https://img.shields.io/badge/Bioinformatics-Accepted-success" alt="Publication"></a></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing AlpsNMR</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Ivan Montoliu Roura <br><small class="roles"> Author </small>  </li>
+<li>Sergio Oller Moreno <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8994-1549" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Francisco Madrid Gambin <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9333-0014" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Luis Fernandez <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-9790-6287" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Héctor Gracia Cabrera <br><small class="roles"> Author </small>  </li>
+<li>Santiago Marco Colás <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-2663-2965" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/sipss/AlpsNMR/actions/" class="external-link"><img src="https://github.com/sipss/AlpsNMR/workflows/R-CMD-check/badge.svg?branch=master" alt="Build Status"></a></li>
+<li><a href="https://codecov.io/github/sipss/AlpsNMR" class="external-link"><img src="https://codecov.io/github/sipss/AlpsNMR/coverage.svg?branch=master" alt="codecov.io"></a></li>
+<li><a href="https://bioconductor.org/checkResults/devel/bioc-LATEST/AlpsNMR/" class="external-link"><img src="https://bioconductor.org/shields/build/devel/bioc/AlpsNMR.svg" alt="Bioc Status"></a></li>
+<li><a href="https://sipss.github.io/AlpsNMR/" class="external-link"><img src="https://img.shields.io/badge/documentation-pkgdown-informational" alt="Documentation"></a></li>
+<li><a href="https://doi.org/10.1093/bioinformatics/btaa022" class="external-link"><img src="https://img.shields.io/badge/Bioinformatics-Accepted-success" alt="Publication"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
+  <p></p>
+<p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -205,6 +212,8 @@
 
   
 
+
+  
 
   </body>
 </html>
