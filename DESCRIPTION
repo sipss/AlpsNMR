@@ -48,7 +48,7 @@ Description: Reads Bruker NMR data directories both zipped and unzipped.
  Basic reading of 1D ACD/Labs exported JDX samples is also available.
 License: MIT + file LICENSE
 LazyData: FALSE
-Depends: R (>= 4.0), dplyr (>= 0.7.5), future (>= 1.10.0), magrittr (>= 1.5)
+Depends: R (>= 4.1), dplyr (>= 0.7.5), future (>= 1.10.0), magrittr (>= 1.5)
 Imports:
  utils,
  graphics,
