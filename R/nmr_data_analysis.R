@@ -381,14 +381,16 @@ nmr_data_analysis <- function(dataset,
     # Compute the outer cv models
     outer_cv_results <- do.call(
         what = do_cv,
-        args = c(list(dataset = dataset,
-                      y_column = y_column,
-                      identity_column = identity_column,
-                      train_evaluate_model = train_evaluate_model,
-                      train_test_subsets = train_test_subsets_outer,
-                      train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args
-                      ),
-        train_evaluate_model_params_outer
+        args = c(
+            list(
+                dataset = dataset,
+                y_column = y_column,
+                identity_column = identity_column,
+                train_evaluate_model = train_evaluate_model,
+                train_test_subsets = train_test_subsets_outer,
+                train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args
+            ),
+            train_evaluate_model_params_outer
         )
     )
     
