@@ -132,7 +132,6 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #'
 #' @inherit nmr_integrate_regions return
 #' @export
-#' @rdname Peak_detection
 #' @family peak integration functions
 #' @family nmr_dataset_1D functions
 nmr_integrate_peak_positions <- function(samples,
@@ -158,19 +157,14 @@ nmr_integrate_peak_positions <- function(samples,
 #' 
 #' @param integration_object A [nmr_dataset] object
 #' @return Get integrals with metadata from `integrate peak positions`
-#' @name get_integration_with_metada
-#' @rdname Peak_detection
 #' @export
 #'
 #' @family peak integration functions
 #' @family nmr_dataset_1D functions
 #' @return integration dataframe
-get_integration_with_metadata = function(...) {
-    UseMethod("get_integration_with_metadata")
-}
 get_integration_with_metadata <- function(integration_object) {
-    integration_data = AlpsNMR::nmr_data(integration_object)
-    meta_data = AlpsNMR::nmr_meta_get(integration_object, groups = "external")
+    integration_data <- nmr_data(integration_object)
+    meta_data <- nmr_meta_get(integration_object, groups = "external")
     integration_dataframe <- cbind(meta_data, integration_data)
     return(integration_dataframe)
 }
