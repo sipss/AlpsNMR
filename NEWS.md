@@ -1,3 +1,17 @@
+# AlpsNMR development
+
+- Improve nmr_detect_peaks_tune_snr to tune the SNR threshold with the right
+  other parameters
+- Documentation improvements
+  * Split Peak_detection page into smaller and more specific pages
+- Let the user choose how code is parallellized, as suggested by BiocParallel
+  documentation.
+- Replace furr/future parallellization loops with BiocParallel.
+  Provides a warning in case a future::plan() has been set
+- Demote Imports to Suggests: SummarizedExpriment, S4Vectors, ggrepel, GGally
+- Remove dependencies: tidyselect, assertthat, plyr, furrr
+- Add download_MTBLS242() function to help download the data for the tutorial
+
 # AlpsNMR 3.3.4 (2021-09-16)
 
 - Fix issue with PCA plots not working as expected
