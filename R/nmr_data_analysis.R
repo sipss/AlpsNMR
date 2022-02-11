@@ -236,20 +236,25 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
                   train_test_subsets, train_evaluate_model_args_iter = NULL, ...) {
 
     warn_future_to_biocparallel()
-    output <- BiocParallel::bpmapply(
-        FUN = split_build_perform,
-        c(
-            list(train_test_subset = train_test_subsets),
-            train_evaluate_model_args_iter
-        ),
-        MoreArgs = list(
-            dataset = dataset,
-            y_column = y_column,
-            identity_column = identity_column,
-            train_evaluate_model = train_evaluate_model,
-            ...
-        ),
-        SIMPLIFY = FALSE
+    output <- do.call(
+        what = BiocParallel::bpmapply,
+        args = c(
+            list(
+                FUN = split_build_perform,
+                train_test_subset = train_test_subsets
+            ),
+            train_evaluate_model_args_iter,
+            list(
+                MoreArgs = list(
+                    dataset = dataset,
+                    y_column = y_column,
+                    identity_column = identity_column,
+                    train_evaluate_model = train_evaluate_model,
+                    ...
+                ),
+                SIMPLIFY = FALSE
+            )
+        )
     )
     names(output) <- names(train_test_subsets)
     output
