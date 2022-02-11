@@ -234,24 +234,23 @@ split_build_perform <- function(train_test_subset,
 #' @noRd
 do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
                   train_test_subsets, train_evaluate_model_args_iter = NULL, ...) {
-    if (show_progress_bar(length(train_test_subsets) > 5)) {
-        prgrs <- TRUE
-    } else {
-        prgrs <- FALSE
-    }
 
-    output <- furrr::future_pmap(
-        c(list(train_test_subset = train_test_subsets),
-            train_evaluate_model_args_iter),
-        split_build_perform,
-        dataset = dataset,
-        y_column = y_column,
-        identity_column = identity_column,
-        train_evaluate_model = train_evaluate_model,
-        ...,
-        .progress = prgrs,
-        .options = furrr::furrr_options(globals = character(0),
-                                         packages = character(0)))
+    warn_future_to_biocparallel()
+    output <- BiocParallel::bpmapply(
+        FUN = split_build_perform,
+        c(
+            list(train_test_subset = train_test_subsets),
+            train_evaluate_model_args_iter
+        ),
+        MoreArgs = list(
+            dataset = dataset,
+            y_column = y_column,
+            identity_column = identity_column,
+            train_evaluate_model = train_evaluate_model,
+            ...
+        ),
+        SIMPLIFY = FALSE
+    )
     names(output) <- names(train_test_subsets)
     output
 }
