@@ -169,7 +169,7 @@ fun_choose_best_ncomp_auc_threshold <-
     # Choose best number of latent variables based on a threshold on the auc increment.
     #' @param inner_cv_results A list of elements returned by [callback_plsda_auroc_vip]
     #' @return A list with:
-    #'    - `train_evaluate_model_args`: A list wit one element named `ncomp` with the number of latent variables selected
+    #'    - `train_evaluate_model_args`: A list with one element named `ncomp` with the number of latent variables selected
     #'             for each outer cross-validation
     #'    - `num_latent_var`: A data frame with the number of latent variables chosen for each outer cross-validation
     #'    - `diagnostic_plot`: A plot showing the evolution of the AUC vs the number of latent variables for each iteration
