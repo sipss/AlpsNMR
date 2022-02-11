@@ -22,9 +22,13 @@ peak_data <- nmr_detect_peaks(dataset_1D,
 
 #nmr_detect_peaks_plot(sample_10, peak_data, "NMRExp_ref")
 
-peaks_detected <- nmr_detect_peaks_tune_snr(sample_10, 
-                                            SNR_thresholds = seq(from = 2, 
-                                            to = 3, by = 0.5))
+peaks_detected <- nmr_detect_peaks_tune_snr(
+  sample_10, 
+  SNR_thresholds = seq(from = 2, to = 3, by = 0.5),
+  nDivRange_ppm = 0.03,
+  scales = seq(1, 16, 2),
+  baselineThresh = 0
+)
 
 
 # 2.Find the reference spectrum to align with.
