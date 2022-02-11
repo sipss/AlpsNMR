@@ -60,7 +60,6 @@ Imports:
  tibble(>= 1.3.4),
  tidyr (>= 1.0.0),
  readxl (>= 1.1.0),
- plyr (>= 1.8.4),
  purrr (>= 0.2.5),
  glue (>= 1.2.0),
  reshape2 (>= 1.4.3),
