@@ -179,6 +179,40 @@ show_progress_bar <- function(...) {
     all(...) && interactive() && is.null(getOption("knitr.in.progress"))
 }
 
+progress_bar_new <- function(name, total) {
+  have_pkg_progressr <- requireNamespace("progressr", quietly = TRUE)
+  if (have_pkg_progressr) {
+    return(progressr::progressor(steps = total, message = name))
+  }
+  # fallback txtprogressbar:
+  return(utils::txtProgressBar(min = 0, max = total, style = 3))
+}
+
+progress_bar_update <- function(pb) {
+  have_pkg_progressr <- requireNamespace("progressr", quietly = TRUE)
+  if (have_pkg_progressr) {
+    if (is.null(pb)) {
+      return(NULL)
+    }
+    return(pb())
+  }
+  if (inherits(pb, "txtProgressBar")) {
+    value <- pb$getVal()
+    pb$up(value+1L)
+  }
+}
+
+progress_bar_end <- function(pb) {
+  have_pkg_progressr <- requireNamespace("progressr", quietly = TRUE)
+  if (have_pkg_progressr) {
+    return(invisible(NULL))
+  }
+  if (inherits(pb, "txtProgressBar")) {
+    return(close(pb))
+  }
+}
+
+
 #' Convert to ChemoSpec Spectra class
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #' @param desc a description for the dataset

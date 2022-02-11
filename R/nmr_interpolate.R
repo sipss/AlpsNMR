@@ -80,21 +80,20 @@ interpolate_1d <- function(list_of_ppms, list_of_1r, ppm_axis) {
     tryCatch({
         pb <- NULL
         if (show_progress_bar(num_samples > 5)) {
-            pb <- utils::txtProgressBar(min = 0, max = num_samples, style = 3)
+          pb <- progress_bar_new(
+            name = "Interpolating samples",
+            total = num_samples
+          )
         }
         for (i in seq_len(num_samples)) {
             data_matr[i, ] <- signal::interp1(x = list_of_ppms[[i]],
                                               y = list_of_1r[[i]],
                                               xi = ppm_axis,
                                               method = "spline")
-            if (!is.null(pb)) {
-                utils::setTxtProgressBar(pb, i)
-            }
+            progress_bar_update(pb)
         }
     }, finally = {
-        if (!is.null(pb)) {
-            close(pb)
-        }
+        progress_bar_end(pb)
     })
     data_matr
 }
