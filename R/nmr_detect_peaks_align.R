@@ -71,9 +71,8 @@ NULL
 #' @inheritParams speaq::detectSpecPeaks
 #' @return A data frame with the NMRExperiment, the sample index, the position
 #'     in ppm and index and the peak intensity
-#' 
+#' @seealso Peak_detection
 #' @export
-#' @rdname Peak_detection
 nmr_detect_peaks <- function(nmr_dataset,
                              nDivRange_ppm = 0.1,
                              scales = seq(1, 16, 2),
@@ -158,8 +157,8 @@ nmr_detect_peaks <- function(nmr_dataset,
 #' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
 #' @export
 #' @return Plot peak detection results
-#' @rdname Peak_detection
 #' 
+#' @seealso Peak_detection nmr_detect_peaks
 #' @family peak detection functions
 #' @family nmr_dataset_1D functions
 nmr_detect_peaks_plot <- function(nmr_dataset,
@@ -368,7 +367,6 @@ nmr_detect_peaks_tune_snr <- function(
 #' 
 #' @return An [nmr_dataset_1D], with the spectra aligned
 #' @export
-#' @rdname Peak_detection
 #' @family peak alignment functions
 #' @family nmr_dataset_1D functions
 nmr_align <- function(nmr_dataset,
