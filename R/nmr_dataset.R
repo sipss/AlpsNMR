@@ -181,78 +181,66 @@ nmr_read_samples_bruker <-
             # We overwrite with the same name:
             overwrite_sample_names <- sample_names
         }
-        if (show_progress_bar(length(sample_names) > 5)) {
-            prgrs <- TRUE
-        } else {
-            prgrs <- FALSE
-        }
-        list_of_samples <-
-            furrr::future_map(
-                seq_along(sample_names),
-                function(sampl_idx, ...) {
-                    sampl <- sample_names[sampl_idx]
-                    overwr <- overwrite_sample_names[sampl_idx]
-                    is_zip <- NULL
-                    loaded_sample <-
-                        tryCatch({
-                            sampl <- normalizePath(sampl)
-                            if (grepl("\\.zip$", sampl)) {
-                                is_zip <- TRUE
-                                NMRExperiment <-
-                                    gsub(pattern = "\\.zip$",
-                                         replacement = "",
-                                         basename(overwr))
-                                sampl_temp_dir <-
-                                    tempfile(pattern = paste0("nmr_sample_", NMRExperiment, "_"))
-                                utils::unzip(sampl, exdir = sampl_temp_dir)
-                                sampl_dir <-
-                                    normalizePath(file.path(sampl_temp_dir, NMRExperiment))
-                            } else {
-                                is_zip <- FALSE
-                                sampl_dir <-
-                                    sampl
-                            }
-                            # Ignore internal TopSpin directory used for sample processing
-                            if (basename(sampl_dir) == "98888") {
-                                return(NULL)
-                            }
-                            meta <-
-                                read_bruker_metadata(sampl_dir)
-                            if (is_zip) {
-                                meta$info$file_format <- "Zipped Bruker NMR directory"
-                            }
-                            meta$info$sample_path <-
-                                overwr
-                            if (!is.null(pulse_sequence) &&
-                                toupper(meta$info$pulse_sequence) != toupper(pulse_sequence)) {
-                                return(NULL)
-                            }
-                            if (metadata_only) {
-                                pdata <- NULL
-                            } else {
-                                pdata <- read_bruker_pdata(sample_path = sampl_dir, ...)
-                            }
-                            output <-
-                                bruker_merge_meta_pdata(meta, pdata)
-                            return(output)
-                        }, error = function(err) {
-                            warning("Error loading sample: ", sampl)
-                            msg <-
-                                conditionMessage(err)
-                            message(msg)
+
+        warn_future_to_biocparallel()
+        list_of_samples <- BiocParallel::bplapply(
+            X = seq_along(sample_names),
+            FUN = function(sampl_idx, ...) {
+                sampl <- sample_names[sampl_idx]
+                overwr <- overwrite_sample_names[sampl_idx]
+                is_zip <- NULL
+                loaded_sample <-
+                    tryCatch({
+                        sampl <- normalizePath(sampl)
+                        if (grepl("\\.zip$", sampl)) {
+                            is_zip <- TRUE
+                            NMRExperiment <- gsub(
+                                pattern = "\\.zip$",
+                                replacement = "",
+                                basename(overwr)
+                            )
+                            sampl_temp_dir <-
+                                tempfile(pattern = paste0("nmr_sample_", NMRExperiment, "_"))
+                            utils::unzip(sampl, exdir = sampl_temp_dir)
+                            sampl_dir <-
+                                normalizePath(file.path(sampl_temp_dir, NMRExperiment))
+                        } else {
+                            is_zip <- FALSE
+                            sampl_dir <- sampl
+                        }
+                        # Ignore internal TopSpin directory used for sample processing
+                        if (basename(sampl_dir) == "98888") {
                             return(NULL)
-                        }, finally = {
-                            if (is_zip) {
-                                unlink(sampl_temp_dir, recursive = TRUE)
-                            }
-                        })
-                    return(loaded_sample)
-                },
-                ...,
-                .progress = prgrs,
-                .options = furrr::furrr_options(globals = character(0),
-                                                packages = character(0))
-            )
+                        }
+                        meta <- read_bruker_metadata(sampl_dir)
+                        if (is_zip) {
+                            meta$info$file_format <- "Zipped Bruker NMR directory"
+                        }
+                        meta$info$sample_path <- overwr
+                        if (!is.null(pulse_sequence) &&
+                            toupper(meta$info$pulse_sequence) != toupper(pulse_sequence)) {
+                            return(NULL)
+                        }
+                        if (metadata_only) {
+                            pdata <- NULL
+                        } else {
+                            pdata <- read_bruker_pdata(sample_path = sampl_dir, ...)
+                        }
+                        output <- bruker_merge_meta_pdata(meta, pdata)
+                        return(output)
+                    }, error = function(err) {
+                        warning("Error loading sample: ", sampl)
+                        msg <- conditionMessage(err)
+                        message(msg)
+                        return(NULL)
+                    }, finally = {
+                        if (is_zip) {
+                            unlink(sampl_temp_dir, recursive = TRUE)
+                        }
+                    })
+                return(loaded_sample)
+            }
+        )
 
         # Remove samples that could not be loaded:
         any_error <- purrr::map_lgl(list_of_samples, is.null)
