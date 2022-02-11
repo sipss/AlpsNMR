@@ -81,7 +81,7 @@ Other nmr_dataset_1D functions:
 \code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{format.nmr_dataset_1D}()},
-\code{\link{get_integration_with_metada}},
+\code{\link{get_integration_with_metadata}()},
 \code{\link{is.nmr_dataset_1D}()},
 \code{\link{load_and_save_functions}},
 \code{\link{new_nmr_dataset_1D}()},

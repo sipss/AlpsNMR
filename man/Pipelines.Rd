@@ -246,7 +246,7 @@ Other alignment functions:
 
 Other peak integration functions: 
 \code{\link{computes_peak_width_ppm}()},
-\code{\link{get_integration_with_metada}},
+\code{\link{get_integration_with_metadata}()},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},
