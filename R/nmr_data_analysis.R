@@ -830,16 +830,6 @@ bp_kfold_VIP_analysis <- function(dataset,
         k_fold_index[[i]] <- seq_len(length(y_all))[-k_fold_split[[i]]]
     }
     
-    # Paralellization
-    chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
-    if (nzchar(chk) && chk == "TRUE") {
-        # use 2 cores in CRAN/Travis/AppVeyor
-        numcores <- 2L
-    } else {
-        # use all cores in devtools::test()
-        numcores <- k
-    }
-    snow <- BiocParallel::SnowParam(workers = numcores, type = "SOCK")
     results <- BiocParallel::bplapply(
         k_fold_index, function(index, dataset = dataset, y_column = y_column,
                                ncomp = ncomp, nbootstrap = nbootstrap) {
@@ -849,33 +839,9 @@ bp_kfold_VIP_analysis <- function(dataset,
             y_column = y_column,
             ncomp = ncomp,
             nbootstrap = nbootstrap
-        )}, BPPARAM = snow, dataset = dataset, y_column = y_column, 
+        )}, dataset = dataset, y_column = y_column, 
         ncomp = ncomp, nbootstrap = nbootstrap)
 
-    # # Paralellization
-    # chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
-    # 
-    # if (nzchar(chk) && chk == "TRUE") {
-    #     # use 2 cores in CRAN/Travis/AppVeyor
-    #     numcores <- 2L
-    # } else {
-    #     # use all cores in devtools::test()
-    #     numcores <- parallel::detectCores()
-    # }
-    # if(numcores > k){numcores <- k}
-    # cl <- parallel::makeCluster(numcores)
-    # parallel::clusterExport(cl, c("dataset", "y_column", "ncomp", "nbootstrap"), envir=environment())
-    # results <- parallel::parLapply(cl, k_fold_index, function(index) {
-    #     bp_VIP_analysis(
-    #         dataset,
-    #         index,
-    #         y_column = y_column,
-    #         ncomp = ncomp,
-    #         nbootstrap = nbootstrap
-    #     )
-    # })
-    # parallel::stopCluster(cl)
-    
     # Mean of the vips of the different folds for the plot
     means <- purrr::map(results, "pls_vip_means")
     #means <- sapply(results, "[", "pls_vip_means")
