@@ -239,28 +239,18 @@ process_block <- function(lines, metadata_only = FALSE) {
 #' @keywords internal
 #' @noRd
 read_jdx <- function(file_names, metadata_only = FALSE) {
-    if (show_progress_bar(length(file_names) > 5)) {
-        prog <- TRUE
-    } else {
-        prog <- FALSE
-    }
-    output <- furrr::future_map(file_names,
-                                function(file_name) {
-                                    lines <- readLines(file_name)
-                                    lines <-
-                                        strip_comments(lines)
-                                    sampl <-
-                                        process_block(lines,
-                                                      metadata_only = metadata_only)$block
-                                    info <-
-                                        list(file_format = "JDX-JCAMP NMR sample")
-                                    sampl$info <-
-                                        info
-                                    sampl
-                                }, .progress = prog,
-                                .options = furrr::furrr_options(globals = character(0L),
-                                                                 packages = character(0L)))
-    
+    warn_future_to_biocparallel()
+    output <- BiocParallel::bplapply(
+        X = file_names,
+        FUN = function(file_name) {
+            lines <- readLines(file_name)
+            lines <- strip_comments(lines)
+            sampl <- process_block(lines, metadata_only = metadata_only)$block
+            info <- list(file_format = "JDX-JCAMP NMR sample")
+            sampl$info <- info
+            sampl
+        }
+    )
     return(output)
 }
 
