@@ -16,12 +16,9 @@ NULL
 #' @param nmr_dataset_peak_table An [nmr_dataset_peak_table] object
 #' @return The [nmr_dataset_peak_table] unchanged
 #'
-#' This function is useful for its side-effects: Stopping in case of error
-#'
 #' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @export
-#' @rdname Peak_detection
 validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
     validate_nmr_dataset_family(nmr_dataset_peak_table)
     abort_if_not(
