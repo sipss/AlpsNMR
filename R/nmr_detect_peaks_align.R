@@ -128,36 +128,23 @@ nmr_detect_peaks <- function(nmr_dataset,
             options(warnPartialMatchArgs = warnPartialMatchArgs)
         })
     }
-    
-    prgrs <- show_progress_bar(nrow(nmr_dataset$data_1r) > 5)
-    
+
     data_matrix_to_list <-
         lapply(seq_len(nrow(nmr_dataset$data_1r)),
                function(i)
                    matrix(nmr_dataset$data_1r[i, ], nrow = 1))
     
-    peakList <- furrr::future_map(data_matrix_to_list,
-                                  function(spec, ...) {
-                                      speaq::detectSpecPeaks(spec, ...)[[1]]
-                                  },
-                                  nDivRange = nDivRange,
-                                  scales = scales,
-                                  baselineThresh = baselineThresh,
-                                  SNR.Th = SNR.Th,
-                                  verbose = FALSE,
-                                  .progress = prgrs,
-                                  .options = furrr::furrr_options(globals = character(0L),
-                                                                   packages = character(0L)))
-    
-    # peakList <- speaq::detectSpecPeaks(
-    #     nmr_dataset$data_1r,
-    #     nDivRange = nDivRange,
-    #     scales = scales,
-    #     baselineThresh = baselineThresh,
-    #     SNR.Th = SNR.Th,
-    #     verbose = FALSE
-    # )
-    
+    peakList <- BiocParallel::bplapply(
+        X = data_matrix_to_list,
+        FUN = function(spec, ...) {
+            speaq::detectSpecPeaks(spec, ...)[[1]]
+        },
+        nDivRange = nDivRange,
+        scales = scales,
+        baselineThresh = baselineThresh,
+        SNR.Th = SNR.Th,
+        verbose = FALSE
+    )
     peakList_to_dataframe(nmr_dataset, peakList)
 }
 
