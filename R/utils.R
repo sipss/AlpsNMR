@@ -212,6 +212,25 @@ progress_bar_end <- function(pb) {
   }
 }
 
+warn_future_to_biocparallel <- function() {
+    # REMOVE THIS WARNING >ONE YEAR AFTER IT'S BEEN RELEASED to BIOCONDUCTOR
+    current_plan <- future::plan()
+    if (inherits(current_plan, "sequential")) {
+        return()
+    }
+    rlang::warn(
+        message = c(
+            "AlpsNMR now uses BiocParallel instead of future for parallellization",
+            "i" = "If you used plan(multisession), plan(multiprocess), or other plan(), consider removing all plan() calls and use:\n    library(BiocParallel)\n    register(SnowParam(workers = 3), default = TRUE)",
+            "i" = 'You just need to place that code once, typically at the beginning of your script'
+        ),
+        class = "AlpsNMR-future-to-biocparallel-warning",
+        .frequency = "once",
+        .frequency_id = "future-to-biocparallel"
+    )
+    return()
+}
+
 
 #' Convert to ChemoSpec Spectra class
 #' @param nmr_dataset An [nmr_dataset_1D] object
