@@ -34,19 +34,22 @@ identification <- nmr_identify_regions_cell (ppm_to_assign, num_proposed_compoun
 Other peak detection functions: 
 \code{\link{Pipelines}},
 \code{\link{nmr_baseline_threshold}()},
+\code{\link{nmr_detect_peaks_plot}()},
+\code{\link{nmr_detect_peaks_tune_snr}()},
+\code{\link{nmr_detect_peaks}()},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_urine}()},
 \code{\link{nmr_integrate_regions}()},
-\code{\link{regions_from_peak_table}()},
-\code{\link{validate_nmr_dataset_peak_table}()}
+\code{\link{regions_from_peak_table}()}
 
 Other peak integration functions: 
 \code{\link{Pipelines}},
 \code{\link{computes_peak_width_ppm}()},
+\code{\link{get_integration_with_metada}},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_regions}()},
-\code{\link{validate_nmr_dataset_peak_table}()}
+\code{\link{nmr_integrate_peak_positions}()},
+\code{\link{nmr_integrate_regions}()}
 }
 \concept{peak detection functions}
 \concept{peak integration functions}
