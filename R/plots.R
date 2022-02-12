@@ -235,6 +235,7 @@ plot_webgl <- function(nmr_dataset, html_filename, ...) {
 #' @family plotting functions
 #' @param plt A plot created with plotly or ggplot2
 #' @param html_filename The file name where the plot will be saved
+#' @param overwrite Overwrite the lib/ directory (use `NULL` to prompt the user)
 #'
 #' @return The html_filename
 #' @export
@@ -245,17 +246,27 @@ plot_webgl <- function(nmr_dataset, html_filename, ...) {
 #' # plot <- plot(dataset_1D)
 #' # html_plot_interactive <- plot_interactive(plot, "html_plot_interactive.html")
 #' 
-plot_interactive <- function(plt, html_filename) {
+plot_interactive <- function(plt, html_filename, overwrite = NULL) {
     #Check if lib folder exists
-    libdir <- paste(getwd(), "/lib", sep = "")
-    if(dir.exists(libdir)){
-        # warning user before some contents of lib folder could be destroyed
-        message("warning: lib folder alrready exists, the function plot_interactive will")
-        message("override it. Do yo want to continue? (y/n): ")
-        response <- scan("stdin", character(), n=1)
-        if(response == 'n'){
-            stop("Canceling plot_interactive")
+    basedir <- dirname(html_filename)
+    libdir <- file.path(basedir, "lib")
+    libdir_exists <- dir.exists(libdir)
+    if (is.null(overwrite) && libdir_exists) {
+        if (interactive()) {
+            # warning user before some contents of lib folder could be destroyed
+            rlang::inform("{libdir} folder already exists, plot_interactive will replace it. Continue? [y/n]:")
+            response <- scan("stdin", character(), n=1)
+            if (!response %in% c("y", "Y")) {
+                overwrite <- FALSE
+            } else {
+                overwrite <- TRUE
+            }
+        } else {
+            overwrite <- FALSE
         }
+    }
+    if (libdir_exists && isFALSE(overwrite)) {
+        rlang::abort(message = c("plot_interactive aborted", "x" = "{libdir} folder already exists, use overwrite=TRUE"))
     }
     suppressMessages(utils::capture.output({
         htmltools::save_html(

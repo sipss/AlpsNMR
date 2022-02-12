@@ -1,5 +1,7 @@
 # AlpsNMR development
 
+- plot_interactive now accepts an `overwrite` argument to avoid asking the user
+  interactively
 - Improve nmr_detect_peaks_tune_snr to tune the SNR threshold with the right
   other parameters
 - Documentation improvements
