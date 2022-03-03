@@ -4,12 +4,14 @@
 \alias{plot_interactive}
 \title{Plots in WebGL}
 \usage{
-plot_interactive(plt, html_filename)
+plot_interactive(plt, html_filename, overwrite = NULL)
 }
 \arguments{
 \item{plt}{A plot created with plotly or ggplot2}
 
 \item{html_filename}{The file name where the plot will be saved}
+
+\item{overwrite}{Overwrite the lib/ directory (use \code{NULL} to prompt the user)}
 }
 \value{
 The html_filename
