@@ -34,17 +34,7 @@ dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 model <- nmr_pca_build_model(dataset_1D)
 nmr_pca_plot_variance(model)
-
-dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-model <- nmr_pca_build_model(dataset_1D)
 nmr_pca_scoreplot(dataset_1D, model)
-
-dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-model <- nmr_pca_build_model(dataset_1D)
 nmr_pca_loadingplot(model, 1)
 
 }

@@ -72,17 +72,19 @@ nmr_pca_build_model.nmr_dataset_1D <- function(nmr_dataset,
 #' @family PCA related functions
 #' @name nmr_pca_plots
 #' @return Plot of PCA
-NULL
-
-#' @rdname nmr_pca_plots
-#' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' model <- nmr_pca_build_model(dataset_1D)
 #' nmr_pca_plot_variance(model)
+#' nmr_pca_scoreplot(dataset_1D, model)
+#' nmr_pca_loadingplot(model, 1)
 #'
+NULL
+
+#' @rdname nmr_pca_plots
+#' @export
 nmr_pca_plot_variance <- function(pca_model) {
     cum_var_percent <-
         100 * cumsum(pca_model$sdev ^ 2 / pca_model$var.tot)
@@ -95,13 +97,6 @@ nmr_pca_plot_variance <- function(pca_model) {
 
 #' @rdname nmr_pca_plots
 #' @export
-#' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' model <- nmr_pca_build_model(dataset_1D)
-#' nmr_pca_scoreplot(dataset_1D, model)
-#'
 nmr_pca_scoreplot <- function(nmr_dataset,
                               pca_model,
                               comp = seq_len(2), ...) {
@@ -152,13 +147,6 @@ nmr_pca_scoreplot <- function(nmr_dataset,
 
 #' @rdname nmr_pca_plots
 #' @export
-#' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' model <- nmr_pca_build_model(dataset_1D)
-#' nmr_pca_loadingplot(model, 1)
-#'
 nmr_pca_loadingplot <- function(pca_model, comp) {
     ppm_axis <- attr(pca_model, "nmr_data_axis")
     loadings <-
