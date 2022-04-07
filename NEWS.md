@@ -13,7 +13,7 @@
 - Demote Imports to Suggests: SummarizedExpriment, S4Vectors, ggrepel, GGally
 - Remove dependencies: tidyselect, assertthat, plyr, furrr
 - Add `download_MTBLS242()` function to help download the data for the tutorial
-
+- Skip mixOmics test if affected by https://github.com/mixOmicsTeam/mixOmics/pull/199
 
 # AlpsNMR 3.3.4 (2021-09-16)
 
