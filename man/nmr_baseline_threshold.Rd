@@ -4,10 +4,12 @@
 \alias{nmr_baseline_threshold}
 \title{Threshold estimation for peak detection}
 \usage{
-nmr_baseline_threshold(nmr_dataset)
+nmr_baseline_threshold(nmr_dataset, range_without_peaks = c(9.5, 10))
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D}.}
+
+\item{range_without_peaks}{A vector with two doubles describing a range without peaks suitable for baseline detection}
 }
 \value{
 Numerical. A threshold value in intensity below that no peak is detected.
