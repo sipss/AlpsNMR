@@ -12,7 +12,7 @@ nmr_interpolate_1D(samples, axis = c(min = 0.2, max = 10, by = 8e-04))
 \arguments{
 \item{samples}{An NMR dataset}
 
-\item{axis}{The ppm axis range and optionally the ppm step}
+\item{axis}{The ppm axis range and optionally the ppm step. Set it to \code{NULL} for autodetection}
 }
 \value{
 Interpolate a set of 1D NMR Spectra

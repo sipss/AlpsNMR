@@ -79,7 +79,7 @@ The first column on each sheet, named the key column, MUST have unique values.
 For instance, a sheet starting with "SubjectID" MUST specify each subject ID
 only once (without repetitions).}
 
-\item{axis}{The ppm axis range and optionally the ppm step}
+\item{axis}{The ppm axis range and optionally the ppm step. Set it to \code{NULL} for autodetection}
 
 \item{exclude}{A list with regions to be removed Typically:
 \code{exclude = list(water = c(4.7, 5.0))}}
