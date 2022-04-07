@@ -10,15 +10,16 @@ verify_dimensionality <- function(samples, valid_dimensions) {
     dimensions_per_sample
 } 
 
-verify_axisn <- function(axisn, one_sample_axis) {
+verify_axisn <- function(axisn, samples) {
     if (is.null(axisn)) {
-        # axisn will be built on sample_axis:
-        axisn <- c(min = min(one_sample_axis),
-                             max = max(one_sample_axis),
-                             by = abs(one_sample_axis[2] - one_sample_axis[1]))
+        axisn <- c(
+          min = max(purrr::map_dbl(samples$axis, ~ min(.[[1]]))),
+          max = min(purrr::map_dbl(samples$axis, ~ max(.[[1]]))),
+          by = min(purrr::map_dbl(samples$axis, ~ stats::median(abs(diff(.[[1]])))))
+        )
     } else {
         if (length(axisn) == 2) {
-            axisn <- c(axisn, abs(one_sample_axis[2] - one_sample_axis[1]))
+            axisn <- c(axisn, min(purrr::map_dbl(samples$axis, ~ stats::median(abs(diff(.[[1]]))))))
             names(axisn) <- c("min", "max", "by")
         }
         if (is.null(names(axisn))) {
@@ -31,7 +32,7 @@ verify_axisn <- function(axisn, one_sample_axis) {
 #' Interpolate a set of 1D NMR Spectra
 #' 
 #' @param samples An NMR dataset
-#' @param axis The ppm axis range and optionally the ppm step
+#' @param axis The ppm axis range and optionally the ppm step. Set it to `NULL` for autodetection
 #' @return Interpolate a set of 1D NMR Spectra
 #' @name nmr_interpolate_1D
 #' @export
@@ -58,7 +59,7 @@ nmr_interpolate_1D.nmr_dataset <- function(samples, axis = c(min = 0.2, max = 10
     verify_dimensionality(samples, valid_dimensions = 1)
     
     # 2. Check that we have the interpolation axis
-    axis <- verify_axisn(axis, samples[["axis"]][[1]][[1]])
+    axis <- verify_axisn(axis, samples)
     
     axis_full <- seq(from = axis["min"], to = axis["max"], by = axis["by"])
     if (show_progress_bar(samples$num_samples > 5)) {
