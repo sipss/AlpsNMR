@@ -4,28 +4,27 @@ prepare_dataset <- function() {
   MeOH_plasma_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
   MeOH_plasma_extraction_xlsx <- file.path(MeOH_plasma_extraction_dir, "dummy_metadata.xlsx")
   exp_subj_id <- readxl::read_excel(MeOH_plasma_extraction_xlsx, sheet = 1)
-  subj_id_age <- readxl::read_excel(MeOH_plasma_extraction_xlsx, sheet = 2)
+
   zip_files <- fs::dir_ls(MeOH_plasma_extraction_dir, glob = "*.zip")
   
   dataset <- nmr_read_samples(sample_names = zip_files)
   dataset <- nmr_meta_add(dataset, metadata = exp_subj_id, by = "NMRExperiment")
-  dataset <- nmr_meta_add(dataset, metadata = subj_id_age, by = "SubjectID")
-  ppm_res <- nmr_ppm_resolution(dataset)[[1]]
   dataset <- nmr_interpolate_1D(dataset, axis = c(min = 3.7, max = 4.5, by = 2.3E-4))
   dataset <- nmr_baseline_removal(dataset, lambda = 6, p = 0.01)
   dataset <- nmr_normalize(dataset, method = "area")
+
   metadata <- nmr_meta_get(dataset, groups = "external")
   metadata$Group <- c("A", "B", "B")
-  dataset <- nmr_meta_add(dataset, metadata[,c("NMRExperiment", "Group")])
   # Artificially create a larger dataset
   larger_metadata <- rbind(metadata, metadata, metadata, metadata, metadata)
   
   larger_metadata$NMRExperiment <- as.character(
     seq(from = 10, by = 10, length.out = nrow(larger_metadata))
   )
+  data_matrix <- nmr_data(dataset)
   dataset <- new_nmr_dataset_1D(
     ppm_axis = dataset$axis,
-    data_1r = rbind(dataset$data_1r, dataset$data_1r, dataset$data_1r, dataset$data_1r, dataset$data_1r),
+    data_1r = rbind(data_matrix, data_matrix, data_matrix, data_matrix, data_matrix),
     metadata = list(external = larger_metadata)
   )
   dataset
@@ -60,6 +59,7 @@ test_that("nmr_data_analysis works", {
   skip_if(is_mixomics_broken(), message = "Skipping nmr_data_analysis because mixOmics is broken. See https://github.com/mixOmicsTeam/mixOmics/pull/199")
   dataset <- prepare_dataset()
   methodology <- plsda_auroc_vip_method(ncomp = 2)
+  set.seed(123L)
   out <- nmr_data_analysis(
     dataset,
     y_column = "Group",
