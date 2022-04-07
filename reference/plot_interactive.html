@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.5.1</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_interactive</span><span class="op">(</span><span class="va">plt</span>, <span class="va">html_filename</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_interactive</span><span class="op">(</span><span class="va">plt</span>, <span class="va">html_filename</span>, overwrite <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -83,6 +83,8 @@
 <dd><p>A plot created with plotly or ggplot2</p></dd>
 <dt>html_filename</dt>
 <dd><p>The file name where the plot will be saved</p></dd>
+<dt>overwrite</dt>
+<dd><p>Overwrite the lib/ directory (use <code>NULL</code> to prompt the user)</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>

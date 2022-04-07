@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.5.1</span>
       </span>
     </div>
 
@@ -127,13 +127,11 @@
 <div class="section level2">
 <h2 id="enable-parallellization">Enable parallellization<a class="anchor" aria-label="anchor" href="#enable-parallellization"></a>
 </h2>
-<p>This package is able to parallellize several functions through the use of the <code>future</code> and <code>furrr</code> packages. Whether to parallelize or not is left to the user that can control the parallellization by setting “plans”.</p>
+<p>This package is able to parallellize several functions through the use of the <code>BiocParallel</code> package. Whether to parallelize or not is left to the user that can control the parallellization registering backends. Please check the <code>BiocParallel</code> introduction for further details</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#plan(sequential()) # disable parallellization (default)</span>
-<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu"><a href="https://future.futureverse.org/reference/multiprocess.html" class="external-link">multiprocess</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="co"># enable parallellization with 4 workers</span>
-<span class="co">#&gt; Warning: Strategy 'multiprocess' is deprecated in future (&gt;= 1.20.0). Instead,</span>
-<span class="co">#&gt; explicitly specify either 'multisession' or 'multicore'. In the current R</span>
-<span class="co">#&gt; session, 'multiprocess' equals 'multicore'.</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Bioconductor/BiocParallel" class="external-link">BiocParallel</a></span><span class="op">)</span>
+<span class="co">#register(SerialParam(), default = TRUE)  # disable parallellization</span>
+<span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SnowParam-class.html" class="external-link">SnowParam</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>, default <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># enable parallellization with 4 workers</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="data-the-meoh_plasma_extraction-dataset">Data: The <code>MeOH_plasma_extraction</code> dataset<a class="anchor" aria-label="anchor" href="#data-the-meoh_plasma_extraction-dataset"></a>
@@ -319,47 +317,29 @@
 <div class="section level2">
 <h2 id="peak-detection">Peak detection<a class="anchor" aria-label="anchor" href="#peak-detection"></a>
 </h2>
-<p>The peak detection is performed on short spectra segments using a continuous wavelet transform. See <code><a href="../reference/Peak_detection.html">?nmr_detect_peaks</a></code> for more information.</p>
+<p>The peak detection is performed on short spectra segments using a continuous wavelet transform. See <code><a href="../reference/nmr_detect_peaks.html">?nmr_detect_peaks</a></code> for more information.</p>
 <p>Our current approach relies on the use of the baseline threshold (<code>baselineThresh</code>) automatic calculated (see <code><a href="../reference/nmr_baseline_threshold.html">?nmr_baseline_threshold</a></code>) and the Signal to Noise Threshold (<code>SNR.Th</code>) to discriminate valid peaks from noise.</p>
 <p>The combination of the <code>baselineThresh</code> and the <code>SNR.Th</code> optimizes the number of actual peaks from noise.</p>
 <p>The advantage of the <code>SNR.Th</code> method is that it estimates the noise level on each spectra region independently, so in practice it can be used as a dynamic baseline threshold level.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">peak_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Peak_detection.html">nmr_detect_peaks</a></span><span class="op">(</span><span class="va">dataset</span>,
+<code class="sourceCode R"><span class="va">peak_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_detect_peaks.html">nmr_detect_peaks</a></span><span class="op">(</span><span class="va">dataset</span>,
                                nDivRange_ppm <span class="op">=</span> <span class="fl">0.1</span>,
                                scales <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">16</span>, <span class="fl">2</span><span class="op">)</span>,
                                baselineThresh <span class="op">=</span> <span class="cn">NULL</span>, SNR.Th <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
-<span class="co">#&gt; Warning: UNRELIABLE VALUE: Future ('&lt;none&gt;') unexpectedly generated random</span>
-<span class="co">#&gt; numbers without specifying argument 'seed'. There is a risk that those random</span>
-<span class="co">#&gt; numbers are not statistically sound and the overall results might be invalid.</span>
-<span class="co">#&gt; To fix this, specify 'seed=TRUE'. This ensures that proper, parallel-safe random</span>
-<span class="co">#&gt; numbers are produced via the L'Ecuyer-CMRG method. To disable this check, use</span>
-<span class="co">#&gt; 'seed=NULL', or set option 'future.rng.onMisuse' to "ignore".</span>
-<span class="co">#&gt; Warning: UNRELIABLE VALUE: Future ('&lt;none&gt;') unexpectedly generated random</span>
-<span class="co">#&gt; numbers without specifying argument 'seed'. There is a risk that those random</span>
-<span class="co">#&gt; numbers are not statistically sound and the overall results might be invalid.</span>
-<span class="co">#&gt; To fix this, specify 'seed=TRUE'. This ensures that proper, parallel-safe random</span>
-<span class="co">#&gt; numbers are produced via the L'Ecuyer-CMRG method. To disable this check, use</span>
-<span class="co">#&gt; 'seed=NULL', or set option 'future.rng.onMisuse' to "ignore".</span>
-<span class="co">#&gt; Warning: UNRELIABLE VALUE: Future ('&lt;none&gt;') unexpectedly generated random</span>
-<span class="co">#&gt; numbers without specifying argument 'seed'. There is a risk that those random</span>
-<span class="co">#&gt; numbers are not statistically sound and the overall results might be invalid.</span>
-<span class="co">#&gt; To fix this, specify 'seed=TRUE'. This ensures that proper, parallel-safe random</span>
-<span class="co">#&gt; numbers are produced via the L'Ecuyer-CMRG method. To disable this check, use</span>
-<span class="co">#&gt; 'seed=NULL', or set option 'future.rng.onMisuse' to "ignore".</span>
 <span class="va">NMRExp_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_align_find_ref.html">nmr_align_find_ref</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Your reference is NMRExperiment "</span>, <span class="va">NMRExp_ref</span><span class="op">)</span>
-<span class="co">#&gt; Your reference is NMRExperiment 20</span>
-<span class="fu"><a href="../reference/Peak_detection.html">nmr_detect_peaks_plot</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span>, NMRExperiment <span class="op">=</span> <span class="st">"20"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">3.8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="co">#&gt; Your reference is NMRExperiment 30</span>
+<span class="fu"><a href="../reference/nmr_detect_peaks_plot.html">nmr_detect_peaks_plot</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span>, NMRExperiment <span class="op">=</span> <span class="st">"20"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">3.8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="spectra-alignment">Spectra alignment<a class="anchor" aria-label="anchor" href="#spectra-alignment"></a>
 </h2>
-<p>To align the sample, we use the <code>nmr_align</code> function, which in turn uses a hierarchical clustering method (see <code><a href="../reference/Peak_detection.html">?nmr_align</a></code> for further details).</p>
+<p>To align the sample, we use the <code>nmr_align</code> function, which in turn uses a hierarchical clustering method (see <code><a href="../reference/nmr_align.html">?nmr_align</a></code> for further details).</p>
 <p>The <code>maxShift_ppm</code> limits the maximum shift allowed for the spectra.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nmr_exp_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_align_find_ref.html">nmr_align_find_ref</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span><span class="op">)</span>
-<span class="va">dataset_align</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Peak_detection.html">nmr_align</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span>, <span class="va">nmr_exp_ref</span>, maxShift_ppm <span class="op">=</span> <span class="fl">0.0015</span>, acceptLostPeak <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<span class="va">dataset_align</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_align.html">nmr_align</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span>, <span class="va">nmr_exp_ref</span>, maxShift_ppm <span class="op">=</span> <span class="fl">0.0015</span>, acceptLostPeak <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.025</span>, <span class="fl">3.063</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
@@ -382,9 +362,9 @@
 <code class="sourceCode R"><span class="va">diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_normalize.html">nmr_normalize_extra_info</a></span><span class="op">(</span><span class="va">dataset_norm</span><span class="op">)</span>
 <span class="va">diagnostic</span><span class="op">$</span><span class="va">norm_factor</span>
 <span class="co">#&gt;   NMRExperiment norm_factor norm_factor_norm</span>
-<span class="co">#&gt; 1            10   520968669        0.8708718</span>
-<span class="co">#&gt; 2            20   690154843        1.1536901</span>
-<span class="co">#&gt; 3            30   598215122        1.0000000</span>
+<span class="co">#&gt; 1            10   520786775        0.8706322</span>
+<span class="co">#&gt; 2            20   689299182        1.1523450</span>
+<span class="co">#&gt; 3            30   598170829        1.0000000</span>
 <span class="va">diagnostic</span><span class="op">$</span><span class="va">plot</span></code></pre></div>
 <p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
 </div>
@@ -396,199 +376,371 @@
 </h3>
 <p>If we want to integrate the whole spectra, we need ppm from the <code>peak_table</code>. See <code>Peak detection</code> section. The function <code>nmr_integrate_peak_positions</code> generates a new <code>nmr_dataset_1D</code> object containing the integrals from the <code>peak_table</code> (ppm values corresponding to detected peaks).</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/Peak_detection.html">nmr_integrate_peak_positions</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/nmr_integrate_peak_positions.html">nmr_integrate_peak_positions</a></span><span class="op">(</span>
   samples <span class="op">=</span> <span class="va">dataset_norm</span>,
   peak_pos_ppm <span class="op">=</span> <span class="va">peak_table</span><span class="op">$</span><span class="va">ppm</span>,
   peak_width_ppm <span class="op">=</span> <span class="fl">0.006</span><span class="op">)</span>
 <span class="co">#&gt; New names:</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_-0.0002` -&gt; `ppm_-0.0002...1`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9032` -&gt; `ppm_0.9032...4`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9085` -&gt; `ppm_0.9085...5`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9196` -&gt; `ppm_0.9196...6`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9437` -&gt; `ppm_0.9437...7`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9554` -&gt; `ppm_0.9554...8`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9658` -&gt; `ppm_0.9658...9`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9902` -&gt; `ppm_0.9902...11`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0019` -&gt; `ppm_1.0019...12`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0093` -&gt; `ppm_1.0093...13`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0208` -&gt; `ppm_1.0208...14`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0410` -&gt; `ppm_1.0410...15`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1979` -&gt; `ppm_1.1979...17`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2084` -&gt; `ppm_1.2084...18`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...19`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3262` -&gt; `ppm_1.3262...22`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3377` -&gt; `ppm_1.3377...23`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4424` -&gt; `ppm_1.4424...25`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4913` -&gt; `ppm_1.4913...27`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7351` -&gt; `ppm_1.7351...28`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9210` -&gt; `ppm_1.9210...29`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0307` -&gt; `ppm_2.0307...30`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0422` -&gt; `ppm_2.0422...31`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0806` -&gt; `ppm_2.0806...35`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1324` -&gt; `ppm_2.1324...36`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3451` -&gt; `ppm_2.3451...40`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...41`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...42`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3644` -&gt; `ppm_2.3644...43`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3711` -&gt; `ppm_2.3711...44`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.7577` -&gt; `ppm_2.7577...49`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0305` -&gt; `ppm_3.0305...51`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0404` -&gt; `ppm_3.0404...52`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0489` -&gt; `ppm_3.0489...53`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2081` -&gt; `ppm_3.2081...56`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2154` -&gt; `ppm_3.2154...57`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2320` -&gt; `ppm_3.2320...58`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2382` -&gt; `ppm_3.2382...59`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2672` -&gt; `ppm_3.2672...61`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2706` -&gt; `ppm_3.2706...62`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4031` -&gt; `ppm_3.4031...66`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4243` -&gt; `ppm_3.4243...69`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4829` -&gt; `ppm_3.4829...76`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4981` -&gt; `ppm_3.4981...78`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5135` -&gt; `ppm_3.5135...79`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5372` -&gt; `ppm_3.5372...81`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7042` -&gt; `ppm_3.7042...91`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7141` -&gt; `ppm_3.7141...92`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7200` -&gt; `ppm_3.7200...93`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7237` -&gt; `ppm_3.7237...94`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7348` -&gt; `ppm_3.7348...95`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7442` -&gt; `ppm_3.7442...96`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7757` -&gt; `ppm_3.7757...99`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8233` -&gt; `ppm_3.8233...102`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8438` -&gt; `ppm_3.8438...105`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8528` -&gt; `ppm_3.8528...107`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8886` -&gt; `ppm_3.8886...109`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8923` -&gt; `ppm_3.8923...110`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9091` -&gt; `ppm_3.9091...111`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9128` -&gt; `ppm_3.9128...112`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9333` -&gt; `ppm_3.9333...113`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9493` -&gt; `ppm_3.9493...114`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9917` -&gt; `ppm_3.9917...117`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.0020` -&gt; `ppm_4.0020...118`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1205` -&gt; `ppm_4.1205...121`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1320` -&gt; `ppm_4.1320...122`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.2369` -&gt; `ppm_5.2369...123`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.2458` -&gt; `ppm_8.2458...130`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.3515` -&gt; `ppm_8.3515...131`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_-0.0002` -&gt; `ppm_-0.0002...132`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9085` -&gt; `ppm_0.9085...135`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9196` -&gt; `ppm_0.9196...136`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9437` -&gt; `ppm_0.9437...137`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9554` -&gt; `ppm_0.9554...138`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9658` -&gt; `ppm_0.9658...139`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0093` -&gt; `ppm_1.0093...143`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0205` -&gt; `ppm_1.0205...144`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2084` -&gt; `ppm_1.2084...149`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...150`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2294` -&gt; `ppm_1.2294...151`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3262` -&gt; `ppm_1.3262...155`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3377` -&gt; `ppm_1.3377...156`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4308` -&gt; `ppm_1.4308...157`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4424` -&gt; `ppm_1.4424...158`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4794` -&gt; `ppm_1.4794...159`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0422` -&gt; `ppm_2.0422...166`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...173`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1324` -&gt; `ppm_2.1324...174`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3451` -&gt; `ppm_2.3451...177`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...178`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...179`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3644` -&gt; `ppm_2.3644...180`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4063` -&gt; `ppm_2.4063...182`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2154` -&gt; `ppm_3.2154...196`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2706` -&gt; `ppm_3.2706...201`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.3930` -&gt; `ppm_3.3930...204`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4185` -&gt; `ppm_3.4185...206`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5793` -&gt; `ppm_3.5793...221`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6428` -&gt; `ppm_3.6428...226`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6499` -&gt; `ppm_3.6499...227`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7237` -&gt; `ppm_3.7237...231`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7348` -&gt; `ppm_3.7348...232`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7642` -&gt; `ppm_3.7642...235`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7757` -&gt; `ppm_3.7757...236`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8438` -&gt; `ppm_3.8438...241`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8923` -&gt; `ppm_3.8923...247`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9128` -&gt; `ppm_3.9128...249`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9917` -&gt; `ppm_3.9917...255`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.0020` -&gt; `ppm_4.0020...256`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.2066` -&gt; `ppm_7.2066...272`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.2458` -&gt; `ppm_8.2458...275`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_-0.0002` -&gt; `ppm_-0.0002...277`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9032` -&gt; `ppm_0.9032...280`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9085` -&gt; `ppm_0.9085...281`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9196` -&gt; `ppm_0.9196...282`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9902` -&gt; `ppm_0.9902...287`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0019` -&gt; `ppm_1.0019...288`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0205` -&gt; `ppm_1.0205...290`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0208` -&gt; `ppm_1.0208...291`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0410` -&gt; `ppm_1.0410...292`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1979` -&gt; `ppm_1.1979...294`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2084` -&gt; `ppm_1.2084...295`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...296`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2294` -&gt; `ppm_1.2294...297`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3262` -&gt; `ppm_1.3262...299`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3377` -&gt; `ppm_1.3377...300`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4308` -&gt; `ppm_1.4308...301`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4424` -&gt; `ppm_1.4424...302`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4794` -&gt; `ppm_1.4794...303`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4913` -&gt; `ppm_1.4913...304`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7351` -&gt; `ppm_1.7351...305`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9210` -&gt; `ppm_1.9210...306`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0307` -&gt; `ppm_2.0307...307`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0806` -&gt; `ppm_2.0806...311`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...312`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...318`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...319`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3711` -&gt; `ppm_2.3711...321`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4063` -&gt; `ppm_2.4063...322`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.7577` -&gt; `ppm_2.7577...327`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0305` -&gt; `ppm_3.0305...329`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0404` -&gt; `ppm_3.0404...330`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0489` -&gt; `ppm_3.0489...331`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2081` -&gt; `ppm_3.2081...333`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2320` -&gt; `ppm_3.2320...335`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2382` -&gt; `ppm_3.2382...336`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2672` -&gt; `ppm_3.2672...338`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.3930` -&gt; `ppm_3.3930...342`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4031` -&gt; `ppm_3.4031...343`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4185` -&gt; `ppm_3.4185...345`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4243` -&gt; `ppm_3.4243...346`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4829` -&gt; `ppm_3.4829...352`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4981` -&gt; `ppm_3.4981...354`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5135` -&gt; `ppm_3.5135...355`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5372` -&gt; `ppm_3.5372...357`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5793` -&gt; `ppm_3.5793...361`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6428` -&gt; `ppm_3.6428...365`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6499` -&gt; `ppm_3.6499...366`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7042` -&gt; `ppm_3.7042...367`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7141` -&gt; `ppm_3.7141...368`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7200` -&gt; `ppm_3.7200...369`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7348` -&gt; `ppm_3.7348...371`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7442` -&gt; `ppm_3.7442...372`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7642` -&gt; `ppm_3.7642...374`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8233` -&gt; `ppm_3.8233...378`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8528` -&gt; `ppm_3.8528...382`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8886` -&gt; `ppm_3.8886...384`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9091` -&gt; `ppm_3.9091...386`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9333` -&gt; `ppm_3.9333...388`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9493` -&gt; `ppm_3.9493...389`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1205` -&gt; `ppm_4.1205...398`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1320` -&gt; `ppm_4.1320...399`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.2369` -&gt; `ppm_5.2369...400`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.2066` -&gt; `ppm_7.2066...405`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.3515` -&gt; `ppm_8.3515...407`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_-0.0002` -&gt; `ppm_-0.0002...6`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8607` -&gt; `ppm_0.8607...22`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8655` -&gt; `ppm_0.8655...23`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8729` -&gt; `ppm_0.8729...24`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8784` -&gt; `ppm_0.8784...25`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8910` -&gt; `ppm_0.8910...26`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9032` -&gt; `ppm_0.9032...27`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9085` -&gt; `ppm_0.9085...28`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9196` -&gt; `ppm_0.9196...30`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9313` -&gt; `ppm_0.9313...31`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9437` -&gt; `ppm_0.9437...32`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9554` -&gt; `ppm_0.9554...33`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9658` -&gt; `ppm_0.9658...34`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9902` -&gt; `ppm_0.9902...36`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0019` -&gt; `ppm_1.0019...37`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0093` -&gt; `ppm_1.0093...38`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0208` -&gt; `ppm_1.0208...39`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0410` -&gt; `ppm_1.0410...40`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0716` -&gt; `ppm_1.0716...43`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0803` -&gt; `ppm_1.0803...44`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1505` -&gt; `ppm_1.1505...46`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1979` -&gt; `ppm_1.1979...47`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2084` -&gt; `ppm_1.2084...48`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...49`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3262` -&gt; `ppm_1.3262...54`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3377` -&gt; `ppm_1.3377...55`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4424` -&gt; `ppm_1.4424...57`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4913` -&gt; `ppm_1.4913...59`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.5693` -&gt; `ppm_1.5693...66`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6195` -&gt; `ppm_1.6195...72`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6443` -&gt; `ppm_1.6443...75`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6562` -&gt; `ppm_1.6562...77`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6799` -&gt; `ppm_1.6799...80`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6990` -&gt; `ppm_1.6990...86`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7351` -&gt; `ppm_1.7351...92`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7614` -&gt; `ppm_1.7614...95`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8131` -&gt; `ppm_1.8131...97`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8748` -&gt; `ppm_1.8748...103`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9210` -&gt; `ppm_1.9210...106`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9313` -&gt; `ppm_1.9313...107`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0026` -&gt; `ppm_2.0026...114`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0194` -&gt; `ppm_2.0194...117`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0307` -&gt; `ppm_2.0307...118`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0422` -&gt; `ppm_2.0422...119`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0806` -&gt; `ppm_2.0806...123`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1149` -&gt; `ppm_2.1149...126`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1192` -&gt; `ppm_2.1192...127`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...128`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1324` -&gt; `ppm_2.1324...129`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1572` -&gt; `ppm_2.1572...134`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1655` -&gt; `ppm_2.1655...135`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2835` -&gt; `ppm_2.2835...143`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2950` -&gt; `ppm_2.2950...144`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3251` -&gt; `ppm_2.3251...147`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3451` -&gt; `ppm_2.3451...149`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...150`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...151`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3644` -&gt; `ppm_2.3644...152`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3711` -&gt; `ppm_2.3711...153`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4196` -&gt; `ppm_2.4196...157`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4912` -&gt; `ppm_2.4912...166`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4953` -&gt; `ppm_2.4953...167`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.5284` -&gt; `ppm_2.5284...171`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.6216` -&gt; `ppm_2.6216...177`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.7577` -&gt; `ppm_2.7577...188`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.9332` -&gt; `ppm_2.9332...199`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0305` -&gt; `ppm_3.0305...206`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0404` -&gt; `ppm_3.0404...207`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0489` -&gt; `ppm_3.0489...208`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2081` -&gt; `ppm_3.2081...218`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2154` -&gt; `ppm_3.2154...219`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2320` -&gt; `ppm_3.2320...220`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2382` -&gt; `ppm_3.2382...221`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2672` -&gt; `ppm_3.2672...223`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2706` -&gt; `ppm_3.2706...224`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4031` -&gt; `ppm_3.4031...228`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4243` -&gt; `ppm_3.4243...231`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4829` -&gt; `ppm_3.4829...238`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4981` -&gt; `ppm_3.4981...240`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5135` -&gt; `ppm_3.5135...241`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5372` -&gt; `ppm_3.5372...243`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7042` -&gt; `ppm_3.7042...254`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7141` -&gt; `ppm_3.7141...255`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7200` -&gt; `ppm_3.7200...256`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7237` -&gt; `ppm_3.7237...257`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7348` -&gt; `ppm_3.7348...258`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7442` -&gt; `ppm_3.7442...259`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7757` -&gt; `ppm_3.7757...262`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8233` -&gt; `ppm_3.8233...265`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8438` -&gt; `ppm_3.8438...268`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8528` -&gt; `ppm_3.8528...270`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8886` -&gt; `ppm_3.8886...273`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8923` -&gt; `ppm_3.8923...274`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9091` -&gt; `ppm_3.9091...275`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9128` -&gt; `ppm_3.9128...276`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9333` -&gt; `ppm_3.9333...277`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9493` -&gt; `ppm_3.9493...278`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9917` -&gt; `ppm_3.9917...282`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.0020` -&gt; `ppm_4.0020...283`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.0108` -&gt; `ppm_4.0108...284`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1205` -&gt; `ppm_4.1205...288`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1320` -&gt; `ppm_4.1320...289`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1927` -&gt; `ppm_4.1927...291`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2281` -&gt; `ppm_4.2281...293`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2398` -&gt; `ppm_4.2398...295`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2566` -&gt; `ppm_4.2566...299`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.4376` -&gt; `ppm_4.4376...315`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.4531` -&gt; `ppm_4.4531...317`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5218` -&gt; `ppm_4.5218...320`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5221` -&gt; `ppm_4.5221...321`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5906` -&gt; `ppm_4.5906...324`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5991` -&gt; `ppm_4.5991...325`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.2369` -&gt; `ppm_5.2369...329`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.4154` -&gt; `ppm_5.4154...336`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.1026` -&gt; `ppm_6.1026...350`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9009` -&gt; `ppm_6.9009...361`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9154` -&gt; `ppm_6.9154...362`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.2894` -&gt; `ppm_7.2894...372`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3014` -&gt; `ppm_7.3014...373`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3409` -&gt; `ppm_7.3409...376`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3816` -&gt; `ppm_7.3816...380`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.4881` -&gt; `ppm_7.4881...387`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.5553` -&gt; `ppm_7.5553...390`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.2458` -&gt; `ppm_8.2458...407`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.3515` -&gt; `ppm_8.3515...409`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.4608` -&gt; `ppm_8.4608...411`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_-0.0002` -&gt; `ppm_-0.0002...422`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8110` -&gt; `ppm_0.8110...438`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8552` -&gt; `ppm_0.8552...442`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8607` -&gt; `ppm_0.8607...443`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8784` -&gt; `ppm_0.8784...446`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8910` -&gt; `ppm_0.8910...447`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9085` -&gt; `ppm_0.9085...449`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9196` -&gt; `ppm_0.9196...450`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9313` -&gt; `ppm_0.9313...451`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9437` -&gt; `ppm_0.9437...452`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9554` -&gt; `ppm_0.9554...453`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9658` -&gt; `ppm_0.9658...454`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0093` -&gt; `ppm_1.0093...458`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0205` -&gt; `ppm_1.0205...459`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0716` -&gt; `ppm_1.0716...463`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0803` -&gt; `ppm_1.0803...464`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1505` -&gt; `ppm_1.1505...468`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2084` -&gt; `ppm_1.2084...470`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...471`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2294` -&gt; `ppm_1.2294...472`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3262` -&gt; `ppm_1.3262...476`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3377` -&gt; `ppm_1.3377...477`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4308` -&gt; `ppm_1.4308...478`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4424` -&gt; `ppm_1.4424...479`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4794` -&gt; `ppm_1.4794...480`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.5693` -&gt; `ppm_1.5693...487`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6195` -&gt; `ppm_1.6195...491`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6319` -&gt; `ppm_1.6319...492`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6441` -&gt; `ppm_1.6441...494`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6560` -&gt; `ppm_1.6560...495`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6562` -&gt; `ppm_1.6562...496`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6675` -&gt; `ppm_1.6675...498`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6747` -&gt; `ppm_1.6747...499`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6799` -&gt; `ppm_1.6799...501`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6990` -&gt; `ppm_1.6990...503`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7075` -&gt; `ppm_1.7075...504`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7614` -&gt; `ppm_1.7614...511`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8752` -&gt; `ppm_1.8752...522`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9812` -&gt; `ppm_1.9812...530`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0422` -&gt; `ppm_2.0422...537`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0923` -&gt; `ppm_2.0923...542`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1192` -&gt; `ppm_2.1192...545`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...546`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1324` -&gt; `ppm_2.1324...547`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1572` -&gt; `ppm_2.1572...550`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1655` -&gt; `ppm_2.1655...551`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2515` -&gt; `ppm_2.2515...558`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2717` -&gt; `ppm_2.2717...561`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3451` -&gt; `ppm_2.3451...570`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...571`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...572`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3644` -&gt; `ppm_2.3644...573`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4063` -&gt; `ppm_2.4063...577`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4196` -&gt; `ppm_2.4196...578`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4456` -&gt; `ppm_2.4456...581`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4953` -&gt; `ppm_2.4953...586`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.5284` -&gt; `ppm_2.5284...590`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.7994` -&gt; `ppm_2.7994...606`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.9339` -&gt; `ppm_2.9339...615`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2154` -&gt; `ppm_3.2154...638`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2706` -&gt; `ppm_3.2706...643`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.3930` -&gt; `ppm_3.3930...646`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4185` -&gt; `ppm_3.4185...648`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5793` -&gt; `ppm_3.5793...663`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6428` -&gt; `ppm_3.6428...668`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6499` -&gt; `ppm_3.6499...669`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7237` -&gt; `ppm_3.7237...673`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7348` -&gt; `ppm_3.7348...674`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7642` -&gt; `ppm_3.7642...677`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7757` -&gt; `ppm_3.7757...678`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8438` -&gt; `ppm_3.8438...683`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8923` -&gt; `ppm_3.8923...689`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9128` -&gt; `ppm_3.9128...691`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9917` -&gt; `ppm_3.9917...698`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.0020` -&gt; `ppm_4.0020...699`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2281` -&gt; `ppm_4.2281...712`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2398` -&gt; `ppm_4.2398...714`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2566` -&gt; `ppm_4.2566...717`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5089` -&gt; `ppm_4.5089...735`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5092` -&gt; `ppm_4.5092...736`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5221` -&gt; `ppm_4.5221...737`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5991` -&gt; `ppm_4.5991...742`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.0973` -&gt; `ppm_5.0973...744`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.4154` -&gt; `ppm_5.4154...753`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.4220` -&gt; `ppm_5.4220...754`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.1026` -&gt; `ppm_6.1026...771`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9154` -&gt; `ppm_6.9154...790`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9626` -&gt; `ppm_6.9626...791`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.2066` -&gt; `ppm_7.2066...798`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3014` -&gt; `ppm_7.3014...803`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3409` -&gt; `ppm_7.3409...806`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.4881` -&gt; `ppm_7.4881...816`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.5415` -&gt; `ppm_7.5415...819`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.2458` -&gt; `ppm_8.2458...839`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.4608` -&gt; `ppm_8.4608...842`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_-0.0002` -&gt; `ppm_-0.0002...853`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8110` -&gt; `ppm_0.8110...865`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8552` -&gt; `ppm_0.8552...869`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8655` -&gt; `ppm_0.8655...871`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8729` -&gt; `ppm_0.8729...872`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9032` -&gt; `ppm_0.9032...875`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9085` -&gt; `ppm_0.9085...876`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9196` -&gt; `ppm_0.9196...877`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9313` -&gt; `ppm_0.9313...878`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9902` -&gt; `ppm_0.9902...883`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0019` -&gt; `ppm_1.0019...884`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0205` -&gt; `ppm_1.0205...886`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0208` -&gt; `ppm_1.0208...887`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0410` -&gt; `ppm_1.0410...888`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0716` -&gt; `ppm_1.0716...891`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0803` -&gt; `ppm_1.0803...892`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1505` -&gt; `ppm_1.1505...896`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1979` -&gt; `ppm_1.1979...897`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2084` -&gt; `ppm_1.2084...898`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...899`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2294` -&gt; `ppm_1.2294...900`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3262` -&gt; `ppm_1.3262...904`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3377` -&gt; `ppm_1.3377...905`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4308` -&gt; `ppm_1.4308...906`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4424` -&gt; `ppm_1.4424...907`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4794` -&gt; `ppm_1.4794...908`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4913` -&gt; `ppm_1.4913...909`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6319` -&gt; `ppm_1.6319...919`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6441` -&gt; `ppm_1.6441...920`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6443` -&gt; `ppm_1.6443...921`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6560` -&gt; `ppm_1.6560...922`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6562` -&gt; `ppm_1.6562...923`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6675` -&gt; `ppm_1.6675...924`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6747` -&gt; `ppm_1.6747...925`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6799` -&gt; `ppm_1.6799...927`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6990` -&gt; `ppm_1.6990...930`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7075` -&gt; `ppm_1.7075...933`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7351` -&gt; `ppm_1.7351...937`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7614` -&gt; `ppm_1.7614...940`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8131` -&gt; `ppm_1.8131...945`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8748` -&gt; `ppm_1.8748...952`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8752` -&gt; `ppm_1.8752...953`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9210` -&gt; `ppm_1.9210...956`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9313` -&gt; `ppm_1.9313...957`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9812` -&gt; `ppm_1.9812...962`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0026` -&gt; `ppm_2.0026...964`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0194` -&gt; `ppm_2.0194...967`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0307` -&gt; `ppm_2.0307...968`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0806` -&gt; `ppm_2.0806...974`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0923` -&gt; `ppm_2.0923...975`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1149` -&gt; `ppm_2.1149...977`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1192` -&gt; `ppm_2.1192...978`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...979`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2515` -&gt; `ppm_2.2515...992`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2717` -&gt; `ppm_2.2717...995`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2835` -&gt; `ppm_2.2835...997`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2950` -&gt; `ppm_2.2950...999`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3251` -&gt; `ppm_2.3251...1002`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...1005`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...1006`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3711` -&gt; `ppm_2.3711...1008`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4063` -&gt; `ppm_2.4063...1011`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4196` -&gt; `ppm_2.4196...1012`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4456` -&gt; `ppm_2.4456...1015`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4912` -&gt; `ppm_2.4912...1020`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.6216` -&gt; `ppm_2.6216...1029`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.7577` -&gt; `ppm_2.7577...1039`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.7994` -&gt; `ppm_2.7994...1041`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.9332` -&gt; `ppm_2.9332...1050`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.9339` -&gt; `ppm_2.9339...1051`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0305` -&gt; `ppm_3.0305...1058`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0404` -&gt; `ppm_3.0404...1059`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0489` -&gt; `ppm_3.0489...1060`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2081` -&gt; `ppm_3.2081...1070`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2320` -&gt; `ppm_3.2320...1072`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2382` -&gt; `ppm_3.2382...1073`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2672` -&gt; `ppm_3.2672...1075`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.3930` -&gt; `ppm_3.3930...1079`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4031` -&gt; `ppm_3.4031...1080`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4185` -&gt; `ppm_3.4185...1082`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4243` -&gt; `ppm_3.4243...1083`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4829` -&gt; `ppm_3.4829...1090`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4981` -&gt; `ppm_3.4981...1092`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5135` -&gt; `ppm_3.5135...1093`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5372` -&gt; `ppm_3.5372...1095`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5793` -&gt; `ppm_3.5793...1099`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6428` -&gt; `ppm_3.6428...1104`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6499` -&gt; `ppm_3.6499...1105`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7042` -&gt; `ppm_3.7042...1106`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7141` -&gt; `ppm_3.7141...1107`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7200` -&gt; `ppm_3.7200...1108`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7348` -&gt; `ppm_3.7348...1110`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7442` -&gt; `ppm_3.7442...1111`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7642` -&gt; `ppm_3.7642...1113`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8233` -&gt; `ppm_3.8233...1117`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8528` -&gt; `ppm_3.8528...1121`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8886` -&gt; `ppm_3.8886...1124`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9091` -&gt; `ppm_3.9091...1126`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9333` -&gt; `ppm_3.9333...1128`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9493` -&gt; `ppm_3.9493...1129`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.0108` -&gt; `ppm_4.0108...1136`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1205` -&gt; `ppm_4.1205...1141`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1320` -&gt; `ppm_4.1320...1142`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1927` -&gt; `ppm_4.1927...1145`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2281` -&gt; `ppm_4.2281...1148`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2566` -&gt; `ppm_4.2566...1154`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.4376` -&gt; `ppm_4.4376...1166`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.4531` -&gt; `ppm_4.4531...1168`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5089` -&gt; `ppm_4.5089...1171`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5092` -&gt; `ppm_4.5092...1172`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5218` -&gt; `ppm_4.5218...1173`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5906` -&gt; `ppm_4.5906...1178`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.0973` -&gt; `ppm_5.0973...1184`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.2369` -&gt; `ppm_5.2369...1187`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.4220` -&gt; `ppm_5.4220...1195`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9009` -&gt; `ppm_6.9009...1225`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9154` -&gt; `ppm_6.9154...1226`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9626` -&gt; `ppm_6.9626...1227`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.2066` -&gt; `ppm_7.2066...1234`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.2894` -&gt; `ppm_7.2894...1237`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3409` -&gt; `ppm_7.3409...1241`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3816` -&gt; `ppm_7.3816...1243`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.5415` -&gt; `ppm_7.5415...1250`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.5553` -&gt; `ppm_7.5553...1251`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.3515` -&gt; `ppm_8.3515...1273`</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.4608` -&gt; `ppm_8.4608...1274`</span>
 
-<span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/Peak_detection.html">get_integration_with_metadata</a></span><span class="op">(</span><span class="va">peak_table_integration</span><span class="op">)</span></code></pre></div>
+<span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/get_integration_with_metadata.html">get_integration_with_metadata</a></span><span class="op">(</span><span class="va">peak_table_integration</span><span class="op">)</span></code></pre></div>
 <p>We can also integrate with a specific peak position and some arbitrary width:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span>
-  <span class="fu"><a href="../reference/Peak_detection.html">nmr_integrate_peak_positions</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="va">dataset_norm</span>,
+  <span class="fu"><a href="../reference/nmr_integrate_peak_positions.html">nmr_integrate_peak_positions</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="va">dataset_norm</span>,
                             peak_pos_ppm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.1925</span>, <span class="fl">4.183</span>, <span class="fl">4.1775</span>, <span class="fl">4.17</span><span class="op">)</span>,
                             peak_width_ppm <span class="op">=</span> <span class="fl">0.006</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="co">#&gt;      ppm_4.1925   ppm_4.1830   ppm_4.1775   ppm_4.1700</span>
-<span class="co">#&gt; 10 3.199480e-08 3.307910e-08 2.319829e-08 1.343858e-08</span>
-<span class="co">#&gt; 20 2.543387e-08 1.775268e-08 1.808552e-08 9.949101e-09</span>
-<span class="co">#&gt; 30 2.571741e-08 2.550170e-08 1.911236e-08 8.217628e-09</span></code></pre></div>
+<span class="co">#&gt; 10 3.448593e-08 3.403713e-08 2.285832e-08 9.315293e-10</span>
+<span class="co">#&gt; 20 2.546544e-08 1.777472e-08 1.810798e-08 9.961452e-09</span>
+<span class="co">#&gt; 30 2.684927e-08 2.434735e-08 2.032502e-08 3.397328e-09</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="integration-based-on-peak-boundaries">2. Integration based on peak boundaries<a class="anchor" aria-label="anchor" href="#integration-based-on-peak-boundaries"></a>
@@ -609,18 +761,18 @@
 <span class="va">regions_basel_corr_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span><span class="va">regions_basel_corr_ds</span><span class="op">)</span>
 <span class="va">regions_basel_corr_matrix</span>
 <span class="co">#&gt;    pyroglutamic_acid1 pyroglutamic_acid2 pyroglutamic_acid3 pyroglutamic_acid4</span>
-<span class="co">#&gt; 10       2.679967e-08       3.307910e-08       2.441353e-08       5.588898e-08</span>
-<span class="co">#&gt; 20       2.152805e-08       1.775268e-08       1.201631e-08       5.132786e-08</span>
-<span class="co">#&gt; 30       2.299145e-08       2.550170e-08       1.822286e-08       5.187043e-08</span>
+<span class="co">#&gt; 10       2.610977e-08       3.403713e-08       2.677993e-08       5.515394e-08</span>
+<span class="co">#&gt; 20       2.155477e-08       1.777472e-08       1.203122e-08       5.139157e-08</span>
+<span class="co">#&gt; 30       2.115166e-08       2.434735e-08       1.876817e-08       5.188576e-08</span>
 
 
 <span class="va">regions_basel_not_corr_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_integrate_regions.html">nmr_integrate_regions</a></span><span class="op">(</span><span class="va">dataset_norm</span>, <span class="va">pyroglutamic_acid</span>, fix_baseline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">regions_basel_not_corr_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span><span class="va">regions_basel_not_corr_ds</span><span class="op">)</span>
 <span class="va">regions_basel_not_corr_matrix</span>
 <span class="co">#&gt;    pyroglutamic_acid1 pyroglutamic_acid2 pyroglutamic_acid3 pyroglutamic_acid4</span>
-<span class="co">#&gt; 10       2.784051e-07       3.337131e-07       2.691285e-07       3.776341e-07</span>
-<span class="co">#&gt; 20       2.720955e-07       3.286697e-07       2.667187e-07       3.788178e-07</span>
-<span class="co">#&gt; 30       2.698978e-07       3.248928e-07       2.624279e-07       3.671806e-07</span></code></pre></div>
+<span class="co">#&gt; 10       2.789542e-07       3.331880e-07       2.702796e-07       3.786158e-07</span>
+<span class="co">#&gt; 20       2.724333e-07       3.290777e-07       2.670498e-07       3.792881e-07</span>
+<span class="co">#&gt; 30       2.699134e-07       3.239257e-07       2.636944e-07       3.681288e-07</span></code></pre></div>
 <p>We may plot the integral values to explore variation based on the baseline subtraction.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span>
@@ -711,70 +863,45 @@
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] ggplot2_3.3.5  AlpsNMR_3.5.0  magrittr_2.0.3 future_1.24.0  dplyr_1.0.8   </span>
+<span class="co">#&gt; [1] BiocParallel_1.26.2 ggplot2_3.3.5       AlpsNMR_3.5.1      </span>
+<span class="co">#&gt; [4] magrittr_2.0.3      future_1.24.0       dplyr_1.0.8        </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;   [1] colorspace_2.0-3            ellipsis_0.3.2             </span>
-<span class="co">#&gt;   [3] rprojroot_2.0.3             speaq_2.6.1                </span>
-<span class="co">#&gt;   [5] corpcor_1.6.10              XVector_0.32.0             </span>
-<span class="co">#&gt;   [7] GenomicRanges_1.44.0        fs_1.5.2                   </span>
-<span class="co">#&gt;   [9] listenv_0.8.0               furrr_0.2.3                </span>
-<span class="co">#&gt;  [11] farver_2.1.0                ggrepel_0.9.1              </span>
-<span class="co">#&gt;  [13] RSpectra_0.16-0             fansi_1.0.3                </span>
-<span class="co">#&gt;  [15] mvtnorm_1.1-3               xml2_1.3.3                 </span>
-<span class="co">#&gt;  [17] codetools_0.2-18            impute_1.66.0              </span>
-<span class="co">#&gt;  [19] cachem_1.0.6                knitr_1.38                 </span>
-<span class="co">#&gt;  [21] itertools_0.1-3             mixOmics_6.16.3            </span>
-<span class="co">#&gt;  [23] jsonlite_1.8.0              cluster_2.1.3              </span>
-<span class="co">#&gt;  [25] missForest_1.4              httr_1.4.2                 </span>
-<span class="co">#&gt;  [27] compiler_4.1.1              assertthat_0.2.1           </span>
-<span class="co">#&gt;  [29] RcppZiggurat_0.1.6          Matrix_1.4-1               </span>
-<span class="co">#&gt;  [31] fastmap_1.1.0               cli_3.2.0                  </span>
-<span class="co">#&gt;  [33] htmltools_0.5.2             tools_4.1.1                </span>
-<span class="co">#&gt;  [35] qtl_1.50                    igraph_1.3.0               </span>
-<span class="co">#&gt;  [37] gtable_0.3.0                glue_1.6.2                 </span>
-<span class="co">#&gt;  [39] GenomeInfoDbData_1.2.6      reshape2_1.4.4             </span>
-<span class="co">#&gt;  [41] Rcpp_1.0.8.3                limSolve_1.5.6             </span>
-<span class="co">#&gt;  [43] Biobase_2.52.0              cellranger_1.1.0           </span>
-<span class="co">#&gt;  [45] jquerylib_0.1.4             pkgdown_2.0.2              </span>
-<span class="co">#&gt;  [47] vctrs_0.4.0                 baseline_1.3-1             </span>
-<span class="co">#&gt;  [49] progressr_0.10.0            iterators_1.0.14           </span>
-<span class="co">#&gt;  [51] xfun_0.30                   stringr_1.4.0              </span>
-<span class="co">#&gt;  [53] globals_0.14.0              rvest_1.0.2                </span>
-<span class="co">#&gt;  [55] lpSolve_5.6.15              lifecycle_1.0.1            </span>
-<span class="co">#&gt;  [57] zlibbioc_1.38.0             MASS_7.3-56                </span>
-<span class="co">#&gt;  [59] scales_1.1.1                ragg_1.2.2                 </span>
-<span class="co">#&gt;  [61] doSNOW_1.0.20               MatrixGenerics_1.4.3       </span>
-<span class="co">#&gt;  [63] parallel_4.1.1              SummarizedExperiment_1.22.0</span>
-<span class="co">#&gt;  [65] MassSpecWavelet_1.58.0      SparseM_1.81               </span>
-<span class="co">#&gt;  [67] RColorBrewer_1.1-3          yaml_2.3.5                 </span>
-<span class="co">#&gt;  [69] memoise_2.0.1               gridExtra_2.3              </span>
-<span class="co">#&gt;  [71] sass_0.4.1                  stringi_1.7.6              </span>
-<span class="co">#&gt;  [73] highr_0.9                   S4Vectors_0.30.2           </span>
-<span class="co">#&gt;  [75] desc_1.4.1                  randomForest_4.7-1         </span>
-<span class="co">#&gt;  [77] pcaPP_1.9-74                foreach_1.5.2              </span>
-<span class="co">#&gt;  [79] BiocGenerics_0.38.0         BiocParallel_1.26.2        </span>
-<span class="co">#&gt;  [81] GenomeInfoDb_1.28.4         rlang_1.0.2                </span>
-<span class="co">#&gt;  [83] pkgconfig_2.0.3             systemfonts_1.0.4          </span>
-<span class="co">#&gt;  [85] matrixStats_0.61.0          bitops_1.0-7               </span>
-<span class="co">#&gt;  [87] evaluate_0.15               lattice_0.20-45            </span>
-<span class="co">#&gt;  [89] purrr_0.3.4                 labeling_0.4.2             </span>
-<span class="co">#&gt;  [91] Rfast_2.0.6                 tidyselect_1.1.2           </span>
-<span class="co">#&gt;  [93] parallelly_1.30.0           plyr_1.8.7                 </span>
-<span class="co">#&gt;  [95] R6_2.5.1                    IRanges_2.26.0             </span>
-<span class="co">#&gt;  [97] snow_0.4-4                  generics_0.1.2             </span>
-<span class="co">#&gt;  [99] DelayedArray_0.18.0         pillar_1.7.0               </span>
-<span class="co">#&gt; [101] withr_2.5.0                 mQTL_1.0                   </span>
-<span class="co">#&gt; [103] RCurl_1.98-1.6              tibble_3.1.6               </span>
-<span class="co">#&gt; [105] crayon_1.5.1                rARPACK_0.11-0             </span>
-<span class="co">#&gt; [107] utf8_1.2.2                  ellipse_0.4.2              </span>
-<span class="co">#&gt; [109] rmarkdown_2.13              grid_4.1.1                 </span>
-<span class="co">#&gt; [111] readxl_1.4.0                data.table_1.14.2          </span>
-<span class="co">#&gt; [113] digest_0.6.29               tidyr_1.2.0                </span>
-<span class="co">#&gt; [115] outliers_0.15               textshaping_0.3.6          </span>
-<span class="co">#&gt; [117] signal_0.7-7                stats4_4.1.1               </span>
-<span class="co">#&gt; [119] munsell_0.5.0               bslib_0.3.1                </span>
-<span class="co">#&gt; [121] quadprog_1.5-8</span></code></pre></div>
+<span class="co">#&gt;   [1] matrixStats_0.61.0     fs_1.5.2               httr_1.4.2            </span>
+<span class="co">#&gt;   [4] RColorBrewer_1.1-3     rprojroot_2.0.3        tools_4.1.1           </span>
+<span class="co">#&gt;   [7] bslib_0.3.1            utf8_1.2.2             R6_2.5.1              </span>
+<span class="co">#&gt;  [10] colorspace_2.0-3       withr_2.5.0            mQTL_1.0              </span>
+<span class="co">#&gt;  [13] tidyselect_1.1.2       gridExtra_2.3          compiler_4.1.1        </span>
+<span class="co">#&gt;  [16] MassSpecWavelet_1.58.0 progressr_0.10.0       rvest_1.0.2           </span>
+<span class="co">#&gt;  [19] textshaping_0.3.6      cli_3.2.0              SparseM_1.81          </span>
+<span class="co">#&gt;  [22] xml2_1.3.3             desc_1.4.1             labeling_0.4.2        </span>
+<span class="co">#&gt;  [25] sass_0.4.1             scales_1.1.1           mvtnorm_1.1-3         </span>
+<span class="co">#&gt;  [28] randomForest_4.7-1     quadprog_1.5-8         pkgdown_2.0.2         </span>
+<span class="co">#&gt;  [31] systemfonts_1.0.4      stringr_1.4.0          digest_0.6.29         </span>
+<span class="co">#&gt;  [34] rmarkdown_2.13         pkgconfig_2.0.3        htmltools_0.5.2       </span>
+<span class="co">#&gt;  [37] parallelly_1.30.0      itertools_0.1-3        fastmap_1.1.0         </span>
+<span class="co">#&gt;  [40] highr_0.9              rlang_1.0.2            readxl_1.4.0          </span>
+<span class="co">#&gt;  [43] impute_1.66.0          jquerylib_0.1.4        farver_2.1.0          </span>
+<span class="co">#&gt;  [46] generics_0.1.2         jsonlite_1.8.0         speaq_2.6.1           </span>
+<span class="co">#&gt;  [49] qtl_1.50               Matrix_1.4-1           Rcpp_1.0.8.3          </span>
+<span class="co">#&gt;  [52] munsell_0.5.0          fansi_1.0.3            lifecycle_1.0.1       </span>
+<span class="co">#&gt;  [55] RcppZiggurat_0.1.6     stringi_1.7.6          yaml_2.3.5            </span>
+<span class="co">#&gt;  [58] MASS_7.3-56            plyr_1.8.7             grid_4.1.1            </span>
+<span class="co">#&gt;  [61] parallel_4.1.1         listenv_0.8.0          ggrepel_0.9.1         </span>
+<span class="co">#&gt;  [64] doSNOW_1.0.20          crayon_1.5.1           lattice_0.20-45       </span>
+<span class="co">#&gt;  [67] knitr_1.38             pillar_1.7.0           igraph_1.3.0          </span>
+<span class="co">#&gt;  [70] corpcor_1.6.10         reshape2_1.4.4         codetools_0.2-18      </span>
+<span class="co">#&gt;  [73] mixOmics_6.16.3        lpSolve_5.6.15         glue_1.6.2            </span>
+<span class="co">#&gt;  [76] evaluate_0.15          outliers_0.15          data.table_1.14.2     </span>
+<span class="co">#&gt;  [79] missForest_1.4         foreach_1.5.2          vctrs_0.4.0           </span>
+<span class="co">#&gt;  [82] cellranger_1.1.0       gtable_0.3.0           purrr_0.3.4           </span>
+<span class="co">#&gt;  [85] tidyr_1.2.0            cachem_1.0.6           xfun_0.30             </span>
+<span class="co">#&gt;  [88] limSolve_1.5.6         Rfast_2.0.6            RSpectra_0.16-0       </span>
+<span class="co">#&gt;  [91] baseline_1.3-1         ragg_1.2.2             pcaPP_1.9-74          </span>
+<span class="co">#&gt;  [94] rARPACK_0.11-0         signal_0.7-7           tibble_3.1.6          </span>
+<span class="co">#&gt;  [97] snow_0.4-4             iterators_1.0.14       memoise_2.0.1         </span>
+<span class="co">#&gt; [100] ellipse_0.4.2          cluster_2.1.3          globals_0.14.0        </span>
+<span class="co">#&gt; [103] ellipsis_0.3.2</span></code></pre></div>
 </div>
 <div class="footnotes">
 <hr>

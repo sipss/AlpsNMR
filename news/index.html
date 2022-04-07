@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.5.1</span>
       </span>
     </div>
 
@@ -68,6 +68,23 @@
       
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="3.5.1" id="alpsnmr-351-2022-04-07">AlpsNMR 3.5.1 (2022-04-07)<a class="anchor" aria-label="anchor" href="#alpsnmr-351-2022-04-07"></a></h2>
+<ul><li>
+<code>plot_interactive</code> now accepts an <code>overwrite</code> argument to avoid asking the user interactively</li>
+<li>Improve <code>nmr_detect_peaks_tune_snr</code> to tune the SNR threshold with the right other parameters</li>
+<li>Documentation improvements
+<ul><li>Split Peak_detection page into smaller and more specific pages</li>
+</ul></li>
+<li>Let the user choose how code is parallellized, as suggested by BiocParallel documentation.</li>
+<li>Replace furr/future parallellization loops with BiocParallel. Provides a warning in case a future::plan() has been set.</li>
+<li>Demote Imports to Suggests: SummarizedExpriment, S4Vectors, ggrepel, GGally</li>
+<li>Remove dependencies: tidyselect, assertthat, plyr, furrr</li>
+<li>Add <code><a href="../reference/download_MTBLS242.html">download_MTBLS242()</a></code> function to help download the data for the tutorial</li>
+<li>Skip mixOmics test if affected by <a href="https://github.com/mixOmicsTeam/mixOmics/pull/199" class="external-link uri">https://github.com/mixOmicsTeam/mixOmics/pull/199</a>
+</li>
+<li>Fix auto setting of the baseline threshold for the peak detection</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.3.4" id="alpsnmr-334-2021-09-16">AlpsNMR 3.3.4 (2021-09-16)<a class="anchor" aria-label="anchor" href="#alpsnmr-334-2021-09-16"></a></h2>
 <ul><li>Fix issue with PCA plots not working as expected</li>

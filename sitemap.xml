@@ -103,6 +103,9 @@
     <loc>/reference/format.nmr_dataset_peak_table.html</loc>
   </url>
   <url>
+    <loc>/reference/get_integration_with_metadata.html</loc>
+  </url>
+  <url>
     <loc>/reference/hmdb.html</loc>
   </url>
   <url>
@@ -137,6 +140,9 @@
   </url>
   <url>
     <loc>/reference/new_nmr_dataset_peak_table.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nmr_align.html</loc>
   </url>
   <url>
     <loc>/reference/nmr_align_find_ref.html</loc>
@@ -181,6 +187,15 @@
     <loc>/reference/nmr_dataset_peak_table_to_SummarizedExperiment.html</loc>
   </url>
   <url>
+    <loc>/reference/nmr_detect_peaks.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nmr_detect_peaks_plot.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nmr_detect_peaks_tune_snr.html</loc>
+  </url>
+  <url>
     <loc>/reference/nmr_diagnose-defunct.html</loc>
   </url>
   <url>
@@ -197,6 +212,9 @@
   </url>
   <url>
     <loc>/reference/nmr_identify_regions_urine.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nmr_integrate_peak_positions.html</loc>
   </url>
   <url>
     <loc>/reference/nmr_integrate_regions.html</loc>
@@ -338,5 +356,8 @@
   </url>
   <url>
     <loc>/reference/validate_nmr_dataset_family.html</loc>
+  </url>
+  <url>
+    <loc>/reference/validate_nmr_dataset_peak_table.html</loc>
   </url>
 </urlset>
