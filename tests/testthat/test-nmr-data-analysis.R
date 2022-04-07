@@ -31,9 +31,33 @@ prepare_dataset <- function() {
   dataset
 }
 
+##
+
+is_mixomics_broken <- function() {
+  # Issue https://github.com/mixOmicsTeam/mixOmics/pull/199 makes mixOmics-dependant test to fail.
+  # If the issue is fixed and released, depend on that mixomics version and remove this function
+  r_version <- as.package_version(paste0(R.Version()[c("major","minor")], collapse = "."))
+  if (r_version < "4.2") {
+    return(FALSE)
+  }
+  
+  # test for this mixOmics issue:
+  dummy_object <- list()
+  class(dummy_object) <- c("mint.block.pls", "mixo_pls")
+  errmsg <- tryCatch({
+      mixOmics::plotIndiv(dummy_object)
+    }, error = function(e)  {
+      conditionMessage(e)
+    }
+  )
+  grepl("length(class2) == 1L is not TRUE", errmsg)
+}
+
+
 ## Dataset can be used
 
 test_that("nmr_data_analysis works", {
+  skip_if(is_mixomics_broken(), message = "Skipping nmr_data_analysis because mixOmics is broken. See https://github.com/mixOmicsTeam/mixOmics/pull/199")
   dataset <- prepare_dataset()
   methodology <- plsda_auroc_vip_method(ncomp = 2)
   out <- nmr_data_analysis(
