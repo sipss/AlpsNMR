@@ -256,11 +256,7 @@ plot_interactive <- function(plt, html_filename, overwrite = NULL) {
             # warning user before some contents of lib folder could be destroyed
             rlang::inform("{libdir} folder already exists, plot_interactive will replace it. Continue? [y/n]:")
             response <- scan("stdin", character(), n=1)
-            if (!response %in% c("y", "Y")) {
-                overwrite <- FALSE
-            } else {
-                overwrite <- TRUE
-            }
+            overwrite <- response %in% c("y", "Y")
         } else {
             overwrite <- FALSE
         }
