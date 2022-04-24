@@ -30,7 +30,7 @@ nmr_exclude_region.nmr_dataset_1D <- function(samples, exclude = list(water = c(
     }
     axis_include <- is_ppm_included(samples[["axis"]], exclude)
     samples[["axis"]] <- samples[["axis"]][axis_include]
-    samples[["data_1r"]] <- samples[["data_1r"]][, axis_include]
+    samples[["data_1r"]] <- samples[["data_1r"]][, axis_include, drop=FALSE]
     samples[["excluded_regions"]] <- c(nmr_get_excluded_regions(samples), exclude)
     return(samples)
 }
