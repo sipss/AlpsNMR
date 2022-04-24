@@ -1,7 +1,7 @@
-pandoc: 2.11.4
+pandoc: 2.17.1.1
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   introduction-to-alpsnmr: introduction-to-alpsnmr.html
-last_built: 2022-04-22T11:13Z
+last_built: 2022-04-24T18:36Z
 

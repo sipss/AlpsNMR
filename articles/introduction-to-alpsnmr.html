@@ -90,9 +90,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to AlpsNMR</h1>
-                        <h4 data-toc-skip class="author">Sergio Oller, Institute for Bioengineering of Catalonia</h4>
+                        <h4 data-toc-skip class="author">Sergio Oller,
+Institute for Bioengineering of Catalonia</h4>
             
-            <h4 data-toc-skip class="date">2022-04-22</h4>
+            <h4 data-toc-skip class="date">2022-04-24</h4>
       
       
       <div class="hidden name"><code>introduction-to-alpsnmr.Rmd</code></div>
@@ -101,13 +102,29 @@
 
     
     
-<p>The <code>AlpsNMR</code> package was written with two purposes in mind:</p>
+<p>The <code>AlpsNMR</code> package was written with two purposes in
+mind:</p>
 <ul>
-<li>to help <strong>data analysts and NMR scientists</strong> to work with NMR samples.</li>
-<li>to help <strong>IT pipeline builders</strong> implement automated methods for preprocessing.</li>
+<li>to help <strong>data analysts and NMR scientists</strong> to work
+with NMR samples.</li>
+<li>to help <strong>IT pipeline builders</strong> implement automated
+methods for preprocessing.</li>
 </ul>
-<p>Functions from this package written for data analysts and NMR scientists are prefixed with <code>nmr_</code>, while higher level functions written for IT pipeline builders are prefixed with <code>pipe_</code>. The main reason why all exported functions have a prefix is to make it easy for the user to discover the functions from the package. By typing nmr_ RStudio will return the list of exported functions. In the R terminal, nmr_ followed by the tab key (⇥) twice will have the same effect. Other popular packages, follow similar approaches (e.g: <code>forcats</code>: <code>fct_*</code>, <code>stringr</code>: <code>str_*</code>).</p>
-<p>This vignette is written for the first group. It assumes some prior basic knowledge of NMR and data analysis, as well as some basic R programming. In case you are interested in building pipelines with this package, you may want to open the file saved in this directory (run it on your computer):</p>
+<p>Functions from this package written for data analysts and NMR
+scientists are prefixed with <code>nmr_</code>, while higher level
+functions written for IT pipeline builders are prefixed with
+<code>pipe_</code>. The main reason why all exported functions have a
+prefix is to make it easy for the user to discover the functions from
+the package. By typing nmr_ RStudio will return the list of exported
+functions. In the R terminal, nmr_ followed by the tab key (⇥) twice
+will have the same effect. Other popular packages, follow similar
+approaches (e.g: <code>forcats</code>: <code>fct_*</code>,
+<code>stringr</code>: <code>str_*</code>).</p>
+<p>This vignette is written for the first group. It assumes some prior
+basic knowledge of NMR and data analysis, as well as some basic R
+programming. In case you are interested in building pipelines with this
+package, you may want to open the file saved in this directory (run it
+on your computer):</p>
 <pre><code><span class="va">pipeline_example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"pipeline-rmd"</span>, <span class="st">"pipeline_example.R"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span>
 <span class="va">pipeline_example</span></code></pre>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -127,7 +144,11 @@
 <div class="section level2">
 <h2 id="enable-parallellization">Enable parallellization<a class="anchor" aria-label="anchor" href="#enable-parallellization"></a>
 </h2>
-<p>This package is able to parallellize several functions through the use of the <code>BiocParallel</code> package. Whether to parallelize or not is left to the user that can control the parallellization registering backends. Please check the <code>BiocParallel</code> introduction for further details</p>
+<p>This package is able to parallellize several functions through the
+use of the <code>BiocParallel</code> package. Whether to parallelize or
+not is left to the user that can control the parallellization
+registering backends. Please check the <code>BiocParallel</code>
+introduction for further details</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Bioconductor/BiocParallel" class="external-link">BiocParallel</a></span><span class="op">)</span>
 <span class="co">#register(SerialParam(), default = TRUE)  # disable parallellization</span>
@@ -136,13 +157,19 @@
 <div class="section level2">
 <h2 id="data-the-meoh_plasma_extraction-dataset">Data: The <code>MeOH_plasma_extraction</code> dataset<a class="anchor" aria-label="anchor" href="#data-the-meoh_plasma_extraction-dataset"></a>
 </h2>
-<p>To explore the basics of the AlpsNMR package, we have included four NMR samples acquired in a 600 MHz Bruker instrument bundled with the package. The samples are pooled quality control plasma samples, that were extracted with methanol, and therefore only contain small molecules.</p>
-<p>If you have installed this package, you can obtain the directory where the four samples are with the command</p>
+<p>To explore the basics of the AlpsNMR package, we have included four
+NMR samples acquired in a 600 MHz Bruker instrument bundled with the
+package. The samples are pooled quality control plasma samples, that
+were extracted with methanol, and therefore only contain small
+molecules.</p>
+<p>If you have installed this package, you can obtain the directory
+where the four samples are with the command</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MeOH_plasma_extraction_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span>
 <span class="va">MeOH_plasma_extraction_dir</span>
 <span class="co">#&gt; [1] "/__w/_temp/Library/AlpsNMR/dataset-demo"</span></code></pre></div>
-<p>The demo directory includes four samples (zipped) and a dummy Excel metadata file.</p>
+<p>The demo directory includes four samples (zipped) and a dummy Excel
+metadata file.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/10.zip</span></span>
@@ -150,7 +177,11 @@
 <span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/30.zip</span></span>
 <span class="co">#&gt; /__w/_temp/Library/AlpsNMR/dataset-demo/README.txt</span>
 <span class="co">#&gt; /__w/_temp/Library/AlpsNMR/dataset-demo/dummy_metadata.xlsx</span></code></pre></div>
-<p>Given the name of the dataset, one may guess that the dataset was used to check the Methanol extraction in serum samples. The dummy metadata consists of dummy information, just for the sake of showing how this package can integrate external metadata. The excel file consists of two tidy tables, in two sheets.</p>
+<p>Given the name of the dataset, one may guess that the dataset was
+used to check the Methanol extraction in serum samples. The dummy
+metadata consists of dummy information, just for the sake of showing how
+this package can integrate external metadata. The excel file consists of
+two tidy tables, in two sheets.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MeOH_plasma_extraction_xlsx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, <span class="st">"dummy_metadata.xlsx"</span><span class="op">)</span>
 <span class="va">exp_subj_id</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_xlsx</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
@@ -172,8 +203,11 @@
 <div class="section level2">
 <h2 id="loading-samples">Loading samples<a class="anchor" aria-label="anchor" href="#loading-samples"></a>
 </h2>
-<p>The function to read samples is called <code>nmr_read_samples</code>. It expects a character vector with the samples to load that can be paths to directories of Bruker format samples or paths to JDX files.</p>
-<p>Additionally, this function can filter by pulse sequences (e.g. load only NOESY samples) or loading only metadata.</p>
+<p>The function to read samples is called <code>nmr_read_samples</code>.
+It expects a character vector with the samples to load that can be paths
+to directories of Bruker format samples or paths to JDX files.</p>
+<p>Additionally, this function can filter by pulse sequences (e.g. load
+only NOESY samples) or loading only metadata.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">zip_files</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, glob <span class="op">=</span> <span class="st">"*.zip"</span><span class="op">)</span>
 <span class="va">zip_files</span>
@@ -183,7 +217,8 @@
 <span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_read_samples.html">nmr_read_samples</a></span><span class="op">(</span>sample_names <span class="op">=</span> <span class="va">zip_files</span><span class="op">)</span>
 <span class="va">dataset</span>
 <span class="co">#&gt; An nmr_dataset (3 samples)</span></code></pre></div>
-<p>As we have not added any metadata to this dataset, the only column we see is the <code>NMRExperiment</code>:</p>
+<p>As we have not added any metadata to this dataset, the only column we
+see is the <code>NMRExperiment</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 1</span></span>
@@ -196,7 +231,8 @@
 <div class="section level2">
 <h2 id="adding-metadata">Adding metadata<a class="anchor" aria-label="anchor" href="#adding-metadata"></a>
 </h2>
-<p>Initally our dataset only has the <code>NMRExperiment</code> column:</p>
+<p>Initally our dataset only has the <code>NMRExperiment</code>
+column:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 1</span></span>
@@ -205,8 +241,11 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 10           </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20           </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 30</span></code></pre></div>
-<p>The <code>exp_subj_id</code> table we loaded links the <code>NMRExperiment</code> to the <code>SubjectID</code>.</p>
-<p>As we already have the <code>NMRExperiment</code> column, we can use it as the merging column (note that both columns have the same column name to match the metadata such as group class, age, BMI…):</p>
+<p>The <code>exp_subj_id</code> table we loaded links the
+<code>NMRExperiment</code> to the <code>SubjectID</code>.</p>
+<p>As we already have the <code>NMRExperiment</code> column, we can use
+it as the merging column (note that both columns have the same column
+name to match the metadata such as group class, age, BMI…):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, metadata <span class="op">=</span> <span class="va">exp_subj_id</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span>
@@ -216,7 +255,9 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 30            Elia      baseline</span></code></pre></div>
-<p>If we have info from different files we can match them. For instance, now we have the <code>SubjectID</code> information so we can add the table that adds the <code>SubjectID</code> to the <code>Age</code>.</p>
+<p>If we have info from different files we can match them. For instance,
+now we have the <code>SubjectID</code> information so we can add the
+table that adds the <code>SubjectID</code> to the <code>Age</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, metadata <span class="op">=</span> <span class="va">subj_id_age</span>, by <span class="op">=</span> <span class="st">"SubjectID"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span>
@@ -226,34 +267,52 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 10            Ana       baseline     29</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20            Ana       3 months     29</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 30            Elia      baseline      0</span></code></pre></div>
-<p>Now we have our metadata integrated in the dataset and we can make use of it in further data analysis steps.</p>
+<p>Now we have our metadata integrated in the dataset and we can make
+use of it in further data analysis steps.</p>
 </div>
 <div class="section level2">
 <h2 id="interpolation">Interpolation<a class="anchor" aria-label="anchor" href="#interpolation"></a>
 </h2>
-<p>1D NMR samples can be interpolated together, in order to arrange all the spectra into a matrix, with one row per sample. The main parameters we would need is the range of ppm values that we want to interpolate and the resolution.</p>
-<p>We can see the ppm resolution by looking at the ppm axis of one sample:</p>
+<p>1D NMR samples can be interpolated together, in order to arrange all
+the spectra into a matrix, with one row per sample. The main parameters
+we would need is the range of ppm values that we want to interpolate and
+the resolution.</p>
+<p>We can see the ppm resolution by looking at the ppm axis of one
+sample:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ppm_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_ppm_resolution.html">nmr_ppm_resolution</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"The ppm resolution is: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">ppm_res</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, <span class="st">" ppm"</span><span class="op">)</span>
 <span class="co">#&gt; The ppm resolution is: 0.00023 ppm</span></code></pre></div>
-<p>We can interpolate the dataset, obtaining an <code>nmr_dataset_1D</code> object:</p>
+<p>We can interpolate the dataset, obtaining an
+<code>nmr_dataset_1D</code> object:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>, max <span class="op">=</span> <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">2.3E-4</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>This operation changes the class of the object, as now the data is on a matrix. The dataset is now of class <code>nmr_dataset_1D</code>. The <code>axis</code> element is now a numeric vector and the <code>data_1r</code> element is a matrix.</p>
+<p>This operation changes the class of the object, as now the data is on
+a matrix. The dataset is now of class <code>nmr_dataset_1D</code>. The
+<code>axis</code> element is now a numeric vector and the
+<code>data_1r</code> element is a matrix.</p>
 </div>
 <div class="section level2">
 <h2 id="plotting-samples">Plotting samples<a class="anchor" aria-label="anchor" href="#plotting-samples"></a>
 </h2>
-<p>The <code>AlpsNMR</code> package offers the possibility to plot <code>nmr_dataset_1D</code> objects. Plotting many spectra with so many points is quite expensive so it is possible to include only some regions of the spectra or plot only some samples.</p>
-<p>Use <code><a href="../reference/plot.nmr_dataset_1D.html">?plot.nmr_dataset_1D</a></code> to check the parameters, among them:</p>
+<p>The <code>AlpsNMR</code> package offers the possibility to plot
+<code>nmr_dataset_1D</code> objects. Plotting many spectra with so many
+points is quite expensive so it is possible to include only some regions
+of the spectra or plot only some samples.</p>
+<p>Use <code><a href="../reference/plot.nmr_dataset_1D.html">?plot.nmr_dataset_1D</a></code> to check the parameters, among
+them:</p>
 <ul>
 <li>
-<code>NMRExperiment</code>: A character vector with the NMR experiments to plot</li>
+<code>NMRExperiment</code>: A character vector with the NMR
+experiments to plot</li>
 <li>
-<code>chemshift_range</code>: A ppm range to plot only a small region, or to reduce the resolution</li>
+<code>chemshift_range</code>: A ppm range to plot only a small
+region, or to reduce the resolution</li>
 <li>
-<code>interactive</code>: To make the plot interactive - <code>...</code>: Can be used to pass additional parameters such as <code>color = "SubjectID"</code> that are passed as aesthetics to ggplot.</li>
+<code>interactive</code>: To make the plot interactive -
+<code>...</code>: Can be used to pass additional parameters such as
+<code>color = "SubjectID"</code> that are passed as aesthetics to
+ggplot.</li>
 </ul>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"30"</span><span class="op">)</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.2</span>, <span class="fl">2.8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -261,9 +320,17 @@
 <div class="section level3">
 <h3 id="creating-interactive-plots">Creating interactive plots<a class="anchor" aria-label="anchor" href="#creating-interactive-plots"></a>
 </h3>
-<p>The option <code>interactive = TRUE</code> described above has some performance limitations. As high performance workaround, you can make many plots interactive with the function <code>plot_interactive</code>.</p>
-<p>This function will use WebGL technologies to create a webpage that, once opened, allows you to interact with the plot.</p>
-<p>Due to technical limitations, these plots need to be opened manually and can’t be embedded in RMarkdown documents. Therefore, the function saves the plot in the directory for further exploration. Additionally, some old web browsers may not be able to display these interactive plots correctly.</p>
+<p>The option <code>interactive = TRUE</code> described above has some
+performance limitations. As high performance workaround, you can make
+many plots interactive with the function
+<code>plot_interactive</code>.</p>
+<p>This function will use WebGL technologies to create a webpage that,
+once opened, allows you to interact with the plot.</p>
+<p>Due to technical limitations, these plots need to be opened manually
+and can’t be embedded in RMarkdown documents. Therefore, the function
+saves the plot in the directory for further exploration. Additionally,
+some old web browsers may not be able to display these interactive plots
+correctly.</p>
 <pre><code><span class="va">plt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"30"</span><span class="op">)</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.2</span>, <span class="fl">2.8</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot_interactive.html">plot_interactive</a></span><span class="op">(</span><span class="va">plt</span>, <span class="st">"plot_region.html"</span><span class="op">)</span></code></pre>
 </div>
@@ -271,7 +338,10 @@
 <div class="section level2">
 <h2 id="exclude-regions">Exclude regions<a class="anchor" aria-label="anchor" href="#exclude-regions"></a>
 </h2>
-<p>Some regions can easily be excluded from the spectra with <code>nmr_exclude_region</code>. Note that the regions are fully removed and not zeroed, as using zeros complicates a lot the implementation<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and has little advantages.</p>
+<p>Some regions can easily be excluded from the spectra with
+<code>nmr_exclude_region</code>. Note that the regions are fully removed
+and not zeroed, as using zeros complicates a lot the implementation<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and has
+little advantages.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">regions_to_exclude</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>water <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.6</span>, <span class="fl">5</span><span class="op">)</span>, methanol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.33</span>, <span class="fl">3.39</span><span class="op">)</span><span class="op">)</span>
 <span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_exclude_region.html">nmr_exclude_region</a></span><span class="op">(</span><span class="va">dataset</span>, exclude <span class="op">=</span> <span class="va">regions_to_exclude</span><span class="op">)</span>
@@ -281,7 +351,9 @@
 <div class="section level2">
 <h2 id="filter-samples">Filter samples<a class="anchor" aria-label="anchor" href="#filter-samples"></a>
 </h2>
-<p>Maybe we just want to analyze a subset of the data, e.g., only a class group or a particular gender. We can filter some samples according to their metadata as follows:</p>
+<p>Maybe we just want to analyze a subset of the data, e.g., only a
+class group or a particular gender. We can filter some samples according
+to their metadata as follows:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">samples_10_20</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">SubjectID</span> <span class="op">==</span> <span class="st">"Ana"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">samples_10_20</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span>
@@ -294,7 +366,10 @@
 <div class="section level2">
 <h2 id="robust-pca-for-outlier-detection">Robust PCA for outlier detection<a class="anchor" aria-label="anchor" href="#robust-pca-for-outlier-detection"></a>
 </h2>
-<p>The AlpsNMR package includes robust PCA analysis for outlier detection. With such a small demo dataset, it is not practical to use, but check out the documentation of <code>nmr_pca_outliers_*</code> functions.</p>
+<p>The AlpsNMR package includes robust PCA analysis for outlier
+detection. With such a small demo dataset, it is not practical to use,
+but check out the documentation of <code>nmr_pca_outliers_*</code>
+functions.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pca_outliers_rob</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_pca_outliers_robust.html">nmr_pca_outliers_robust</a></span><span class="op">(</span><span class="va">dataset</span>, ncomp <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
 <span class="fu"><a href="../reference/nmr_pca_outliers_plot.html">nmr_pca_outliers_plot</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">pca_outliers_rob</span><span class="op">)</span></code></pre></div>
@@ -303,7 +378,10 @@
 <div class="section level2">
 <h2 id="baseline-removal">Baseline removal<a class="anchor" aria-label="anchor" href="#baseline-removal"></a>
 </h2>
-<p>Spectra may display an unstable baseline, specially when processing blood/fecal blood/fecal samples. If so, <code>nmr_baseline_removal</code> subtract the baseline by means of Asymmetric Least Squares method.</p>
+<p>Spectra may display an unstable baseline, specially when processing
+blood/fecal blood/fecal samples. If so,
+<code>nmr_baseline_removal</code> subtract the baseline by means of
+Asymmetric Least Squares method.</p>
 <p>See before:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">3.8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -317,10 +395,18 @@
 <div class="section level2">
 <h2 id="peak-detection">Peak detection<a class="anchor" aria-label="anchor" href="#peak-detection"></a>
 </h2>
-<p>The peak detection is performed on short spectra segments using a continuous wavelet transform. See <code><a href="../reference/nmr_detect_peaks.html">?nmr_detect_peaks</a></code> for more information.</p>
-<p>Our current approach relies on the use of the baseline threshold (<code>baselineThresh</code>) automatic calculated (see <code><a href="../reference/nmr_baseline_threshold.html">?nmr_baseline_threshold</a></code>) and the Signal to Noise Threshold (<code>SNR.Th</code>) to discriminate valid peaks from noise.</p>
-<p>The combination of the <code>baselineThresh</code> and the <code>SNR.Th</code> optimizes the number of actual peaks from noise.</p>
-<p>The advantage of the <code>SNR.Th</code> method is that it estimates the noise level on each spectra region independently, so in practice it can be used as a dynamic baseline threshold level.</p>
+<p>The peak detection is performed on short spectra segments using a
+continuous wavelet transform. See <code><a href="../reference/nmr_detect_peaks.html">?nmr_detect_peaks</a></code> for
+more information.</p>
+<p>Our current approach relies on the use of the baseline threshold
+(<code>baselineThresh</code>) automatic calculated (see
+<code><a href="../reference/nmr_baseline_threshold.html">?nmr_baseline_threshold</a></code>) and the Signal to Noise Threshold
+(<code>SNR.Th</code>) to discriminate valid peaks from noise.</p>
+<p>The combination of the <code>baselineThresh</code> and the
+<code>SNR.Th</code> optimizes the number of actual peaks from noise.</p>
+<p>The advantage of the <code>SNR.Th</code> method is that it estimates
+the noise level on each spectra region independently, so in practice it
+can be used as a dynamic baseline threshold level.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">peak_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_detect_peaks.html">nmr_detect_peaks</a></span><span class="op">(</span><span class="va">dataset</span>,
                                nDivRange_ppm <span class="op">=</span> <span class="fl">0.1</span>,
@@ -335,8 +421,11 @@
 <div class="section level2">
 <h2 id="spectra-alignment">Spectra alignment<a class="anchor" aria-label="anchor" href="#spectra-alignment"></a>
 </h2>
-<p>To align the sample, we use the <code>nmr_align</code> function, which in turn uses a hierarchical clustering method (see <code><a href="../reference/nmr_align.html">?nmr_align</a></code> for further details).</p>
-<p>The <code>maxShift_ppm</code> limits the maximum shift allowed for the spectra.</p>
+<p>To align the sample, we use the <code>nmr_align</code> function,
+which in turn uses a hierarchical clustering method (see
+<code><a href="../reference/nmr_align.html">?nmr_align</a></code> for further details).</p>
+<p>The <code>maxShift_ppm</code> limits the maximum shift allowed for
+the spectra.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nmr_exp_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_align_find_ref.html">nmr_align_find_ref</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span><span class="op">)</span>
 <span class="va">dataset_align</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_align.html">nmr_align</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span>, <span class="va">nmr_exp_ref</span>, maxShift_ppm <span class="op">=</span> <span class="fl">0.0015</span>, acceptLostPeak <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
@@ -350,14 +439,23 @@
 <div class="section level2">
 <h2 id="normalization">Normalization<a class="anchor" aria-label="anchor" href="#normalization"></a>
 </h2>
-<p>There are multiple normalization techniques available. The most strongly recommended is the <code>pqn</code> normalization, but it may not be fully reliable when the number of samples is small, as it needs a computation of the median spectra. Nevertheless, it is possible to compute it:</p>
+<p>There are multiple normalization techniques available. The most
+strongly recommended is the <code>pqn</code> normalization, but it may
+not be fully reliable when the number of samples is small, as it needs a
+computation of the median spectra. Nevertheless, it is possible to
+compute it:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dataset_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_normalize.html">nmr_normalize</a></span><span class="op">(</span><span class="va">dataset_align</span>, method <span class="op">=</span> <span class="st">"pqn"</span><span class="op">)</span>
 <span class="co">#&gt; Warning in norm_pqn(samples[["data_1r"]]): The Probabalistic Quotient</span>
 <span class="co">#&gt; Normalization requires several samples to compute the median spectra. Your</span>
 <span class="co">#&gt; number of samples is low</span></code></pre></div>
-<p>The <code>AlpsNMR</code> package offers the possibility to extract additional normalization information with <code>nmr_normalize_extra_info(dataset)</code>, to explore the normalization factors applied to each sample:</p>
-<p>The plot shows the dispersion with respect to the median of the normalization factors, and can highlight samples with abnormaly large or small normalization factors.</p>
+<p>The <code>AlpsNMR</code> package offers the possibility to extract
+additional normalization information with
+<code>nmr_normalize_extra_info(dataset)</code>, to explore the
+normalization factors applied to each sample:</p>
+<p>The plot shows the dispersion with respect to the median of the
+normalization factors, and can highlight samples with abnormaly large or
+small normalization factors.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_normalize.html">nmr_normalize_extra_info</a></span><span class="op">(</span><span class="va">dataset_norm</span><span class="op">)</span>
 <span class="va">diagnostic</span><span class="op">$</span><span class="va">norm_factor</span>
@@ -374,7 +472,12 @@
 <div class="section level3">
 <h3 id="integration-based-on-peak-center-and-width">1. Integration based on peak center and width<a class="anchor" aria-label="anchor" href="#integration-based-on-peak-center-and-width"></a>
 </h3>
-<p>If we want to integrate the whole spectra, we need ppm from the <code>peak_table</code>. See <code>Peak detection</code> section. The function <code>nmr_integrate_peak_positions</code> generates a new <code>nmr_dataset_1D</code> object containing the integrals from the <code>peak_table</code> (ppm values corresponding to detected peaks).</p>
+<p>If we want to integrate the whole spectra, we need ppm from the
+<code>peak_table</code>. See <code>Peak detection</code> section. The
+function <code>nmr_integrate_peak_positions</code> generates a new
+<code>nmr_dataset_1D</code> object containing the integrals from the
+<code>peak_table</code> (ppm values corresponding to detected
+peaks).</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/nmr_integrate_peak_positions.html">nmr_integrate_peak_positions</a></span><span class="op">(</span>
   samples <span class="op">=</span> <span class="va">dataset_norm</span>,
@@ -730,7 +833,8 @@
 <span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.4608` -&gt; `ppm_8.4608...1274`</span>
 
 <span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/get_integration_with_metadata.html">get_integration_with_metadata</a></span><span class="op">(</span><span class="va">peak_table_integration</span><span class="op">)</span></code></pre></div>
-<p>We can also integrate with a specific peak position and some arbitrary width:</p>
+<p>We can also integrate with a specific peak position and some
+arbitrary width:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span>
   <span class="fu"><a href="../reference/nmr_integrate_peak_positions.html">nmr_integrate_peak_positions</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="va">dataset_norm</span>,
@@ -745,13 +849,17 @@
 <div class="section level3">
 <h3 id="integration-based-on-peak-boundaries">2. Integration based on peak boundaries<a class="anchor" aria-label="anchor" href="#integration-based-on-peak-boundaries"></a>
 </h3>
-<p>Imagine we only want to integrate the four peaks corresponding to the pyroglutamic acid:</p>
+<p>Imagine we only want to integrate the four peaks corresponding to the
+pyroglutamic acid:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pyroglutamic_acid_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.15</span>, <span class="fl">4.20</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset_norm</span>, chemshift_range <span class="op">=</span> <span class="va">pyroglutamic_acid_region</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Pyroglutamic acid region"</span><span class="op">)</span></code></pre></div>
 <p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-25-1.png" width="672"></p>
-<p>We define the peak regions and integrate them. Note how we can correct the baseline or not. If we correct the baseline, the limits of the integration will be connected with a straight line and that line will be used as the baseline, that will be subtracted.</p>
+<p>We define the peak regions and integrate them. Note how we can
+correct the baseline or not. If we correct the baseline, the limits of
+the integration will be connected with a straight line and that line
+will be used as the baseline, that will be subtracted.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pyroglutamic_acid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pyroglutamic_acid1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.19</span>, <span class="fl">4.195</span><span class="op">)</span>,
                           pyroglutamic_acid2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.18</span>, <span class="fl">4.186</span><span class="op">)</span>,
@@ -773,7 +881,8 @@
 <span class="co">#&gt; 10       2.789542e-07       3.331880e-07       2.702796e-07       3.786158e-07</span>
 <span class="co">#&gt; 20       2.724333e-07       3.290777e-07       2.670498e-07       3.792881e-07</span>
 <span class="co">#&gt; 30       2.699134e-07       3.239257e-07       2.636944e-07       3.681288e-07</span></code></pre></div>
-<p>We may plot the integral values to explore variation based on the baseline subtraction.</p>
+<p>We may plot the integral values to explore variation based on the
+baseline subtraction.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span>
   <span class="va">regions_basel_corr_matrix</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -794,7 +903,11 @@
 <div class="section level2">
 <h2 id="identification">Identification<a class="anchor" aria-label="anchor" href="#identification"></a>
 </h2>
-<p>After applying any feature selection or machine learning, Alps allows the identification of features of interest through <code>nmr_identify_regions_blood</code>. The function gives 3 posibilities sorted by the most probable metabolite (see <code>nmr_identify_regions_blood</code> for details).</p>
+<p>After applying any feature selection or machine learning, Alps allows
+the identification of features of interest through
+<code>nmr_identify_regions_blood</code>. The function gives 3
+posibilities sorted by the most probable metabolite (see
+<code>nmr_identify_regions_blood</code> for details).</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ppm_to_assign</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.060960203</span>, <span class="fl">3.048970634</span>,<span class="fl">2.405935596</span>,<span class="fl">0.990616851</span>,<span class="fl">0.986520147</span>, <span class="fl">1.044258467</span><span class="op">)</span>
 <span class="va">identification</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_identify_regions_blood.html">nmr_identify_regions_blood</a></span> <span class="op">(</span><span class="va">ppm_to_assign</span><span class="op">)</span></code></pre></div>
@@ -805,7 +918,11 @@
 <div class="section level3">
 <h3 id="getting-the-spectra-and-manipulating-it-manually">Getting the spectra and manipulating it manually<a class="anchor" aria-label="anchor" href="#getting-the-spectra-and-manipulating-it-manually"></a>
 </h3>
-<p>Besides all those techniques, you can easily implement your own. You can extract the raw matrix and manipulate it at will. As long as you don’t permute the rows, you can always replace the raw matrix of the <code>nmr_dataset_1D</code> object through the <code>nmr_data</code> function:</p>
+<p>Besides all those techniques, you can easily implement your own. You
+can extract the raw matrix and manipulate it at will. As long as you
+don’t permute the rows, you can always replace the raw matrix of the
+<code>nmr_dataset_1D</code> object through the <code>nmr_data</code>
+function:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">full_spectra_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span>
 <span class="va">full_spectra_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span> <span class="co"># change it as you wish</span>
@@ -818,7 +935,8 @@
 <div class="section level3">
 <h3 id="creating-an-nmr_dataset_1d-object-from-a-matrix">Creating an <code>nmr_dataset_1D</code> object from a matrix<a class="anchor" aria-label="anchor" href="#creating-an-nmr_dataset_1d-object-from-a-matrix"></a>
 </h3>
-<p>You can also create an <code>nmr_dataset_1D</code> object from scratch with the <code>new_nmr_dataset_1D</code> function:</p>
+<p>You can also create an <code>nmr_dataset_1D</code> object from
+scratch with the <code>new_nmr_dataset_1D</code> function:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nsamp</span> <span class="op">&lt;-</span> <span class="fl">12</span>
 <span class="va">npoints</span> <span class="op">&lt;-</span> <span class="fl">20</span>
@@ -841,12 +959,15 @@
 <div class="section level2">
 <h2 id="final-thoughts">Final thoughts<a class="anchor" aria-label="anchor" href="#final-thoughts"></a>
 </h2>
-<p>This vignette shows many of the features of the package, some features have room for improvement, others are not fully described, and the reader will need to browse the documentation. Hopefully it is a good starting point for using the package.</p>
+<p>This vignette shows many of the features of the package, some
+features have room for improvement, others are not fully described, and
+the reader will need to browse the documentation. Hopefully it is a good
+starting point for using the package.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; R version 4.1.1 (2021-08-10)</span>
+<span class="co">#&gt; R version 4.1.3 (2022-03-10)</span>
 <span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">#&gt; Running under: Ubuntu 20.04.3 LTS</span>
+<span class="co">#&gt; Running under: Ubuntu 20.04.4 LTS</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Matrix products: default</span>
 <span class="co">#&gt; BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
@@ -854,7 +975,7 @@
 <span class="co">#&gt; locale:</span>
 <span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
 <span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             </span>
+<span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
 <span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
 <span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
 <span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
@@ -863,16 +984,16 @@
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] BiocParallel_1.26.2 ggplot2_3.3.5       AlpsNMR_3.5.1      </span>
+<span class="co">#&gt; [1] BiocParallel_1.28.3 ggplot2_3.3.5       AlpsNMR_3.5.1      </span>
 <span class="co">#&gt; [4] magrittr_2.0.3      future_1.24.0       dplyr_1.0.8        </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
 <span class="co">#&gt;   [1] matrixStats_0.62.0     fs_1.5.2               httr_1.4.2            </span>
 <span class="co">#&gt;   [4] RColorBrewer_1.1-3     rprojroot_2.0.3        doRNG_1.8.2           </span>
-<span class="co">#&gt;   [7] tools_4.1.1            bslib_0.3.1            utf8_1.2.2            </span>
+<span class="co">#&gt;   [7] tools_4.1.3            bslib_0.3.1            utf8_1.2.2            </span>
 <span class="co">#&gt;  [10] R6_2.5.1               colorspace_2.0-3       withr_2.5.0           </span>
 <span class="co">#&gt;  [13] mQTL_1.0               tidyselect_1.1.2       gridExtra_2.3         </span>
-<span class="co">#&gt;  [16] compiler_4.1.1         MassSpecWavelet_1.58.0 progressr_0.10.0      </span>
+<span class="co">#&gt;  [16] compiler_4.1.3         MassSpecWavelet_1.60.1 progressr_0.10.0      </span>
 <span class="co">#&gt;  [19] rvest_1.0.2            textshaping_0.3.6      cli_3.2.0             </span>
 <span class="co">#&gt;  [22] SparseM_1.81           xml2_1.3.3             desc_1.4.1            </span>
 <span class="co">#&gt;  [25] labeling_0.4.2         sass_0.4.1             scales_1.2.0          </span>
@@ -881,17 +1002,17 @@
 <span class="co">#&gt;  [34] digest_0.6.29          rmarkdown_2.13         pkgconfig_2.0.3       </span>
 <span class="co">#&gt;  [37] htmltools_0.5.2        parallelly_1.31.0      itertools_0.1-3       </span>
 <span class="co">#&gt;  [40] fastmap_1.1.0          highr_0.9              rlang_1.0.2           </span>
-<span class="co">#&gt;  [43] readxl_1.4.0           impute_1.66.0          jquerylib_0.1.4       </span>
+<span class="co">#&gt;  [43] readxl_1.4.0           impute_1.68.0          jquerylib_0.1.4       </span>
 <span class="co">#&gt;  [46] farver_2.1.0           generics_0.1.2         jsonlite_1.8.0        </span>
 <span class="co">#&gt;  [49] speaq_2.6.1            qtl_1.50               Matrix_1.4-1          </span>
 <span class="co">#&gt;  [52] Rcpp_1.0.8.3           munsell_0.5.0          fansi_1.0.3           </span>
 <span class="co">#&gt;  [55] lifecycle_1.0.1        RcppZiggurat_0.1.6     stringi_1.7.6         </span>
 <span class="co">#&gt;  [58] yaml_2.3.5             MASS_7.3-56            plyr_1.8.7            </span>
-<span class="co">#&gt;  [61] grid_4.1.1             parallel_4.1.1         listenv_0.8.0         </span>
+<span class="co">#&gt;  [61] grid_4.1.3             parallel_4.1.3         listenv_0.8.0         </span>
 <span class="co">#&gt;  [64] ggrepel_0.9.1          doSNOW_1.0.20          crayon_1.5.1          </span>
 <span class="co">#&gt;  [67] lattice_0.20-45        knitr_1.38             pillar_1.7.0          </span>
 <span class="co">#&gt;  [70] igraph_1.3.1           rngtools_1.5.2         corpcor_1.6.10        </span>
-<span class="co">#&gt;  [73] reshape2_1.4.4         codetools_0.2-18       mixOmics_6.16.3       </span>
+<span class="co">#&gt;  [73] reshape2_1.4.4         codetools_0.2-18       mixOmics_6.18.1       </span>
 <span class="co">#&gt;  [76] lpSolve_5.6.15         glue_1.6.2             evaluate_0.15         </span>
 <span class="co">#&gt;  [79] outliers_0.15          data.table_1.14.2      missForest_1.5        </span>
 <span class="co">#&gt;  [82] foreach_1.5.2          vctrs_0.4.1            cellranger_1.1.0      </span>
@@ -903,10 +1024,11 @@
 <span class="co">#&gt; [100] iterators_1.0.14       memoise_2.0.1          ellipse_0.4.2         </span>
 <span class="co">#&gt; [103] cluster_2.1.3          globals_0.14.0         ellipsis_0.3.2</span></code></pre></div>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr>
 <ol>
-<li id="fn1"><p>e.g. it can inadvertedly distort the PQN normalization results<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>e.g. it can inadvertedly distort the PQN normalization
+results<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
@@ -923,12 +1045,15 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
+<p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco
+Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco
+Colás.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>
