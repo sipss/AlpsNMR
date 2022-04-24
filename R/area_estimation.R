@@ -77,6 +77,7 @@ fit_lorentzians_to_peak_data <- function(peak_data, nmr_dataset, nrmse_max = Inf
         # \gamma = \frac{\sqrt{3}}{2} (x_{right} - x_{left} )
         # FIXME: Possible minor improvement. Use a linear interpolation to
         #        determine x[peak_bounds["right"]] and the corresponding left.
+        #        The error in in gamma would be reduced by half.
         gamma <- sqrt(3)/2 * (x[peak_bounds["right"]] - x[peak_bounds["left"]])
         # Estimate the amplitude of the lorentzian with the amplitude of the second derivative. 
         # This has the effect of removing the baseline up to linear effects.
