@@ -28,14 +28,38 @@ nmr_exclude_region.nmr_dataset_1D <- function(samples, exclude = list(water = c(
     if (is.null(exclude) || length(exclude) == 0) {
         return(samples)
     }
-    axis_include <- rep(TRUE, length(samples[["axis"]]))
-    for (i_region in seq_along(exclude)) {
-        region <- exclude[[i_region]]
-        excl_dim1 <- samples[["axis"]] >= min(region) & samples[["axis"]] <= max(region)
-        axis_include[excl_dim1] <- FALSE
-    }
+    axis_include <- is_ppm_included(samples[["axis"]], exclude)
     samples[["axis"]] <- samples[["axis"]][axis_include]
     samples[["data_1r"]] <- samples[["data_1r"]][, axis_include]
+    samples[["excluded_regions"]] <- c(nmr_get_excluded_regions(samples), exclude)
     return(samples)
 }
 
+is_ppm_included <- function(ppm, exclude) {
+    ppms_included <- rep(TRUE, length(ppm))
+    for (i_region in seq_along(exclude)) {
+        region <- exclude[[i_region]]
+        excl_dim1 <- ppm >= min(region) & ppm <= max(region)
+        ppms_included[excl_dim1] <- FALSE
+    }
+    names(ppms_included) <- ppm
+    ppms_included
+}
+
+is_ppm_region_excluded <- function(ppm_region, exclude) {
+    ppm_min <- min(ppm_region)
+    ppm_max <- max(ppm_region)
+    for (region in exclude) {
+        reg_min <- min(region)
+        reg_max <- max(region)
+        if (ppm_min <= reg_max && reg_min <= ppm_max) {
+            return(TRUE)
+        }
+    }
+    FALSE
+}
+
+nmr_get_excluded_regions <- function(samples) {
+    samples <- validate_nmr_dataset_1D(samples)
+    samples[["excluded_regions"]]
+}

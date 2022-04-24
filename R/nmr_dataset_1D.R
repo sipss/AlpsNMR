@@ -73,6 +73,21 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
         message = "The num_samples value does not match nrow(data_1r)"
     )
     
+    if (!"excluded_regions" %in% names(nmr_dataset_1D)) {
+        rlang::warn(
+            message = c(
+                'The dataset should have a "excluded_regions" element with the excluded regions.',
+                "i" = paste0(
+                    'If you saved and restored a dataset from a previous AlpsNMR version, and you ',
+                    'know the regions you excluded, you can set it manually: if `x` is your ',
+                    'dataset, just use:\n  `x[["excluded_regions"]] <- list(water = c(4.7, 5.0))`\n',
+                    '  where the list can be just empty or whatever you passed to nmr_exclude_regions().'
+                ),
+                "i" = "Otherwise, AlpsNMR will assume there are no excluded regions on some peak detection stages."
+            )
+        )
+        nmr_dataset_1D[["excluded_regions"]] <- list()
+    }
     nmr_dataset_1D
 }
 
@@ -109,6 +124,7 @@ new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
     samples[["data_1r"]] <- data_1r
     samples[["axis"]] <- ppm_axis
     samples[["num_samples"]] <- nrow(data_1r)
+    samples[["excluded_regions"]] <- list()
     class(samples) <- c("nmr_dataset_1D", "nmr_dataset_family")
     validate_nmr_dataset_1D(samples)
 }
