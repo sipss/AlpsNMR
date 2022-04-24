@@ -1,5 +1,3 @@
-context("test-baseline_removal")
-
 test_that("nmr_baseline_removal works", {
   dataset <- new_nmr_dataset_1D(ppm_axis = c(1,2,3,4),
                                 data_1r = matrix(c(1,2,2,1), nrow = 1),

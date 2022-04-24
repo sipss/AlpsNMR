@@ -1,5 +1,3 @@
-context("test-random_subsampling")
-
 test_that("random_subsampling", {
 subject_id <- c("Alice", "Bob", "Chalie", "Eve")
 rnd <- random_subsampling(1:4, iterations = 2, test_size = 0.25, keep_together = subject_id)

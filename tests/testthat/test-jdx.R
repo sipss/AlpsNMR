@@ -1,5 +1,3 @@
-context("Import JDX files")
-
 test_that("comments are stripped", {
   
   expect_equal(strip_comments(c("##TITLE=Hello $$ world",

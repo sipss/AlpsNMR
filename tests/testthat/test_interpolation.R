@@ -1,5 +1,3 @@
-context("test-interpolation")
-
 test_that("nmr_ppm_resolution works", {
   dataset <- new_nmr_dataset_1D(ppm_axis = c(1,2,3),
                                 data_1r = matrix(c(1,2,1), nrow = 1),

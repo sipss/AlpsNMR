@@ -1,5 +1,3 @@
-context("test-normalization")
-
 test_that("nmr_normalize & nmr_normalize_extra_info work", {
   dataset <- new_nmr_dataset_1D(
     ppm_axis = 1:10,

@@ -1,5 +1,3 @@
-context("test-NMR_identify_regions")
-
 test_that("nmr_identify_regions_blood", {
   ppm_to_assign <- c(4.06)
   assignation <- nmr_identify_regions_blood(ppm_to_assign)

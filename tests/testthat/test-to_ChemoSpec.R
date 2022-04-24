@@ -1,5 +1,3 @@
-context("test-to_ChemoSpec")
-
 test_that("to_ChemoSpec works", {
   skip_if_not_installed("ChemoSpec")
   dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")

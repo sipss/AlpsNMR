@@ -1,5 +1,3 @@
-context("test-adding_metadata")
-
 test_that("nmr_meta_get works", {
   dataset <- new_nmr_dataset_1D(ppm_axis = c(0:10),
                                 data_1r = matrix(sample(0:43,replace = TRUE), nrow = 4),

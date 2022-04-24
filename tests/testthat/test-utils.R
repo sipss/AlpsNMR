@@ -1,5 +1,3 @@
-context("utils-list_of_lists_to_tibble")
-
 test_that("list_of_lists_to_tibble works", {
   data_as_list <- list(list(Gender = "Male", Height = 170),
                        list(Gender = "Female", Height = 160),

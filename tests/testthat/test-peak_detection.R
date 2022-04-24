@@ -1,5 +1,3 @@
-context("test-peak_detection_align_integration")
-
 test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_peak_position works", {
   dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
   dataset <- nmr_read_samples_dir(dir_to_demo_dataset)

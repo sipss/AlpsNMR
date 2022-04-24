@@ -1,5 +1,3 @@
-context("test-rDolphin")
-
 test_that("to rDolphin files works", {
 skip_on_bioc()
 skip_if_not_installed("rDolphin")

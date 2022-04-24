@@ -1,5 +1,3 @@
-context("test-outliers")
-
 test_that("nmr_pca_outliers_robust works", {
   dataset <- new_nmr_dataset_1D(ppm_axis = c(0:10),
                                 data_1r = matrix(sample(0:43,replace = FALSE), nrow = 4),

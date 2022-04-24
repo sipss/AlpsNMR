@@ -1,5 +1,3 @@
-context("test-new_nmr_dataset_1d")
-
 test_that("new_nmr_dataset_1D", {
   ds <- new_nmr_dataset_1D(ppm_axis = c(1,2,3),
                            data_1r = matrix(c(1,2,1), nrow = 1),
