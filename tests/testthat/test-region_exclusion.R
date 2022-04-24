@@ -4,7 +4,7 @@ test_that("nmr_exclude_region works", {
                            metadata = list(external = data.frame(NMRExperiment = "10")))
   regions_to_exclude <- list(water = c(1, 2))
   dataset <- nmr_exclude_region(dataset, exclude = regions_to_exclude)
-  expect_equal(dataset[["data_1r"]], 1)
+  expect_equal(dataset[["data_1r"]], matrix(1, nrow = 1))
 })
 
 test_that("AlpsNMR filter works", {
