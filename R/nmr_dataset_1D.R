@@ -111,7 +111,6 @@ new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
     samples[["num_samples"]] <- nrow(data_1r)
     class(samples) <- c("nmr_dataset_1D", "nmr_dataset_family")
     validate_nmr_dataset_1D(samples)
-    samples
 }
 
 #' Object is of [nmr_dataset_1D] class
@@ -181,7 +180,6 @@ format.nmr_dataset_1D <- function(x, ...) {
     output[["data_1r"]] <- output[["data_1r"]][i, , drop = FALSE]
     output$num_samples <- nrow(output$metadata[[1]])
     validate_nmr_dataset_1D(output)
-    return(output)
 }
 
 #' Export 1D NMR data to a CSV file

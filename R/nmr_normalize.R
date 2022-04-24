@@ -71,7 +71,7 @@ norm_pqn <- function(spectra) {
 nmr_normalize <- function(samples, 
                           method = c("area", "max", "value", "region", "pqn", "none"),
                           ...) {
-    validate_nmr_dataset_1D(samples)
+    samples <- validate_nmr_dataset_1D(samples)
 
     method <- tolower(method[1])
     if (!(method %in% c("area", "max", "value", "region", "pqn", "none"))) {

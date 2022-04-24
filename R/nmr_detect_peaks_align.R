@@ -82,7 +82,7 @@ nmr_detect_peaks <- function(nmr_dataset,
                              scales = seq(1, 16, 2),
                              baselineThresh = NULL,
                              SNR.Th = 3) {
-    validate_nmr_dataset_1D(nmr_dataset)
+    nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
     
     # Convert ppm to number of data points
     ppm_resolution <- stats::median(diff(nmr_dataset$axis))
@@ -378,7 +378,7 @@ nmr_align <- function(nmr_dataset,
                       NMRExp_ref = NULL,
                       maxShift_ppm = 0.0015,
                       acceptLostPeak = FALSE) {
-    validate_nmr_dataset_1D(nmr_dataset)
+    nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
     maxShift <-
         round(maxShift_ppm / nmr_ppm_resolution(nmr_dataset))
     if (is.null(NMRExp_ref)) {

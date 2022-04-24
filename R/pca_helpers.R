@@ -199,7 +199,7 @@ nmr_pca_outliers <- function(nmr_dataset,
                              pca_model,
                              ncomp = NULL,
                              quantile_critical = 0.975) {
-    validate_nmr_dataset_1D(nmr_dataset)
+    nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
     
     if (is.null(ncomp)) {
         cum_var_percent <-
@@ -282,7 +282,7 @@ nmr_pca_outliers <- function(nmr_dataset,
 #' outliers_info <- nmr_pca_outliers_robust(dataset_1D)
 #'
 nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
-    validate_nmr_dataset_1D(nmr_dataset)
+    nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
     
     Xprep_rob <- scale(
         nmr_dataset$data_1r,
