@@ -46,12 +46,12 @@ is_ppm_included <- function(ppm, exclude) {
     ppms_included
 }
 
-is_ppm_region_excluded <- function(ppm_region, exclude) {
-    ppm_min <- min(ppm_region)
-    ppm_max <- max(ppm_region)
-    for (region in exclude) {
-        reg_min <- min(region)
-        reg_max <- max(region)
+is_ppm_region_excluded <- function(region, exclude) {
+    ppm_min <- min(region)
+    ppm_max <- max(region)
+    for (excl in exclude) {
+        reg_min <- min(excl)
+        reg_max <- max(excl)
         if (ppm_min <= reg_max && reg_min <= ppm_max) {
             return(TRUE)
         }
