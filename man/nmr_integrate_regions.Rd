@@ -78,6 +78,7 @@ peak_table_integration = nmr_integrate_regions(
 Other peak detection functions: 
 \code{\link{Pipelines}},
 \code{\link{nmr_baseline_threshold}()},
+\code{\link{nmr_detect_peaks_plot_overview}()},
 \code{\link{nmr_detect_peaks_plot}()},
 \code{\link{nmr_detect_peaks_tune_snr}()},
 \code{\link{nmr_detect_peaks}()},
