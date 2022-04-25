@@ -138,6 +138,7 @@ nmr_detect_peaks <- function(nmr_dataset,
 nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(peak_data$ppm), n = 20)) {
     to_plot <- peak_data
     to_plot <- dplyr::mutate(to_plot, ppm_grp = cut(.data$ppm, breaks = !!ppm_breaks))
+    to_plot <- to_plot[!is.na(to_plot$ppm_grp),]
     to_plot <- dplyr::group_by(to_plot, .data$NMRExperiment, .data$ppm_grp)
     to_plot <- dplyr::summarize(to_plot, num_peaks = dplyr::n(), .groups = "drop")
     to_plot$ppm_grp <- factor(to_plot$ppm_grp, levels = rev(levels(to_plot$ppm_grp)))
