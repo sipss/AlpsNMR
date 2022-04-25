@@ -67,12 +67,12 @@ NULL
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @param nDivRange_ppm Segment size, in ppms, to divide the spectra and search
 #'     for peaks.
-#' @param baselineThresh    It will remove all peaks under an intensity set by
-#'     baselineThresh. If you set it to 'NULL', nmr_detect_peaks will
-#'     automatically compute an aproximate value considering baseline between 9.5
-#'     and 10.0 ppm (automatically calculation using `baselineThresh = NULL` will
-#'     not work if spectra were not interpolated up to 10.0 ppm)
+#' @param baselineThresh It will remove all peaks under an intensity set by
+#'     `baselineThresh`. If you set it to `NULL`, `nmr_detect_peaks()` will
+#'     automatically estimate the baseline on the region given by the
+#'     `range_without_peaks` argument.
 #' @inheritParams speaq::detectSpecPeaks
+#' @param range_without_peaks A numeric vector of length two with a region without peaks, only used when `baselineThresh = NULL`
 #' @return A data frame with the NMRExperiment, the sample index, the position
 #'     in ppm and index and the peak intensity
 #' @seealso Peak_detection
@@ -81,19 +81,21 @@ nmr_detect_peaks <- function(nmr_dataset,
                              nDivRange_ppm = 0.1,
                              scales = seq(1, 16, 2),
                              baselineThresh = NULL,
-                             SNR.Th = 3) {
+                             SNR.Th = 3,
+                             range_without_peaks = c(9.5, 10)) {
     nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
     
     # Convert ppm to number of data points
     ppm_resolution <- stats::median(diff(nmr_dataset$axis))
     nDivRange <- round(nDivRange_ppm / ppm_resolution)
     
-    # Computes the Baseline Threshold ###NEW###
+    # Computes the Baseline Threshold
     if (is.null(baselineThresh)) {
-        baselineThresh <- nmr_baseline_threshold(nmr_dataset)
+        baselineThresh <- nmr_baseline_threshold(
+            nmr_dataset,
+            range_without_peaks = range_without_peaks
+        )
     }
-    
-
 
     data_matrix_to_list <-
         lapply(seq_len(nrow(nmr_dataset$data_1r)),
