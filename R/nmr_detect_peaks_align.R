@@ -100,13 +100,19 @@ nmr_detect_peaks <- function(nmr_dataset,
         if (isTRUE(verbose)) {
             rlang::inform(
                 message = c(
-                    "i" = glue::glue("Using baselineThresh={baselineThresh}", baselineThresh=baselineThresh),
+                    "i" = glue::glue("Using baselineThresh={baselineThresh}", baselineThresh=baselineThresh)
+                )
+            )
+            rlang::inform(
+                message = c(
                     "i" = glue::glue(
-                        "You can plot(<your-dataset>, chemshift_range=c({rmin}, {rmax}))",
-                        "to assess that there are no peaks in the region and that the baselineThresh was estimated correctly",
+                        "You may plot(<your-dataset>, chemshift_range=c({rmin}, {rmax})) ",
+                        "to assess that the baselineThresh was estimated correctly",
                         rmin = range_without_peaks[1], rmax = range_without_peaks[2]
                     )
-                )
+                ),
+                .frequency = "regularly",
+                .frequency_id = "suggest-plot-for-baseline-threshold-estimation"
             )
         }
     }
