@@ -73,6 +73,7 @@ NULL
 #'     `range_without_peaks` argument.
 #' @inheritParams speaq::detectSpecPeaks
 #' @param range_without_peaks A numeric vector of length two with a region without peaks, only used when `baselineThresh = NULL`
+#' @param verbose Logical (`TRUE` or `FALSE`). Show informational messages, such as the estimated baseline
 #' @return A data frame with the NMRExperiment, the sample index, the position
 #'     in ppm and index and the peak intensity
 #' @seealso Peak_detection
@@ -96,8 +97,17 @@ nmr_detect_peaks <- function(nmr_dataset,
             nmr_dataset,
             range_without_peaks = range_without_peaks
         )
-        if (verbose) {
-            rlang::inform(message = c("i" = sprintf("Using baselineThresh=%s", format(baselineThresh))))
+        if (isTRUE(verbose)) {
+            rlang::inform(
+                message = c(
+                    "i" = glue::glue("Using baselineThresh={baselineThresh}", baselineThresh=baselineThresh),
+                    "i" = glue::glue(
+                        "You can plot(<your-dataset>, chemshift_range=c({rmin}, {rmax}))",
+                        "to assess that there are no peaks in the region and that the baselineThresh was estimated correctly",
+                        rmin = range_without_peaks[1], rmax = range_without_peaks[2]
+                    )
+                )
+            )
         }
     }
 
