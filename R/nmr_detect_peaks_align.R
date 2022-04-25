@@ -203,12 +203,25 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
 #' @family nmr_dataset_1D functions
 nmr_detect_peaks_plot <- function(nmr_dataset,
                                   peak_data,
-                                  NMRExperiment,
+                                  NMRExperiment = NULL,
                                   peak_ids = NULL,
                                   accepted_only = TRUE,
                                   ...) {
-    if (!rlang::is_scalar_character(NMRExperiment)) {
-        stop("NMRExperiment should be a string")
+    
+    if (!rlang::is_scalar_character(NMRExperiment) && is.null(peak_ids)) {
+        stop("NMRExperiment should be a string or peak_ids should contain peaks from one experiment")
+    }
+    peak_data_to_show <- peak_data
+    if (is.null(NMRExperiment)) {
+        peak_data_to_show <- peak_data_to_show[peak_data_to_show$peak_id %in% peak_ids,,drop=FALSE]
+        NMRExperiment <- unique(peak_data_to_show$NMRExperiment)
+        if (!rlang::is_scalar_character(NMRExperiment)) {
+            stop(glue::glue(
+                "Peak ids `{peakids}` should belong to only one NMRExperiment ({exper})",
+                peakids = paste0(peak_ids, collapse = ", "),
+                exper = paste0(NMRExperiment, collapse = ", ")
+                ))
+        }
     }
     # If we plot only a subset of the data, we also plot only the required
     # vertical lines:
