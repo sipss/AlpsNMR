@@ -7,15 +7,32 @@
 #'
 #' @return a named numeric vector with the indices for the left inflection point, the apex and the right inflection point.
 #' @noRd
-get_peak_bounds <- function(peak_limit_left, peak_limit_right, pos){
+get_peak_bounds <- function(peak_limit_left, peak_limit_right, pos, x, sgf){
     peak_limit_left <- peak_limit_left[pos - peak_limit_left > 0]
     peak_limit_right <- peak_limit_right[peak_limit_right - pos > 0]
-    if(length(peak_limit_right) == 0 || length(peak_limit_left) == 0){
-        return(c("left" = 0, "apex" = pos, "right" = 0))
+    if(length(peak_limit_right) == 0 || length(peak_limit_left) == 0) {
+        return(c("left" = 0, "apex" = pos, "right" = 0, "xleft" = 0, "xright" = 0))
     }
     right <- peak_limit_right[1]
     left <- peak_limit_left[length(peak_limit_left)]
-    return(c("left" = left, "apex" = pos, "right" = right))
+    # y = y0 + m*(x-x0)
+    # y = 0 ==> x = x0 -1/m * y0
+    mfun <- function(x0, y0, x1, y1) {(y1-y0)/(x1-x0)}
+    
+    if (left == length(sgf)) {
+        xleft <- x[left]
+    } else {
+        mleft <- mfun(x[left], sgf[left], x[left+1L], sgf[left+1L])
+        xleft <- x[left] - 1/mleft * sgf[left]
+    }
+    
+    if (right == length(sgf)) {
+        xright <- x[right]
+    } else {
+        mright <- mfun(x[right], sgf[right], x[right+1L], sgf[right+1L])
+        xright <- x[right] - 1.0/mright * sgf[right]
+    }
+    return(c("left" = left, "apex" = pos, "right" = right, "xleft" = xleft, "xright" = xright))
 }
 
 
@@ -65,7 +82,7 @@ fit_lorentzians_to_peak_data <- function(peak_data, nmr_dataset, nrmse_max = Inf
             peak_limit_left <- which((diff(sign(sgf)))== -2)
             peak_limit_right <- which((diff(sign(sgf)))== 2)
         }
-        peak_bounds <- get_peak_bounds(peak_limit_left, peak_limit_right, posi)
+        peak_bounds <- get_peak_bounds(peak_limit_left, peak_limit_right, posi, x, sgf)
         # Estimate gamma with the inflection points:
         # The lorentzian second derivative:
         # $$f''(x, x_0, A, \gamma) = -\frac{2A \gamma \left(\gamma^2-3\left(x-x_0\right)^2\right)}{\pi \left(\gamma^2+\left(x-x_0\right)^2\right)^3}$$
@@ -75,10 +92,7 @@ fit_lorentzians_to_peak_data <- function(peak_data, nmr_dataset, nrmse_max = Inf
         #    x_{left}=x_0-\frac{\sqrt{3}\gamma}{3}
         # Therefore gamma is:
         # \gamma = \frac{\sqrt{3}}{2} (x_{right} - x_{left} )
-        # FIXME: Possible minor improvement. Use a linear interpolation to
-        #        determine x[peak_bounds["right"]] and the corresponding left.
-        #        The error in in gamma would be reduced by half.
-        gamma <- sqrt(3)/2 * (x[peak_bounds["right"]] - x[peak_bounds["left"]])
+        gamma <- sqrt(3)/2 * (peak_bounds["xright"] - peak_bounds["xleft"])
         # Estimate the amplitude of the lorentzian with the amplitude of the second derivative. 
         # This has the effect of removing the baseline up to linear effects.
         # At $x = x_0$, the second derivative is:
@@ -111,7 +125,7 @@ fit_lorentzians_to_peak_data <- function(peak_data, nmr_dataset, nrmse_max = Inf
                 x[peak_bounds["apex"]] >= ppm_min &&
                 x[peak_bounds["apex"]] <= ppm_max &&
                 !is_ppm_region_excluded(
-                    region = c(x[peak_bounds["left"]], x[peak_bounds["right"]]),
+                    region = c(peak_bounds["xleft"], peak_bounds["xright"]),
                     nmr_get_excluded_regions(nmr_dataset)
                 )
         )
