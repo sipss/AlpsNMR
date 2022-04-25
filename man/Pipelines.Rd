@@ -103,10 +103,9 @@ for peaks.}
 \item{scales}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.}
 
 \item{baselineThresh}{It will remove all peaks under an intensity set by
-baselineThresh. If you set it to 'NULL', nmr_detect_peaks will
-automatically compute an aproximate value considering baseline between 9.5
-and 10.0 ppm (automatically calculation using \code{baselineThresh = NULL} will
-not work if spectra were not interpolated up to 10.0 ppm)}
+\code{baselineThresh}. If you set it to \code{NULL}, \code{nmr_detect_peaks()} will
+automatically estimate the baseline on the region given by the
+\code{range_without_peaks} argument.}
 
 \item{SNR.Th}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.}
 

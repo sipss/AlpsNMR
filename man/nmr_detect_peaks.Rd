@@ -9,7 +9,8 @@ nmr_detect_peaks(
   nDivRange_ppm = 0.1,
   scales = seq(1, 16, 2),
   baselineThresh = NULL,
-  SNR.Th = 3
+  SNR.Th = 3,
+  range_without_peaks = c(9.5, 10)
 )
 }
 \arguments{
@@ -21,12 +22,13 @@ for peaks.}
 \item{scales}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.}
 
 \item{baselineThresh}{It will remove all peaks under an intensity set by
-baselineThresh. If you set it to 'NULL', nmr_detect_peaks will
-automatically compute an aproximate value considering baseline between 9.5
-and 10.0 ppm (automatically calculation using \code{baselineThresh = NULL} will
-not work if spectra were not interpolated up to 10.0 ppm)}
+\code{baselineThresh}. If you set it to \code{NULL}, \code{nmr_detect_peaks()} will
+automatically estimate the baseline on the region given by the
+\code{range_without_peaks} argument.}
 
 \item{SNR.Th}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.}
+
+\item{range_without_peaks}{A numeric vector of length two with a region without peaks, only used when \code{baselineThresh = NULL}}
 }
 \value{
 A data frame with the NMRExperiment, the sample index, the position
