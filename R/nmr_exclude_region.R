@@ -46,17 +46,16 @@ is_ppm_included <- function(ppm, exclude) {
     ppms_included
 }
 
-is_ppm_region_excluded <- function(region, exclude) {
-    ppm_min <- min(region)
-    ppm_max <- max(region)
+are_ppm_regions_excluded <- function(regions_min, regions_max, exclude) {
+    stopifnot(length(regions_min) == length(regions_max))
+    stopifnot(regions_min <= regions_max)
+    out <- rep(FALSE, length(regions_min))
     for (excl in exclude) {
-        reg_min <- min(excl)
-        reg_max <- max(excl)
-        if (ppm_min <= reg_max && reg_min <= ppm_max) {
-            return(TRUE)
-        }
+        excl_min <- min(excl)
+        excl_max <- max(excl)
+        out[regions_min <= excl_max & regions_max >= excl_min] <- TRUE
     }
-    FALSE
+    out
 }
 
 nmr_get_excluded_regions <- function(samples) {

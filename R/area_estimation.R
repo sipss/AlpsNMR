@@ -61,12 +61,12 @@ get_norm_rmse <- function(y_fitted, y, y_fitted_apex, y_apex){
 }
 
 
-fit_lorentzians_to_peak_data <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_min = 0, area_max = Inf, ppm_min = 0.1, ppm_max = 12) {
+peaklist_fit_lorentzians <- function(peak_data, nmr_dataset) {
+    peak_data$ppm_infl_min <- NA_real_
+    peak_data$ppm_infl_max <- NA_real_
     peak_data$gamma <- NA_real_
     peak_data$area <- NA_real_
     peak_data$norm_rmse <- NA_real_
-    peak_data$accepted <- NA
-    
     
     x <- nmr_dataset$axis
     sindex_prev <- -1
@@ -115,22 +115,28 @@ fit_lorentzians_to_peak_data <- function(peak_data, nmr_dataset, nrmse_max = Inf
             y_fitted = y[peak_bounds["apex"]]
         )
         # And save the result in the peak_data table:
+        peak_data$ppm_infl_min[i] <- peak_bounds["xleft"]
+        peak_data$ppm_infl_max[i] <- peak_bounds["xright"]
         peak_data$gamma[i] <- gamma
         peak_data$area[i] <- estimated_A
         peak_data$norm_rmse[i] <- norm_rmse
-        peak_data$accepted[i] <- (
-            norm_rmse <= nrmse_max &&
-                estimated_A >= area_min &&
-                estimated_A <= area_max &&
-                x[peak_bounds["apex"]] >= ppm_min &&
-                x[peak_bounds["apex"]] <= ppm_max &&
-                !is_ppm_region_excluded(
-                    region = c(peak_bounds["xleft"], peak_bounds["xright"]),
-                    nmr_get_excluded_regions(nmr_dataset)
-                )
-        )
         sindex_prev <- sindex
     }
-    return(peak_data)
+    peak_data
+}
+
+peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_min = 0, area_max = Inf, ppm_min = -Inf, ppm_max = Inf) {
+    peak_data <- dplyr::mutate(
+        peak_data,
+        accepted = (
+            .data$norm_rmse <= !!nrmse_max & 
+                .data$area >= !!area_min &
+                .data$area <= !!area_max &
+                .data$ppm >= !!ppm_min &
+                .data$ppm <= !!ppm_max &
+                !are_ppm_regions_excluded(.data$ppm_infl_min, .data$ppm_infl_max, nmr_get_excluded_regions(nmr_dataset))
+        )
+    )
+    peak_data
 }
 
