@@ -93,44 +93,7 @@ nmr_detect_peaks <- function(nmr_dataset,
         baselineThresh <- nmr_baseline_threshold(nmr_dataset)
     }
     
-    
-    # A dependency of the speaq package uses partial matching of arguments.
-    #
-    # ## What is partial argument matching?
-    # partial matching is an R feature that allows to call functions without
-    # fully specifying the arguments, for instance:
-    # nmr_detect_peaks(n = dataset)
-    # nmr_detect_peaks(nmr_dat = dataset)
-    # nmr_detect_peaks(nmr_datase = dataset)
-    # These can work thanks to partial matching of arguments.
-    #
-    # ## Why is partial argument matching a problem?
-    # Partial Arg matching follows the idea that "what you write is *probably* what you want"
-    # A better approach is to use the full argument name.
-    #
-    # ## Can I be warned if I used partial arguments?
-    # Yes, you can use the warnPartialMatchArgs option
-    #
-    # ## Why am I reading this?
-    #
-    # If you enable warnPartialMatchArgs, you will get several warnings when
-    # calling speaq::detectSpecPeaks() because MassSpecWavelet::cwt() (a dependency)
-    # uses partial argument matching by mistake on a seq() function call.
-    # Wrong:
-    #     MassSpecWavelet/R/cwt.R:     psi_xval <- seq(-8, 8, length = 1024)
-    # Right:
-    #     MassSpecWavelet/R/cwt.R:     psi_xval <- seq(-8, 8, length.out = 1024)
-    #
-    # As we don't control the MassSpecWavelet code, we disable warnPartialMatchArgs
-    # in this function if you had it enabled, and we restore it when this function finishes
-    #
-    warnPartialMatchArgs <- getOption("warnPartialMatchArgs")
-    if (isTRUE(warnPartialMatchArgs)) {
-        options(warnPartialMatchArgs = FALSE)
-        on.exit({
-            options(warnPartialMatchArgs = warnPartialMatchArgs)
-        })
-    }
+
 
     data_matrix_to_list <-
         lapply(seq_len(nrow(nmr_dataset$data_1r)),
