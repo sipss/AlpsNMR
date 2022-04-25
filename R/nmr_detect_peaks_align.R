@@ -117,6 +117,50 @@ nmr_detect_peaks <- function(nmr_dataset,
     peakList_to_dataframe(nmr_dataset, peakList)
 }
 
+#' Overview of the peak detection results
+#' 
+#' This plot allows to explore the performance of the peak detection across all the samples, by summarizing
+#' how many peaks are detected on each sample at each chemical shift range.
+#' 
+#' You can use this plot to find differences in the number of detected peaks across your dataset, and then use
+#' [nmr_detect_peaks_plot()] to have a finer look at specific samples and chemical shifts, and assess graphically that the
+#' peak detection results that you have are correct.
+#' 
+#'
+#' @param peak_data The output of [nmr_detect_peaks()]
+#' @param ppm_breaks A numeric vector with the breaks that will be used to count the number of the detected peaks.
+#'
+#' @return A scatter plot, with samples on one axis and chemical shift bins in the other axis. The size of each dot
+#'   represents the number of peaks found on a sample within a chemical shift range.
+#' @export
+#' @seealso Peak_detection
+#' @family peak detection functions
+nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(peak_data$ppm), n = 20)) {
+    to_plot <- peak_data
+    to_plot <- dplyr::mutate(to_plot, ppm_grp = cut(.data$ppm, breaks = !!ppm_breaks))
+    to_plot <- dplyr::group_by(to_plot, .data$NMRExperiment, .data$ppm_grp)
+    to_plot <- dplyr::summarize(to_plot, num_peaks = dplyr::n(), .groups = "drop")
+    to_plot$ppm_grp <- factor(to_plot$ppm_grp, levels = rev(levels(to_plot$ppm_grp)))
+    to_plot$NMRExperiment <- factor(
+        to_plot$NMRExperiment,
+        levels = stringr::str_sort(unique(to_plot$NMRExperiment), numeric = TRUE)
+    )
+    
+    gplt <- ggplot2::ggplot(to_plot) +
+        ggplot2::geom_point(
+            ggplot2::aes(
+                x = .data$ppm_grp,
+                y = .data$NMRExperiment,
+                size = .data$num_peaks
+            )
+        ) +
+        ggplot2::labs(x = "chemical shift bin", y = "NMRExperiment", size = "Number of peaks detected") +
+        ggplot2::theme(legend.position = "bottom", axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
+        ggplot2::coord_flip()
+    gplt
+}
+
+
 #' Plot peak detection results
 #'
 #' @family peak detection functions
