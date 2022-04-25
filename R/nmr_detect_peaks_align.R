@@ -82,7 +82,8 @@ nmr_detect_peaks <- function(nmr_dataset,
                              scales = seq(1, 16, 2),
                              baselineThresh = NULL,
                              SNR.Th = 3,
-                             range_without_peaks = c(9.5, 10)) {
+                             range_without_peaks = c(9.5, 10),
+                             verbose = FALSE) {
     nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
     
     # Convert ppm to number of data points
@@ -95,6 +96,9 @@ nmr_detect_peaks <- function(nmr_dataset,
             nmr_dataset,
             range_without_peaks = range_without_peaks
         )
+        if (verbose) {
+            rlang::inform(message = c("i" = sprintf("Using baselineThresh=%s", format(baselineThresh))))
+        }
     }
 
     data_matrix_to_list <-
