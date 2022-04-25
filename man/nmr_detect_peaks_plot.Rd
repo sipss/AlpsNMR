@@ -4,7 +4,13 @@
 \alias{nmr_detect_peaks_plot}
 \title{Plot peak detection results}
 \usage{
-nmr_detect_peaks_plot(nmr_dataset, peak_data, NMRExperiment, ...)
+nmr_detect_peaks_plot(
+  nmr_dataset,
+  peak_data,
+  NMRExperiment,
+  accepted_only = TRUE,
+  ...
+)
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D}.}
@@ -12,6 +18,8 @@ nmr_detect_peaks_plot(nmr_dataset, peak_data, NMRExperiment, ...)
 \item{peak_data}{The peak table returned by \link{nmr_detect_peaks}}
 
 \item{NMRExperiment}{a single NMR experiment to plot}
+
+\item{accepted_only}{If \code{peak_data} contains a logical column named \code{accepted}, only those with \code{accepted=TRUE} will be counted.}
 
 \item{...}{Arguments passed to \link{plot.nmr_dataset_1D} (\code{chemshift_range}, \code{...})}
 }

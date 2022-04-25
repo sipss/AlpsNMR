@@ -6,13 +6,16 @@
 \usage{
 nmr_detect_peaks_plot_overview(
   peak_data,
-  ppm_breaks = pretty(range(peak_data$ppm), n = 20)
+  ppm_breaks = pretty(range(peak_data$ppm), n = 20),
+  accepted_only = TRUE
 )
 }
 \arguments{
 \item{peak_data}{The output of \code{\link[=nmr_detect_peaks]{nmr_detect_peaks()}}}
 
 \item{ppm_breaks}{A numeric vector with the breaks that will be used to count the number of the detected peaks.}
+
+\item{accepted_only}{If \code{peak_data} contains a logical column named \code{accepted}, only those with \code{accepted=TRUE} will be counted.}
 }
 \value{
 A scatter plot, with samples on one axis and chemical shift bins in the other axis. The size of each dot
