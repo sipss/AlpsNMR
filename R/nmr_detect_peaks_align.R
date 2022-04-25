@@ -192,6 +192,7 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
 #' @inheritParams nmr_detect_peaks
 #' @param peak_data The peak table returned by [nmr_detect_peaks]
 #' @param NMRExperiment a single NMR experiment to plot
+#' @param peak_ids A character vector. If given, plot only those peak ids. Example: `c("Peak021", "Peak132")`
 #' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
 #' @param accepted_only If `peak_data` contains a logical column named `accepted`, only those with `accepted=TRUE` will be counted.
 #' @export
@@ -203,6 +204,7 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
 nmr_detect_peaks_plot <- function(nmr_dataset,
                                   peak_data,
                                   NMRExperiment,
+                                  peak_ids = NULL,
                                   accepted_only = TRUE,
                                   ...) {
     if (!rlang::is_scalar_character(NMRExperiment)) {
@@ -227,6 +229,9 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
     if (accepted_only && "accepted" %in% colnames(peak_data_to_show)) {
         peak_data_to_show <- peak_data_to_show[peak_data_to_show$accepted,,drop=FALSE]
     }
+    if (!is.null(peak_ids)) {
+        peak_data_to_show <- peak_data_to_show[peak_data_to_show$peak_id %in% peak_ids,,drop=FALSE]
+    }
     # Plot:
     plot(nmr_dataset,
          NMRExperiment = NMRExperiment,
@@ -248,13 +253,14 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
 #' @keywords internal
 peakList_to_dataframe <- function(nmr_dataset, peakList) {
     NMRExperiment <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
-    purrr::imap_dfr(peakList, function(peak_idx,
+    out <- purrr::imap_dfr(peakList, function(peak_idx,
                                        sample_idx,
                                        nmr_dataset,
                                        NMRExperiment) {
         num_of_peaks_in_sample <- length(peak_idx)
         spec <- as.numeric(nmr_dataset$data_1r[sample_idx, ])
         data.frame(
+            peak_id = "",
             NMRExperiment = rep(NMRExperiment[sample_idx], num_of_peaks_in_sample),
             sample_idx = rep(sample_idx, num_of_peaks_in_sample),
             ppm = nmr_dataset$axis[peak_idx],
@@ -263,6 +269,10 @@ peakList_to_dataframe <- function(nmr_dataset, peakList) {
             stringsAsFactors = FALSE
         )
     }, nmr_dataset = nmr_dataset, NMRExperiment = NMRExperiment)
+    num_digits <- nchar(format(nrow(out)))
+    fmt_str <- sprintf("Peak%%0%dd", num_digits)
+    out$peak_id <- sprintf(fmt_str, seq_len(nrow(out)))
+    out
 }
 
 #' Convert the data frame created by [peakList_to_dataframe] back to a peakList
