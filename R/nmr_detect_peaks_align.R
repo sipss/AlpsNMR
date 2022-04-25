@@ -149,16 +149,20 @@ nmr_detect_peaks <- function(nmr_dataset,
 #'
 #' @param peak_data The output of [nmr_detect_peaks()]
 #' @param ppm_breaks A numeric vector with the breaks that will be used to count the number of the detected peaks.
+#' @param accepted_only If `peak_data` contains a logical column named `accepted`, only those with `accepted=TRUE` will be counted.
 #'
 #' @return A scatter plot, with samples on one axis and chemical shift bins in the other axis. The size of each dot
 #'   represents the number of peaks found on a sample within a chemical shift range.
 #' @export
 #' @seealso Peak_detection
 #' @family peak detection functions
-nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(peak_data$ppm), n = 20)) {
+nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(peak_data$ppm), n = 20), accepted_only = TRUE) {
     to_plot <- peak_data
+    if (accepted_only && "accepted" %in% colnames(to_plot)) {
+        to_plot <- to_plot[to_plot$accepted, , drop = FALSE]
+    }
     to_plot <- dplyr::mutate(to_plot, ppm_grp = cut(.data$ppm, breaks = !!ppm_breaks))
-    to_plot <- to_plot[!is.na(to_plot$ppm_grp),]
+    to_plot <- to_plot[!is.na(to_plot$ppm_grp),, drop = FALSE]
     to_plot <- dplyr::group_by(to_plot, .data$NMRExperiment, .data$ppm_grp)
     to_plot <- dplyr::summarize(to_plot, num_peaks = dplyr::n(), .groups = "drop")
     to_plot$ppm_grp <- factor(to_plot$ppm_grp, levels = rev(levels(to_plot$ppm_grp)))
@@ -189,6 +193,7 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
 #' @param peak_data The peak table returned by [nmr_detect_peaks]
 #' @param NMRExperiment a single NMR experiment to plot
 #' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
+#' @param accepted_only If `peak_data` contains a logical column named `accepted`, only those with `accepted=TRUE` will be counted.
 #' @export
 #' @return Plot peak detection results
 #' 
@@ -198,6 +203,7 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
 nmr_detect_peaks_plot <- function(nmr_dataset,
                                   peak_data,
                                   NMRExperiment,
+                                  accepted_only = TRUE,
                                   ...) {
     if (!rlang::is_scalar_character(NMRExperiment)) {
         stop("NMRExperiment should be a string")
@@ -218,6 +224,9 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
         .data$ppm > chemshift_range[1] &
             .data$ppm < chemshift_range[2]
     )
+    if (accepted_only && "accepted" %in% colnames(peak_data_to_show)) {
+        peak_data_to_show <- peak_data_to_show[peak_data_to_show$accepted,,drop=FALSE]
+    }
     # Plot:
     plot(nmr_dataset,
          NMRExperiment = NMRExperiment,
