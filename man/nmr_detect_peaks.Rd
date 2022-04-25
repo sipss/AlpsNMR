@@ -10,7 +10,8 @@ nmr_detect_peaks(
   scales = seq(1, 16, 2),
   baselineThresh = NULL,
   SNR.Th = 3,
-  range_without_peaks = c(9.5, 10)
+  range_without_peaks = c(9.5, 10),
+  verbose = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ automatically estimate the baseline on the region given by the
 \item{SNR.Th}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.}
 
 \item{range_without_peaks}{A numeric vector of length two with a region without peaks, only used when \code{baselineThresh = NULL}}
+
+\item{verbose}{Logical (\code{TRUE} or \code{FALSE}). Show informational messages, such as the estimated baseline}
 }
 \value{
 A data frame with the NMRExperiment, the sample index, the position

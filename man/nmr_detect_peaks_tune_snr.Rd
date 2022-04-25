@@ -29,6 +29,7 @@ for peaks.}
 automatically estimate the baseline on the region given by the
 \code{range_without_peaks} argument.}
     \item{\code{range_without_peaks}}{A numeric vector of length two with a region without peaks, only used when \code{baselineThresh = NULL}}
+    \item{\code{verbose}}{Logical (\code{TRUE} or \code{FALSE}). Show informational messages, such as the estimated baseline}
     \item{\code{scales}}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.}
     \item{\code{SNR.Th}}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.}
   }}
