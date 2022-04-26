@@ -71,37 +71,27 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.5.1" id="alpsnmr-351-2022-04-07">AlpsNMR 3.5.1 (2022-04-07)<a class="anchor" aria-label="anchor" href="#alpsnmr-351-2022-04-07"></a></h2>
 <ul><li>
-<code>plot_interactive</code> now accepts an <code>overwrite</code>
-argument to avoid asking the user interactively</li>
-<li>Improve <code>nmr_detect_peaks_tune_snr</code> to tune the SNR
-threshold with the right other parameters</li>
+<code>plot_interactive</code> now accepts an <code>overwrite</code> argument to avoid asking the user interactively</li>
+<li>Improve <code>nmr_detect_peaks_tune_snr</code> to tune the SNR threshold with the right other parameters</li>
 <li>Documentation improvements
 <ul><li>Split Peak_detection page into smaller and more specific pages</li>
 </ul></li>
-<li>Let the user choose how code is parallellized, as suggested by
-BiocParallel documentation.</li>
-<li>Replace furr/future parallellization loops with BiocParallel.
-Provides a warning in case a future::plan() has been set.</li>
-<li>Demote Imports to Suggests: SummarizedExpriment, S4Vectors, ggrepel,
-GGally</li>
+<li>Let the user choose how code is parallellized, as suggested by BiocParallel documentation.</li>
+<li>Replace furr/future parallellization loops with BiocParallel. Provides a warning in case a future::plan() has been set.</li>
+<li>Demote Imports to Suggests: SummarizedExpriment, S4Vectors, ggrepel, GGally</li>
 <li>Remove dependencies: tidyselect, assertthat, plyr, furrr</li>
-<li>Add <code><a href="../reference/download_MTBLS242.html">download_MTBLS242()</a></code> function to help download the
-data for the tutorial</li>
+<li>Add <code><a href="../reference/download_MTBLS242.html">download_MTBLS242()</a></code> function to help download the data for the tutorial</li>
 <li>Skip mixOmics test if affected by <a href="https://github.com/mixOmicsTeam/mixOmics/pull/199" class="external-link uri">https://github.com/mixOmicsTeam/mixOmics/pull/199</a>
 </li>
-<li>Fix auto setting of the baseline threshold for the peak
-detection</li>
+<li>Fix auto setting of the baseline threshold for the peak detection</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.3.4" id="alpsnmr-334-2021-09-16">AlpsNMR 3.3.4 (2021-09-16)<a class="anchor" aria-label="anchor" href="#alpsnmr-334-2021-09-16"></a></h2>
 <ul><li>Fix issue with PCA plots not working as expected</li>
-<li>Ensure NMRExperiment names are not duplicated in a dataset (closes
-#44)</li>
-<li>Fix issue with some title file formatting in Bruker samples (closes
-#46)</li>
+<li>Ensure NMRExperiment names are not duplicated in a dataset (closes #44)</li>
+<li>Fix issue with some title file formatting in Bruker samples (closes #46)</li>
 <li>Export groups in to_ChemoSpec</li>
-<li>License since AlpsNMR was released has alwayd been MIT as stated in
-the bioinformatics paper</li>
+<li>License since AlpsNMR was released has alwayd been MIT as stated in the bioinformatics paper</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.1.5" id="alpsnmr-315-2021-3-31">AlpsNMR 3.1.5 (2021-3-31)<a class="anchor" aria-label="anchor" href="#alpsnmr-315-2021-3-31"></a></h2>
@@ -114,13 +104,11 @@ the bioinformatics paper</li>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.1.3" id="alpsnmr-313-2020-11-19">AlpsNMR 3.1.3 (2020-11-19)<a class="anchor" aria-label="anchor" href="#alpsnmr-313-2020-11-19"></a></h2>
 <ul><li>Added instructions to follow a longer tutorial</li>
-<li>nmr_pca_outliers_plot modified to show names in all boundaries of
-the plot</li>
+<li>nmr_pca_outliers_plot modified to show names in all boundaries of the plot</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.1.2" id="alpsnmr-312-2020-11-04">AlpsNMR 3.1.2 (2020-11-04)<a class="anchor" aria-label="anchor" href="#alpsnmr-312-2020-11-04"></a></h2>
-<ul><li>Bug fix related with Bioconductor Renviron variable
-<em>R_CHECK_LENGTH_1_CONDITION</em>
+<ul><li>Bug fix related with Bioconductor Renviron variable <em>R_CHECK_LENGTH_1_CONDITION</em>
 </li>
 </ul></div>
     <div class="section level2">
@@ -133,8 +121,7 @@ the plot</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.99.93" id="alpsnmr-29993-2020-10-22">AlpsNMR 2.99.93 (2020-10-22)<a class="anchor" aria-label="anchor" href="#alpsnmr-29993-2020-10-22"></a></h2>
-<ul><li>Héctor removed as maintainer to ensure a single point of
-contact</li>
+<ul><li>Héctor removed as maintainer to ensure a single point of contact</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.99.92" id="alpsnmr-29992-2020-10-22">AlpsNMR 2.99.92 (2020-10-22)<a class="anchor" aria-label="anchor" href="#alpsnmr-29992-2020-10-22"></a></h2>
@@ -159,10 +146,8 @@ contact</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.99.6" id="alpsnmr-2996-2020-10-19">AlpsNMR 2.99.6 (2020-10-19)<a class="anchor" aria-label="anchor" href="#alpsnmr-2996-2020-10-19"></a></h2>
-<ul><li>Added import/export options form nmr_dataset_1D to
-SummarizedExperiment</li>
-<li>Added import/export options form nmr_dataset_peak_table to
-SummarizedExperiment</li>
+<ul><li>Added import/export options form nmr_dataset_1D to SummarizedExperiment</li>
+<li>Added import/export options form nmr_dataset_peak_table to SummarizedExperiment</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.99.5" id="alpsnmr-2995-2020-10-14">AlpsNMR 2.99.5 (2020-10-14)<a class="anchor" aria-label="anchor" href="#alpsnmr-2995-2020-10-14"></a></h2>
@@ -171,8 +156,7 @@ SummarizedExperiment</li>
 <li>Reexport of some functions removed</li>
 <li>to_rDolphin_blood code reorganized</li>
 <li>Typos removed from tutorial</li>
-<li>norm_pqn_diagnostic$norm_factor used in tutorial instead of plot
-it</li>
+<li>norm_pqn_diagnostic$norm_factor used in tutorial instead of plot it</li>
 <li>Parallel changed for BiocParallel</li>
 </ul></div>
     <div class="section level2">
@@ -188,16 +172,14 @@ it</li>
 <li>LazyData: TRUE removed</li>
 <li>Excessive print statements removed from vignettes</li>
 <li>sessionInfo() added to end of vignettes</li>
-<li>Created inst/script directoy to describe inst/extdata source and
-creation #TODO falta rellenar el archivo</li>
+<li>Created inst/script directoy to describe inst/extdata source and creation #TODO falta rellenar el archivo</li>
 <li>Commented out code removed</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.99.2" id="alpsnmr-2992-2020-08-26">AlpsNMR 2.99.2 (2020-08-26)<a class="anchor" aria-label="anchor" href="#alpsnmr-2992-2020-08-26"></a></h2>
 <ul><li>AlpsNMR.Rproj removed from git repository</li>
 <li>Reduced demo dataset to avoid package size &gt; 5 MB</li>
-<li>Modified introduction to alpsnmr vignette and some tests to work
-with reduced demo dataset</li>
+<li>Modified introduction to alpsnmr vignette and some tests to work with reduced demo dataset</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.99.1" id="alpsnmr-2991-2020-08-25">AlpsNMR 2.99.1 (2020-08-25)<a class="anchor" aria-label="anchor" href="#alpsnmr-2991-2020-08-25"></a></h2>
@@ -206,15 +188,13 @@ with reduced demo dataset</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.99.0" id="alpsnmr-2990-2020-08-24">AlpsNMR 2.99.0 (2020-08-24)<a class="anchor" aria-label="anchor" href="#alpsnmr-2990-2020-08-24"></a></h2>
-<ul><li>Added bootstrap and permutation method and some plots related to
-it</li>
+<ul><li>Added bootstrap and permutation method and some plots related to it</li>
 <li>Minor modifications for bioconductor submision</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.5.9002" id="alpsnmr-259002-2020-05-25">AlpsNMR 2.5.9002 (2020-05-25)<a class="anchor" aria-label="anchor" href="#alpsnmr-259002-2020-05-25"></a></h2>
 <ul><li>Changes to pass BiocCheck</li>
-<li>Added permutation test and permutation test plot to
-<code>nmr_data_analysis</code>
+<li>Added permutation test and permutation test plot to <code>nmr_data_analysis</code>
 </li>
 </ul></div>
     <div class="section level2">
@@ -229,10 +209,7 @@ it</li>
 </li>
 <li>Add tutorial</li>
 <li>Remotes installation</li>
-<li>nmr_diagnose is deprecated. Since nmr_diagnose was only used for
-getting extra normalization information, it was been replaced with
-<code>nmr_normalize_extra_info</code> that offers a less confusing
-name.</li>
+<li>nmr_diagnose is deprecated. Since nmr_diagnose was only used for getting extra normalization information, it was been replaced with <code>nmr_normalize_extra_info</code> that offers a less confusing name.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.3.3.9001" id="alpsnmr-2339001">AlpsNMR 2.3.3.9001<a class="anchor" aria-label="anchor" href="#alpsnmr-2339001"></a></h2>
@@ -249,8 +226,7 @@ name.</li>
 <li>Add <code>nmr_identify_regions_urine</code> function</li>
 <li>Add documentation of <code>HMDB_urine</code>
 </li>
-<li>Add <code>computes_peak_width_ppm</code>function for
-<code>nmr_integrate_peak_positions</code>
+<li>Add <code>computes_peak_width_ppm</code>function for <code>nmr_integrate_peak_positions</code>
 </li>
 <li>New <code>get_integration_with_metadata</code>
 </li>
@@ -263,8 +239,7 @@ name.</li>
 <li>Change the baselineThresh to NULL so it is autodetected</li>
 <li>Vignettes updated including baseline removal</li>
 <li>Bug correction in nmr_baseline_threshold</li>
-<li>Elimination of package vignettes (there is an error to be solved
-there)</li>
+<li>Elimination of package vignettes (there is an error to be solved there)</li>
 <li>New <code>nmr_identify_regions</code> function</li>
 <li>Add documentation of <code>HMDB_blood</code>
 </li>
@@ -284,14 +259,11 @@ there)</li>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco
-Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco
-Colás.</p>
+  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

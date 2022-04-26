@@ -160,10 +160,9 @@ for peaks.</p></dd>
 <dd><p>The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.</p></dd>
 <dt>baselineThresh</dt>
 <dd><p>It will remove all peaks under an intensity set by
-baselineThresh. If you set it to 'NULL', nmr_detect_peaks will
-automatically compute an aproximate value considering baseline between 9.5
-and 10.0 ppm (automatically calculation using <code>baselineThresh = NULL</code> will
-not work if spectra were not interpolated up to 10.0 ppm)</p></dd>
+<code>baselineThresh</code>. If you set it to <code>NULL</code>, <code><a href="nmr_detect_peaks.html">nmr_detect_peaks()</a></code> will
+automatically estimate the baseline on the region given by the
+<code>range_without_peaks</code> argument.</p></dd>
 <dt>SNR.Th</dt>
 <dd><p>The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.</p></dd>
 <dt>maxShift_ppm</dt>
@@ -218,6 +217,7 @@ Pipe: Full spectra normalization</p>
 <code><a href="nmr_pca_outliers.html">nmr_pca_outliers</a>()</code></p>
 <p>Other peak detection functions: 
 <code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold</a>()</code>,
+<code><a href="nmr_detect_peaks_plot_overview.html">nmr_detect_peaks_plot_overview</a>()</code>,
 <code><a href="nmr_detect_peaks_plot.html">nmr_detect_peaks_plot</a>()</code>,
 <code><a href="nmr_detect_peaks_tune_snr.html">nmr_detect_peaks_tune_snr</a>()</code>,
 <code><a href="nmr_detect_peaks.html">nmr_detect_peaks</a>()</code>,
@@ -305,14 +305,11 @@ Pipe: Full spectra normalization</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco
-Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco
-Colás.</p>
+  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

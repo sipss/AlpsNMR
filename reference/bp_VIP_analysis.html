@@ -172,7 +172,7 @@ squares regression</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cv_outer_iteration ncomp   auc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1 0.625</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## The number of components for the bootstrap models is selected </span></span>
 <span class="r-in"><span class="va">ncomps</span> <span class="op">&lt;-</span> <span class="va">model</span><span class="op">$</span><span class="va">outer_cv_results</span><span class="op">$</span><span class="va">`1`</span><span class="op">$</span><span class="va">model</span><span class="op">$</span><span class="va">ncomp</span></span>
@@ -187,15 +187,11 @@ squares regression</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 9</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 8</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 9</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 4</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 7</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 7</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 7</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 6</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 9</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps</span>
@@ -210,14 +206,11 @@ squares regression</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco
-Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco
-Colás.</p>
+  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

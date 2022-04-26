@@ -74,7 +74,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_detect_peaks_plot</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">peak_data</span>, <span class="va">NMRExperiment</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_detect_peaks_plot</span><span class="op">(</span>
+  <span class="va">nmr_dataset</span>,
+  <span class="va">peak_data</span>,
+  NMRExperiment <span class="op">=</span> <span class="cn">NULL</span>,
+  peak_id <span class="op">=</span> <span class="cn">NULL</span>,
+  accepted_only <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">...</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -85,6 +92,10 @@
 <dd><p>The peak table returned by <a href="nmr_detect_peaks.html">nmr_detect_peaks</a></p></dd>
 <dt>NMRExperiment</dt>
 <dd><p>a single NMR experiment to plot</p></dd>
+<dt>peak_id</dt>
+<dd><p>A character vector. If given, plot only that peak id.</p></dd>
+<dt>accepted_only</dt>
+<dd><p>If <code>peak_data</code> contains a logical column named <code>accepted</code>, only those with <code>accepted=TRUE</code> will be counted. By default, <code>accepted_only = TRUE</code>, unless a <code>peak_id</code> is given</p></dd>
 <dt>...</dt>
 <dd><p>Arguments passed to <a href="plot.nmr_dataset_1D.html">plot.nmr_dataset_1D</a> (<code>chemshift_range</code>, <code>...</code>)</p></dd>
 </dl></div>
@@ -98,6 +109,7 @@
 <p>Other peak detection functions: 
 <code><a href="Pipelines.html">Pipelines</a></code>,
 <code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold</a>()</code>,
+<code><a href="nmr_detect_peaks_plot_overview.html">nmr_detect_peaks_plot_overview</a>()</code>,
 <code><a href="nmr_detect_peaks_tune_snr.html">nmr_detect_peaks_tune_snr</a>()</code>,
 <code><a href="nmr_detect_peaks.html">nmr_detect_peaks</a>()</code>,
 <code><a href="nmr_identify_regions_blood.html">nmr_identify_regions_blood</a>()</code>,
@@ -108,6 +120,7 @@
 <p>Other peak detection functions: 
 <code><a href="Pipelines.html">Pipelines</a></code>,
 <code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold</a>()</code>,
+<code><a href="nmr_detect_peaks_plot_overview.html">nmr_detect_peaks_plot_overview</a>()</code>,
 <code><a href="nmr_detect_peaks_tune_snr.html">nmr_detect_peaks_tune_snr</a>()</code>,
 <code><a href="nmr_detect_peaks.html">nmr_detect_peaks</a>()</code>,
 <code><a href="nmr_identify_regions_blood.html">nmr_identify_regions_blood</a>()</code>,
@@ -164,14 +177,11 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco
-Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco
-Colás.</p>
+  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

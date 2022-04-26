@@ -173,18 +173,18 @@ the examples here and <a href="plsda_auroc_vip_method.html">plsda_auroc_vip_meth
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cv_outer_iteration ncomp   auc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1 0.733</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>                  2     1 0.812</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>                  3     1 0.533</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1 1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>                  2     1 0.8  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>                  3     1 0.812</span>
 <span class="r-in"><span class="co">## Rank Product of the Variable Importance in the Projection</span></span>
 <span class="r-in"><span class="co">## (Lower means more important)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">outer_cv_results_digested</span><span class="op">$</span><span class="va">vip_rankproducts</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak2     Peak1    Peak19     Peak6     Peak7     Peak5    Peak16    Peak17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.709976  2.080084  2.884499  3.174802  4.932424  6.415069  8.572619  8.759038 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak14    Peak11    Peak12     Peak8     Peak3     Peak9    Peak13    Peak15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8.879040 10.446439 10.482966 12.062177 12.603409 13.084265 14.016986 14.409664 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak10    Peak18    Peak20     Peak4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14.910579 17.145238 17.544106 17.942201 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak2     Peak6     Peak9    Peak19    Peak15    Peak20    Peak10     Peak7 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.000000  2.884499  3.779763  3.914868  4.379519  4.820285  6.804092  8.962809 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak8    Peak14    Peak13    Peak12     Peak5     Peak3    Peak16     Peak1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10.338418 10.482966 11.000000 11.696071 12.632719 13.564846 14.187942 15.326189 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak17    Peak11    Peak18     Peak4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15.639054 16.726893 17.145238 19.000000 </span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -196,14 +196,11 @@ the examples here and <a href="plsda_auroc_vip_method.html">plsda_auroc_vip_meth
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco
-Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco
-Colás.</p>
+  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

@@ -100,10 +100,15 @@ for peaks.</p></dd>
 
     <dt><code>baselineThresh</code></dt>
 <dd><p>It will remove all peaks under an intensity set by
-baselineThresh. If you set it to 'NULL', nmr_detect_peaks will
-automatically compute an aproximate value considering baseline between 9.5
-and 10.0 ppm (automatically calculation using <code>baselineThresh = NULL</code> will
-not work if spectra were not interpolated up to 10.0 ppm)</p></dd>
+<code>baselineThresh</code>. If you set it to <code>NULL</code>, <code><a href="nmr_detect_peaks.html">nmr_detect_peaks()</a></code> will
+automatically estimate the baseline on the region given by the
+<code>range_without_peaks</code> argument.</p></dd>
+
+    <dt><code>range_without_peaks</code></dt>
+<dd><p>A numeric vector of length two with a region without peaks, only used when <code>baselineThresh = NULL</code></p></dd>
+
+    <dt><code>verbose</code></dt>
+<dd><p>Logical (<code>TRUE</code> or <code>FALSE</code>). Show informational messages, such as the estimated baseline</p></dd>
 
     <dt><code>scales</code></dt>
 <dd><p>The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.</p></dd>
@@ -130,6 +135,7 @@ SNR threshold. Use <a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class=
 <p>Other peak detection functions: 
 <code><a href="Pipelines.html">Pipelines</a></code>,
 <code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold</a>()</code>,
+<code><a href="nmr_detect_peaks_plot_overview.html">nmr_detect_peaks_plot_overview</a>()</code>,
 <code><a href="nmr_detect_peaks_plot.html">nmr_detect_peaks_plot</a>()</code>,
 <code><a href="nmr_detect_peaks.html">nmr_detect_peaks</a>()</code>,
 <code><a href="nmr_identify_regions_blood.html">nmr_identify_regions_blood</a>()</code>,
@@ -186,14 +192,11 @@ SNR threshold. Use <a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class=
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco
-Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco
-Colás.</p>
+  <p></p><p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>
