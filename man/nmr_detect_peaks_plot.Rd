@@ -7,9 +7,9 @@
 nmr_detect_peaks_plot(
   nmr_dataset,
   peak_data,
-  NMRExperiment,
-  peak_ids = NULL,
-  accepted_only = TRUE,
+  NMRExperiment = NULL,
+  peak_id = NULL,
+  accepted_only = NULL,
   ...
 )
 }
@@ -20,9 +20,9 @@ nmr_detect_peaks_plot(
 
 \item{NMRExperiment}{a single NMR experiment to plot}
 
-\item{peak_ids}{A character vector. If given, plot only those peak ids. Example: \code{c("Peak021", "Peak132")}}
+\item{peak_id}{A character vector. If given, plot only that peak id.}
 
-\item{accepted_only}{If \code{peak_data} contains a logical column named \code{accepted}, only those with \code{accepted=TRUE} will be counted.}
+\item{accepted_only}{If \code{peak_data} contains a logical column named \code{accepted}, only those with \code{accepted=TRUE} will be counted. By default, \code{accepted_only = TRUE}, unless a \code{peak_id} is given}
 
 \item{...}{Arguments passed to \link{plot.nmr_dataset_1D} (\code{chemshift_range}, \code{...})}
 }

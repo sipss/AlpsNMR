@@ -192,9 +192,9 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
 #' @inheritParams nmr_detect_peaks
 #' @param peak_data The peak table returned by [nmr_detect_peaks]
 #' @param NMRExperiment a single NMR experiment to plot
-#' @param peak_ids A character vector. If given, plot only those peak ids. Example: `c("Peak021", "Peak132")`
+#' @param peak_id A character vector. If given, plot only that peak id.
 #' @param ... Arguments passed to [plot.nmr_dataset_1D] (`chemshift_range`, `...`)
-#' @param accepted_only If `peak_data` contains a logical column named `accepted`, only those with `accepted=TRUE` will be counted.
+#' @param accepted_only If `peak_data` contains a logical column named `accepted`, only those with `accepted=TRUE` will be counted. By default, `accepted_only = TRUE`, unless a `peak_id` is given
 #' @export
 #' @return Plot peak detection results
 #' 
@@ -204,23 +204,30 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
 nmr_detect_peaks_plot <- function(nmr_dataset,
                                   peak_data,
                                   NMRExperiment = NULL,
-                                  peak_ids = NULL,
-                                  accepted_only = TRUE,
+                                  peak_id = NULL,
+                                  accepted_only = NULL,
                                   ...) {
     
-    if (!rlang::is_scalar_character(NMRExperiment) && is.null(peak_ids)) {
-        stop("NMRExperiment should be a string or peak_ids should contain peaks from one experiment")
+    if (!rlang::is_scalar_character(NMRExperiment) && is.null(peak_id)) {
+        stop("NMRExperiment should be a string or peak_id should be a peak from one experiment")
     }
     peak_data_to_show <- peak_data
     if (is.null(NMRExperiment)) {
-        peak_data_to_show <- peak_data_to_show[peak_data_to_show$peak_id %in% peak_ids,,drop=FALSE]
+        peak_data_to_show <- peak_data_to_show[peak_data_to_show$peak_id %in% peak_id,,drop=FALSE]
         NMRExperiment <- unique(peak_data_to_show$NMRExperiment)
         if (!rlang::is_scalar_character(NMRExperiment)) {
             stop(glue::glue(
                 "Peak ids `{peakids}` should belong to only one NMRExperiment ({exper})",
-                peakids = paste0(peak_ids, collapse = ", "),
+                peakids = paste0(peak_id, collapse = ", "),
                 exper = paste0(NMRExperiment, collapse = ", ")
                 ))
+        }
+    }
+    if (is.null(accepted_only)) {
+        if (!is.null(peak_id)) {
+            accepted_only <- FALSE
+        } else {
+            accepted_only <- TRUE
         }
     }
     # If we plot only a subset of the data, we also plot only the required
@@ -242,8 +249,8 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
     if (accepted_only && "accepted" %in% colnames(peak_data_to_show)) {
         peak_data_to_show <- peak_data_to_show[peak_data_to_show$accepted,,drop=FALSE]
     }
-    if (!is.null(peak_ids)) {
-        peak_data_to_show <- peak_data_to_show[peak_data_to_show$peak_id %in% peak_ids,,drop=FALSE]
+    if (!is.null(peak_id)) {
+        peak_data_to_show <- peak_data_to_show[peak_data_to_show$peak_id %in% peak_id,,drop=FALSE]
     }
     # Plot:
     if ("chemshift_range" %in% names(dots)) {
@@ -270,6 +277,64 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
             linetype = "dashed"
         )
     plt
+}
+
+signif_transformer <- function(digits = 3) {
+    force(digits)
+    function(text, envir) {
+        x <- glue::identity_transformer(text, envir)
+        if (is.numeric(x)) {
+            signif(x, digits = digits)
+        } else {
+            x
+        }
+    }
+}
+
+
+#' Plot multiple peaks from a peak list
+#'
+#' @param nmr_dataset The `nmr_dataset_1D` object with the spectra
+#' @param peak_data A data frame, the peak list
+#' @param peak_ids The peak ids to plot
+#' @param caption The caption for each subplot
+#'
+#' @return A plot object
+#' @export
+#'
+nmr_detect_peaks_plot_peaks <- function(
+        nmr_dataset, 
+        peak_data,
+        peak_ids,
+        caption = "{peak_id} (NMRExp. {NMRExperiment}, \u03B3 = {gamma},\narea = {area}, nrmse = {norm_rmse})") {
+    
+    has_cowplot <- requireNamespace("cowplot", quietly = TRUE)
+    has_scales <- requireNamespace("scales", quietly = TRUE)
+    has_gridextra <- requireNamespace("gridExtra", quietly = TRUE)
+    if (!all(has_cowplot, has_scales, has_gridextra)) {
+        miss_pkgs <- c("cowplot", "scales", "gridExtra")[c(has_cowplot, has_scales, has_gridextra)]
+        rlang::abort(message = c(
+            "nmr_detect_peaks_plot_peaks() requires additional packages. Please install them. You may want to use:",
+            glue::glue("install.packages({deparse(miss_pkgs)})", miss_pkgs = miss_pkgs)
+            )
+        )
+    }
+
+    force(nmr_dataset)
+    force(peak_data)
+    plots <- purrr::map(peak_ids, function(peak_id) {
+        peak_metadata <- peak_data[peak_data$peak_id == peak_id, , drop = FALSE]
+        nmr_detect_peaks_plot(nmr_dataset, peak_data, peak_id = peak_id) +
+            ggplot2::labs(caption = glue::glue_data(.x = peak_metadata, caption, .transformer = signif_transformer(3))) +
+            ggplot2::scale_y_continuous(labels = scales::label_number_si()) +
+            ggplot2::theme(legend.position = "none", axis.title = ggplot2::element_blank())
+    })
+    all_plots <- cowplot::plot_grid(plotlist = plots)
+    
+    axis_title_x <- grid::textGrob("Chemical shift (ppm)", gp=grid::gpar(fontsize=14))
+    axis_title_y <- grid::textGrob("Intensity (a.u.)", gp=grid::gpar(fontsize=14), rot=90)
+
+    gridExtra::grid.arrange(gridExtra::arrangeGrob(all_plots, left = axis_title_y, bottom = axis_title_x))
 }
 
 #' Convert a speaq::detectSpecPeaks peak list to an interpretable data frame
