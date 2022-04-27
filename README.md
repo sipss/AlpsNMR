@@ -26,7 +26,7 @@ AlpsNMR can be installed with the `devtools` package. For this is needed
 Rtools and note that it uses packages from
 CRAN, from BioConductor and from git repositories:
 
-If you already have Rtools, follow this to install AlspNMR:
+If you already have Rtools, follow this to install AlpsNMR:
 
 ```r
 if (!"BiocManager" %in% rownames(installed.packages()))  
