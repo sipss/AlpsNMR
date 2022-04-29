@@ -251,11 +251,11 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
     dots <- list(...)
     if ("chemshift_range" %in% names(dots)) {
         chemshift_range <- dots[["chemshift_range"]]
-        chemshift_range[seq_len(2)] <-
-            range(chemshift_range[seq_len(2)])
+        chemshift_range[seq_len(2)] <- range(chemshift_range[seq_len(2)])
     } else {
         chemshift_range <- range(c(peak_data_to_show$ppm, peak_data_to_show$ppm_infl_min-0.01, peak_data_to_show$ppm_infl_max+0.01))
     }
+    dots[["chemshift_range"]] <- chemshift_range
     peak_data_to_show <- dplyr::filter(
         peak_data_to_show,
         .data$NMRExperiment == !!NMRExperiment,
@@ -268,24 +268,15 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
     if (!is.null(peak_id)) {
         peak_data_to_show <- peak_data_to_show[peak_data_to_show$peak_id %in% peak_id,,drop=FALSE]
     }
-    # Plot:
-    # FIXME: Overwrite the chemshift_range in  ... instead of this approach.
-    if ("chemshift_range" %in% names(dots)) {
-        plt <- plot(
-            nmr_dataset,
-            NMRExperiment = NMRExperiment,
-            ...,
-            interactive = FALSE
-        )
-    } else {
-        plt <- plot(
-            nmr_dataset,
-            NMRExperiment = NMRExperiment,
-            ...,
-            chemshift_range = chemshift_range,
-            interactive = FALSE
-        )
-    }
+    # We can't make it interactive here
+    interactive <- "interactive" %in% names(dots) && dots[["interactive"]]
+    dots[["interactive"]] <- FALSE
+    plt <- rlang::exec(
+        plot,
+        nmr_dataset,
+        NMRExperiment = NMRExperiment,
+        !!!dots
+    )
     plt <- plt +
         ggplot2::geom_vline(
             data = peak_data_to_show,
@@ -293,7 +284,12 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
             color = "black",
             linetype = "dashed"
         )
-    plt
+
+    if (interactive) {
+        plotly::ggplotly(plt)
+    } else {
+        plt
+    }
 }
 
 signif_transformer <- function(digits = 3) {
