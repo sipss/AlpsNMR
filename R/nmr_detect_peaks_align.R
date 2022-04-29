@@ -60,6 +60,11 @@ NULL
 #' [speaq::detectSpecPeaks]. `detectSpecPeaks` divides the whole spectra into
 #' smaller segments and uses [MassSpecWavelet::peakDetectionCWT] for peak
 #' detection.
+#' 
+#' Afterwards, the peak apex and the peak inflection points are used to efficiently
+#' adjust a lorentzian to each peak, and compute the peak area and width, as well as
+#' the error of the fit. These peak features can be used afterwards to reject false
+#' detections.
 #'
 #' @family peak detection functions
 #' @family nmr_dataset_1D functions
@@ -67,10 +72,11 @@ NULL
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @param nDivRange_ppm Segment size, in ppms, to divide the spectra and search
 #'     for peaks.
-#' @param baselineThresh It will remove all peaks under an intensity set by
-#'     `baselineThresh`. If you set it to `NULL`, `nmr_detect_peaks()` will
-#'     automatically estimate the baseline on the region given by the
-#'     `range_without_peaks` argument.
+#' @param baselineThresh All peaks with intensities below the thresholds are excluded. Either:
+#'   - A numeric vector of length the number of samples. Each number is a threshold for that sample
+#'   - A single number. All samples use this number as baseline threshold.
+#'   - A function, that takes the `nmr_dataset` and `range_without_peaks` and returns a numeric vector with the thresholds.
+#'   - `NULL`. If that's the case, a default function is used ([nmr_baseline_threshold()])
 #' @inheritParams speaq::detectSpecPeaks
 #' @param range_without_peaks A numeric vector of length two with a region without peaks, only used when `baselineThresh = NULL`
 #' @param verbose Logical (`TRUE` or `FALSE`). Show informational messages, such as the estimated baseline
@@ -150,7 +156,8 @@ nmr_detect_peaks <- function(nmr_dataset,
         ),
         SIMPLIFY = FALSE
     )
-    peakList_to_dataframe(nmr_dataset, peakList)
+    peak_data <- peakList_to_dataframe(nmr_dataset, peakList)
+    peaklist_fit_lorentzians(peak_data, nmr_dataset)
 }
 
 #' Overview of the peak detection results
