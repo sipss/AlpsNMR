@@ -91,12 +91,14 @@ nmr_detect_peaks <- function(nmr_dataset,
     ppm_resolution <- stats::median(diff(nmr_dataset$axis))
     nDivRange <- round(nDivRange_ppm / ppm_resolution)
     
+    baselineThresh_fun <- NULL
     # Computes the Baseline Threshold
     if (is.null(baselineThresh)) {
-        baselineThresh <- nmr_baseline_threshold(
-            nmr_dataset,
-            range_without_peaks = range_without_peaks
-        )
+        baselineThresh_fun <- nmr_baseline_threshold
+    }
+    if (rlang::is_function(baselineThresh)) {
+        baselineThresh_fun <- baselineThresh
+        baselineThresh <- rlang::exec(baselineThresh_fun, nmr_dataset, range_without_peaks = range_without_peaks)
         if (isTRUE(verbose)) {
             rlang::inform(
                 message = c(
@@ -116,6 +118,13 @@ nmr_detect_peaks <- function(nmr_dataset,
             )
         }
     }
+    
+    if (!is.numeric(baselineThresh)) {
+        rlang::abort(glue::glue("The baseline threshold is not numeric: {baselineThresh}"))
+    }
+    if (length(baselineThresh) == 1) {
+        baselineThresh <- rep(baselineThresh, times = nmr_dataset$num_samples)
+    }
 
     data_matrix_to_list <-
         lapply(seq_len(nrow(nmr_dataset$data_1r)),
@@ -123,16 +132,23 @@ nmr_detect_peaks <- function(nmr_dataset,
                    matrix(nmr_dataset$data_1r[i, ], nrow = 1))
 
     warn_future_to_biocparallel()
-    peakList <- BiocParallel::bplapply(
-        X = data_matrix_to_list,
-        FUN = function(spec, ...) {
-            speaq::detectSpecPeaks(spec, ...)[[1]]
+    peakList <- BiocParallel::bpmapply(
+        FUN = function(spec, thresh, ...) {
+            speaq::detectSpecPeaks(
+                spec,
+                baselineThresh = thresh,
+                ...
+            )[[1]]
         },
-        nDivRange = nDivRange,
-        scales = scales,
-        baselineThresh = baselineThresh,
-        SNR.Th = SNR.Th,
-        verbose = FALSE
+        data_matrix_to_list,
+        baselineThresh,
+        MoreArgs = list(
+            nDivRange = nDivRange,
+            scales = scales,
+            SNR.Th = SNR.Th,
+            verbose = FALSE
+        ),
+        SIMPLIFY = FALSE
     )
     peakList_to_dataframe(nmr_dataset, peakList)
 }
@@ -253,6 +269,7 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
         peak_data_to_show <- peak_data_to_show[peak_data_to_show$peak_id %in% peak_id,,drop=FALSE]
     }
     # Plot:
+    # FIXME: Overwrite the chemshift_range in  ... instead of this approach.
     if ("chemshift_range" %in% names(dots)) {
         plt <- plot(
             nmr_dataset,
