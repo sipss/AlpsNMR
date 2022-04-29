@@ -14,13 +14,7 @@
 #' download_MTBLS242("./MTBLS242")
 #' }
 download_MTBLS242 <- function(dest_dir = "MTBLS242") {
-  has_curl <- requireNamespace("curl", quietly = TRUE)
-  has_zip <- requireNamespace("zip", quietly = TRUE)
-  if (!has_curl || !has_zip) {
-    pkgs <- c("curl", "zip")[c(!has_curl, !has_zip)]
-    stop(sprintf("Please install the packages: %s", paste0(pkgs, collapse = ", ")))
-  }
-  
+  require_pkgs(pkg = c("curl", "zip"))
   url <- "ftp://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242/"
   
   dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)

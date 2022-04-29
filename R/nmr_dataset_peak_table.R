@@ -230,12 +230,7 @@ nmr_dataset_peak_table_to_SummarizedExperiment <- function(nmr_peak_table) {
 #' se <- nmr_dataset_peak_table_to_SummarizedExperiment(nmr_peak_table)
 #' nmr_peak_table <- SummarizedExperiment_to_nmr_dataset_peak_table(se)
 SummarizedExperiment_to_nmr_dataset_peak_table <- function(se) {
-    if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
-        rlang::abort("Please install the SummarizedExperiment package")
-    }
-    if (!requireNamespace("S4Vectors", quietly = TRUE)) {
-        rlang::abort("Please install the S4Vectors package")
-    }
+    require_pkgs(pkg = c("SummarizedExperiment", "S4Vectors"))
     meta <- S4Vectors::metadata(se)
     
     col_names <- names(meta)

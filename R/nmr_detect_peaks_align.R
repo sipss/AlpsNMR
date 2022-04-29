@@ -325,18 +325,7 @@ nmr_detect_peaks_plot_peaks <- function(
         peak_ids,
         caption = "{peak_id} (NMRExp. {NMRExperiment}, \u03B3 = {gamma},\narea = {area}, nrmse = {norm_rmse})") {
     
-    has_cowplot <- requireNamespace("cowplot", quietly = TRUE)
-    has_scales <- requireNamespace("scales", quietly = TRUE)
-    has_gridextra <- requireNamespace("gridExtra", quietly = TRUE)
-    if (!all(has_cowplot, has_scales, has_gridextra)) {
-        miss_pkgs <- c("cowplot", "scales", "gridExtra")[c(has_cowplot, has_scales, has_gridextra)]
-        rlang::abort(message = c(
-            "nmr_detect_peaks_plot_peaks() requires additional packages. Please install them. You may want to use:",
-            glue::glue("install.packages({deparse(miss_pkgs)})", miss_pkgs = miss_pkgs)
-            )
-        )
-    }
-
+    require_pkgs(pkg = c("cowplot", "scales", "gridExtra"))
     force(nmr_dataset)
     force(peak_data)
     plots <- purrr::map(peak_ids, function(peak_id) {

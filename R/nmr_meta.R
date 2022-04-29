@@ -253,9 +253,7 @@ nmr_meta_add_tidy_excel <- function(nmr_data, excel_file) {
 nmr_meta_export <- function(nmr_dataset,
                             xlsx_file,
                             groups = c("info", "orig", "title", "external")) {
-    if (!requireNamespace("writexl", quietly = TRUE)) {
-        rlang::abort("Please install the writexl package to export the metadata using this function")
-    }
+    require_pkgs("writexl")
     groups_present <- groups %in% names(nmr_dataset$metadata)
     if (!all(groups_present)) {
         warning(

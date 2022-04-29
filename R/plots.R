@@ -27,15 +27,7 @@ plot.nmr_dataset_1D <- function(x,
                                 quantile_colors = NULL,
                                 ...) {
     if (interactive) {
-        if (!requireNamespace("plotly", quietly = TRUE)) {
-            rlang::abort(
-                message = c(
-                    "plot.nmr_dataset_1D() requires the plotly package to create interactive plots. Please install it.",
-                    "i" = 'You may want to use: install.packages("plotly")',
-                    "i" = "Otherwise, you can set interactive=FALSE."
-                )
-            )
-        }
+        require_pkgs("plotly", msgs = c("i" = "Otherwise, you can set interactive=FALSE."))
     }
     if (is.null(chemshift_range)) {
         chemshift_range <- range(x$axis)
