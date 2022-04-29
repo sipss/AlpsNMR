@@ -15,10 +15,9 @@ nmr_baseline_threshold(nmr_dataset, range_without_peaks = c(9.5, 10))
 Numerical. A threshold value in intensity below that no peak is detected.
 }
 \description{
-Estimates the threshold value for peak detection on an \link{nmr_dataset_1D} object.
-This is performed computing the mean and the standard deviation of each spectrum
-beyond 9.5 ppm. The threshold is then averaged of means and adding 3 times the
-mean of the standard deviations
+Estimates a robust baseline threshold value for peak detection on an \link{nmr_dataset_1D} object.
+This is performed computing the median and the mean absolute deviation of each spectrum
+in the 9.5-10 ppm range. The threshold is computed as the \code{median+3*mad}.
 }
 \examples{
 dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")

@@ -24,10 +24,13 @@ nmr_detect_peaks_tune_snr(
     \item{\code{nmr_dataset}}{An \link{nmr_dataset_1D}.}
     \item{\code{nDivRange_ppm}}{Segment size, in ppms, to divide the spectra and search
 for peaks.}
-    \item{\code{baselineThresh}}{It will remove all peaks under an intensity set by
-\code{baselineThresh}. If you set it to \code{NULL}, \code{nmr_detect_peaks()} will
-automatically estimate the baseline on the region given by the
-\code{range_without_peaks} argument.}
+    \item{\code{baselineThresh}}{All peaks with intensities below the thresholds are excluded. Either:
+\itemize{
+\item A numeric vector of length the number of samples. Each number is a threshold for that sample
+\item A single number. All samples use this number as baseline threshold.
+\item A function, that takes the \code{nmr_dataset} and \code{range_without_peaks} and returns a numeric vector with the thresholds.
+\item \code{NULL}. If that's the case, a default function is used (\code{\link[=nmr_baseline_threshold]{nmr_baseline_threshold()}})
+}}
     \item{\code{range_without_peaks}}{A numeric vector of length two with a region without peaks, only used when \code{baselineThresh = NULL}}
     \item{\code{verbose}}{Logical (\code{TRUE} or \code{FALSE}). Show informational messages, such as the estimated baseline}
     \item{\code{scales}}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.}

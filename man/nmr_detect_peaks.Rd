@@ -22,10 +22,13 @@ for peaks.}
 
 \item{scales}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.}
 
-\item{baselineThresh}{It will remove all peaks under an intensity set by
-\code{baselineThresh}. If you set it to \code{NULL}, \code{nmr_detect_peaks()} will
-automatically estimate the baseline on the region given by the
-\code{range_without_peaks} argument.}
+\item{baselineThresh}{All peaks with intensities below the thresholds are excluded. Either:
+\itemize{
+\item A numeric vector of length the number of samples. Each number is a threshold for that sample
+\item A single number. All samples use this number as baseline threshold.
+\item A function, that takes the \code{nmr_dataset} and \code{range_without_peaks} and returns a numeric vector with the thresholds.
+\item \code{NULL}. If that's the case, a default function is used (\code{\link[=nmr_baseline_threshold]{nmr_baseline_threshold()}})
+}}
 
 \item{SNR.Th}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.}
 
@@ -42,6 +45,12 @@ The function detects peaks on an \link{nmr_dataset_1D} object, using
 \link[speaq:detectSpecPeaks]{speaq::detectSpecPeaks}. \code{detectSpecPeaks} divides the whole spectra into
 smaller segments and uses \link[MassSpecWavelet:peakDetectionCWT]{MassSpecWavelet::peakDetectionCWT} for peak
 detection.
+}
+\details{
+Afterwards, the peak apex and the peak inflection points are used to efficiently
+adjust a lorentzian to each peak, and compute the peak area and width, as well as
+the error of the fit. These peak features can be used afterwards to reject false
+detections.
 }
 \seealso{
 \link{nmr_align} for peak alignment with the detected peak table
