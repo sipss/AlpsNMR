@@ -1,9 +1,8 @@
 #' Threshold estimation for peak detection
 #'
-#' Estimates the threshold value for peak detection on an [nmr_dataset_1D] object.
-#'    This is performed computing the mean and the standard deviation of each spectrum
-#'    beyond 9.5 ppm. The threshold is then averaged of means and adding 3 times the
-#'    mean of the standard deviations
+#' Estimates a robust baseline threshold value for peak detection on an [nmr_dataset_1D] object.
+#'    This is performed computing the median and the mean absolute deviation of each spectrum
+#'    in the 9.5-10 ppm range. The threshold is computed as the `median+3*mad`.
 #'
 #' @family peak detection functions
 #' @family nmr_dataset_1D functions
@@ -17,15 +16,19 @@
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' bl_threshold <- nmr_baseline_threshold(dataset_1D)
 #' 
-
 nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = c(9.5, 10)) {
+    # FIXME: Maybe a whole baseline would be better, so we can cope with slowly changing baselines better
     if (length(range_without_peaks) != 2) {
         rlang::abort("range_without_peaks must have length 2")
     }
     r_start <- min(range_without_peaks)
     r_end <- max(range_without_peaks)
     threshold_ind <- nmr_dataset$axis >= r_start & nmr_dataset$axis < r_end
-    cent <- mean(apply(nmr_dataset$data_1r[, threshold_ind], 2, mean))
-    disp <- mean(apply(nmr_dataset$data_1r[, threshold_ind], 2, stats::sd))
-    cent + 3*disp
+    out <- rep(NA_real_, nmr_dataset$num_samples)
+    for (i in seq_len(nmr_dataset$num_samples)) {
+        spec_region <- nmr_dataset$data_1r[i, threshold_ind]
+        out[i] <- stats::median(spec_region) + 3*stats::mad(spec_region)
+    }
+    names(out) <- nmr_meta_get_column(nmr_dataset, column = "NMRExperiment")
+    out
 }
