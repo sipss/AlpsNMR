@@ -1,3 +1,17 @@
+# AlpsNMR 3.7.1 (2022-05-02)
+
+- Peak detection has a more robust baseline threshold estimation
+- Peak detection estimates the baseline threshold on each sample individually.
+  The threshold is calculated using only the sample where we are currently detecting the peaks
+- Peak detection includes a simple but effective lorentzian fitting (for area and width estimation)
+- Add functions to evaluate the quality of the peak detection using plots
+- More fine grained interpolation axis if `axis = NULL` is given in `nmr_interpolate_1D()`
+- Save list of excluded regions in the `nmr_dataset` object.
+- Drop MassSpecWavelet workaround on partial argument matching since it was fixed upstream
+- Documentation: Start providing verbose messages with tips in functions
+- Remove unused deprecated imports from the `future` package (#65, thanks to @HenrikBengtsson)
+- Add URL and BugReports to the DESCRIPTION (#64, thanks to @HenrikBengtsson)
+
 # AlpsNMR 3.5.1 (2022-04-07)
 
 - `plot_interactive` now accepts an `overwrite` argument to avoid asking the user
