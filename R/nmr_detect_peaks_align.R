@@ -97,13 +97,14 @@ nmr_detect_peaks <- function(nmr_dataset,
     ppm_resolution <- stats::median(diff(nmr_dataset$axis))
     nDivRange <- round(nDivRange_ppm / ppm_resolution)
     
-    baselineThresh_fun <- NULL
     # Computes the Baseline Threshold
+    baselineThresh_fun <- NULL
     if (is.null(baselineThresh)) {
         baselineThresh_fun <- nmr_baseline_threshold
-    }
-    if (rlang::is_function(baselineThresh)) {
+    } else if (rlang::is_function(baselineThresh)) {
         baselineThresh_fun <- baselineThresh
+    }
+    if (!is.null(baselineThresh_fun)) {
         baselineThresh <- rlang::exec(baselineThresh_fun, nmr_dataset, range_without_peaks = range_without_peaks)
         if (isTRUE(verbose)) {
             rlang::inform(
