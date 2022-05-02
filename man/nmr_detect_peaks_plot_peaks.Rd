@@ -8,8 +8,8 @@ nmr_detect_peaks_plot_peaks(
   nmr_dataset,
   peak_data,
   peak_ids,
- 
-    caption = "{peak_id} (NMRExp. {NMRExperiment}, γ = {gamma},\\narea = {area}, nrmse = {norm_rmse})"
+  caption = paste("{peak_id}", "(NMRExp. {NMRExperiment},", "γ = {gamma},",
+    "\\narea = {area},", "nrmse = {norm_rmse})")
 )
 }
 \arguments{
