@@ -327,7 +327,8 @@ nmr_detect_peaks_plot_peaks <- function(
         nmr_dataset, 
         peak_data,
         peak_ids,
-        caption = "{peak_id} (NMRExp. {NMRExperiment}, \u03B3 = {gamma},\narea = {area}, nrmse = {norm_rmse})") {
+        caption = paste("{peak_id}", "(NMRExp.\u00A0{NMRExperiment},", "\u03B3\u00A0=\u00A0{gamma},",
+                        "\narea\u00A0=\u00A0{area},", "nrmse\u00A0=\u00A0{norm_rmse})")) {
     
     require_pkgs(pkg = c("cowplot", "scales", "gridExtra"))
     force(nmr_dataset)
