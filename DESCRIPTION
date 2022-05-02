@@ -47,6 +47,8 @@ Description: Reads Bruker NMR data directories both zipped and unzipped.
  Efficient plotting with 1-D data is also available.
  Basic reading of 1D ACD/Labs exported JDX samples is also available.
 License: MIT + file LICENSE
+URL: https://sipss.github.io/AlpsNMR/, https://github.com/sipss/AlpsNMR
+BugReports: https://github.com/sipss/AlpsNMR/issues
 LazyData: FALSE
 Depends: R (>= 4.1), dplyr (>= 0.7.5), future (>= 1.10.0), magrittr (>= 1.5)
 Imports:
