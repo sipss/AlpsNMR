@@ -17,7 +17,6 @@
 #' The [nmr_dataset] object is essentially a list, so it is easy to access
 #' its components for further analysis.
 #'
-#' @importFrom future plan sequential multicore multiprocess multisession cluster remote
 #' @importFrom magrittr %>%
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
