@@ -34,6 +34,15 @@ my_nmr_dataset <- dataset \%>\%
   nmr_normalize(method = "pqn") \%>\%
   plot
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://sipss.github.io/AlpsNMR/}
+  \item \url{https://github.com/sipss/AlpsNMR}
+  \item Report bugs at \url{https://github.com/sipss/AlpsNMR/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Sergio Oller Moreno \email{sergioller@gmail.com} (\href{https://orcid.org/0000-0002-8994-1549}{ORCID})
 
