@@ -125,18 +125,56 @@ peaklist_fit_lorentzians <- function(peak_data, nmr_dataset) {
     peak_data
 }
 
-peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_min = 0, area_max = Inf, ppm_min = -Inf, ppm_max = Inf) {
-    peak_data <- dplyr::mutate(
-        peak_data,
-        accepted = (
-            .data$norm_rmse <= !!nrmse_max & 
-                .data$area >= !!area_min &
-                .data$area <= !!area_max &
-                .data$ppm >= !!ppm_min &
-                .data$ppm <= !!ppm_max &
-                !are_ppm_regions_excluded(.data$ppm_infl_min, .data$ppm_infl_max, nmr_get_excluded_regions(nmr_dataset))
-        )
+
+#' Peak list: Create an `accepted` column based on some criteria
+#'
+#' @param peak_data The peak list (a data frame)
+#' @param nmr_dataset The nmr_dataset where the peak_data was computed from
+#' @param nrmse_max The normalized root mean squared error of the lorentzian peak fitting must be less than or equal to this value
+#' @param area_min Peak areas must be larger or equal to this value
+#' @param area_max Peak areas must be smaller or equal to this value
+#' @param ppm_min The peak apex must be above this value
+#' @param ppm_max The peak apex must be below this value
+#' @param keep_others If `FALSE`, remove those peaks that do not satisfy the criteria
+#'
+#' @return The `peak_data`, with a new `accepted` column (and maybe some filtered rows)
+#' @export
+#'
+#' @examples
+#' # Fake data:
+#' nmr_dataset <- new_nmr_dataset_1D(
+#'   1:10,
+#'   matrix(c(1:5, 4:2, 3, 0), nrow=1),
+#'   list(external = data.frame(NMRExperiment = "10"))
+#' )
+#' peak_data <- data.frame(
+#'   peak_id = c("Peak1", "Peak2"),
+#'   NMRExperiment = c("10", "10"),
+#'   sample_idx = c(1L,1L),
+#'   ppm = c(5, 9),
+#'   pos = c(5, 9),
+#'   intensity = c(5, 3),
+#'   ppm_infl_min = c(3, 8),
+#'   ppm_infl_max = c(7, 10),
+#'   gamma = c(1, 1),
+#'   area = c(25, 3),
+#'   norm_rmse = c(0.01, 0.8)
+#' )
+#' # Create the accepted column:
+#' peak_data <- peaklist_accept_peaks(peak_data, nmr_dataset, area_min = 10)
+#' stopifnot(all(peak_data$accepted == c(TRUE, FALSE)))
+peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_min = 0, area_max = Inf, ppm_min = -Inf, ppm_max = Inf, keep_others = TRUE) {
+    peak_data$accepted <- (
+        peak_data$norm_rmse <= nrmse_max &
+            peak_data$area >= area_min &
+            peak_data$area <= area_max &
+            peak_data$ppm >= ppm_min &
+            peak_data$ppm <= ppm_max &
+            !are_ppm_regions_excluded(peak_data$ppm_infl_min, peak_data$ppm_infl_max, nmr_get_excluded_regions(nmr_dataset))
     )
+    if (!keep_others) {
+        peak_data <- peak_data[!peak_data$accepted, , drop = FALSE]
+    }
     peak_data
 }
 
