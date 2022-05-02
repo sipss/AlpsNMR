@@ -212,6 +212,7 @@ progress_bar_end <- function(pb) {
   }
 }
 
+#' @importFrom future plan
 warn_future_to_biocparallel <- function() {
     # REMOVE THIS WARNING >ONE YEAR AFTER IT'S BEEN RELEASED to BIOCONDUCTOR
     current_plan <- future::plan()
@@ -285,7 +286,7 @@ require_pkgs <- function(pkg, msgs = NULL, ...) {
     if (!all(have_pkgs)) {
         missing_pkgs <- names(have_pkgs)[!have_pkgs]
         aval_pkgs <- rownames(utils::available.packages())
-        if (!"BiocManager" %in% rownames(installed.packages())) {
+        if (!"BiocManager" %in% rownames(utils::installed.packages())) {
             missing_cran_pkgs <- c(missing_pkgs, "BiocManager")
         }
         missing_cran_pkgs <- intersect(missing_pkgs, aval_pkgs)
