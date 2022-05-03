@@ -18,7 +18,7 @@ nmr_dataset_1D full spectra as well as nmr_dataset_peak_table peak tables."><!--
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.7.1</span>
       </span>
     </div>
 
@@ -66,7 +66,7 @@ nmr_dataset_1D full spectra as well as nmr_dataset_peak_table peak tables."><!--
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Bootstrap and permutation over PLS-VIP</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/nmr_data_analysis.R" class="external-link"><code>R/nmr_data_analysis.R</code></a></small>
     <div class="hidden name"><code>bp_VIP_analysis.Rd</code></div>
     </div>
 
@@ -172,7 +172,7 @@ squares regression</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cv_outer_iteration ncomp   auc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1 0.583</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1     1</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## The number of components for the bootstrap models is selected </span></span>
 <span class="r-in"><span class="va">ncomps</span> <span class="op">&lt;-</span> <span class="va">model</span><span class="op">$</span><span class="va">outer_cv_results</span><span class="op">$</span><span class="va">`1`</span><span class="op">$</span><span class="va">model</span><span class="op">$</span><span class="va">ncomp</span></span>
@@ -185,17 +185,13 @@ squares regression</p>
 <span class="r-in">                           ncomp <span class="op">=</span> <span class="va">ncomps</span>,</span>
 <span class="r-in">                           nbootstrap <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 6</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 9</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 5</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 8</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 7</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 9</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 8</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>At least one class is not represented in one fold, which may unbalance the error rate.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 5</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Consider a number of folds lower than the minimum in table(Y): 9</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps</span>
 <span class="r-in"></span>
 </code></pre></div>

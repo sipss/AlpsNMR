@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.7.1</span>
       </span>
     </div>
 
@@ -65,9 +65,23 @@
   <div class="col-md-9 contents">
     <div class="page-header">
       <h1 data-toc-skip>Changelog <small></small></h1>
-      
+      <small>Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="3.7.1" id="alpsnmr-371-2022-05-02">AlpsNMR 3.7.1 (2022-05-02)<a class="anchor" aria-label="anchor" href="#alpsnmr-371-2022-05-02"></a></h2>
+<ul><li>Peak detection has a more robust baseline threshold estimation</li>
+<li>Peak detection estimates the baseline threshold on each sample individually. The threshold is calculated using only the sample where we are currently detecting the peaks</li>
+<li>Peak detection includes a simple but effective lorentzian fitting (for area and width estimation)</li>
+<li>Add functions to evaluate the quality of the peak detection using plots</li>
+<li>More fine grained interpolation axis if <code>axis = NULL</code> is given in <code><a href="../reference/nmr_interpolate_1D.html">nmr_interpolate_1D()</a></code>
+</li>
+<li>Save list of excluded regions in the <code>nmr_dataset</code> object.</li>
+<li>Drop MassSpecWavelet workaround on partial argument matching since it was fixed upstream</li>
+<li>Documentation: Start providing verbose messages with tips in functions</li>
+<li>Remove unused deprecated imports from the <code>future</code> package (<a href="https://github.com/sipss/AlpsNMR/issues/65" class="external-link">#65</a>, thanks to <a href="https://github.com/HenrikBengtsson" class="external-link">@HenrikBengtsson</a>)</li>
+<li>Add URL and BugReports to the DESCRIPTION (<a href="https://github.com/sipss/AlpsNMR/issues/64" class="external-link">#64</a>, thanks to <a href="https://github.com/HenrikBengtsson" class="external-link">@HenrikBengtsson</a>)</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.5.1" id="alpsnmr-351-2022-04-07">AlpsNMR 3.5.1 (2022-04-07)<a class="anchor" aria-label="anchor" href="#alpsnmr-351-2022-04-07"></a></h2>
 <ul><li>
@@ -88,8 +102,8 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.3.4" id="alpsnmr-334-2021-09-16">AlpsNMR 3.3.4 (2021-09-16)<a class="anchor" aria-label="anchor" href="#alpsnmr-334-2021-09-16"></a></h2>
 <ul><li>Fix issue with PCA plots not working as expected</li>
-<li>Ensure NMRExperiment names are not duplicated in a dataset (closes #44)</li>
-<li>Fix issue with some title file formatting in Bruker samples (closes #46)</li>
+<li>Ensure NMRExperiment names are not duplicated in a dataset (closes <a href="https://github.com/sipss/AlpsNMR/issues/44" class="external-link">#44</a>)</li>
+<li>Fix issue with some title file formatting in Bruker samples (closes <a href="https://github.com/sipss/AlpsNMR/issues/46" class="external-link">#46</a>)</li>
 <li>Export groups in to_ChemoSpec</li>
 <li>License since AlpsNMR was released has alwayd been MIT as stated in the bioinformatics paper</li>
 </ul></div>

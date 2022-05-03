@@ -18,7 +18,7 @@ nmr_dataset_1D full spectra as well as nmr_dataset_peak_table peak tables."><!--
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.7.1</span>
       </span>
     </div>
 
@@ -66,7 +66,7 @@ nmr_dataset_1D full spectra as well as nmr_dataset_peak_table peak tables."><!--
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>K-fold bootstrap and permutation over PLS-VIP</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/nmr_data_analysis.R" class="external-link"><code>R/nmr_data_analysis.R</code></a></small>
     <div class="hidden name"><code>bp_kfold_VIP_analysis.Rd</code></div>
     </div>
 
@@ -151,8 +151,9 @@ squares regression, in a k-fold cross validation</p>
 <span class="r-in">                           y_column <span class="op">=</span> <span class="st">"Condition"</span>, <span class="co"># Label</span></span>
 <span class="r-in">                           k <span class="op">=</span> <span class="fl">3</span>,</span>
 <span class="r-in">                           nbootstrap <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Only one VIP ranked as important and relevant, you can try again with more bootstraps</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Only one VIP ranked as important and relevant, you can try again with more bootstraps</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Reset maximum number of variates 'ncomp' to ncol(X) = 2.</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Selected VIPs are: "</span>, <span class="va">bp_results</span><span class="op">$</span><span class="va">importarn_vips</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Selected VIPs are: </span>

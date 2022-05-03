@@ -19,7 +19,7 @@ that region and finally perform PQN normalization."><!-- mathjax --><script src=
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.7.1</span>
       </span>
     </div>
 
@@ -67,7 +67,7 @@ that region and finally perform PQN normalization."><!-- mathjax --><script src=
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Pipelines</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/pipeline.R" class="external-link"><code>R/pipeline.R</code></a></small>
     <div class="hidden name"><code>Pipelines.Rd</code></div>
     </div>
 
@@ -159,10 +159,11 @@ for peaks.</p></dd>
 <dt>scales</dt>
 <dd><p>The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.</p></dd>
 <dt>baselineThresh</dt>
-<dd><p>It will remove all peaks under an intensity set by
-<code>baselineThresh</code>. If you set it to <code>NULL</code>, <code><a href="nmr_detect_peaks.html">nmr_detect_peaks()</a></code> will
-automatically estimate the baseline on the region given by the
-<code>range_without_peaks</code> argument.</p></dd>
+<dd><p>All peaks with intensities below the thresholds are excluded. Either:</p><ul><li><p>A numeric vector of length the number of samples. Each number is a threshold for that sample</p></li>
+<li><p>A single number. All samples use this number as baseline threshold.</p></li>
+<li><p>A function, that takes the <code>nmr_dataset</code> and <code>range_without_peaks</code> and returns a numeric vector with the thresholds.</p></li>
+<li><p><code>NULL</code>. If that's the case, a default function is used (<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>)</p></li>
+</ul></dd>
 <dt>SNR.Th</dt>
 <dd><p>The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.</p></dd>
 <dt>maxShift_ppm</dt>
