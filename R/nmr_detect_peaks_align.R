@@ -330,7 +330,7 @@ nmr_detect_peaks_plot_peaks <- function(
         caption = paste("{peak_id}", "(NMRExp. {NMRExperiment},", "\u03B3 = {gamma},",
                         "\narea = {area},", "nrmse = {norm_rmse})")) {
     
-    require_pkgs(pkg = c("cowplot", "scales", "gridExtra"))
+    require_pkgs(pkg = c("cowplot", "gridExtra"))
     force(nmr_dataset)
     force(peak_data)
     # Workaround https://github.com/r-lib/roxygen2/issues/1342
