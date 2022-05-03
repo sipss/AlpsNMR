@@ -12,7 +12,8 @@ peaklist_accept_peaks(
   area_max = Inf,
   ppm_min = -Inf,
   ppm_max = Inf,
-  keep_others = TRUE
+  keep_rejected = TRUE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -30,10 +31,12 @@ peaklist_accept_peaks(
 
 \item{ppm_max}{The peak apex must be below this value}
 
-\item{keep_others}{If \code{FALSE}, remove those peaks that do not satisfy the criteria}
+\item{keep_rejected}{If \code{FALSE}, removes those peaks that do not satisfy the criteria and remove the accepted column (since all would be accepted)}
+
+\item{verbose}{Print informational message}
 }
 \value{
-The \code{peak_data}, with a new \code{accepted} column (and maybe some filtered rows)
+The \code{peak_data}, with a new \code{accepted} column (or maybe some filtered rows)
 }
 \description{
 Peak list: Create an \code{accepted} column based on some criteria
@@ -54,11 +57,11 @@ peak_data <- data.frame(
   intensity = c(5, 3),
   ppm_infl_min = c(3, 8),
   ppm_infl_max = c(7, 10),
-  gamma = c(1, 1),
+  gamma_ppb = c(1, 1),
   area = c(25, 3),
   norm_rmse = c(0.01, 0.8)
 )
 # Create the accepted column:
-peak_data <- peaklist_accept_peaks(peak_data, nmr_dataset, area_min = 10)
-stopifnot(all(peak_data$accepted == c(TRUE, FALSE)))
+peak_data <- peaklist_accept_peaks(peak_data, nmr_dataset, area_min = 10, keep_rejected = FALSE)
+stopifnot(identical(peak_data$peak_id, "Peak1"))
 }

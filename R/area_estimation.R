@@ -135,9 +135,10 @@ peaklist_fit_lorentzians <- function(peak_data, nmr_dataset) {
 #' @param area_max Peak areas must be smaller or equal to this value
 #' @param ppm_min The peak apex must be above this value
 #' @param ppm_max The peak apex must be below this value
-#' @param keep_others If `FALSE`, remove those peaks that do not satisfy the criteria
+#' @param keep_rejected If `FALSE`, removes those peaks that do not satisfy the criteria and remove the accepted column (since all would be accepted)
+#' @param verbose Print informational message
 #'
-#' @return The `peak_data`, with a new `accepted` column (and maybe some filtered rows)
+#' @return The `peak_data`, with a new `accepted` column (or maybe some filtered rows)
 #' @export
 #'
 #' @examples
@@ -156,14 +157,14 @@ peaklist_fit_lorentzians <- function(peak_data, nmr_dataset) {
 #'   intensity = c(5, 3),
 #'   ppm_infl_min = c(3, 8),
 #'   ppm_infl_max = c(7, 10),
-#'   gamma = c(1, 1),
+#'   gamma_ppb = c(1, 1),
 #'   area = c(25, 3),
 #'   norm_rmse = c(0.01, 0.8)
 #' )
 #' # Create the accepted column:
-#' peak_data <- peaklist_accept_peaks(peak_data, nmr_dataset, area_min = 10)
-#' stopifnot(all(peak_data$accepted == c(TRUE, FALSE)))
-peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_min = 0, area_max = Inf, ppm_min = -Inf, ppm_max = Inf, keep_others = TRUE) {
+#' peak_data <- peaklist_accept_peaks(peak_data, nmr_dataset, area_min = 10, keep_rejected = FALSE)
+#' stopifnot(identical(peak_data$peak_id, "Peak1"))
+peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_min = 0, area_max = Inf, ppm_min = -Inf, ppm_max = Inf, keep_rejected = TRUE, verbose = FALSE) {
     peak_data$accepted <- (
         peak_data$norm_rmse <= nrmse_max &
             peak_data$area >= area_min &
@@ -172,8 +173,17 @@ peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_
             peak_data$ppm <= ppm_max &
             !are_ppm_regions_excluded(peak_data$ppm_infl_min, peak_data$ppm_infl_max, nmr_get_excluded_regions(nmr_dataset))
     )
-    if (!keep_others) {
+    report <- c(
+        "Acceptance report",
+        "i" = glue::glue("{sum(peak_data$accepted)}/{nrow(peak_data)} peaks accepted. ({signif(100*sum(peak_data$accepted)/nrow(peak_data), 3)}%)")
+    )
+    if (!keep_rejected) {
+        report <- c(report, "i" = glue::glue("Removing {sum(!peak_data$accepted)} peaks"))
         peak_data <- peak_data[peak_data$accepted, , drop = FALSE]
+        peak_data$accepted <- NULL
+    }
+    if (verbose) {
+        rlang::inform(message = report)
     }
     peak_data
 }
