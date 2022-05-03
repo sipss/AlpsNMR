@@ -82,7 +82,8 @@
   area_max <span class="op">=</span> <span class="cn">Inf</span>,
   ppm_min <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span>,
   ppm_max <span class="op">=</span> <span class="cn">Inf</span>,
-  keep_others <span class="op">=</span> <span class="cn">TRUE</span>
+  keep_rejected <span class="op">=</span> <span class="cn">TRUE</span>,
+  verbose <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -102,12 +103,14 @@
 <dd><p>The peak apex must be above this value</p></dd>
 <dt>ppm_max</dt>
 <dd><p>The peak apex must be below this value</p></dd>
-<dt>keep_others</dt>
-<dd><p>If <code>FALSE</code>, remove those peaks that do not satisfy the criteria</p></dd>
+<dt>keep_rejected</dt>
+<dd><p>If <code>FALSE</code>, removes those peaks that do not satisfy the criteria and remove the accepted column (since all would be accepted)</p></dd>
+<dt>verbose</dt>
+<dd><p>Print informational message</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The <code>peak_data</code>, with a new <code>accepted</code> column (and maybe some filtered rows)</p>
+    <p>The <code>peak_data</code>, with a new <code>accepted</code> column (or maybe some filtered rows)</p>
     </div>
 
     <div id="ref-examples">
@@ -127,13 +130,13 @@
 <span class="r-in">  intensity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span class="r-in">  ppm_infl_min <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">8</span><span class="op">)</span>,</span>
 <span class="r-in">  ppm_infl_max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7</span>, <span class="fl">10</span><span class="op">)</span>,</span>
-<span class="r-in">  gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span class="r-in">  gamma_ppb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span class="r-in">  area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span class="r-in">  norm_rmse <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.8</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="co"># Create the accepted column:</span></span>
-<span class="r-in"><span class="va">peak_data</span> <span class="op">&lt;-</span> <span class="fu">peaklist_accept_peaks</span><span class="op">(</span><span class="va">peak_data</span>, <span class="va">nmr_dataset</span>, area_min <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">peak_data</span><span class="op">$</span><span class="va">accepted</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">peak_data</span> <span class="op">&lt;-</span> <span class="fu">peaklist_accept_peaks</span><span class="op">(</span><span class="va">peak_data</span>, <span class="va">nmr_dataset</span>, area_min <span class="op">=</span> <span class="fl">10</span>, keep_rejected <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">peak_data</span><span class="op">$</span><span class="va">peak_id</span>, <span class="st">"Peak1"</span><span class="op">)</span><span class="op">)</span></span>
 </code></pre></div>
     </div>
   </div>
