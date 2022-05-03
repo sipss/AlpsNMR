@@ -158,7 +158,16 @@ nmr_detect_peaks <- function(nmr_dataset,
         SIMPLIFY = FALSE
     )
     peak_data <- peakList_to_dataframe(nmr_dataset, peakList)
-    peaklist_fit_lorentzians(peak_data, nmr_dataset)
+    peak_data <- peaklist_fit_lorentzians(peak_data, nmr_dataset)
+    # Remove peaks that cross excluded regions:
+    # We may argue about areas, peak positions, fits... but these ones are clear:
+    peaks_at_excl_regions <- are_ppm_regions_excluded(
+        peak_data$ppm_infl_min,
+        peak_data$ppm_infl_max,
+        nmr_get_excluded_regions(nmr_dataset)
+    )
+    peak_data <- peak_data[!peaks_at_excl_regions, , drop = FALSE]
+    peak_data
 }
 
 #' Overview of the peak detection results
