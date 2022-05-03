@@ -57,6 +57,6 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
             ggplot2::aes(yintercept = .data$threshold),
             data = tibble::enframe(thresholds, name = "NMRExperiment", value = "threshold")
         ) +
-        ggplot2::facet_wrap(~NMRExperiment) +
+        ggplot2::facet_wrap(~factor(NMRExperiment, levels = unique(NMRExperiment))) +
         ggplot2::theme(legend.position = "none")
 }
