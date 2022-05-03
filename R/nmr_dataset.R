@@ -98,7 +98,7 @@ nmr_read_samples_dir_internal <- function(samples_dir,
     } else {
         stop("Unsupported sample format: ", format)
     }
-    
+    all_samples <- stringr::str_sort(all_samples, numeric = TRUE)
     dataset <- nmr_read_samples_internal(
         sample_names = all_samples,
         format = format,
