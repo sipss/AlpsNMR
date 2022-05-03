@@ -327,12 +327,15 @@ nmr_detect_peaks_plot_peaks <- function(
         nmr_dataset, 
         peak_data,
         peak_ids,
-        caption = paste("{peak_id}", "(NMRExp.\u00A0{NMRExperiment},", "\u03B3\u00A0=\u00A0{gamma},",
-                        "\narea\u00A0=\u00A0{area},", "nrmse\u00A0=\u00A0{norm_rmse})")) {
+        caption = paste("{peak_id}", "(NMRExp. {NMRExperiment},", "\u03B3 = {gamma},",
+                        "\narea = {area},", "nrmse = {norm_rmse})")) {
     
     require_pkgs(pkg = c("cowplot", "scales", "gridExtra"))
     force(nmr_dataset)
     force(peak_data)
+    # Workaround https://github.com/r-lib/roxygen2/issues/1342
+    caption <- gsub("NMRExp. ", "NMRExp.\u00A0", caption)
+    caption <- gsub(" = ", "\u00a0=\u00a0", caption)
     plots <- purrr::map(peak_ids, function(peak_id) {
         peak_metadata <- peak_data[peak_data$peak_id == peak_id, , drop = FALSE]
         nmr_detect_peaks_plot(nmr_dataset, peak_data, peak_id = peak_id) +
