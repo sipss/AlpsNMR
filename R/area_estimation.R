@@ -42,7 +42,7 @@ get_peak_bounds <- function(peak_limit_left, peak_limit_right, pos, x, sgf){
 #'
 #' @param x Numbers where the function will be evaluated.
 #' @param x0 The peak location
-#' @param gamma Lorentzian peak width
+#' @param gamma Lorentzian peak width (in the same units as x and x0)
 #' @param A A multiplication factor. When \eqn{x = x_0}, the lorentzian will be \eqn{\frac{A}{\pi \gamma}}
 #'
 #' @return A numeric vector of the same length than `x`, with the values of the lorentzian
@@ -64,7 +64,7 @@ get_norm_rmse <- function(y_fitted, y, y_fitted_apex, y_apex){
 peaklist_fit_lorentzians <- function(peak_data, nmr_dataset) {
     peak_data$ppm_infl_min <- NA_real_
     peak_data$ppm_infl_max <- NA_real_
-    peak_data$gamma <- NA_real_
+    peak_data$gamma_ppb <- NA_real_
     peak_data$area <- NA_real_
     peak_data$norm_rmse <- NA_real_
     
@@ -117,7 +117,7 @@ peaklist_fit_lorentzians <- function(peak_data, nmr_dataset) {
         # And save the result in the peak_data table:
         peak_data$ppm_infl_min[i] <- peak_bounds["xleft"]
         peak_data$ppm_infl_max[i] <- peak_bounds["xright"]
-        peak_data$gamma[i] <- gamma
+        peak_data$gamma_ppb[i] <- 1000*gamma
         peak_data$area[i] <- estimated_A
         peak_data$norm_rmse[i] <- norm_rmse
         sindex_prev <- sindex
