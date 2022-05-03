@@ -324,6 +324,14 @@ signif_transformer <- function(digits = 3) {
 
 #' Plot multiple peaks from a peak list
 #'
+#' @usage nmr_detect_peaks_plot_peaks(
+#'   nmr_dataset,
+#'   peak_data,
+#'   peak_ids,
+#'   caption = paste("{peak_id}", "(NMRExp.\u00A0{NMRExperiment},",
+#'     "\u03B3(ppb)\u00a0=\u00a0{gamma_ppb},", "\narea\u00a0=\u00a0{area},",
+#'     "nrmse\u00a0=\u00a0{norm_rmse})")
+#' )
 #' @param nmr_dataset The `nmr_dataset_1D` object with the spectra
 #' @param peak_data A data frame, the peak list
 #' @param peak_ids The peak ids to plot
@@ -336,15 +344,13 @@ nmr_detect_peaks_plot_peaks <- function(
         nmr_dataset, 
         peak_data,
         peak_ids,
-        caption = paste("{peak_id}", "(NMRExp. {NMRExperiment},", "\u03B3(ppb) = {gamma_ppb},",
-                        "\narea = {area},", "nrmse = {norm_rmse})")) {
+        caption = paste("{peak_id}", "(NMRExp.\u00A0{NMRExperiment},", "\u03B3(ppb)\u00a0=\u00a0{gamma_ppb},",
+                        "\narea\u00a0=\u00a0{area},", "nrmse\u00a0=\u00a0{norm_rmse})")) {
     
     require_pkgs(pkg = c("cowplot", "gridExtra"))
     force(nmr_dataset)
     force(peak_data)
     # Workaround https://github.com/r-lib/roxygen2/issues/1342
-    caption <- gsub("NMRExp. ", "NMRExp.\u00A0", caption)
-    caption <- gsub(" = ", "\u00a0=\u00a0", caption)
     plots <- purrr::map(peak_ids, function(peak_id) {
         peak_metadata <- peak_data[peak_data$peak_id == peak_id, , drop = FALSE]
         nmr_detect_peaks_plot(nmr_dataset, peak_data, peak_id = peak_id) +
