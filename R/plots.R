@@ -129,7 +129,8 @@ plot.nmr_dataset_1D <- function(x,
     gplt <- gplt +
         ggplot2::geom_line(do.call(ggplot2::aes_string, all_aes)) +
         ggplot2::labs(x = "Chemical Shift (ppm)", y = "Intensity (a.u.)") +
-        ggplot2::scale_x_reverse(limits = rev(chemshift_range[seq_len(2)]))
+        ggplot2::scale_x_reverse(limits = rev(chemshift_range[seq_len(2)])) +
+        ggplot2::scale_y_continuous(labels = scales::label_number_si())
     
     if (interactive) {
         output <- plotly::ggplotly(gplt)

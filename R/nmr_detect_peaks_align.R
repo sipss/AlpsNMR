@@ -340,7 +340,6 @@ nmr_detect_peaks_plot_peaks <- function(
         peak_metadata <- peak_data[peak_data$peak_id == peak_id, , drop = FALSE]
         nmr_detect_peaks_plot(nmr_dataset, peak_data, peak_id = peak_id) +
             ggplot2::labs(caption = glue::glue_data(.x = peak_metadata, caption, .transformer = signif_transformer(3))) +
-            ggplot2::scale_y_continuous(labels = scales::label_number_si()) +
             ggplot2::theme(legend.position = "none", axis.title = ggplot2::element_blank())
     })
     all_plots <- cowplot::plot_grid(plotlist = plots)
