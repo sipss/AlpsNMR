@@ -173,7 +173,7 @@ peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_
             !are_ppm_regions_excluded(peak_data$ppm_infl_min, peak_data$ppm_infl_max, nmr_get_excluded_regions(nmr_dataset))
     )
     if (!keep_others) {
-        peak_data <- peak_data[!peak_data$accepted, , drop = FALSE]
+        peak_data <- peak_data[peak_data$accepted, , drop = FALSE]
     }
     peak_data
 }
