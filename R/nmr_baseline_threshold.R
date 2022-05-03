@@ -32,3 +32,31 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = c(9.5, 10)
     names(out) <- nmr_meta_get_column(nmr_dataset, column = "NMRExperiment")
     out
 }
+
+
+#' Plot the baseline thresholds
+#'
+#' If you have a lot of samples you can make the plot window bigger (or
+#' use "` ```{r fig.height=10, fig.width=10}`" in notebooks), or choose some NMRExperiments.
+#' 
+#' @inheritParams plot.nmr_dataset_1D
+#' @param nmr_dataset An [nmr_dataset_1D] object
+#' @param thresholds A named vector. The values are baseline thresholds. The names are NMRExperiments.
+#' @param NMRExperiment The NMRExperiments to plot (Use `"all"` to plot all of them)
+#' @param chemshift_range The range to plot, as a first check use the `range_without_peaks` from [nmr_baseline_threshold]
+#'
+#' @return A plot.
+#' @export
+#'
+nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment = "all", chemshift_range = c(9.5, 10), ...) {
+    if (NMRExperiment != "all") {
+        thresholds <- thresholds[NMRExperiment]
+    }
+    plot(nmr_dataset, chemshift_range = chemshift_range, NMRExperiment = NMRExperiment, ...) +
+        ggplot2::geom_hline(
+            ggplot2::aes(yintercept = .data$threshold),
+            data = tibble::enframe(thresholds, name = "NMRExperiment", value = "threshold")
+        ) +
+        ggplot2::facet_wrap(~NMRExperiment) +
+        ggplot2::theme(legend.position = "none")
+}
