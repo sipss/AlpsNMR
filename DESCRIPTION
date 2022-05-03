@@ -92,12 +92,9 @@ Suggests:
     curl,
     progressr,
     SummarizedExperiment,
-    S4Vectors,
-    roxygen2 (>= 7.1.2.9000)
+    S4Vectors
 biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
-RoxygenNote: 7.1.2.9000
+RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
-Remotes:  
-    zeehio/roxygen2@fix-nbsp-usage
