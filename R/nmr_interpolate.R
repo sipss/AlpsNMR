@@ -58,6 +58,18 @@ nmr_interpolate_1D.nmr_dataset <- function(samples, axis = c(min = 0.2, max = 10
     # Check if we can interpolate:
     verify_dimensionality(samples, valid_dimensions = 1)
     
+    if (missing(axis)) {
+        rlang::inform(
+            message = c(
+                "Change in default axis for interpolation",
+                "i" = "The default axis in the interpolation has changed from `axis = c(min=0.2, max=10, by = 8E-4)` to `axis = NULL`",
+                "i" = "The new default uses the ppm region common to all samples (usually wider than 0.2-10) and a ppm step computed from the data.",
+                "i" = "You can use: nmr_interpolate_1D(<your-dataset>, axis = NULL) or any value for the axis to silence this message."
+            ),
+            .frequency = "once",
+            .frequency_id = "change-nmr_inteporlate_1D_default_axis"
+        )
+    }
     # 2. Check that we have the interpolation axis
     axis <- verify_axisn(axis, samples)
     
