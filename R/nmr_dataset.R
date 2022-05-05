@@ -229,9 +229,15 @@ nmr_read_samples_bruker <-
                         output <- bruker_merge_meta_pdata(meta, pdata)
                         return(output)
                     }, error = function(err) {
-                        warning("Error loading sample: ", sampl)
                         msg <- conditionMessage(err)
-                        message(msg)
+                        rlang::warn(
+                            message = c(
+                                "Error loading a sample",
+                                "i" = glue::glue("The sample '{sampl}' failed to load"),
+                                "i" = glue::glue("The underlying error message is: {msg}")
+                            ),
+                            
+                        )
                         return(NULL)
                     }, finally = {
                         if (is_zip) {
@@ -319,7 +325,7 @@ nmr_read_samples_jdx <-
                     numeric(1)
                 )
             if (any(block_with_data_per_sample == -1)) {
-                stop("Error loading: ", sample_names[block_with_data_per_sample == -1])
+                stop("Loading samples: ", sample_names[block_with_data_per_sample == -1], "failed")
             }
         }
         num_samples <- length(raw_samples)

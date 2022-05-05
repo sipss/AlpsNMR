@@ -191,7 +191,11 @@ process_block <- function(lines, metadata_only = FALSE) {
                 next
             }
             # Unknown data format:
-            stop("Error: Format not implemented")
+            rlang::abort(c(
+                "The format of this data field is not implemented",
+                "i" = sprintf("Line: %d", i),
+                "i" = sprintf("Content: %s", line)
+            ))
         } # The field was not multiline
         # Default field-value pair
         block[[field_name]] <- field_value

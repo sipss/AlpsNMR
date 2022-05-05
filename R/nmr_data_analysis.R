@@ -81,7 +81,14 @@ random_subsampling <- function(sample_idx,
             output[[i]] <- list(training = train_samples,
                                 test = test_samples)
             if (length(train_samples) == 0 || length(test_samples) == 0) {
-              stop("Error in random_subsampling, set of cero length: increase number of samples of the lowest set")
+              rlang::abort(
+                  message = c(
+                      "Too few samples in a random subsampling split",
+                      "i" = glue::glue("Train samples: {length(train_samples)}"),
+                      "i" = glue::glue("Test samples: {length(test_samples)}"),
+                      "i" = sprintf("Please %s the test_subset", ifelse(length(test_samples) == 0, "increase", "decrease"))
+                  )
+              )
             }
         }
     } else {
@@ -94,7 +101,14 @@ random_subsampling <- function(sample_idx,
             output[[i]] <- list(training = train_samples,
                                 test = test_samples)
             if (length(train_samples) == 0 || length(test_samples) == 0) {
-              stop("Error in random_subsampling, set of cero length: increase number of samples of the lowest set")
+                rlang::abort(
+                    message = c(
+                        "Too few samples in a random subsampling split",
+                        "i" = glue::glue("Train samples: {length(train_samples)}"),
+                        "i" = glue::glue("Test samples: {length(test_samples)}"),
+                        "i" = sprintf("Please %s the test_subset", ifelse(length(test_samples) == 0, "increase", "decrease"))
+                    )
+                )
             }
         }
     }
@@ -528,17 +542,17 @@ bp_VIP_analysis <- function(dataset,
     y_test <- y_all[-train_index]
     
     if (length(unique(y_train)) == 1) {
-        stop("Only one class in train set, increase number of samples")
+        stop("Only one class in train set, please increase number of samples")
     }
     if (length(unique(y_test)) == 1) {
-        stop("Only one class in test set, increase number of samples")
+        stop("Only one class in test set, please increase number of samples")
     }
     
     n <- dim(x_all)[2]
     names <- colnames(x_all)
     #some checks
     if (length(names) == 0) {
-        stop("Error in bp_VIP_analysis, the dataset peak_table don't have colnames.")
+        stop("bp_VIP_analysis requires that the `dataset$peak_table` has colnames set.")
     }
     
     pls_vip <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
@@ -651,18 +665,23 @@ bp_VIP_analysis <- function(dataset,
     
     if (length(important_vips) == 0) {
         if (length(relevant_vips) == 0) {
-            warning(
-                "Error in bp_VIP_analysis, none of the variables seems relevant:\n
-             try increasing the number of bootstraps"
+            rlang::warn(
+                message = c(
+                    "bp_VIP_analysis: no relevant variable found",
+                    "i" = "You may try increasing the number of bootstraps"
+                )
             )
         }
-        warning(
-            "No VIPs are ranked as important, use the relevant_vips or try again with more bootstraps"
+        rlang::warn(
+            message = c(
+                "No VIPs are ranked as important",
+                "i" = "Use relevant_vips or try increasing the number of bootstrap iterations"
+            )
         )
         vips_model <- NULL
         vips_CR <- 0
     } else {
-        # Chequing performance of selected vips
+        # Checking performance of selected vips
         if (length(important_vips) == 1) {
             if (length(relevant_vips) == 1) {
                 warning(

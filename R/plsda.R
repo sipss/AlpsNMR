@@ -17,7 +17,14 @@ plsda_build <- function(x, y, identity, ncomp) {
             )
         }))
     }, error = function(e) {
-        stop("Error building PLSDA: ", e)
+        msg <- conditionMessage(e)
+        rlang::abort(
+            message = c(
+                "plsda_build failed",
+                "i" = glue::glue("Original message: {msg}"),
+            ),
+            parent = e
+        )
     })
     plsda_model
 }
@@ -55,7 +62,14 @@ plsda_auroc <-
                 mean(x[, "AUC"]))
             aucs_full <- roc
         }, error = function(e) {
-            stop("Error in auroc estimation: ", e)
+            msg <- conditionMessage(e)
+            rlang::abort(
+                message = c(
+                    "Area Under Curve estimation failed",
+                    "i" = glue::glue("Original message: {msg}"),
+                ),
+                parent = e
+            )
         })
         
         ncomps <-
@@ -86,7 +100,13 @@ plsda_vip <- function(plsda_model) {
             vip <- mixOmics::vip(object = plsda_model)
         }))
     }, error = function(e) {
-        message("Error in vip, continuing")
+        msg <- conditionMessage(e)
+        rlang::inform(
+            message = c(
+                "VIP calculation failed",
+                "i" = glue::glue("Original message: {msg}")
+            )
+        )
     })
     vip
 }
