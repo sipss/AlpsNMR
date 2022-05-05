@@ -71,7 +71,7 @@ set_peak_distances_within_groups <- function(dist_matrix, peak_groups, value = I
 #'   ppm = c(1, 2, 1.1, 3)
 #' )
 #' peak2peak_dist <- nmr_get_peak_distances(peak_data)
-#' stopifnot(as.numeric(peak2peak_dist) == c(6, 0.1, 2, 0.9, 1, 6))
+#' stopifnot(abs(as.numeric(peak2peak_dist) - c(6, 0.1, 2, 0.9, 1, 6)) < 1E-8)
 nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
     peak_matrix <- matrix(peak_data$ppm, ncol = 1)
     rownames(peak_matrix) <- peak_data$peak_id

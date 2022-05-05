@@ -25,5 +25,5 @@ peak_data <- data.frame(
   ppm = c(1, 2, 1.1, 3)
 )
 peak2peak_dist <- nmr_get_peak_distances(peak_data)
-stopifnot(as.numeric(peak2peak_dist) == c(6, 0.1, 2, 0.9, 1, 6))
+stopifnot(abs(as.numeric(peak2peak_dist) - c(6, 0.1, 2, 0.9, 1, 6)) < 1E-8)
 }
