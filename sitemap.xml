@@ -163,6 +163,9 @@
     <loc>/reference/nmr_batman_options.html</loc>
   </url>
   <url>
+    <loc>/reference/nmr_build_peak_table.html</loc>
+  </url>
+  <url>
     <loc>/reference/nmr_data.html</loc>
   </url>
   <url>
@@ -214,6 +217,9 @@
     <loc>/reference/nmr_export_data_1r.html</loc>
   </url>
   <url>
+    <loc>/reference/nmr_get_peak_distances.html</loc>
+  </url>
+  <url>
     <loc>/reference/nmr_identify_regions_blood.html</loc>
   </url>
   <url>
@@ -263,6 +269,9 @@
   </url>
   <url>
     <loc>/reference/nmr_pca_plots.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nmr_peak_clustering.html</loc>
   </url>
   <url>
     <loc>/reference/nmr_ppm_resolution.html</loc>
