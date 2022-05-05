@@ -15,3 +15,15 @@ A matrix, with one row per sample and one column per peak
 \description{
 Build a peak table from the clustered peak list
 }
+\examples{
+peak_data <- data.frame(
+  NMRExperiment = c("10", "10", "20", "20"),
+  peak_id = paste0("Peak", 1:4),
+  ppm = c(1, 2, 1.1, 2.1),
+  area = c(10, 20, 12, 22)
+)
+clustering_result <- nmr_peak_clustering(peak_data, num_clusters = 2)
+peak_data <- clustering_result$peak_data
+peak_table <- nmr_build_peak_table(peak_data)
+stopifnot(ncol(peak_table) == 2)
+}

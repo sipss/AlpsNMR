@@ -4,13 +4,15 @@
 \alias{nmr_peak_clustering}
 \title{Peak clustering}
 \usage{
-nmr_peak_clustering(peak_data, peak2peak_dist = NULL)
+nmr_peak_clustering(peak_data, peak2peak_dist = NULL, num_clusters = NULL)
 }
 \arguments{
 \item{peak_data}{The peak list}
 
 \item{peak2peak_dist}{The distances obtained with \link{nmr_get_peak_distances}.
 If NULL it is computed from \code{peak_data}}
+
+\item{num_clusters}{If you want to fix the number of clusters. Leave it to \code{NULL} to use a rough estimation}
 }
 \value{
 A list including: The \code{peak_data} with an
@@ -19,4 +21,14 @@ num_clusters (an estimation of the number of clusters)
 }
 \description{
 Peak clustering
+}
+\examples{
+peak_data <- data.frame(
+  NMRExperiment = c("10", "10", "20", "20"),
+  peak_id = paste0("Peak", 1:4),
+  ppm = c(1, 2, 1.1, 3)
+)
+clustering_result <- nmr_peak_clustering(peak_data)
+peak_data <- clustering_result$peak_data
+stopifnot("cluster" \%in\% colnames(peak_data))
 }

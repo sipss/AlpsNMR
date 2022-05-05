@@ -64,6 +64,14 @@ set_peak_distances_within_groups <- function(dist_matrix, peak_groups, value = I
 #'
 #' @return A dist object with the peak2peak distances
 #' @export
+#' @examples 
+#' peak_data <- data.frame(
+#'   NMRExperiment = c("10", "10", "20", "20"),
+#'   peak_id = paste0("Peak", 1:4),
+#'   ppm = c(1, 2, 1.1, 3)
+#' )
+#' peak2peak_dist <- nmr_get_peak_distances(peak_data)
+#' stopifnot(as.numeric(peak2peak_dist) == c(6, 0.1, 2, 0.9, 1, 6))
 nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
     peak_matrix <- matrix(peak_data$ppm, ncol = 1)
     rownames(peak_matrix) <- peak_data$peak_id
@@ -87,19 +95,31 @@ nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
 #' @param peak_data The peak list
 #' @param peak2peak_dist The distances obtained with [nmr_get_peak_distances].
 #'  If NULL it is computed from `peak_data`
+#' @param num_clusters If you want to fix the number of clusters. Leave it to `NULL` to use a rough estimation
 #'
 #' @return A list including: The `peak_data` with an
 #' additional "cluster" column, cluster (the hierarchical cluster),
 #'  num_clusters (an estimation of the number of clusters)
 #' @export
 #'
-nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL) {
+#' @examples
+#' peak_data <- data.frame(
+#'   NMRExperiment = c("10", "10", "20", "20"),
+#'   peak_id = paste0("Peak", 1:4),
+#'   ppm = c(1, 2, 1.1, 3)
+#' )
+#' clustering_result <- nmr_peak_clustering(peak_data)
+#' peak_data <- clustering_result$peak_data
+#' stopifnot("cluster" %in% colnames(peak_data))
+nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters = NULL) {
     if (is.null(peak2peak_dist)) {
         peak2peak_dist <- nmr_get_peak_distances(peak_data)
     }
     cluster <- stats::hclust(d = peak2peak_dist, method = "complete")
-    # FIXME: Implement something more robust to estimate num_clusters or height to cut:
-    num_clusters <- which.max(-diff(sort(cluster$height, decreasing = TRUE)))+1
+    if (is.null(num_clusters)) {
+        # FIXME: Implement something more robust to estimate num_clusters or height to cut:
+        num_clusters <- which.max(-diff(sort(cluster$height, decreasing = TRUE)))+1
+    }
     peak_data$cluster <- stats::cutree(cluster, k = num_clusters)
     list(
         peak_data = peak_data,
@@ -115,7 +135,17 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL) {
 #'
 #' @return A matrix, with one row per sample and one column per peak
 #' @export
-#'
+#' @examples
+#' peak_data <- data.frame(
+#'   NMRExperiment = c("10", "10", "20", "20"),
+#'   peak_id = paste0("Peak", 1:4),
+#'   ppm = c(1, 2, 1.1, 2.1),
+#'   area = c(10, 20, 12, 22)
+#' )
+#' clustering_result <- nmr_peak_clustering(peak_data, num_clusters = 2)
+#' peak_data <- clustering_result$peak_data
+#' peak_table <- nmr_build_peak_table(peak_data)
+#' stopifnot(ncol(peak_table) == 2)
 nmr_build_peak_table <- function(peak_data) {
     if (!"cluster" %in% colnames(peak_data)) {
         stop("Please run nmr_peak_clustering() first")
