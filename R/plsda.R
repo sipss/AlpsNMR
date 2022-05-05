@@ -21,7 +21,7 @@ plsda_build <- function(x, y, identity, ncomp) {
         rlang::abort(
             message = c(
                 "plsda_build failed",
-                "i" = glue::glue("Original message: {msg}"),
+                "i" = glue::glue("Original message: {msg}")
             ),
             parent = e
         )
@@ -66,7 +66,7 @@ plsda_auroc <-
             rlang::abort(
                 message = c(
                     "Area Under Curve estimation failed",
-                    "i" = glue::glue("Original message: {msg}"),
+                    "i" = glue::glue("Original message: {msg}")
                 ),
                 parent = e
             )
