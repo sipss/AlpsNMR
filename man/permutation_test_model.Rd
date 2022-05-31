@@ -23,10 +23,7 @@ metadata of the dataset)}
 \item{identity_column}{\code{NULL} or a string with the name of the identity column (present in the
 metadata of the dataset).}
 
-\item{external_val}{A list with two elements: \code{iterations} and \code{test_size}.
-See \link{random_subsampling} for further details}
-
-\item{internal_val}{A list with two elements: \code{iterations} and \code{test_size}.
+\item{external_val, internal_val}{A list with two elements: \code{iterations} and \code{test_size}.
 See \link{random_subsampling} for further details}
 
 \item{data_analysis_method}{An \link{nmr_data_analysis_method} object}

@@ -14,8 +14,10 @@ new_nmr_data_analysis_method(
 )
 }
 \arguments{
-\item{train_evaluate_model}{A function. The \code{train_evaluate_model} must have the following signature:\preformatted{    function(x_train, y_train, identity_train, x_test, y_test, identity_test, ...)
-}
+\item{train_evaluate_model}{A function. The \code{train_evaluate_model} must have the following signature:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    function(x_train, y_train, identity_train, x_test, y_test, identity_test, ...)
+}\if{html}{\out{</div>}}
 
 The \code{x_train} and \code{y_train} (and their test counterparts) are self-explanatory.
 
@@ -29,8 +31,10 @@ The \code{...} arguments are free to be defined for each \code{train_evaluate_mo
 \item{train_evaluate_model_params_inner, train_evaluate_model_params_outer}{A list with additional
 arguments to pass to \code{train_evaluate_model} either in the inner cv loop or in the outer cv loop.}
 
-\item{choose_best_inner}{A function with a single argument:\preformatted{function(inner_cv_results)
-}
+\item{choose_best_inner}{A function with a single argument:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{function(inner_cv_results)
+}\if{html}{\out{</div>}}
 
 The argument is a list of \code{train_evaluate_model} outputs.
 The return value of must be a list with at least an element named \code{train_evaluate_model_args}.
