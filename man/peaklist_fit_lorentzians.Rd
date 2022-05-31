@@ -27,7 +27,7 @@ when considering the 2nd derivative of the spectrum. The 2nd derivative is calcu
 is proportional to the corrected intensity at the apex (as in the "intensity" method).
 }}
 
-\item{refine_peak_model.}{Whether a non linear least squares fitting should be used to refine the estimated parameters. It can be:
+\item{refine_peak_model}{Whether a non linear least squares fitting should be used to refine the estimated parameters. It can be:
 \itemize{
 \item \code{"none"}: Do not refine using nls.
 \item \code{"peak"}: Use a lorentzian peak model and the baseline corrected spectra.
