@@ -110,14 +110,14 @@ refine_lorentzian_fit_with_nls <- function(data_to_fit, start, method) {
 #' 
 #' The different methods are available for benchmarking while developing, we should pick one.
 #' 
-#' - $\gamma$ is estimated using the inflection points of the signal and fitting them to the lorentzian inflection points
+#' - gamma is estimated using the inflection points of the signal and fitting them to the lorentzian inflection points
 #' - $A$ is estimated using the `amplitude_method` below
 #' - The peak position ($x_0$) is given in `peak_data`
 #' 
 #' Those estimations may be refined with non-linear least squares using `refine_peak_model`. If the nls does not converge,
 #' the initial estimations are kept. Convergence -and other nls errors- are saved for further reference and diagnostic.
 #' Use `attr(peak_data_fitted, "errors")` to retreive the error messages, where `peak_data_fitted` is assumed to be the
-#' output of this function. The refining improves $\gamma$, $A$ and $x_0$.
+#' output of this function. The refining improves gamma, $A$ and $x_0$.
 #' 
 #' The baseline estimation (when calculated, see the arguments) is set to Asymmetric Least Squares with 
 #' lambda = 6, p=0.05, maxit=20 and it is probably not optimal... yet.
