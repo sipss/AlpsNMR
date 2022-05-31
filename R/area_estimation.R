@@ -195,7 +195,7 @@ peaklist_fit_lorentzians <- function(
             peak_limit_left <- which((diff(sign(sgf))) == -2)
             peak_limit_right <- which((diff(sign(sgf))) == 2)
         }
-        peak_bounds <- AlpsNMR:::get_peak_bounds(peak_limit_left, peak_limit_right, posi, x, sgf)
+        peak_bounds <- get_peak_bounds(peak_limit_left, peak_limit_right, posi, x, sgf)
         # Estimate gamma with the inflection points:
         # The lorentzian second derivative:
         # $$f''(x, x_0, A, \gamma) = -\frac{2A \gamma \left(\gamma^2-3\left(x-x_0\right)^2\right)}{\pi \left(\gamma^2+\left(x-x_0\right)^2\right)^3}$$
