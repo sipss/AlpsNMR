@@ -134,7 +134,7 @@ refine_lorentzian_fit_with_nls <- function(data_to_fit, start, method) {
 #'    when considering the 2nd derivative of the spectrum. The 2nd derivative is calculated with a 2nd order Savitzky-Golay filter of 21 points.
 #'  - `"intensity_without_baseline"`: A baseline is estimated on the whole spectra and subtracted from it. Then the peak amplitude
 #'    is proportional to the corrected intensity at the apex (as in the "intensity" method).
-#' @param refine_peak_model. Whether a non linear least squares fitting should be used to refine the estimated parameters. It can be:
+#' @param refine_peak_model Whether a non linear least squares fitting should be used to refine the estimated parameters. It can be:
 #'  - `"none"`: Do not refine using nls.
 #'  - `"peak"`: Use a lorentzian peak model and the baseline corrected spectra.
 #'  - `"2nd_derivative"`:
