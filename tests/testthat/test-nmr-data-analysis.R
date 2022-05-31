@@ -114,7 +114,7 @@ test_that("split_double_cv works", {
   internal_val_niter <- 4L
   external_test_size <- 0.25
   internal_test_size <- 0.34
-  out <- AlpsNMR:::split_double_cv(
+  out <- split_double_cv(
     dataset = dataset,
     keep_together = "SubjectID",
     external_val = list(iterations = external_val_niter, test_size = external_test_size),
