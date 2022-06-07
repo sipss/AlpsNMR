@@ -141,7 +141,7 @@ refine_lorentzian_fit_with_nls <- function(data_to_fit, start, method) {
 #'
 #'
 #' 
-#'
+#' @export
 #' @return The given data frame `peak_data`, with added columns:
 #'  - inflection points, 
 #'  - gamma
@@ -152,7 +152,6 @@ refine_lorentzian_fit_with_nls <- function(data_to_fit, start, method) {
 #'  - "errors": A data frame with any error in the peak fitting
 #'  - "fit_baseline": Whether the method used has any consideration for the baseline of the signal (maybe not very useful attribute)
 #'  - "method_description": A textual description of what we did, to include it in plots
-#'  @export
 peaklist_fit_lorentzians <- function(
         peak_data, 
         nmr_dataset, 

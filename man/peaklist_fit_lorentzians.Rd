@@ -48,7 +48,6 @@ As well as some attributes
 \item "errors": A data frame with any error in the peak fitting
 \item "fit_baseline": Whether the method used has any consideration for the baseline of the signal (maybe not very useful attribute)
 \item "method_description": A textual description of what we did, to include it in plots
-@export
 }
 }
 \description{
