@@ -85,14 +85,20 @@ plotting spectra or further analysis (PCA...).</p>
     <h2>Arguments</h2>
     <dl><dt>nmr_data</dt>
 <dd><p>an <a href="nmr_dataset_family.html">nmr_dataset_family</a> object</p></dd>
+
+
 <dt>metadata</dt>
 <dd><p>A data frame with metadata to add</p></dd>
+
+
 <dt>by</dt>
 <dd><p>A column name of both the <code>nmr_data$metadata$external</code> and the metadata
 data.frame. If you want to merge two columns with different headers you can
 use a named character vector <code>c("NMRExperiment" = "ExperimentNMR")</code> where
 the left side is the column name of the <code>nmr_data$metadata$external</code> and the right side is
 the column name of the metadata data frame.</p></dd>
+
+
 <dt>excel_file</dt>
 <dd><p>Path to a tidy Excel file name. The Excel can consist
 of multiple sheets, that are added sequentially. The first column of the first
@@ -103,10 +109,13 @@ named as one of the metadata already present in the dataset, typically
 "NMRExperiment" or any of the columns of the first sheet. The rest of the columns
 of the second sheet can be named at will. See the package vignette for an
 example.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The nmr_dataset_family object with the added metadata</p>
+    
+
+<p>The nmr_dataset_family object with the added metadata</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -272,7 +281,7 @@ example.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

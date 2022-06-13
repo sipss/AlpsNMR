@@ -86,8 +86,12 @@
     <h2>Arguments</h2>
     <dl><dt>peak_data</dt>
 <dd><p>The peak data</p></dd>
+
+
 <dt>nmr_dataset</dt>
 <dd><p>The nmr_dataset object with the data. This function for now assumes nmr_dataset is NOT be baseline corrected</p></dd>
+
+
 <dt>amplitude_method</dt>
 <dd><p>The method to estimate the amplitude. It may be:</p><ul><li><p><code>"intensity"</code>. The amplitude of the peak is proportional to the raw intensity at the apex. This is a bad estimation if
 the intensity includes a baseline, because the amplitude of the peak will be overestimated</p></li>
@@ -97,15 +101,20 @@ when considering the 2nd derivative of the spectrum. The 2nd derivative is calcu
 <li><p><code>"intensity_without_baseline"</code>: A baseline is estimated on the whole spectra and subtracted from it. Then the peak amplitude
 is proportional to the corrected intensity at the apex (as in the "intensity" method).</p></li>
 </ul></dd>
+
+
 <dt>refine_peak_model</dt>
 <dd><p>Whether a non linear least squares fitting should be used to refine the estimated parameters. It can be:</p><ul><li><p><code>"none"</code>: Do not refine using nls.</p></li>
 <li><p><code>"peak"</code>: Use a lorentzian peak model and the baseline corrected spectra.</p></li>
 <li><p><code>"2nd_derivative"</code>:</p></li>
 </ul></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The given data frame <code>peak_data</code>, with added columns:</p><ul><li><p>inflection points,</p></li>
+    
+
+<p>The given data frame <code>peak_data</code>, with added columns:</p><ul><li><p>inflection points,</p></li>
 <li><p>gamma</p></li>
 <li><p>area</p></li>
 <li><p>a norm_rmse fitting error</p></li>
@@ -139,7 +148,7 @@ lambda = 6, p=0.05, maxit=20 and it is probably not optimal... yet.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

@@ -89,6 +89,8 @@ to a given criteria.</p>
     <h2>Arguments</h2>
     <dl><dt>samples</dt>
 <dd><p>A <a href="nmr_dataset_1D.html">nmr_dataset_1D</a> object</p></dd>
+
+
 <dt>method</dt>
 <dd><p>The criteria to be used for normalization
 - area: Normalize to the total area
@@ -97,6 +99,8 @@ to a given criteria.</p>
 - region: Integrate a region and normalize each sample to that region
 - pqn: Use Probabalistic Quotient Normalization for normalization
 - none: Do not normalize at all</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Method dependent arguments:
 - <code>method == "value"</code>:
@@ -104,10 +108,13 @@ to a given criteria.</p>
 - <code>method == "region"</code>:
 - <code>ppm_range</code>: A chemical shift region to integrate
 - <code>...</code>: Other arguments passed on to <a href="nmr_integrate_regions.html">nmr_integrate_regions</a></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The <a href="nmr_dataset_1D.html">nmr_dataset_1D</a> object, with the samples normalized.
+    
+
+<p>The <a href="nmr_dataset_1D.html">nmr_dataset_1D</a> object, with the samples normalized.
 Further information for diagnostic of the normalization process is also saved
 and can be extracted by calling <code>nmr_normalize_extra_info()</code> afterwards.</p>
     </div>
@@ -197,7 +204,7 @@ the dispersion of the normalization factor for each sample.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

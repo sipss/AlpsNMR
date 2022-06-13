@@ -119,12 +119,20 @@ that region and finally perform PQN normalization.</p>
     <h2>Arguments</h2>
     <dl><dt>samples_dir</dt>
 <dd><p>The directory where the samples are</p></dd>
+
+
 <dt>glob</dt>
 <dd><p>A wildcard aka globbing pattern (e.g. <code>*.csv</code>) passed on to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep()</a></code> to filter paths.</p></dd>
+
+
 <dt>output_dir</dt>
 <dd><p>The output directory for this pipe element</p></dd>
+
+
 <dt>nmr_dataset_rds</dt>
 <dd><p>The nmr_dataset.rds file name coming from previous nodes</p></dd>
+
+
 <dt>excel_file</dt>
 <dd><p>An excel file name. See details for the requirements</p>
 <p>The excel file can have one or more sheets. The excel sheets need to be as
@@ -139,11 +147,17 @@ for instance the "SubjectID", and any additional columns (e.g. Gender, Age).</p>
 <p>The first column on each sheet, named the key column, MUST have unique values.
 For instance, a sheet starting with "SubjectID" MUST specify each subject ID
 only once (without repetitions).</p></dd>
+
+
 <dt>axis</dt>
 <dd><p>The ppm axis range and optionally the ppm step. Set it to <code>NULL</code> for autodetection</p></dd>
+
+
 <dt>exclude</dt>
 <dd><p>A list with regions to be removed Typically:
 <code>exclude = list(water = c(4.7, 5.0))</code></p></dd>
+
+
 <dt>conditions</dt>
 <dd><p>A character vector with conditions to filter metadata.
 The <code>conditions</code> parameter should be a character vector of
@@ -153,41 +167,78 @@ Some examples:</p><ul><li><p>conditions &lt;- 'Gender == "Female"'</p></li>
 <li><p>conditions &lt;- 'TimePoint %in% c("T0", "T31")'</p></li>
 <li><p>conditions &lt;- c(Cohort == "Chuv", 'TimePoint %in% c("T0", "T31")')</p></li>
 </ul><p>Only samples fullfilling all the given conditions are kept in further analysis.</p></dd>
+
+
 <dt>nDivRange_ppm</dt>
 <dd><p>Segment size, in ppms, to divide the spectra and search
 for peaks.</p></dd>
+
+
 <dt>scales</dt>
 <dd><p>The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.</p></dd>
+
+
 <dt>baselineThresh</dt>
 <dd><p>All peaks with intensities below the thresholds are excluded. Either:</p><ul><li><p>A numeric vector of length the number of samples. Each number is a threshold for that sample</p></li>
 <li><p>A single number. All samples use this number as baseline threshold.</p></li>
 <li><p>A function, that takes the <code>nmr_dataset</code> and <code>range_without_peaks</code> and returns a numeric vector with the thresholds.</p></li>
 <li><p><code>NULL</code>. If that's the case, a default function is used (<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>)</p></li>
 </ul></dd>
+
+
 <dt>SNR.Th</dt>
 <dd><p>The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.</p></dd>
+
+
 <dt>maxShift_ppm</dt>
 <dd><p>The maximum shift allowed, in ppm</p></dd>
+
+
 <dt>acceptLostPeak</dt>
 <dd><p>This is an option for users, TRUE is the default value. If the users believe that all the peaks in the peak list are true positive, change it to FALSE.</p></dd>
+
+
 <dt>peak_det_align_dir</dt>
 <dd><p>Output directory from pipe_peakdet_align</p></dd>
+
+
 <dt>peak_width_ppm</dt>
 <dd><p>A peak width in ppm</p></dd>
+
+
 <dt>internal_calibrant</dt>
 <dd><p>A ppm range where the internal calibrant is, or <code>NULL</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>This function saves the result to the output directory
-This function saves the result to the output directory
-This function saves the result to the output directory
-This function saves the result to the output directory
-This function saves the result to the output directory
-Pipeline: Filter samples according to metadata conditions
-Pipeline: Peak detection and Alignment
-Pipeline: Peak integration
-Pipe: Full spectra normalization</p>
+    
+
+<p>This function saves the result to the output directory</p>
+
+
+<p>This function saves the result to the output directory</p>
+
+
+<p>This function saves the result to the output directory</p>
+
+
+<p>This function saves the result to the output directory</p>
+
+
+<p>This function saves the result to the output directory</p>
+
+
+<p>Pipeline: Filter samples according to metadata conditions</p>
+
+
+<p>Pipeline: Peak detection and Alignment</p>
+
+
+<p>Pipeline: Peak integration</p>
+
+
+<p>Pipe: Full spectra normalization</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -310,7 +361,7 @@ Pipe: Full spectra normalization</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

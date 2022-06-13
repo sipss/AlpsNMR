@@ -90,21 +90,32 @@ as well as <a href="nmr_dataset_peak_table.html">nmr_dataset_peak_table</a> peak
     <h2>Arguments</h2>
     <dl><dt>dataset</dt>
 <dd><p>An <a href="nmr_dataset_family.html">nmr_dataset_family</a> object</p></dd>
+
+
 <dt>y_column</dt>
 <dd><p>A string with the name of the y column (present in the
 metadata of the dataset)</p></dd>
+
+
 <dt>identity_column</dt>
 <dd><p><code>NULL</code> or a string with the name of the identity column (present in the
 metadata of the dataset).</p></dd>
+
+
 <dt>external_val, internal_val</dt>
 <dd><p>A list with two elements: <code>iterations</code> and <code>test_size</code>.
 See <a href="random_subsampling.html">random_subsampling</a> for further details</p></dd>
+
+
 <dt>data_analysis_method</dt>
 <dd><p>An <a href="nmr_data_analysis_method.html">nmr_data_analysis_method</a> object</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list with the following elements:</p><ul><li><p><code>train_test_partitions</code>: A list with the indices used in train and test on each of the cross-validation iterations</p></li>
+    
+
+<p>A list with the following elements:</p><ul><li><p><code>train_test_partitions</code>: A list with the indices used in train and test on each of the cross-validation iterations</p></li>
 <li><p><code>inner_cv_results</code>: The output returned by <code>train_evaluate_model</code> on each inner cross-validation</p></li>
 <li><p><code>inner_cv_results_digested</code>: The output returned by <code>choose_best_inner</code>.</p></li>
 <li><p><code>outer_cv_results</code>: The output returned by <code>train_evaluate_model</code> on each outer cross-validation</p></li>
@@ -173,18 +184,18 @@ the examples here and <a href="plsda_auroc_vip_method.html">plsda_auroc_vip_meth
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cv_outer_iteration ncomp   auc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1 0.875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>                  2     1 0.833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1 0.5  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>                  2     2 0.812</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>                  3     1 0.733</span>
 <span class="r-in"><span class="co">## Rank Product of the Variable Importance in the Projection</span></span>
 <span class="r-in"><span class="co">## (Lower means more important)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">outer_cv_results_digested</span><span class="op">$</span><span class="va">vip_rankproducts</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak2    Peak11     Peak6    Peak15    Peak18    Peak20     Peak3    Peak16 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.000000  2.000000  3.000000  5.241483  7.230427  7.958114  7.989570  7.989570 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak7    Peak14    Peak19     Peak4    Peak17    Peak13     Peak5     Peak9 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  9.837369  9.892175 10.147805 11.597780 12.428930 12.805792 13.904107 13.986381 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak8    Peak10    Peak12     Peak1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14.977745 15.197391 15.874011 16.443332 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak19    Peak16     Peak6     Peak9     Peak2     Peak4     Peak5     Peak1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.442250  1.817121  2.289428  4.578857  6.910423  7.488872  8.434327  9.356095 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak7     Peak8    Peak17    Peak10    Peak11    Peak12    Peak15     Peak3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10.163964 10.783652 11.125289 11.849984 12.394309 13.025591 13.161689 13.207709 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak14    Peak20    Peak13    Peak18 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14.094597 15.274930 15.659471 15.860771 </span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -200,7 +211,7 @@ the examples here and <a href="plsda_auroc_vip_method.html">plsda_auroc_vip_meth
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

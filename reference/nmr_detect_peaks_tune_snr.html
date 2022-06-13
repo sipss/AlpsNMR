@@ -86,10 +86,16 @@
     <h2>Arguments</h2>
     <dl><dt>ds</dt>
 <dd><p>An <a href="nmr_dataset_1D.html">nmr_dataset_1D</a> dataset</p></dd>
+
+
 <dt>NMRExperiment</dt>
 <dd><p>A string with the single NMRExperiment used explore the SNR thresholds. If not given, use the first one.</p></dd>
+
+
 <dt>SNR_thresholds</dt>
 <dd><p>A numeric vector with the SNR thresholds to explore</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Arguments passed on to <code><a href="nmr_detect_peaks.html">nmr_detect_peaks</a></code></p><dl><dt><code>nmr_dataset</code></dt>
 <dd><p>An <a href="nmr_dataset_1D.html">nmr_dataset_1D</a>.</p></dd>
@@ -119,10 +125,13 @@ for peaks.</p></dd>
 
   
 </dl></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list with the following elements:</p><ul><li><p><code>peaks_detected</code>: A data frame with the columns from the <a href="nmr_detect_peaks.html">nmr_detect_peaks</a> output and an additional column
+    
+
+<p>A list with the following elements:</p><ul><li><p><code>peaks_detected</code>: A data frame with the columns from the <a href="nmr_detect_peaks.html">nmr_detect_peaks</a> output and an additional column
 <code>SNR_threshold</code> with the threshold used on each row.</p></li>
 <li><p><code>num_peaks_per_region</code>: A summary of the <code>peaks_detected</code> table, with the number of peaks detected on
 each chemical shift region</p></li>
@@ -197,7 +206,7 @@ SNR threshold. Use <a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class=
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

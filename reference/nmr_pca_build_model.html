@@ -100,6 +100,8 @@ excluded from the analysis.</p>
     <h2>Arguments</h2>
     <dl><dt>nmr_dataset</dt>
 <dd><p>a <a href="nmr_dataset_1D.html">nmr_dataset_1D</a> object</p></dd>
+
+
 <dt>ncomp</dt>
 <dd><p>Integer, if data is complete <code>ncomp</code> decides the number of
 components and associated eigenvalues to display from the <code>pcasvd</code>
@@ -107,12 +109,16 @@ algorithm and if the data has missing values, <code>ncomp</code> gives the numbe
 of components to keep to perform the reconstitution of the data using the
 NIPALS algorithm. If <code>NULL</code>, function sets <code>ncomp = min(nrow(X),
 ncol(X))</code></p></dd>
+
+
 <dt>center</dt>
 <dd><p>(Default=TRUE) Logical, whether the variables should be shifted
 to be zero centered. Only set to FALSE if data have already been centered.
 Alternatively, a vector of length equal the number of columns of <code>X</code>
 can be supplied. The value is passed to <code><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></code>. If the data
 contain missing values, columns should be centered for reliable results.</p></dd>
+
+
 <dt>scale</dt>
 <dd><p>(Default=FALSE) Logical indicating whether the variables should be
 scaled to have unit variance before the analysis takes place. The default is
@@ -120,12 +126,17 @@ scaled to have unit variance before the analysis takes place. The default is
 scaling is advisable. Alternatively, a vector of length equal the number of
 columns of <code>X</code> can be supplied. The value is passed to
 <code><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments passed on to <a href="https://rdrr.io/pkg/mixOmics/man/pca.html" class="external-link">mixOmics::pca</a></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A PCA model as given by <a href="https://rdrr.io/pkg/mixOmics/man/pca.html" class="external-link">mixOmics::pca</a> with two additional attributes:</p><ul><li><p><code>nmr_data_axis</code> containing the full ppm axis</p></li>
+    
+
+<p>A PCA model as given by <a href="https://rdrr.io/pkg/mixOmics/man/pca.html" class="external-link">mixOmics::pca</a> with two additional attributes:</p><ul><li><p><code>nmr_data_axis</code> containing the full ppm axis</p></li>
 <li><p><code>nmr_included</code> with the data points included in the model
 These attributes are used internally by AlpsNMR to create loading plots</p></li>
 </ul></div>
@@ -204,7 +215,7 @@ These attributes are used internally by AlpsNMR to create loading plots</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

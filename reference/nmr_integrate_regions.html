@@ -80,7 +80,7 @@
 <span class="fu">nmr_integrate_regions</span><span class="op">(</span>
   <span class="va">samples</span>,
   <span class="va">regions</span>,
-  fix_baseline <span class="op">=</span> <span class="cn">TRUE</span>,
+  fix_baseline <span class="op">=</span> <span class="cn">FALSE</span>,
   excluded_regions_as_zero <span class="op">=</span> <span class="cn">FALSE</span>,
   set_negative_areas_to_zero <span class="op">=</span> <span class="cn">FALSE</span>,
   <span class="va">...</span>
@@ -91,16 +91,24 @@
     <h2>Arguments</h2>
     <dl><dt>samples</dt>
 <dd><p>A <a href="nmr_dataset.html">nmr_dataset</a> object</p></dd>
+
+
 <dt>regions</dt>
 <dd><p>A named list. Each element of the list is a region,
 given as a named numeric vector of length two with the range
 to integrate. The name of the region will be the name of the
 column</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Keep for compatibility</p></dd>
+
+
 <dt>fix_baseline</dt>
 <dd><p>A logical. If <code>TRUE</code> it removes the baseline. See details
 below</p></dd>
+
+
 <dt>excluded_regions_as_zero</dt>
 <dd><p>A logical. It determines the behaviour of the
 integration when integrating regions that have been excluded. If <code>TRUE</code>,
@@ -110,13 +118,18 @@ NA values.</p>
 a baseline. The baseline is estimated "connecting the boundaries with a straight
 line". Only when the spectrum is above the baseline the area is integrated
 (negative contributions due to the baseline estimation are ignored).</p></dd>
+
+
 <dt>set_negative_areas_to_zero</dt>
 <dd><p>A logical. Ignored if <code>fix_baseline</code> is <code>FALSE</code>.
 When set to <code>TRUE</code> negative areas are set to zero.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An <a href="nmr_dataset_peak_table.html">nmr_dataset_peak_table</a> object</p>
+    
+
+<p>An <a href="nmr_dataset_peak_table.html">nmr_dataset_peak_table</a> object</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -191,8 +204,8 @@ When set to <code>TRUE</code> negative areas are set to zero.</p></dd>
 <span class="r-in"><span class="co"># Integrating selected regions</span></span>
 <span class="r-in"><span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu">nmr_integrate_regions</span><span class="op">(</span></span>
 <span class="r-in">                                   samples <span class="op">=</span> <span class="va">dataset</span>,</span>
-<span class="r-in">                                   regions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ppm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">                                   fix_baseline <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in">                                   regions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ppm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">                                   <span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Creating a dataset</span></span>
 <span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nmr_dataset_1D.html">new_nmr_dataset_1D</a></span><span class="op">(</span>ppm_axis <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
@@ -204,7 +217,7 @@ When set to <code>TRUE</code> negative areas are set to zero.</p></dd>
 <span class="r-in"><span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu">nmr_integrate_regions</span><span class="op">(</span></span>
 <span class="r-in">                                   samples <span class="op">=</span> <span class="va">dataset</span>,</span>
 <span class="r-in">                                   regions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ppm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">                                   fix_baseline <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in">                                   fix_baseline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-in">        </span>
 </code></pre></div>
     </div>
@@ -220,7 +233,7 @@ When set to <code>TRUE</code> negative areas are set to zero.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
