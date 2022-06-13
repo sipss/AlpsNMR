@@ -19,8 +19,8 @@
 #' # Integrating selected regions
 #' peak_table_integration = nmr_integrate_regions(
 #'                                    samples = dataset,
-#'                                    regions = list(ppm = c(2,5)),
-#'                                    fix_baseline = TRUE)
+#'                                    regions = list(ppm = c(2,5))
+#'                                    )
 #'
 #' @export
 #' @family peak detection functions
@@ -73,11 +73,11 @@ rough_baseline <- function(x, allow_baseline_above_signal = TRUE) {
 #' peak_table_integration = nmr_integrate_regions(
 #'                                    samples = dataset,
 #'                                    regions = list(ppm = c(2,5)),
-#'                                    fix_baseline = TRUE)
+#'                                    fix_baseline = FALSE)
 #'         
 nmr_integrate_regions.nmr_dataset_1D <- function(samples,
                                                  regions,
-                                                 fix_baseline = TRUE,
+                                                 fix_baseline = FALSE,
                                                  excluded_regions_as_zero = FALSE,
                                                  set_negative_areas_to_zero = FALSE,
                                                  ...) {

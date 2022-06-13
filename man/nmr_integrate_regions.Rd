@@ -10,7 +10,7 @@ nmr_integrate_regions(samples, regions, ...)
 \method{nmr_integrate_regions}{nmr_dataset_1D}(
   samples,
   regions,
-  fix_baseline = TRUE,
+  fix_baseline = FALSE,
   excluded_regions_as_zero = FALSE,
   set_negative_areas_to_zero = FALSE,
   ...
@@ -58,8 +58,8 @@ dataset <- new_nmr_dataset_1D(ppm_axis = 1:10,
 # Integrating selected regions
 peak_table_integration = nmr_integrate_regions(
                                    samples = dataset,
-                                   regions = list(ppm = c(2,5)),
-                                   fix_baseline = TRUE)
+                                   regions = list(ppm = c(2,5))
+                                   )
 
 #Creating a dataset
 dataset <- new_nmr_dataset_1D(ppm_axis = 1:10,
@@ -71,7 +71,7 @@ dataset <- new_nmr_dataset_1D(ppm_axis = 1:10,
 peak_table_integration = nmr_integrate_regions(
                                    samples = dataset,
                                    regions = list(ppm = c(2,5)),
-                                   fix_baseline = TRUE)
+                                   fix_baseline = FALSE)
         
 }
 \seealso{
