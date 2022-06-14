@@ -223,7 +223,8 @@ Other metadata functions:
 \code{\link{nmr_meta_add}()},
 \code{\link{nmr_meta_export}()},
 \code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_meta_get}()}
+\code{\link{nmr_meta_get}()},
+\code{\link{nmr_meta_groups}()}
 
 Other outlier detection functions: 
 \code{\link{nmr_pca_outliers_filter}()},
