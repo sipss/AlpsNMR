@@ -184,18 +184,18 @@ the examples here and <a href="plsda_auroc_vip_method.html">plsda_auroc_vip_meth
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cv_outer_iteration ncomp   auc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1 0.5  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>                  2     2 0.812</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>                  3     1 0.733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1 0.867</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>                  2     1 0.867</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>                  3     1 0.875</span>
 <span class="r-in"><span class="co">## Rank Product of the Variable Importance in the Projection</span></span>
 <span class="r-in"><span class="co">## (Lower means more important)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">outer_cv_results_digested</span><span class="op">$</span><span class="va">vip_rankproducts</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak19    Peak16     Peak6     Peak9     Peak2     Peak4     Peak5     Peak1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.442250  1.817121  2.289428  4.578857  6.910423  7.488872  8.434327  9.356095 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak7     Peak8    Peak17    Peak10    Peak11    Peak12    Peak15     Peak3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10.163964 10.783652 11.125289 11.849984 12.394309 13.025591 13.161689 13.207709 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak14    Peak20    Peak13    Peak18 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14.094597 15.274930 15.659471 15.860771 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak2     Peak6    Peak10    Peak17    Peak15     Peak9    Peak12     Peak4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.000000  2.000000  3.634241  4.481405  6.502957  7.488872  7.862224  8.962809 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak19     Peak8    Peak20     Peak1    Peak11     Peak3     Peak5    Peak18 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8.962809  9.640569 11.334102 11.522954 11.617571 12.557072 13.986381 14.194562 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak14     Peak7    Peak16    Peak13 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15.066373 15.844855 16.582689 16.821665 </span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
