@@ -18,6 +18,7 @@
 #' its components for further analysis.
 #'
 #' @importFrom magrittr %>%
+#' @importFrom glue glue glue_collapse
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
