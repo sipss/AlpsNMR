@@ -1,53 +1,44 @@
 ---
 title: "Introduction to AlpsNMR"
-author: "Sergio Oller, Institute for Bioengineering of Catalonia"
-date: "`r Sys.Date()`"
+author: "AlpsNMR authors"
+package: AlpsNMR
+abstract: >
+  An introduction to the AlpsNMR package, showing the most relevant functions and
+  a proposed workflow. This includes loading bruker NMR samples, adding sample
+  annotations, preprocessing the spectra, detecting outliers, detecting peaks,
+  aligning the samples and integrating the peaks to build a peak table.
+date: "`r format(Sys.Date(), '%F')`"
 output:
-  rmarkdown::html_vignette:
-    toc: true
+  BiocStyle::html_document:
+      fig_width: 7
+      fig_height: 5
+      toc_float: true
 vignette: >
   %\VignetteIndexEntry{Introduction to AlpsNMR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  fig.width = 7,
-  fig.height = 5,
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
-The `AlpsNMR` package was written with two purposes in mind:
+# Getting started
 
-- to help **data analysts and NMR scientists** to work with NMR samples.
-- to help **IT pipeline builders** implement automated methods for preprocessing.
+The `AlpsNMR` package has most of its functions prefixed with `nmr_`. The main
+reason for this is to avoid conflicts with other packages and to make it easy 
+for the user to discover the functions from the package using autocompletion.
+Most coding environments (e.g. RStudio), by typing `nmr_` followed by pressing
+the tab key (⇥), one can see most of the function names with their arguments.
 
-Functions from this package written for data analysts and NMR scientists are
-prefixed with `nmr_`, while higher level functions written for IT pipeline
-builders are prefixed with `pipe_`. The main reason why all exported functions
-have a prefix is to make it easy for the user to discover the functions from the
-package. By typing nmr_ RStudio will return the list of exported functions. In
-the R terminal, nmr_ followed by the tab key (⇥) twice will have the same
-effect. Other popular packages, follow similar approaches (e.g: `forcats`:
-`fct_*`, `stringr`: `str_*`).
+This vignette assumes some basic knowledge of NMR and data analysis, and some
+basic R programming.
 
-This vignette is written for the first group. It assumes some prior basic
-knowledge of NMR and data analysis, as well as some basic R programming. In case
-you are interested in building pipelines with this package, you may want to open
-the file saved in this directory (run it on your computer):
-
-```
-pipeline_example <- system.file("pipeline-rmd", "pipeline_example.R", package = "AlpsNMR")
-pipeline_example
-```
-
+We will start by loading `AlpsNMR` along some convenience packages:
 
 ```{r}
-library(AlpsNMR)
+library(dplyr)
 library(ggplot2)
+library(readxl)
+library(BiocParallel)
+library(AlpsNMR)
 ```
 
 
@@ -59,9 +50,8 @@ that can control the parallellization registering backends. Please check
 the `BiocParallel` introduction for further details
 
 ```{r}
-library(BiocParallel)
 #register(SerialParam(), default = TRUE)  # disable parallellization
-register(SnowParam(workers = 4), default = TRUE)  # enable parallellization with 4 workers
+register(SnowParam(workers = 3), default = TRUE)  # enable parallellization with 3 workers
 ```
 
 
@@ -80,26 +70,19 @@ MeOH_plasma_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
 MeOH_plasma_extraction_dir
 ```
 
-The demo directory includes four samples (zipped) and a dummy Excel metadata file.
+The demo directory includes three zipped samples and a dummy Excel metadata file.
 
 ```{r}
-fs::dir_ls(MeOH_plasma_extraction_dir)
+list.files(MeOH_plasma_extraction_dir)
 ```
 
-Given the name of the dataset, one may guess that the dataset was used to check
-the Methanol extraction in serum samples. The dummy metadata consists of dummy
-information, just for the sake of showing how this package can integrate
-external metadata. The excel file consists of two tidy tables, in two sheets.
+This is just some quality control dataset, the metadata is just a simple dummy table:
 
 ```{r}
 MeOH_plasma_extraction_xlsx <- file.path(MeOH_plasma_extraction_dir, "dummy_metadata.xlsx")
-exp_subj_id <- readxl::read_excel(MeOH_plasma_extraction_xlsx, sheet = 1)
-subj_id_age <- readxl::read_excel(MeOH_plasma_extraction_xlsx, sheet = 2)
-exp_subj_id
-subj_id_age
-
+annotations <- readxl::read_excel(MeOH_plasma_extraction_xlsx)
+annotations
 ```
-
 
 # Loading samples
 
@@ -117,6 +100,12 @@ dataset <- nmr_read_samples(sample_names = zip_files)
 dataset
 ```
 
+
+
+# Adding annotations
+
+To explore the metadata and the annotations, see the handling metadata and annotations vignette. Here we just do a basic introduction:
+
 As we have not added any metadata to this dataset, the only column we see is
 the `NMRExperiment`:
 
@@ -125,36 +114,25 @@ nmr_meta_get(dataset, groups = "external")
 ```
 
 
-# Adding metadata
+We can read some external metadata from excel:
 
-Initally our dataset only has the `NMRExperiment` column:
+```{r}
+excel_file <- file.path(MeOH_plasma_extraction_dir, "dummy_metadata.xlsx")
+subject_timepoint <- read_excel(excel_file, sheet = 1)
+subject_timepoint
+```
+
+And add it to the dataset:
+
+```{r}
+dataset <- nmr_meta_add(dataset, metadata = subject_timepoint, by = "NMRExperiment")
+```
+
+The table information is now embedded in our dataset and we can make use of it in further data analysis steps.
 
 ```{r}
 nmr_meta_get(dataset, groups = "external")
 ```
-
-The `exp_subj_id` table we loaded links the `NMRExperiment` to the `SubjectID`.
-
-As we already have the `NMRExperiment` column, we can use it as the merging
-column (note that both columns have the same column name to match the metadata
-such as group class, age, BMI...):
-
-```{r}
-dataset <- nmr_meta_add(dataset, metadata = exp_subj_id, by = "NMRExperiment")
-nmr_meta_get(dataset, groups = "external")
-```
-
-If we have info from different files we can match them.
-For instance, now we have the `SubjectID` information so we can add the table that 
-adds the `SubjectID` to the `Age`.
-
-```{r}
-dataset <- nmr_meta_add(dataset, metadata = subj_id_age, by = "SubjectID")
-nmr_meta_get(dataset, groups = "external")
-```
-
-Now we have our metadata integrated in the dataset and we can make use of it
-in further data analysis steps.
 
 
 # Interpolation
@@ -163,22 +141,13 @@ in further data analysis steps.
 into a matrix, with one row per sample. The main parameters we would need is the 
 range of ppm values that we want to interpolate and the resolution.
 
-We can see the ppm resolution by looking at the ppm axis of one sample:
-
-```{r}
-ppm_res <- nmr_ppm_resolution(dataset)[[1]]
-message("The ppm resolution is: ", format(ppm_res, digits = 2), " ppm")
-```
-
 We can interpolate the dataset, obtaining an `nmr_dataset_1D` object:
 
 ```{r}
-dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10))
 ```
 
-This operation changes the class of the object, as now the data is on a matrix. The
-dataset is now of class `nmr_dataset_1D`. The `axis` element is now a numeric vector
-and the `data_1r` element is a matrix.
+If the `axis = NULL` then the ppm axis is autodetected from the samples.
 
 
 # Plotting samples
