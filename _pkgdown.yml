@@ -1,6 +1,7 @@
 destination: docs
 template:
   params:
+    bootstrap: 5
     bootswatch: cerulean
 authors:
   Nestlé Institute of Health Sciences:
