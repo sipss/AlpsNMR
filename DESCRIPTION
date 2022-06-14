@@ -78,21 +78,22 @@ Imports:
  vctrs (>= 0.3.0),
  BiocParallel
 Suggests:
-    DT (>= 0.5),
-    testthat (>= 2.0.0),
-    plotly (>= 4.7.1),
+    BiocStyle,
     ChemoSpec,
-    knitr,
-    zip (>= 2.0.4),
+    cowplot,
+    curl,
+    DT (>= 0.5),
     GGally (>= 1.4.0),
     ggrepel (>= 0.8.0),
-    cowplot,
     gridExtra,
-    writexl (>= 1.0),
-    curl,
+    knitr,
+    plotly (>= 4.7.1),
     progressr,
     SummarizedExperiment,
-    S4Vectors
+    S4Vectors,
+    testthat (>= 2.0.0),
+    writexl (>= 1.0),
+    zip (>= 2.0.4)
 biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
 RoxygenNote: 7.2.0
