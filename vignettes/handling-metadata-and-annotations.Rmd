@@ -1,0 +1,208 @@
+---
+title: "Handling metadata and annotations"
+author: "AlpsNMR authors"
+package: AlpsNMR
+abstract: >
+    This vignette shows some examples on how to explore sample metadata and
+    add additional sample annotations, coming from one or more CSV or Excel
+    files.
+date: "`r format(Sys.Date(), '%F')`"
+output:
+  BiocStyle::html_document:
+    fig_width: 7
+    fig_height: 5
+vignette: >
+    %\VignetteIndexEntry{Handling metadata and annotations}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+# Getting started
+
+We start by loading `AlpsNMR` and some convenience libraries:
+
+```{r load-libraries, message=FALSE, warning=FALSE}
+library(dplyr)
+library(readxl)
+library(AlpsNMR)
+```
+
+
+We also load the demo samples, see the introduction vignette for further details:
+
+
+```{r load-samples}
+MeOH_plasma_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
+zip_files <- list.files(MeOH_plasma_extraction_dir, pattern = glob2rx("*.zip"), full.names = TRUE)
+dataset <- nmr_read_samples(sample_names = zip_files)
+dataset <- nmr_interpolate_1D(dataset, axis = NULL)
+dataset
+```
+
+
+```{r}
+plot(dataset, chemshift_range = c(3.4, 3.6))
+```
+
+
+# Exploring the sample metadata
+
+Most NMR formats include besides the actual NMR spectra, a lot of additional
+information describing the acquisition properties, instrument settings, and
+spectral processing information.
+
+`AlpsNMR` parses all that information whenever possible, and stores it in
+the `nmr_dataset`object, so the user can inspect it. Since there may be a lot
+of information, the data is stored in several data frames.
+
+The available data frames are:
+
+```{r}
+nmr_meta_groups(dataset)
+```
+
+We can further explore each of those groups. 
+
+For instance, for the `acqus` group we find `r ncol(nmr_meta_get(dataset, groups = "acqus"))` columns:
+
+```{r}
+acqus_metadata <- nmr_meta_get(dataset, groups = "acqus")
+acqus_metadata
+```
+
+Here follows a long list of all the columns available:
+
+```{r}
+colnames(acqus_metadata)
+```
+
+We can check for instance that the nuclei used on all samples is 1H:
+
+```{r}
+acqus_metadata[, c("NMRExperiment", "acqus_NUC1")]
+```
+
+Similarly, we can obtain the processing settings:
+
+```{r}
+procs_metadata <- nmr_meta_get(dataset, groups = "procs")
+procs_metadata
+
+```
+
+
+
+# Sample annotations
+
+Besides the sample metadata, most studies usually have design variables or annotations,
+that describe the biological sample. These annotations do not come from
+the instrument itself, but rather usually are defined on an *external* CSV or Excel file.
+
+`AlpsNMR` supports adding *external* annotations from data frames.
+
+Let's load a table from an Excel file, that has some annotations for our demo dataset:
+
+```{r}
+excel_file <- file.path(MeOH_plasma_extraction_dir, "dummy_metadata.xlsx")
+subject_timepoint <- read_excel(excel_file, sheet = 1)
+subject_timepoint
+```
+
+Note how this table includes a first column named `NMRExperiment`. This column
+allows us to match the rows in the table with our samples.
+
+We can embed these external annotations in our dataset:
+
+```{r}
+dataset <- nmr_meta_add(dataset, metadata = subject_timepoint, by = "NMRExperiment")
+```
+
+We can retrieve these *external* columns from the dataset:
+
+```{r}
+nmr_meta_get(dataset, groups = "external")
+```
+
+After adding the annotations to the dataset, we can use them in plots:
+
+```{r}
+plot(dataset, color = "TimePoint", linetype = "SubjectID", chemshift_range = c(3.4, 3.6))
+```
+
+# Further annotations
+
+Sometimes due to the study design we have more than one table that we want to match with our data.
+
+For instance, a collaborator just sent us this table:
+
+```{r}
+additional_annotations <- data.frame(
+    NMRExperiment = c("10", "20", "30"),
+    SampleCollectionDay = c(1, 91, 3)
+)
+additional_annotations
+```
+
+Since we have the `NMRExperiment` column it is very easy to include it:
+
+```{r}
+dataset <- nmr_meta_add(dataset, additional_annotations)
+```
+
+And the column has been added:
+
+```{r}
+nmr_meta_get(dataset, groups = "external")
+```
+
+We received further information, but this time it is related to the `SubjectID` that we added before:
+
+```{r}
+subject_related_information <- data.frame(
+    SubjectID = c("Ana", "Elia"),
+    Age = c(33, 3),
+    Sex = c("female", "female")
+)
+subject_related_information
+```
+
+Note how in this case we only have two rows, and we don't have the `NMRExperiment` column anymore.
+
+We can specify the `by` argument in `nmr_meta_add()` to use another column for merging:
+
+```{r}
+dataset <- nmr_meta_add(dataset, subject_related_information, by = "SubjectID")
+```
+
+And the Sex and Age columns will have been added:
+
+```{r}
+nmr_meta_get(dataset, groups = "external")
+```
+
+We can also use it in a plot:
+
+```{r}
+plot(dataset, color = "SubjectID", linetype = "as.factor(Age)", chemshift_range = c(7.7, 7.8)) + ggplot2::labs(linetype = "Age")
+```
+
+
+# Summary
+
+In this vignette we have seen how to explore the sample metadata, including acquisition
+and processing settings, and how to embed external annotations and use them in plots.
+
+`AlpsNMR` is able to merge external annotations as long as there is a common 
+annotation in the data that can be used as merging key.
+
+To import external data, you may want to use the following functions:
+
+| File type | Suggested function     |
+| ----------| ---------------------- |
+| CSV       | `readr::read_csv()`    |
+| TSV       | `readr::read_tsv()`    |
+| SPSS      | `haven::read_spss()`   |
+| xls/xlsx  | `readxl::read_excel()` |
+
+
+
