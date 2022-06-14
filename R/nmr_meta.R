@@ -73,6 +73,20 @@ nmr_meta_get <- function(samples,
     return(metadata)
 }
 
+#' Get the names of metadata groups
+#' 
+#' @param samples a [nmr_dataset_family] object
+#' @return A character vector with group names
+#' @family metadata functions
+#' @export
+#' @examples 
+#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' metadata_column <- nmr_meta_get_column(dataset)
+nmr_meta_groups <- function(samples) {
+    names(as.list(samples)[["metadata"]])
+}
+
 #' Get a single metadata column
 #'
 #' @param samples a [nmr_dataset_family] object
