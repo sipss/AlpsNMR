@@ -38,6 +38,7 @@ env:
   run_covr: 'true'
   run_pkgdown: 'true'
   pkgdown_repo: 'sipss/AlpsNMR'
+  uses_latex: true
   has_RUnit: 'false'
   cache-version: 'cache-v1'
   run_docker: 'false'
@@ -203,6 +204,14 @@ jobs:
           message(paste('****', Sys.time(), 'pass number 2 at installing dependencies: any remaining dependencies ****'))
           options(install.packages.check.source = "no")
           remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), build_vignettes = TRUE, upgrade = TRUE, force = TRUE)
+        shell: Rscript {0}
+
+      - name: Install tinytex
+        if:  env.uses_latex == 'true'
+        run: |
+          ## Install tinytex
+          install.packages('tinytex')
+          tinytex::install_tinytex()
         shell: Rscript {0}
 
       - name: Install BiocGenerics
