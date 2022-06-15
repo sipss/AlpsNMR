@@ -7,6 +7,10 @@
 \description{
 The template ROI_urine contains the targeted list of metabolites to be quantified (urine samples)
 }
+\examples{
+data("ROI_urine")
+ROI_urine[ROI_urine$Metabolite == "Valine", ]
+}
 \references{
 \url{github.com/danielcanueto/rDolphin}
 }

@@ -7,6 +7,10 @@
 \description{
 The template ROI_blood contains the targeted list of metabolites to be quantified (blood samples)
 }
+\examples{
+data("ROI_blood")
+ROI_blood[ROI_blood$Metabolite == "Valine", ]
+}
 \references{
 \url{github.com/danielcanueto/rDolphin}
 }

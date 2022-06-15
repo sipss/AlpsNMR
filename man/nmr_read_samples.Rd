@@ -32,7 +32,14 @@ the samples that match that pulse sequence.}
 
 \item{metadata_only}{A logical, to load only metadata (default: \code{FALSE})}
 
-\item{...}{Arguments passed to \code{\link[=read_bruker_sample]{read_bruker_sample()}} for data loading}
+\item{...}{The following arguments:
+\itemize{
+\item \code{pdata_file} File name of the binary NMR data to load. Usually "1r".
+If it is null it is autodetected and all files are loaded.
+\item \code{sample_path} A character path of the sample directory
+\item \code{pdata_path} Path from \code{sample_path} to the preprocessed data
+\item \code{all_components} If \code{FALSE} load only the real component. Otherwise load all of them
+}}
 
 \item{sample_names}{A character vector with file or directory names.}
 }
