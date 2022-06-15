@@ -8,9 +8,7 @@ abstract: >
   annotations, preprocessing the spectra, detecting outliers, detecting peaks,
   aligning the samples and integrating the peaks to build a peak table.
 date: "`r format(Sys.Date(), '%F')`"
-output:
-  BiocStyle::html_document:
-      toc_float: true
+output: "BiocStyle::pdf_document"
 vignette: >
   %\VignetteIndexEntry{Introduction to AlpsNMR}
   %\VignetteEngine{knitr::rmarkdown}

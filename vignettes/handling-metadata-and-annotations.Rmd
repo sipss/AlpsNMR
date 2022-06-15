@@ -7,8 +7,7 @@ abstract: >
     add additional sample annotations, coming from one or more CSV or Excel
     files.
 date: "`r format(Sys.Date(), '%F')`"
-output:
-  "BiocStyle::html_document"
+output: "BiocStyle::pdf_document"
 vignette: >
     %\VignetteIndexEntry{Handling metadata and annotations}
     %\VignetteEngine{knitr::rmarkdown}
