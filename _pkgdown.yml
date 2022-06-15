@@ -5,7 +5,6 @@ template:
     bootswatch: cerulean
 authors:
   Nestlé Institute of Health Sciences:
-    href: https://www.nestleinstitutehealthsciences.com/
   Institute for Bioengineering of Catalonia:
     href: http://www.ibecbarcelona.eu/sensingsys
 navbar:
@@ -33,8 +32,188 @@ navbar:
           AlpsNMR tutorial
         href: articles/tutorial_MTBLS242.html
     news:
-      text: Changelog
+      text: News
       href: news/index.html
     github:
       icon: fab fa-github fa-lg
       href: https://github.com/sipss/AlpsNMR
+
+reference:
+- title: "Basic functions"
+  desc: >
+    Functions you'll use on a first analysis
+  contents:
+  - AlpsNMR-package
+  - nmr_read_samples
+  - nmr_meta_add
+  - nmr_interpolate_1D
+  - nmr_exclude_region
+  - plot.nmr_dataset_1D
+  - nmr_baseline_removal
+  - nmr_detect_peaks
+  - nmr_align
+  - nmr_normalize
+  - nmr_integrate_peak_positions
+  - nmr_data_analysis
+- title: "Metadata related functions"
+  desc: >
+    Functions to handle metadata
+  contents: 
+  - nmr_meta_add
+  - nmr_meta_export
+  - nmr_meta_get_column
+  - nmr_meta_get
+  - nmr_meta_groups
+- title: "Input / Output functions"
+  desc: >
+    Functions to read NMR files into AlpsNMR datasets or to export to other
+    packages
+  contents:
+  - load_and_save_functions
+  - nmr_read_bruker_fid
+  - nmr_read_samples
+  - nmr_zip_bruker_samples
+  - nmr_export_data_1r
+  - read_bruker_sample
+  - files_to_rDolphin
+  - save_files_to_rDolphin
+  - nmr_data_1r_to_SummarizedExperiment
+  - SummarizedExperiment_to_nmr_data_1r
+  - SummarizedExperiment_to_nmr_dataset_peak_table
+  - to_ChemoSpec
+  - nmr_batman_options
+  - nmr_batman
+  - nmr_dataset_peak_table_to_SummarizedExperiment
+  - save_profiling_output
+- title: "Data analysis / Modelling functions"
+  desc: >
+    Functions for machine learning or data analysis, to be used once the
+    data has been preprocessed
+  contents:
+  - AUC_model
+  - bp_kfold_VIP_analysis
+  - bp_VIP_analysis
+  - confusion_matrix
+  - model_VIP
+  - models_stability_plot_bootstrap
+  - models_stability_plot_plsda
+  - MUVR_model_plot
+  - nmr_data_analysis_method
+  - nmr_data_analysis
+  - p_value_perm
+  - permutation_test_model
+  - permutation_test_plot
+  - ppm_VIP_vector
+  - plot_bootstrap_multimodel
+  - plot_plsda_multimodel
+  - plot_plsda_samples
+  - plot_vip_scores
+  - plsda_auroc_vip_compare
+  - plsda_auroc_vip_method
+  - random_subsampling
+  - rdCV_PLS_RF_ML
+  - rdCV_PLS_RF
+- title: "nmr_dataset manipulation functions"
+  desc: >
+    Functions to manage and filter nmr_dataset objects
+  contents:
+  - filter.nmr_dataset_family
+  - format.nmr_dataset_1D
+  - format.nmr_dataset_peak_table
+  - format.nmr_dataset
+  - is.nmr_dataset_1D
+  - is.nmr_dataset_peak_table
+  - is.nmr_dataset
+  - new_nmr_dataset_1D
+  - new_nmr_dataset_peak_table
+  - new_nmr_dataset
+  - nmr_data
+  - nmr_dataset_1D
+  - nmr_dataset_family
+  - nmr_dataset_peak_table
+  - nmr_dataset
+  - plot_interactive
+  - plot_webgl
+  - plot.nmr_dataset_1D
+  - print.nmr_dataset_1D
+  - print.nmr_dataset_peak_table
+  - print.nmr_dataset
+  - "[.nmr_dataset_1D"
+  - "[.nmr_dataset_peak_table"
+  - "[.nmr_dataset"
+  - validate_nmr_dataset_family
+  - validate_nmr_dataset_peak_table
+  - validate_nmr_dataset
+- title: "Metabolite identification"
+  desc: >
+    Functions and tables related to metabolite identification
+  contents:
+  - HMDB_blood
+  - HMDB_cell
+  - HMDB_urine
+  - hmdb
+  - Parameters_blood
+  - Parameters_cell
+  - Parameters_urine
+  - ROI_blood
+  - ROI_cell
+  - ROI_urine
+  - nmr_identify_regions_blood
+  - nmr_identify_regions_cell
+  - nmr_identify_regions_urine
+- title: "Alignment functions"
+  desc: >
+    Functions to align spectra
+  contents:
+  - nmr_align_find_ref
+  - nmr_align
+- title: "Baseline correction"
+  desc: >
+    Functions to remove or estimate the baseline
+  contents:
+  - nmr_baseline_removal
+- title: "Peak detection"
+  desc: >
+    Functions to detect peaks and visualize the resulting peak lists
+  contents:
+  - nmr_detect_peaks_plot_overview
+  - nmr_detect_peaks_plot_peaks
+  - nmr_detect_peaks_plot
+  - nmr_detect_peaks_tune_snr
+  - nmr_detect_peaks
+  - nmr_baseline_threshold_plot
+  - nmr_baseline_threshold
+  - Peak_detection
+  - peaklist_accept_peaks
+  - peaklist_fit_lorentzians
+- title: "Peak clustering / matching / Peak tables"
+  desc: >
+    Functions to build peak tables from peak lists
+  contents:
+  - nmr_peak_clustering
+  - nmr_build_peak_table
+  - nmr_get_peak_distances
+  - nmr_integrate_regions
+  - nmr_integrate_peak_positions
+
+- title: "Outlier detection"
+  desc: >
+    Functions to detect and report outliers in the dataset
+  contents:
+  - nmr_pca_build_model
+  - nmr_pca_outliers_filter
+  - nmr_pca_outliers_plot
+  - nmr_pca_outliers_robust
+  - nmr_pca_outliers
+  - nmr_pca_plots
+
+- title: "Other functions"
+  desc: >
+    Other, not catalogued, AlpsNMR functions
+  contents: 
+  - download_MTBLS242
+  - file_lister
+  - get_integration_with_metadata
+  - Pipelines
+  - nmr_ppm_resolution
+  - ppm_resolution
