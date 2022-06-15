@@ -18,6 +18,13 @@ NULL
 #'
 #' @family class helper functions
 #' @export
+#' @examples
+#' pt <- new_nmr_dataset_peak_table(
+#'   peak_table = matrix(c(1, 2), nrow = 1, dimnames = list("10", c("ppm_1.4", "ppm_1.6"))),
+#'   metadata = list(external = data.frame(NMRExperiment = "10"))
+#' )
+#' pt_validated <- validate_nmr_dataset_peak_table(pt)
+#' 
 validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
     validate_nmr_dataset_family(nmr_dataset_peak_table)
     abort_if_not(

@@ -39,7 +39,7 @@ validate_nmr_dataset_family <- function(nmr_dataset_family) {
     
     abort_if_not(
         "metadata" %in% names(nmr_dataset_family),
-        message = "Missing acquisition and parameter metadata"
+        message = "Missing metadata"
     )
 
     metadata <- nmr_dataset_family[["metadata"]]

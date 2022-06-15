@@ -762,6 +762,7 @@ read_bruker_metadata <-
 #' @param pdata_path Path from `sample_path` to the preprocessed data
 #' @param all_components If `FALSE` load only the real component. Otherwise load all of them
 #' @return a list with all the bruker sample information
+#' @noRd
 read_bruker_sample <- function(sample_path,
                                pdata_file = NULL,
                                pdata_path = "pdata/1",

@@ -8,6 +8,9 @@
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
+#' @examples 
+#' data("Parameters_blood")
+#' Parameters_blood
 NULL
 
 #' ROIs for blood (plasma/serum) samples
@@ -18,6 +21,9 @@ NULL
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
+#' @examples
+#' data("ROI_blood")
+#' ROI_blood[ROI_blood$Metabolite == "Valine", ]
 
 NULL
 
@@ -129,6 +135,9 @@ files_to_rDolphin = function (nmr_dataset, biological_origin) {
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
+#' @examples
+#' data("ROI_cell")
+#' ROI_cell[ROI_cell$Metabolite == "Valine", ]
 
 NULL
 
@@ -140,6 +149,9 @@ NULL
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
+#' @examples 
+#' data("Parameters_cell")
+#' Parameters_cell
 NULL
 
 #' ROIs for urine samples
@@ -150,6 +162,9 @@ NULL
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
+#' @examples
+#' data("ROI_urine")
+#' ROI_urine[ROI_urine$Metabolite == "Valine", ]
 NULL
 
 #' Parameters for urine samples profiling
@@ -160,6 +175,9 @@ NULL
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
+#' @examples 
+#' data("Parameters_urine")
+#' Parameters_urine
 NULL
 
 #' Save files to rDoplhin
