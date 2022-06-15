@@ -8,9 +8,7 @@ abstract: >
     files.
 date: "`r format(Sys.Date(), '%F')`"
 output:
-  BiocStyle::html_document:
-    fig_width: 7
-    fig_height: 5
+  "BiocStyle::html_document"
 vignette: >
     %\VignetteIndexEntry{Handling metadata and annotations}
     %\VignetteEngine{knitr::rmarkdown}
@@ -204,5 +202,8 @@ To import external data, you may want to use the following functions:
 | SPSS      | `haven::read_spss()`   |
 | xls/xlsx  | `readxl::read_excel()` |
 
+# Session Information
 
-
+```{r}
+sessionInfo()
+```

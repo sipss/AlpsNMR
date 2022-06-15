@@ -10,8 +10,6 @@ abstract: >
 date: "`r format(Sys.Date(), '%F')`"
 output:
   BiocStyle::html_document:
-      fig_width: 7
-      fig_height: 5
       toc_float: true
 vignette: >
   %\VignetteIndexEntry{Introduction to AlpsNMR}
