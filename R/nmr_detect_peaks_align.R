@@ -67,7 +67,6 @@ NULL
 #' detections.
 #'
 #' @family peak detection functions
-#' @family nmr_dataset_1D functions
 #' @seealso [nmr_align] for peak alignment with the detected peak table
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @param nDivRange_ppm Segment size, in ppms, to divide the spectra and search
@@ -233,7 +232,6 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
 #' 
 #' @seealso Peak_detection nmr_detect_peaks
 #' @family peak detection functions
-#' @family nmr_dataset_1D functions
 nmr_detect_peaks_plot <- function(nmr_dataset,
                                   peak_data,
                                   NMRExperiment = NULL,
@@ -430,7 +428,6 @@ peak_data_to_peakList <- function(nmr_dataset, peak_data) {
 #'    - `plot_spectrum_and_detections`: A visual representation of the spectrum and the peaks detected with each
 #'         SNR threshold. Use [plotly::ggplotly] or [plot_interactive] on this to zoom and explore the results.
 #' @family peak detection functions
-#' @family nmr_dataset_1D functions
 #' @export
 #' @seealso nmr_detect_peaks
 nmr_detect_peaks_tune_snr <- function(
@@ -541,7 +538,6 @@ nmr_detect_peaks_tune_snr <- function(
 #' @return An [nmr_dataset_1D], with the spectra aligned
 #' @export
 #' @family peak alignment functions
-#' @family nmr_dataset_1D functions
 nmr_align <- function(nmr_dataset,
                       peak_data,
                       NMRExp_ref = NULL,
@@ -580,7 +576,6 @@ nmr_align <- function(nmr_dataset,
 #' @export
 #'
 #' @family peak alignment functions
-#' @family nmr_dataset_1D functions
 nmr_align_find_ref <- function(nmr_dataset, peak_data) {
     peakList <- peak_data_to_peakList(nmr_dataset, peak_data)
     resFindRef <- speaq::findRef(peakList)
@@ -628,7 +623,6 @@ nmr_ppm_resolution <- function(nmr_dataset) {
 }
 
 #' @rdname nmr_ppm_resolution
-#' @family nmr_dataset functions
 #' @export 
 #' @examples
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))

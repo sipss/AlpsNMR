@@ -16,7 +16,6 @@
 #'
 #'
 #' @name nmr_dataset_1D
-#' @family AlpsNMR dataset objects
 NULL
 
 #' Validate 1D nmr datasets
@@ -27,7 +26,6 @@ NULL
 #' This function is useful for its side-effects. Stopping in case of error
 #'
 #' @family class helper functions
-#' @family nmr_dataset_1D functions
 #' @export
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -98,9 +96,7 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
 #' @param data_1r A numeric matrix with one NMR spectrum on each row
 #' @param metadata A list of data frames with at least the `NMRExperiment` column
 #'
-#' @importFrom glue glue
 #' @family class helper functions
-#' @family nmr_dataset_1D functions
 #' @export
 #' @return Creates a new 1D nmr_dataset object from scratch
 #' 

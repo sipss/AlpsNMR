@@ -18,7 +18,6 @@ NULL
 #'
 #' This function is useful for its side-effects: Stopping in case of error
 #'
-#' @family nmr_dataset_family functions
 #' @family class helper functions
 #' @export
 #' @examples 
@@ -89,7 +88,6 @@ validate_nmr_dataset_family <- function(nmr_dataset_family) {
 #' @param ... conditions, as in [dplyr]
 #' @return The same object, with the matching rows
 #' @importFrom dplyr filter
-#' @family nmr_dataset_family manipulation functions
 #' @family subsetting functions
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")

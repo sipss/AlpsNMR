@@ -42,7 +42,6 @@ NULL
 NULL
 
 #' @rdname nmr_read_samples
-#' @family nmr_dataset functions
 #' @family import/export functions
 #' @export
 #' @examples 
@@ -375,7 +374,6 @@ nmr_read_samples_jdx <-
 #' Object is of [nmr_dataset] class
 #' @param x An object
 #' @return `TRUE` if the object is an [nmr_dataset], `FALSE` otherwise
-#' @family nmr_dataset manipulation functions
 #' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -391,7 +389,6 @@ is.nmr_dataset <- function(x)
 #' @param i indices of the samples to keep
 #' @return an nmr_dataset with the extracted samples
 #' @family subsetting functions
-#' @family nmr_dataset functions
 #' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -420,7 +417,6 @@ is.nmr_dataset <- function(x)
 #' @param x an [nmr_dataset] object
 #' @param ... for future use
 #' @family class helper functions
-#' @family nmr_dataset functions
 #' @return Print for nmr_dataset
 #' @export
 #' @examples
@@ -437,7 +433,6 @@ print.nmr_dataset <- function(x, ...) {
 #' @param x an [nmr_dataset] object
 #' @param ... for future use
 #' @family class helper functions
-#' @family nmr_dataset functions
 #' @return Format for nmr_dataset
 #' @export
 #' @examples
@@ -453,7 +448,6 @@ format.nmr_dataset <- function(x, ...) {
 #' 
 #' @param samples An nmr_dataset object
 #' @family class helper functions
-#' @family nmr_dataset functions
 #' @export
 #' @return Validate nmr_dataset objects
 #' @name validate_nmr_dataset
@@ -477,7 +471,6 @@ validate_nmr_dataset <- function(samples) {
 #' @param data_fields A named list. Check the examples
 #' @param axis A list. Check the examples
 #' @family class helper functions
-#' @family nmr_dataset functions
 #' @name new_nmr_dataset 
 #' @return Create an nmr_dataset object
 #' @export

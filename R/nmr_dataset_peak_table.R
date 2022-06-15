@@ -16,7 +16,6 @@ NULL
 #' @param nmr_dataset_peak_table An [nmr_dataset_peak_table] object
 #' @return The [nmr_dataset_peak_table] unchanged
 #'
-#' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @export
 validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
@@ -54,7 +53,6 @@ validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
 #' @return Creates a new nmr_dataset_peak_table object from scratch
 #' @name new_nmr_dataset_peak_table 
 #' @importFrom glue glue
-#' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @export
 #' @examples
@@ -83,7 +81,6 @@ new_nmr_dataset_peak_table <- function(peak_table, metadata) {
 #' @param x an [nmr_dataset_peak_table] object
 #' @return `TRUE` if the object is an `nmr_dataset_peak_table`, `FALSE` otherwise
 #' @export
-#' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -106,7 +103,6 @@ is.nmr_dataset_peak_table <-
 #' @param ... for future use
 #' @export
 #' @return print for nmr_dataset_peak_table
-#' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -129,7 +125,6 @@ print.nmr_dataset_peak_table <- function(x, ...) {
 #' @param ... for future use
 #' @export
 #' @return Format for nmr_dataset_peak_table
-#' @family nmr_dataset_peak_table functions
 #' @family class helper functions
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -157,7 +152,6 @@ format.nmr_dataset_peak_table <- function(x, ...) {
 #' @param i indices of the samples to keep
 #' @return an nmr_dataset_peak_table with the extracted samples
 #' @family subsetting functions
-#' @family nmr_dataset_peak_table functions
 #' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")

@@ -240,7 +240,6 @@ warn_future_to_biocparallel <- function() {
 #' @return A Spectra object from the ChemoSpec package
 #' @export
 #' @family import/export functions
-#' @family nmr_dataset_1D functions
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)

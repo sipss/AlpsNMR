@@ -38,8 +38,6 @@ NULL
 #'    - `ROI`: ROI template
 #'    - `Parameters`: parameters file
 #' @family import/export functions
-#' @family nmr_dataset_1D functions
-#' @family to_rDolphin functions
 #' @examples
 #' \dontrun{
 #' # Set the directory in which rDolphin files will be saved
@@ -174,8 +172,6 @@ NULL
 #'    - `Parameters_blood`: parameters file
 #' @param output_directory a directory in which the CSV files are saved
 #' @family import/export functions
-#' @family nmr_dataset_1D functions
-#' @family to_rDolphin_blood functions
 #' @return CSV files containing:
 #' @examples
 #' \dontrun{
@@ -211,7 +207,6 @@ save_files_to_rDolphin = function (files_rDolphin, output_directory) {
 #' @param targeted_profiling A list from Automatic_targeted_profiling function
 #' @param output_directory a directory in which the CSV files are saved
 #' @family import/export functions
-#' @family to_rDolphin_blood functions
 #' @return rDolphin output from Automatic_targeted_profiling function:
 #' - metabolites_intensity
 #' - metabolites_quantification

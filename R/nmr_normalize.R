@@ -61,7 +61,7 @@ norm_pqn <- function(spectra) {
 #' @return The [nmr_dataset_1D] object, with the samples normalized.
 #' Further information for diagnostic of the normalization process is also saved
 #' and can be extracted by calling `nmr_normalize_extra_info()` afterwards.
-#' @family nmr_dataset_1D functions
+#' @family basic functions
 #' @export
 #' @examples
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))

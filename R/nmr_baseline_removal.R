@@ -3,7 +3,6 @@
 #' Removes the baseline on an [nmr_dataset_1D] object, using [baseline::baseline.als].
 #'
 #' @family baseline removal functions
-#' @family nmr_dataset_1D functions
 #' @seealso [baseline::baseline.als]
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @inheritParams baseline::baseline.als

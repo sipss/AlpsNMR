@@ -11,7 +11,6 @@
 #'   package) passed on to `grep()` to filter paths.
 #'
 #'
-#' @family nmr_dataset_1D functions
 #' @export
 #'
 #' @examples

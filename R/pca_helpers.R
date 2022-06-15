@@ -31,7 +31,6 @@ nmr_pca_build_model <- function(nmr_dataset,
 
 
 #' @rdname nmr_pca_build_model
-#' @family nmr_dataset_1D functions
 #' @export
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -176,7 +175,6 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
 #'
 #' @family PCA related functions
 #' @family outlier detection functions
-#' @family nmr_dataset_1D functions
 #' @return
 #'
 #' A list with:
@@ -272,7 +270,6 @@ nmr_pca_outliers <- function(nmr_dataset,
 #' @export
 #' @family PCA related functions
 #' @family outlier detection functions
-#' @family nmr_dataset_1D functions
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
@@ -353,7 +350,6 @@ nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
 #'
 #' @family PCA related functions
 #' @family outlier detection functions
-#' @family nmr_dataset_1D functions
 #' @importFrom rlang .data
 #' @examples
 #' #dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -421,7 +417,6 @@ nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
 #' @export
 #' @family PCA related functions
 #' @family outlier detection functions
-#' @family nmr_dataset_1D functions
 #' @family subsetting functions
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")

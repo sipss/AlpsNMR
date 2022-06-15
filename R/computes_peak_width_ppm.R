@@ -5,7 +5,6 @@
 #' of a peak from alanine doublet is considered.
 #'
 #' @family peak integration functions
-#' @family nmr_dataset_1D functions
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @return Numerical. A peak width (ppm) that may be set in `nmr_integrate_peak_positions`
 #' @noRd

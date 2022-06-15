@@ -17,7 +17,7 @@ nmr_exclude_region <- function(samples, exclude = list(water = c(4.7, 5.0))) {
 }
 
 #' @rdname nmr_exclude_region
-#' @family nmr_dataset_1D functions
+#' @family basic functions
 #' @export
 #' @examples 
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))

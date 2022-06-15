@@ -1,6 +1,5 @@
 #' Plot an nmr_dataset_1D
 #' @family plotting functions
-#' @family nmr_dataset_1D functions
 #' @param x a [nmr_dataset_1D] object
 #' @param chemshift_range range of the chemical shifts to be included. Can be of length 3
 #'                to include the resolution in the third element (e.g. `c(0.2, 0.8, 0.005)`)
@@ -210,7 +209,6 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #' Uses WebGL for performance
 #'
 #' @family plotting nmr datasets
-#' @family nmr_dataset_1D functions
 #' @param nmr_dataset An [nmr_dataset_1D]
 #' @param html_filename The output HTML filename to be created
 #' @inheritDotParams plot.nmr_dataset_1D

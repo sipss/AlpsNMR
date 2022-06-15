@@ -46,8 +46,6 @@ nmr_interpolate_1D <- function(samples, axis = c(min = 0.2, max = 10, by = 0.000
 }
 
 #' @rdname nmr_interpolate_1D
-#' @family nmr_dataset functions
-#' @family nmr_dataset_1D functions
 #' @export 
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
