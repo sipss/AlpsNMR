@@ -64,7 +64,7 @@ reference:
   - nmr_meta_get_column
   - nmr_meta_get
   - nmr_meta_groups
-- title: "Input / Output functions"
+- title: "Import / Export functions"
   desc: >
     Functions to read NMR files into AlpsNMR datasets or to export to other
     packages
