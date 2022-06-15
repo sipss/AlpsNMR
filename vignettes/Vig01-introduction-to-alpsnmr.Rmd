@@ -10,7 +10,7 @@ abstract: >
 date: "`r format(Sys.Date(), '%F')`"
 output: "BiocStyle::pdf_document"
 vignette: >
-  %\VignetteIndexEntry{Introduction to AlpsNMR}
+  %\VignetteIndexEntry{Vignette 01: Introduction to AlpsNMR (start here)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

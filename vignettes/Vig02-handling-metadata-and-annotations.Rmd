@@ -9,7 +9,7 @@ abstract: >
 date: "`r format(Sys.Date(), '%F')`"
 output: "BiocStyle::pdf_document"
 vignette: >
-    %\VignetteIndexEntry{Handling metadata and annotations}
+    %\VignetteIndexEntry{Vignette 02: Handling metadata and annotations}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
