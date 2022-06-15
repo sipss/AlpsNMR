@@ -90,20 +90,14 @@ reference:
     Functions for machine learning or data analysis, to be used once the
     data has been preprocessed
   contents:
-  - AUC_model
   - bp_kfold_VIP_analysis
   - bp_VIP_analysis
-  - confusion_matrix
-  - model_VIP
   - models_stability_plot_bootstrap
   - models_stability_plot_plsda
-  - MUVR_model_plot
   - nmr_data_analysis_method
   - nmr_data_analysis
-  - p_value_perm
   - permutation_test_model
   - permutation_test_plot
-  - ppm_VIP_vector
   - plot_bootstrap_multimodel
   - plot_plsda_multimodel
   - plot_plsda_samples
@@ -111,8 +105,6 @@ reference:
   - plsda_auroc_vip_compare
   - plsda_auroc_vip_method
   - random_subsampling
-  - rdCV_PLS_RF_ML
-  - rdCV_PLS_RF
 - title: "nmr_dataset manipulation functions"
   desc: >
     Functions to manage and filter nmr_dataset objects
