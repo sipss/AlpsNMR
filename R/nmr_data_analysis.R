@@ -1053,8 +1053,6 @@ plot_vip_scores <- function(vip_means, error, nbootstrap, plot = TRUE) {
 #' @return An object encapsulating the method dependent functions that can be used with [nmr_data_analysis]
 #' @name nmr_data_analysis_method
 #' @export
-#' @examples 
-#' help(new_nmr_data_analysis_method)
 #' 
 new_nmr_data_analysis_method <- function(train_evaluate_model,
                                          train_evaluate_model_params_inner,
