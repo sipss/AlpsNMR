@@ -1130,27 +1130,21 @@ new_nmr_data_analysis_method <- function(train_evaluate_model,
 #'                            data_analysis_method = methodology, 
 #'                            nPerm = 10)
 #'                            
-permutation_test_model = function (dataset,
-                                   y_column,
-                                   identity_column, 
-                                   external_val,
-                                   internal_val,
-                                   data_analysis_method,
-                                   nPerm = 50)
+permutation_test_model <- function(
+        dataset, y_column, identity_column, external_val, internal_val,
+        data_analysis_method, nPerm = 50)
 {
-    startTime=proc.time()[3]
-    permMatrix=matrix(ncol=1,nrow=nPerm)
+    permMatrix <- matrix(ncol = 1, nrow = nPerm)
     #colnames(permMatrix)=c('Min','Mid','Max')
     dataset_perm <- dataset
     y_all <- nmr_meta_get_column(dataset, column = y_column)
+    pb <- progress_bar_new(name = "Permutations", total = nPerm)
     for (p in seq_len(nPerm)) {
-        cat('\n permutation ',p,' of ',nPerm,'\n',sep = '')
-        
         #Permutar columna y_colum del dataset
-        YPerm=sample(y_all)
+        YPerm <- sample(y_all)
         dataset_perm[["metadata"]][["external"]][[y_column]] <- YPerm
         # print(sum(y_test!=y_all))
-        permMod=nmr_data_analysis(dataset_perm,
+        permMod <- nmr_data_analysis(dataset_perm,
                                   y_column = y_column,
                                   identity_column = identity_column,
                                   external_val = external_val,
@@ -1158,16 +1152,12 @@ permutation_test_model = function (dataset,
                                   data_analysis_method = data_analysis_method)
         
         # I will use the mean of the auc of all the outer_cv for the test static
-        test_stat = mean(permMod$outer_cv_results_digested$auroc$auc)
-
-        permMatrix[p,1] = test_stat
-        nowTime=proc.time()[3]
-        timePerRep=(nowTime-startTime)/p
-        timeLeft=(timePerRep*(nPerm-p))/60
-        cat('\nEstimated time left:',timeLeft,'mins\n\n')
+        test_stat <- mean(permMod$outer_cv_results_digested$auroc$auc)
+        permMatrix[p,1] <- test_stat
+        progress_bar_update(pb)
     }
-
-    return (permMatrix)
+    progress_bar_end(pb)
+    permMatrix
 }
 
 #' Permutation test plot
