@@ -22,7 +22,7 @@ The `AlpsNMR` package has most of its functions prefixed with `nmr_`. The main
 reason for this is to avoid conflicts with other packages and to make it easy 
 for the user to discover the functions from the package using autocompletion.
 Most coding environments (e.g. RStudio), by typing `nmr_` followed by pressing
-the tab key (⇥), one can see most of the function names with their arguments.
+the tab key, one can see most of the function names with their arguments.
 
 This vignette assumes some basic knowledge of NMR and data analysis, and some
 basic R programming.
