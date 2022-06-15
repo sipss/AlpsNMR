@@ -7,6 +7,9 @@
     <loc>/LICENSE-text.html</loc>
   </url>
   <url>
+    <loc>/articles/handling-metadata-and-annotations.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
@@ -248,6 +251,9 @@
   </url>
   <url>
     <loc>/reference/nmr_meta_get_column.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nmr_meta_groups.html</loc>
   </url>
   <url>
     <loc>/reference/nmr_normalize.html</loc>

@@ -90,10 +90,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to AlpsNMR</h1>
-                        <h4 data-toc-skip class="author">Sergio Oller,
-Institute for Bioengineering of Catalonia</h4>
+                        <h4 data-toc-skip class="author">AlpsNMR
+authors</h4>
             
-            <h4 data-toc-skip class="date">2022-06-14</h4>
+            <h4 data-toc-skip class="date">2022-06-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/vignettes/introduction-to-alpsnmr.Rmd" class="external-link"><code>vignettes/introduction-to-alpsnmr.Rmd</code></a></small>
       <div class="hidden name"><code>introduction-to-alpsnmr.Rmd</code></div>
@@ -101,46 +101,47 @@ Institute for Bioengineering of Catalonia</h4>
     </div>
 
     
+        <div class="abstract">
+      <p class="abstract">Abstract</p>
+      <p>An introduction to the AlpsNMR package, showing the most
+      relevant functions and a proposed workflow. This includes loading
+      bruker NMR samples, adding sample annotations, preprocessing the
+      spectra, detecting outliers, detecting peaks, aligning the samples
+      and integrating the peaks to build a peak table.</p>
+    </div>
     
-<p>The <code>AlpsNMR</code> package was written with two purposes in
-mind:</p>
-<ul>
-<li>to help <strong>data analysts and NMR scientists</strong> to work
-with NMR samples.</li>
-<li>to help <strong>IT pipeline builders</strong> implement automated
-methods for preprocessing.</li>
-</ul>
-<p>Functions from this package written for data analysts and NMR
-scientists are prefixed with <code>nmr_</code>, while higher level
-functions written for IT pipeline builders are prefixed with
-<code>pipe_</code>. The main reason why all exported functions have a
-prefix is to make it easy for the user to discover the functions from
-the package. By typing nmr_ RStudio will return the list of exported
-functions. In the R terminal, nmr_ followed by the tab key (⇥) twice
-will have the same effect. Other popular packages, follow similar
-approaches (e.g: <code>forcats</code>: <code>fct_*</code>,
-<code>stringr</code>: <code>str_*</code>).</p>
-<p>This vignette is written for the first group. It assumes some prior
-basic knowledge of NMR and data analysis, as well as some basic R
-programming. In case you are interested in building pipelines with this
-package, you may want to open the file saved in this directory (run it
-on your computer):</p>
-<pre><code><span class="va">pipeline_example</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"pipeline-rmd"</span>, <span class="st">"pipeline_example.R"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span>
-<span class="va">pipeline_example</span></code></pre>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sipss.github.io/AlpsNMR/" class="external-link">AlpsNMR</a></span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: dplyr</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'dplyr'</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     filter, lag</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
-<span class="co">#&gt; Loading required package: future</span>
-<span class="co">#&gt; Loading required package: magrittr</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></code></pre></div>
+<div class="section level2">
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<p>The <code>AlpsNMR</code> package has most of its functions prefixed
+with <code>nmr_</code>. The main reason for this is to avoid conflicts
+with other packages and to make it easy for the user to discover the
+functions from the package using autocompletion. Most coding
+environments (e.g. RStudio), by typing <code>nmr_</code> followed by
+pressing the tab key, one can see most of the function names with their
+arguments.</p>
+<p>This vignette assumes some basic knowledge of NMR and data analysis,
+and some basic R programming.</p>
+<p>We will start by loading <code>AlpsNMR</code> along some convenience
+packages:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## </span>
+<span class="co">## Attaching package: 'dplyr'</span></code></pre>
+<pre><code><span class="co">## The following objects are masked from 'package:stats':</span>
+<span class="co">## </span>
+<span class="co">##     filter, lag</span></code></pre>
+<pre><code><span class="co">## The following objects are masked from 'package:base':</span>
+<span class="co">## </span>
+<span class="co">##     intersect, setdiff, setequal, union</span></code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org" class="external-link">readxl</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Bioconductor/BiocParallel" class="external-link">BiocParallel</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sipss.github.io/AlpsNMR/" class="external-link">AlpsNMR</a></span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Loading required package: future</span></code></pre>
+<pre><code><span class="co">## Loading required package: magrittr</span></code></pre>
+</div>
 <div class="section level2">
 <h2 id="enable-parallellization">Enable parallellization<a class="anchor" aria-label="anchor" href="#enable-parallellization"></a>
 </h2>
@@ -149,10 +150,9 @@ use of the <code>BiocParallel</code> package. Whether to parallelize or
 not is left to the user that can control the parallellization
 registering backends. Please check the <code>BiocParallel</code>
 introduction for further details</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Bioconductor/BiocParallel" class="external-link">BiocParallel</a></span><span class="op">)</span>
-<span class="co">#register(SerialParam(), default = TRUE)  # disable parallellization</span>
-<span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SnowParam-class.html" class="external-link">SnowParam</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>, default <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># enable parallellization with 4 workers</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#register(SerialParam(), default = TRUE)  # disable parallellization</span>
+<span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SnowParam-class.html" class="external-link">SnowParam</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, default <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># enable parallellization with 3 workers</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="data-the-meoh_plasma_extraction-dataset">Data: The <code>MeOH_plasma_extraction</code> dataset<a class="anchor" aria-label="anchor" href="#data-the-meoh_plasma_extraction-dataset"></a>
@@ -164,41 +164,28 @@ were extracted with methanol, and therefore only contain small
 molecules.</p>
 <p>If you have installed this package, you can obtain the directory
 where the four samples are with the command</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MeOH_plasma_extraction_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span>
-<span class="va">MeOH_plasma_extraction_dir</span>
-<span class="co">#&gt; [1] "/__w/_temp/Library/AlpsNMR/dataset-demo"</span></code></pre></div>
-<p>The demo directory includes four samples (zipped) and a dummy Excel
+<span class="va">MeOH_plasma_extraction_dir</span></code></pre></div>
+<pre><code><span class="co">## [1] "/__w/_temp/Library/AlpsNMR/dataset-demo"</span></code></pre>
+<p>The demo directory includes three zipped samples and a dummy Excel
 metadata file.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/10.zip</span></span>
-<span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/20.zip</span></span>
-<span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/30.zip</span></span>
-<span class="co">#&gt; /__w/_temp/Library/AlpsNMR/dataset-demo/README.txt</span>
-<span class="co">#&gt; /__w/_temp/Library/AlpsNMR/dataset-demo/dummy_metadata.xlsx</span></code></pre></div>
-<p>Given the name of the dataset, one may guess that the dataset was
-used to check the Methanol extraction in serum samples. The dummy
-metadata consists of dummy information, just for the sake of showing how
-this package can integrate external metadata. The excel file consists of
-two tidy tables, in two sheets.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] "10.zip"              "20.zip"              "30.zip"             </span>
+<span class="co">## [4] "dummy_metadata.xlsx" "README.txt"</span></code></pre>
+<p>This is just some quality control dataset, the metadata is just a
+simple dummy table:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MeOH_plasma_extraction_xlsx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, <span class="st">"dummy_metadata.xlsx"</span><span class="op">)</span>
-<span class="va">exp_subj_id</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_xlsx</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="va">subj_id_age</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_xlsx</span>, sheet <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-<span class="va">exp_subj_id</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span>
-<span class="co">#&gt;   NMRExperiment SubjectID TimePoint</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 30            Elia      baseline</span>
-<span class="va">subj_id_age</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 2</span></span>
-<span class="co">#&gt;   SubjectID   Age</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Ana          29</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Elia          0</span></code></pre></div>
+<span class="va">annotations</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_xlsx</span><span class="op">)</span>
+<span class="va">annotations</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span>
+<span class="co">##   NMRExperiment SubjectID TimePoint</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="loading-samples">Loading samples<a class="anchor" aria-label="anchor" href="#loading-samples"></a>
@@ -208,67 +195,57 @@ It expects a character vector with the samples to load that can be paths
 to directories of Bruker format samples or paths to JDX files.</p>
 <p>Additionally, this function can filter by pulse sequences (e.g. load
 only NOESY samples) or loading only metadata.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">zip_files</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, glob <span class="op">=</span> <span class="st">"*.zip"</span><span class="op">)</span>
-<span class="va">zip_files</span>
-<span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/10.zip</span></span>
-<span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/20.zip</span></span>
-<span class="co">#&gt; <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/30.zip</span></span>
-<span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_read_samples.html">nmr_read_samples</a></span><span class="op">(</span>sample_names <span class="op">=</span> <span class="va">zip_files</span><span class="op">)</span>
-<span class="va">dataset</span>
-<span class="co">#&gt; An nmr_dataset (3 samples)</span></code></pre></div>
-<p>As we have not added any metadata to this dataset, the only column we
-see is the <code>NMRExperiment</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 1</span></span>
-<span class="co">#&gt;   NMRExperiment</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 10           </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20           </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 30</span></code></pre></div>
+<span class="va">zip_files</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/10.zip</span></span>
+<span class="co">## <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/20.zip</span></span>
+<span class="co">## <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/30.zip</span></span></code></pre>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_read_samples.html">nmr_read_samples</a></span><span class="op">(</span>sample_names <span class="op">=</span> <span class="va">zip_files</span><span class="op">)</span>
+<span class="va">dataset</span></code></pre></div>
+<pre><code><span class="co">## An nmr_dataset (3 samples)</span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="adding-metadata">Adding metadata<a class="anchor" aria-label="anchor" href="#adding-metadata"></a>
+<h2 id="adding-annotations">Adding annotations<a class="anchor" aria-label="anchor" href="#adding-annotations"></a>
 </h2>
-<p>Initally our dataset only has the <code>NMRExperiment</code>
-column:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 1</span></span>
-<span class="co">#&gt;   NMRExperiment</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 10           </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20           </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 30</span></code></pre></div>
-<p>The <code>exp_subj_id</code> table we loaded links the
-<code>NMRExperiment</code> to the <code>SubjectID</code>.</p>
-<p>As we already have the <code>NMRExperiment</code> column, we can use
-it as the merging column (note that both columns have the same column
-name to match the metadata such as group class, age, BMI…):</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, metadata <span class="op">=</span> <span class="va">exp_subj_id</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span>
-<span class="co">#&gt;   NMRExperiment SubjectID TimePoint</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 30            Elia      baseline</span></code></pre></div>
-<p>If we have info from different files we can match them. For instance,
-now we have the <code>SubjectID</code> information so we can add the
-table that adds the <code>SubjectID</code> to the <code>Age</code>.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, metadata <span class="op">=</span> <span class="va">subj_id_age</span>, by <span class="op">=</span> <span class="st">"SubjectID"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span>
-<span class="co">#&gt;   NMRExperiment SubjectID TimePoint   Age</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 10            Ana       baseline     29</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20            Ana       3 months     29</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 30            Elia      baseline      0</span></code></pre></div>
-<p>Now we have our metadata integrated in the dataset and we can make
+<p>To explore the metadata and the annotations, see the handling
+metadata and annotations vignette. Here we just do a basic
+introduction:</p>
+<p>As we have not added any metadata to this dataset, the only column we
+see is the <code>NMRExperiment</code>:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 1</span></span>
+<span class="co">##   NMRExperiment</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 10           </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 20           </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 30</span></code></pre>
+<p>We can read some external metadata from excel:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">excel_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, <span class="st">"dummy_metadata.xlsx"</span><span class="op">)</span>
+<span class="va">subject_timepoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">excel_file</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="va">subject_timepoint</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span>
+<span class="co">##   NMRExperiment SubjectID TimePoint</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline</span></code></pre>
+<p>And add it to the dataset:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, metadata <span class="op">=</span> <span class="va">subject_timepoint</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span></code></pre></div>
+<p>The table information is now embedded in our dataset and we can make
 use of it in further data analysis steps.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span>
+<span class="co">##   NMRExperiment SubjectID TimePoint</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="interpolation">Interpolation<a class="anchor" aria-label="anchor" href="#interpolation"></a>
@@ -277,20 +254,12 @@ use of it in further data analysis steps.</p>
 the spectra into a matrix, with one row per sample. The main parameters
 we would need is the range of ppm values that we want to interpolate and
 the resolution.</p>
-<p>We can see the ppm resolution by looking at the ppm axis of one
-sample:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ppm_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_ppm_resolution.html">nmr_ppm_resolution</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
-<span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"The ppm resolution is: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">ppm_res</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, <span class="st">" ppm"</span><span class="op">)</span>
-<span class="co">#&gt; The ppm resolution is: 0.00023 ppm</span></code></pre></div>
 <p>We can interpolate the dataset, obtaining an
 <code>nmr_dataset_1D</code> object:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>, max <span class="op">=</span> <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">2.3E-4</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>This operation changes the class of the object, as now the data is on
-a matrix. The dataset is now of class <code>nmr_dataset_1D</code>. The
-<code>axis</code> element is now a numeric vector and the
-<code>data_1r</code> element is a matrix.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>, max <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>If the <code>axis = NULL</code> then the ppm axis is autodetected
+from the samples.</p>
 </div>
 <div class="section level2">
 <h2 id="plotting-samples">Plotting samples<a class="anchor" aria-label="anchor" href="#plotting-samples"></a>
@@ -314,9 +283,9 @@ region, or to reduce the resolution</li>
 <code>color = "SubjectID"</code> that are passed as aesthetics to
 ggplot.</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"30"</span><span class="op">)</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.2</span>, <span class="fl">2.8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <div class="section level3">
 <h3 id="creating-interactive-plots">Creating interactive plots<a class="anchor" aria-label="anchor" href="#creating-interactive-plots"></a>
 </h3>
@@ -342,11 +311,11 @@ correctly.</p>
 <code>nmr_exclude_region</code>. Note that the regions are fully removed
 and not zeroed, as using zeros complicates a lot the implementation<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and has
 little advantages.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">regions_to_exclude</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>water <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.6</span>, <span class="fl">5</span><span class="op">)</span>, methanol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.33</span>, <span class="fl">3.39</span><span class="op">)</span><span class="op">)</span>
 <span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_exclude_region.html">nmr_exclude_region</a></span><span class="op">(</span><span class="va">dataset</span>, exclude <span class="op">=</span> <span class="va">regions_to_exclude</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.2</span>, <span class="fl">5.5</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="filter-samples">Filter samples<a class="anchor" aria-label="anchor" href="#filter-samples"></a>
@@ -354,14 +323,14 @@ little advantages.</p>
 <p>Maybe we just want to analyze a subset of the data, e.g., only a
 class group or a particular gender. We can filter some samples according
 to their metadata as follows:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">samples_10_20</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">SubjectID</span> <span class="op">==</span> <span class="st">"Ana"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">samples_10_20</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span>
-<span class="co">#&gt;   NMRExperiment SubjectID TimePoint   Age</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 10            Ana       baseline     29</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20            Ana       3 months     29</span></code></pre></div>
+<span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">samples_10_20</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 2 × 3</span></span>
+<span class="co">##   NMRExperiment SubjectID TimePoint</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="robust-pca-for-outlier-detection">Robust PCA for outlier detection<a class="anchor" aria-label="anchor" href="#robust-pca-for-outlier-detection"></a>
@@ -370,10 +339,10 @@ to their metadata as follows:</p>
 detection. With such a small demo dataset, it is not practical to use,
 but check out the documentation of <code>nmr_pca_outliers_*</code>
 functions.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pca_outliers_rob</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_pca_outliers_robust.html">nmr_pca_outliers_robust</a></span><span class="op">(</span><span class="va">dataset</span>, ncomp <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
 <span class="fu"><a href="../reference/nmr_pca_outliers_plot.html">nmr_pca_outliers_plot</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">pca_outliers_rob</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="baseline-removal">Baseline removal<a class="anchor" aria-label="anchor" href="#baseline-removal"></a>
@@ -383,14 +352,14 @@ blood/fecal blood/fecal samples. If so,
 <code>nmr_baseline_removal</code> subtract the baseline by means of
 Asymmetric Least Squares method.</p>
 <p>See before:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">3.8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p>And after:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/nmr_baseline_removal.html">nmr_baseline_removal</a></span><span class="op">(</span><span class="va">dataset</span>, lambda <span class="op">=</span> <span class="fl">6</span>, p <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">3.8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="peak-detection">Peak detection<a class="anchor" aria-label="anchor" href="#peak-detection"></a>
@@ -407,7 +376,7 @@ more information.</p>
 <p>The advantage of the <code>SNR.Th</code> method is that it estimates
 the noise level on each spectra region independently, so in practice it
 can be used as a dynamic baseline threshold level.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">peak_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_detect_peaks.html">nmr_detect_peaks</a></span><span class="op">(</span>
     <span class="va">dataset</span>,
     nDivRange_ppm <span class="op">=</span> <span class="fl">0.1</span>,
@@ -416,10 +385,11 @@ can be used as a dynamic baseline threshold level.</p>
     SNR.Th <span class="op">=</span> <span class="fl">3</span>
 <span class="op">)</span>
 <span class="va">NMRExp_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_align_find_ref.html">nmr_align_find_ref</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Your reference is NMRExperiment "</span>, <span class="va">NMRExp_ref</span><span class="op">)</span>
-<span class="co">#&gt; Your reference is NMRExperiment 30</span>
-<span class="fu"><a href="../reference/nmr_detect_peaks_plot.html">nmr_detect_peaks_plot</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span>, NMRExperiment <span class="op">=</span> <span class="st">"20"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">3.8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
+<span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Your reference is NMRExperiment "</span>, <span class="va">NMRExp_ref</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Your reference is NMRExperiment 10</span></code></pre>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/nmr_detect_peaks_plot.html">nmr_detect_peaks_plot</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span>, NMRExperiment <span class="op">=</span> <span class="st">"20"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">3.8</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="spectra-alignment">Spectra alignment<a class="anchor" aria-label="anchor" href="#spectra-alignment"></a>
@@ -429,15 +399,15 @@ which in turn uses a hierarchical clustering method (see
 <code><a href="../reference/nmr_align.html">?nmr_align</a></code> for further details).</p>
 <p>The <code>maxShift_ppm</code> limits the maximum shift allowed for
 the spectra.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nmr_exp_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_align_find_ref.html">nmr_align_find_ref</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span><span class="op">)</span>
 <span class="va">dataset_align</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_align.html">nmr_align</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span>, <span class="va">nmr_exp_ref</span>, maxShift_ppm <span class="op">=</span> <span class="fl">0.0015</span>, acceptLostPeak <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.025</span>, <span class="fl">3.063</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset_align</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.025</span>, <span class="fl">3.063</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-20-2.png" width="672"></p>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-19-2.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="normalization">Normalization<a class="anchor" aria-label="anchor" href="#normalization"></a>
@@ -447,11 +417,11 @@ strongly recommended is the <code>pqn</code> normalization, but it may
 not be fully reliable when the number of samples is small, as it needs a
 computation of the median spectra. Nevertheless, it is possible to
 compute it:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_normalize.html">nmr_normalize</a></span><span class="op">(</span><span class="va">dataset_align</span>, method <span class="op">=</span> <span class="st">"pqn"</span><span class="op">)</span>
-<span class="co">#&gt; Warning in norm_pqn(samples[["data_1r"]]): The Probabalistic Quotient</span>
-<span class="co">#&gt; Normalization requires several samples to compute the median spectra. Your</span>
-<span class="co">#&gt; number of samples is low</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dataset_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_normalize.html">nmr_normalize</a></span><span class="op">(</span><span class="va">dataset_align</span>, method <span class="op">=</span> <span class="st">"pqn"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Warning in norm_pqn(samples[["data_1r"]]): The Probabalistic Quotient</span>
+<span class="co">## Normalization requires several samples to compute the median spectra. Your</span>
+<span class="co">## number of samples is low</span></code></pre>
 <p>The <code>AlpsNMR</code> package offers the possibility to extract
 additional normalization information with
 <code>nmr_normalize_extra_info(dataset)</code>, to explore the
@@ -459,15 +429,16 @@ normalization factors applied to each sample:</p>
 <p>The plot shows the dispersion with respect to the median of the
 normalization factors, and can highlight samples with abnormaly large or
 small normalization factors.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_normalize.html">nmr_normalize_extra_info</a></span><span class="op">(</span><span class="va">dataset_norm</span><span class="op">)</span>
-<span class="va">diagnostic</span><span class="op">$</span><span class="va">norm_factor</span>
-<span class="co">#&gt;   NMRExperiment norm_factor norm_factor_norm</span>
-<span class="co">#&gt; 1            10   520824787        0.8706957</span>
-<span class="co">#&gt; 2            20   689300837        1.1523478</span>
-<span class="co">#&gt; 3            30   598170829        1.0000000</span>
-<span class="va">diagnostic</span><span class="op">$</span><span class="va">plot</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
+<span class="va">diagnostic</span><span class="op">$</span><span class="va">norm_factor</span></code></pre></div>
+<pre><code><span class="co">##   NMRExperiment norm_factor norm_factor_norm</span>
+<span class="co">## 1            10   522511034         0.870952</span>
+<span class="co">## 2            20   692174900         1.153758</span>
+<span class="co">## 3            30   599930942         1.000000</span></code></pre>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diagnostic</span><span class="op">$</span><span class="va">plot</span></code></pre></div>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="peak-integration">Peak integration<a class="anchor" aria-label="anchor" href="#peak-integration"></a>
@@ -481,408 +452,414 @@ function <code>nmr_integrate_peak_positions</code> generates a new
 <code>nmr_dataset_1D</code> object containing the integrals from the
 <code>peak_table</code> (ppm values corresponding to detected
 peaks).</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/nmr_integrate_peak_positions.html">nmr_integrate_peak_positions</a></span><span class="op">(</span>
   samples <span class="op">=</span> <span class="va">dataset_norm</span>,
   peak_pos_ppm <span class="op">=</span> <span class="va">peak_table</span><span class="op">$</span><span class="va">ppm</span>,
-  peak_width_ppm <span class="op">=</span> <span class="fl">0.006</span><span class="op">)</span>
-<span class="co">#&gt; New names:</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_-0.0002` -&gt; `ppm_-0.0002...3`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8607` -&gt; `ppm_0.8607...17`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8655` -&gt; `ppm_0.8655...18`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8729` -&gt; `ppm_0.8729...19`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8784` -&gt; `ppm_0.8784...20`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8910` -&gt; `ppm_0.8910...21`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9032` -&gt; `ppm_0.9032...22`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9085` -&gt; `ppm_0.9085...23`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9196` -&gt; `ppm_0.9196...25`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9313` -&gt; `ppm_0.9313...26`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9437` -&gt; `ppm_0.9437...27`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9554` -&gt; `ppm_0.9554...28`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9658` -&gt; `ppm_0.9658...29`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9902` -&gt; `ppm_0.9902...31`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0019` -&gt; `ppm_1.0019...32`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0093` -&gt; `ppm_1.0093...33`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0208` -&gt; `ppm_1.0208...34`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0410` -&gt; `ppm_1.0410...35`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0716` -&gt; `ppm_1.0716...38`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0803` -&gt; `ppm_1.0803...39`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1505` -&gt; `ppm_1.1505...41`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1979` -&gt; `ppm_1.1979...42`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2084` -&gt; `ppm_1.2084...43`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...44`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3262` -&gt; `ppm_1.3262...49`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3377` -&gt; `ppm_1.3377...50`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4424` -&gt; `ppm_1.4424...52`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4913` -&gt; `ppm_1.4913...54`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.5693` -&gt; `ppm_1.5693...60`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6195` -&gt; `ppm_1.6195...65`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6443` -&gt; `ppm_1.6443...68`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6562` -&gt; `ppm_1.6562...70`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6799` -&gt; `ppm_1.6799...73`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6990` -&gt; `ppm_1.6990...79`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7351` -&gt; `ppm_1.7351...85`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7614` -&gt; `ppm_1.7614...88`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8131` -&gt; `ppm_1.8131...90`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8748` -&gt; `ppm_1.8748...96`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9210` -&gt; `ppm_1.9210...99`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9313` -&gt; `ppm_1.9313...100`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0026` -&gt; `ppm_2.0026...107`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0194` -&gt; `ppm_2.0194...110`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0307` -&gt; `ppm_2.0307...111`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0422` -&gt; `ppm_2.0422...112`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0806` -&gt; `ppm_2.0806...116`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1149` -&gt; `ppm_2.1149...119`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1192` -&gt; `ppm_2.1192...120`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...121`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1324` -&gt; `ppm_2.1324...122`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1572` -&gt; `ppm_2.1572...127`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1655` -&gt; `ppm_2.1655...128`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2835` -&gt; `ppm_2.2835...136`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2950` -&gt; `ppm_2.2950...137`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3251` -&gt; `ppm_2.3251...140`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3451` -&gt; `ppm_2.3451...142`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...143`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...144`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3644` -&gt; `ppm_2.3644...145`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3711` -&gt; `ppm_2.3711...146`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4196` -&gt; `ppm_2.4196...150`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4912` -&gt; `ppm_2.4912...159`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4953` -&gt; `ppm_2.4953...160`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.5284` -&gt; `ppm_2.5284...164`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.6216` -&gt; `ppm_2.6216...170`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.7577` -&gt; `ppm_2.7577...181`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.9332` -&gt; `ppm_2.9332...192`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0305` -&gt; `ppm_3.0305...199`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0404` -&gt; `ppm_3.0404...200`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0489` -&gt; `ppm_3.0489...201`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2081` -&gt; `ppm_3.2081...211`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2154` -&gt; `ppm_3.2154...212`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2320` -&gt; `ppm_3.2320...213`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2382` -&gt; `ppm_3.2382...214`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2672` -&gt; `ppm_3.2672...216`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2706` -&gt; `ppm_3.2706...217`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4031` -&gt; `ppm_3.4031...221`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4243` -&gt; `ppm_3.4243...224`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4829` -&gt; `ppm_3.4829...231`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4981` -&gt; `ppm_3.4981...233`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5135` -&gt; `ppm_3.5135...234`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5372` -&gt; `ppm_3.5372...236`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7042` -&gt; `ppm_3.7042...247`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7141` -&gt; `ppm_3.7141...248`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7200` -&gt; `ppm_3.7200...249`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7237` -&gt; `ppm_3.7237...250`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7348` -&gt; `ppm_3.7348...251`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7442` -&gt; `ppm_3.7442...252`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7757` -&gt; `ppm_3.7757...255`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8233` -&gt; `ppm_3.8233...258`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8438` -&gt; `ppm_3.8438...261`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8528` -&gt; `ppm_3.8528...263`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8886` -&gt; `ppm_3.8886...266`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8923` -&gt; `ppm_3.8923...267`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9091` -&gt; `ppm_3.9091...268`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9128` -&gt; `ppm_3.9128...269`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9333` -&gt; `ppm_3.9333...270`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9493` -&gt; `ppm_3.9493...271`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9917` -&gt; `ppm_3.9917...275`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.0020` -&gt; `ppm_4.0020...276`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.0108` -&gt; `ppm_4.0108...277`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1205` -&gt; `ppm_4.1205...281`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1320` -&gt; `ppm_4.1320...282`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1927` -&gt; `ppm_4.1927...284`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2281` -&gt; `ppm_4.2281...286`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2398` -&gt; `ppm_4.2398...288`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2566` -&gt; `ppm_4.2566...292`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.4376` -&gt; `ppm_4.4376...304`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.4531` -&gt; `ppm_4.4531...306`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5218` -&gt; `ppm_4.5218...309`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5221` -&gt; `ppm_4.5221...310`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5906` -&gt; `ppm_4.5906...313`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.2369` -&gt; `ppm_5.2369...317`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.4154` -&gt; `ppm_5.4154...323`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.1026` -&gt; `ppm_6.1026...335`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9009` -&gt; `ppm_6.9009...343`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9154` -&gt; `ppm_6.9154...344`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.2894` -&gt; `ppm_7.2894...353`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3014` -&gt; `ppm_7.3014...354`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3409` -&gt; `ppm_7.3409...357`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3816` -&gt; `ppm_7.3816...361`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.4881` -&gt; `ppm_7.4881...367`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.5553` -&gt; `ppm_7.5553...370`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.2458` -&gt; `ppm_8.2458...387`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.3515` -&gt; `ppm_8.3515...389`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.4608` -&gt; `ppm_8.4608...391`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_-0.0002` -&gt; `ppm_-0.0002...400`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8110` -&gt; `ppm_0.8110...411`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8552` -&gt; `ppm_0.8552...415`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8607` -&gt; `ppm_0.8607...416`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8784` -&gt; `ppm_0.8784...419`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8910` -&gt; `ppm_0.8910...420`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9085` -&gt; `ppm_0.9085...422`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9196` -&gt; `ppm_0.9196...423`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9313` -&gt; `ppm_0.9313...424`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9437` -&gt; `ppm_0.9437...425`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9554` -&gt; `ppm_0.9554...426`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9658` -&gt; `ppm_0.9658...427`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0093` -&gt; `ppm_1.0093...431`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0205` -&gt; `ppm_1.0205...432`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0716` -&gt; `ppm_1.0716...436`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0803` -&gt; `ppm_1.0803...437`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1505` -&gt; `ppm_1.1505...441`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2084` -&gt; `ppm_1.2084...443`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...444`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2294` -&gt; `ppm_1.2294...445`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3262` -&gt; `ppm_1.3262...449`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3377` -&gt; `ppm_1.3377...450`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4308` -&gt; `ppm_1.4308...451`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4424` -&gt; `ppm_1.4424...452`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4794` -&gt; `ppm_1.4794...453`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.5693` -&gt; `ppm_1.5693...460`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6195` -&gt; `ppm_1.6195...463`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6319` -&gt; `ppm_1.6319...464`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6441` -&gt; `ppm_1.6441...466`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6560` -&gt; `ppm_1.6560...467`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6562` -&gt; `ppm_1.6562...468`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6675` -&gt; `ppm_1.6675...470`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6747` -&gt; `ppm_1.6747...471`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6799` -&gt; `ppm_1.6799...473`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6990` -&gt; `ppm_1.6990...475`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7075` -&gt; `ppm_1.7075...476`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7614` -&gt; `ppm_1.7614...483`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8752` -&gt; `ppm_1.8752...494`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9812` -&gt; `ppm_1.9812...502`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0422` -&gt; `ppm_2.0422...509`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0923` -&gt; `ppm_2.0923...514`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1192` -&gt; `ppm_2.1192...517`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...518`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1324` -&gt; `ppm_2.1324...519`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1572` -&gt; `ppm_2.1572...522`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1655` -&gt; `ppm_2.1655...523`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2515` -&gt; `ppm_2.2515...530`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2717` -&gt; `ppm_2.2717...533`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3451` -&gt; `ppm_2.3451...542`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...543`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...544`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3644` -&gt; `ppm_2.3644...545`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4063` -&gt; `ppm_2.4063...549`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4196` -&gt; `ppm_2.4196...550`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4456` -&gt; `ppm_2.4456...553`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4953` -&gt; `ppm_2.4953...558`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.5284` -&gt; `ppm_2.5284...562`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.7994` -&gt; `ppm_2.7994...576`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.9339` -&gt; `ppm_2.9339...585`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2154` -&gt; `ppm_3.2154...608`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2706` -&gt; `ppm_3.2706...613`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.3930` -&gt; `ppm_3.3930...616`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4185` -&gt; `ppm_3.4185...618`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5793` -&gt; `ppm_3.5793...633`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6428` -&gt; `ppm_3.6428...638`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6499` -&gt; `ppm_3.6499...639`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7237` -&gt; `ppm_3.7237...643`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7348` -&gt; `ppm_3.7348...644`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7642` -&gt; `ppm_3.7642...647`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7757` -&gt; `ppm_3.7757...648`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8438` -&gt; `ppm_3.8438...653`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8923` -&gt; `ppm_3.8923...659`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9128` -&gt; `ppm_3.9128...661`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9917` -&gt; `ppm_3.9917...668`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.0020` -&gt; `ppm_4.0020...669`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2281` -&gt; `ppm_4.2281...682`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2398` -&gt; `ppm_4.2398...684`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2566` -&gt; `ppm_4.2566...687`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5089` -&gt; `ppm_4.5089...705`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5092` -&gt; `ppm_4.5092...706`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5221` -&gt; `ppm_4.5221...707`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.0973` -&gt; `ppm_5.0973...712`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.4154` -&gt; `ppm_5.4154...720`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.1026` -&gt; `ppm_6.1026...731`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9154` -&gt; `ppm_6.9154...745`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9626` -&gt; `ppm_6.9626...746`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.2066` -&gt; `ppm_7.2066...750`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3014` -&gt; `ppm_7.3014...755`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3409` -&gt; `ppm_7.3409...758`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.4881` -&gt; `ppm_7.4881...768`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.5415` -&gt; `ppm_7.5415...771`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.2458` -&gt; `ppm_8.2458...788`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.4608` -&gt; `ppm_8.4608...790`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_-0.0002` -&gt; `ppm_-0.0002...795`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8110` -&gt; `ppm_0.8110...805`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8552` -&gt; `ppm_0.8552...809`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8655` -&gt; `ppm_0.8655...811`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.8729` -&gt; `ppm_0.8729...812`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9032` -&gt; `ppm_0.9032...815`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9085` -&gt; `ppm_0.9085...816`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9196` -&gt; `ppm_0.9196...817`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9313` -&gt; `ppm_0.9313...818`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_0.9902` -&gt; `ppm_0.9902...823`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0019` -&gt; `ppm_1.0019...824`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0205` -&gt; `ppm_1.0205...826`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0208` -&gt; `ppm_1.0208...827`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0410` -&gt; `ppm_1.0410...828`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0716` -&gt; `ppm_1.0716...831`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.0803` -&gt; `ppm_1.0803...832`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1505` -&gt; `ppm_1.1505...836`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.1979` -&gt; `ppm_1.1979...837`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2084` -&gt; `ppm_1.2084...838`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...839`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.2294` -&gt; `ppm_1.2294...840`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3262` -&gt; `ppm_1.3262...844`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.3377` -&gt; `ppm_1.3377...845`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4308` -&gt; `ppm_1.4308...846`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4424` -&gt; `ppm_1.4424...847`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4794` -&gt; `ppm_1.4794...848`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.4913` -&gt; `ppm_1.4913...849`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6319` -&gt; `ppm_1.6319...859`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6441` -&gt; `ppm_1.6441...860`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6443` -&gt; `ppm_1.6443...861`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6560` -&gt; `ppm_1.6560...862`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6562` -&gt; `ppm_1.6562...863`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6675` -&gt; `ppm_1.6675...864`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6747` -&gt; `ppm_1.6747...865`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6799` -&gt; `ppm_1.6799...867`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.6990` -&gt; `ppm_1.6990...870`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7075` -&gt; `ppm_1.7075...873`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7351` -&gt; `ppm_1.7351...877`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.7614` -&gt; `ppm_1.7614...880`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8131` -&gt; `ppm_1.8131...885`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8748` -&gt; `ppm_1.8748...892`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.8752` -&gt; `ppm_1.8752...893`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9210` -&gt; `ppm_1.9210...896`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9313` -&gt; `ppm_1.9313...897`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_1.9812` -&gt; `ppm_1.9812...902`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0026` -&gt; `ppm_2.0026...904`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0194` -&gt; `ppm_2.0194...907`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0307` -&gt; `ppm_2.0307...908`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0806` -&gt; `ppm_2.0806...914`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.0923` -&gt; `ppm_2.0923...915`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1149` -&gt; `ppm_2.1149...917`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1192` -&gt; `ppm_2.1192...918`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...919`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2515` -&gt; `ppm_2.2515...932`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2717` -&gt; `ppm_2.2717...935`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2835` -&gt; `ppm_2.2835...937`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.2950` -&gt; `ppm_2.2950...939`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3251` -&gt; `ppm_2.3251...942`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...945`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...946`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.3711` -&gt; `ppm_2.3711...948`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4063` -&gt; `ppm_2.4063...951`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4196` -&gt; `ppm_2.4196...952`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4456` -&gt; `ppm_2.4456...955`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.4912` -&gt; `ppm_2.4912...960`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.6216` -&gt; `ppm_2.6216...969`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.7577` -&gt; `ppm_2.7577...979`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.7994` -&gt; `ppm_2.7994...981`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.9332` -&gt; `ppm_2.9332...989`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_2.9339` -&gt; `ppm_2.9339...990`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0305` -&gt; `ppm_3.0305...997`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0404` -&gt; `ppm_3.0404...998`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.0489` -&gt; `ppm_3.0489...999`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2081` -&gt; `ppm_3.2081...1009`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2320` -&gt; `ppm_3.2320...1011`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2382` -&gt; `ppm_3.2382...1012`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.2672` -&gt; `ppm_3.2672...1014`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.3930` -&gt; `ppm_3.3930...1018`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4031` -&gt; `ppm_3.4031...1019`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4185` -&gt; `ppm_3.4185...1021`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4243` -&gt; `ppm_3.4243...1022`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4829` -&gt; `ppm_3.4829...1029`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.4981` -&gt; `ppm_3.4981...1031`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5135` -&gt; `ppm_3.5135...1032`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5372` -&gt; `ppm_3.5372...1034`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.5793` -&gt; `ppm_3.5793...1038`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6428` -&gt; `ppm_3.6428...1043`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.6499` -&gt; `ppm_3.6499...1044`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7042` -&gt; `ppm_3.7042...1045`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7141` -&gt; `ppm_3.7141...1046`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7200` -&gt; `ppm_3.7200...1047`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7348` -&gt; `ppm_3.7348...1049`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7442` -&gt; `ppm_3.7442...1050`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.7642` -&gt; `ppm_3.7642...1052`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8233` -&gt; `ppm_3.8233...1056`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8528` -&gt; `ppm_3.8528...1060`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.8886` -&gt; `ppm_3.8886...1063`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9091` -&gt; `ppm_3.9091...1065`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9333` -&gt; `ppm_3.9333...1067`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_3.9493` -&gt; `ppm_3.9493...1068`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.0108` -&gt; `ppm_4.0108...1075`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1205` -&gt; `ppm_4.1205...1080`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1320` -&gt; `ppm_4.1320...1081`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.1927` -&gt; `ppm_4.1927...1084`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2281` -&gt; `ppm_4.2281...1087`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.2566` -&gt; `ppm_4.2566...1093`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.4376` -&gt; `ppm_4.4376...1105`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.4531` -&gt; `ppm_4.4531...1107`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5089` -&gt; `ppm_4.5089...1110`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5092` -&gt; `ppm_4.5092...1111`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5218` -&gt; `ppm_4.5218...1112`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_4.5906` -&gt; `ppm_4.5906...1117`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.0973` -&gt; `ppm_5.0973...1120`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_5.2369` -&gt; `ppm_5.2369...1123`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9009` -&gt; `ppm_6.9009...1153`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9154` -&gt; `ppm_6.9154...1154`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_6.9626` -&gt; `ppm_6.9626...1155`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.2066` -&gt; `ppm_7.2066...1160`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.2894` -&gt; `ppm_7.2894...1163`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3409` -&gt; `ppm_7.3409...1167`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.3816` -&gt; `ppm_7.3816...1169`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.5415` -&gt; `ppm_7.5415...1176`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_7.5553` -&gt; `ppm_7.5553...1177`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.3515` -&gt; `ppm_8.3515...1194`</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">•</span> `ppm_8.4608` -&gt; `ppm_8.4608...1195`</span>
-
-<span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/get_integration_with_metadata.html">get_integration_with_metadata</a></span><span class="op">(</span><span class="va">peak_table_integration</span><span class="op">)</span></code></pre></div>
+  peak_width_ppm <span class="op">=</span> <span class="fl">0.006</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## New names:</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_-0.0003` -&gt; `ppm_-0.0003...3`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8333` -&gt; `ppm_0.8333...12`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8605` -&gt; `ppm_0.8605...16`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8656` -&gt; `ppm_0.8656...17`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8784` -&gt; `ppm_0.8784...19`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8910` -&gt; `ppm_0.8910...20`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9034` -&gt; `ppm_0.9034...21`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9087` -&gt; `ppm_0.9087...22`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9158` -&gt; `ppm_0.9158...23`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9197` -&gt; `ppm_0.9197...24`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9314` -&gt; `ppm_0.9314...25`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9437` -&gt; `ppm_0.9437...26`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9554` -&gt; `ppm_0.9554...27`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9658` -&gt; `ppm_0.9658...28`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9903` -&gt; `ppm_0.9903...30`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0020` -&gt; `ppm_1.0020...31`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0208` -&gt; `ppm_1.0208...33`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0409` -&gt; `ppm_1.0409...34`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0526` -&gt; `ppm_1.0526...35`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0717` -&gt; `ppm_1.0717...37`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0804` -&gt; `ppm_1.0804...38`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.1505` -&gt; `ppm_1.1505...40`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.1980` -&gt; `ppm_1.1980...42`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.2083` -&gt; `ppm_1.2083...43`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.2720` -&gt; `ppm_1.2720...47`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.3261` -&gt; `ppm_1.3261...48`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.4423` -&gt; `ppm_1.4423...51`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.4792` -&gt; `ppm_1.4792...52`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.4914` -&gt; `ppm_1.4914...53`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.5693` -&gt; `ppm_1.5693...60`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6195` -&gt; `ppm_1.6195...65`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6562` -&gt; `ppm_1.6562...70`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6748` -&gt; `ppm_1.6748...72`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6798` -&gt; `ppm_1.6798...73`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6801` -&gt; `ppm_1.6801...74`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6934` -&gt; `ppm_1.6934...77`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6989` -&gt; `ppm_1.6989...78`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.7351` -&gt; `ppm_1.7351...84`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.7525` -&gt; `ppm_1.7525...86`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.7612` -&gt; `ppm_1.7612...87`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.8749` -&gt; `ppm_1.8749...95`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.8754` -&gt; `ppm_1.8754...96`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.9210` -&gt; `ppm_1.9210...98`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.9313` -&gt; `ppm_1.9313...99`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.9618` -&gt; `ppm_1.9618...102`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.0306` -&gt; `ppm_2.0306...110`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.0423` -&gt; `ppm_2.0423...111`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.0808` -&gt; `ppm_2.0808...115`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.0922` -&gt; `ppm_2.0922...116`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1069` -&gt; `ppm_2.1069...117`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1149` -&gt; `ppm_2.1149...118`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1193` -&gt; `ppm_2.1193...119`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...120`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1324` -&gt; `ppm_2.1324...121`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2834` -&gt; `ppm_2.2834...135`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2951` -&gt; `ppm_2.2951...136`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3251` -&gt; `ppm_2.3251...139`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3451` -&gt; `ppm_2.3451...141`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...142`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...143`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3646` -&gt; `ppm_2.3646...144`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3712` -&gt; `ppm_2.3712...145`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4196` -&gt; `ppm_2.4196...149`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4952` -&gt; `ppm_2.4952...159`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.5065` -&gt; `ppm_2.5065...160`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.5282` -&gt; `ppm_2.5282...163`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.6101` -&gt; `ppm_2.6101...167`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.6215` -&gt; `ppm_2.6215...168`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.7577` -&gt; `ppm_2.7577...179`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.7994` -&gt; `ppm_2.7994...182`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.9333` -&gt; `ppm_2.9333...191`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.0305` -&gt; `ppm_3.0305...197`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.0488` -&gt; `ppm_3.0488...199`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.2320` -&gt; `ppm_3.2320...212`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.2382` -&gt; `ppm_3.2382...213`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.3929` -&gt; `ppm_3.3929...219`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.4243` -&gt; `ppm_3.4243...223`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.4347` -&gt; `ppm_3.4347...224`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.4830` -&gt; `ppm_3.4830...230`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.5135` -&gt; `ppm_3.5135...233`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.5371` -&gt; `ppm_3.5371...235`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.5791` -&gt; `ppm_3.5791...240`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.5981` -&gt; `ppm_3.5981...242`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7141` -&gt; `ppm_3.7141...248`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7237` -&gt; `ppm_3.7237...250`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7444` -&gt; `ppm_3.7444...252`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7643` -&gt; `ppm_3.7643...254`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7758` -&gt; `ppm_3.7758...255`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.8438` -&gt; `ppm_3.8438...261`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.8528` -&gt; `ppm_3.8528...263`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.8886` -&gt; `ppm_3.8886...266`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.8922` -&gt; `ppm_3.8922...267`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9090` -&gt; `ppm_3.9090...268`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9126` -&gt; `ppm_3.9126...269`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9333` -&gt; `ppm_3.9333...270`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9493` -&gt; `ppm_3.9493...271`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9573` -&gt; `ppm_3.9573...272`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9917` -&gt; `ppm_3.9917...275`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.0020` -&gt; `ppm_4.0020...276`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.0107` -&gt; `ppm_4.0107...277`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.0974` -&gt; `ppm_4.0974...278`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.1088` -&gt; `ppm_4.1088...279`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.1320` -&gt; `ppm_4.1320...281`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.1781` -&gt; `ppm_4.1781...282`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2281` -&gt; `ppm_4.2281...286`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2397` -&gt; `ppm_4.2397...288`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2466` -&gt; `ppm_4.2466...289`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2567` -&gt; `ppm_4.2567...292`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2865` -&gt; `ppm_4.2865...298`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.3310` -&gt; `ppm_4.3310...301`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.5219` -&gt; `ppm_4.5219...309`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.5222` -&gt; `ppm_4.5222...310`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_5.2431` -&gt; `ppm_5.2431...319`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.1025` -&gt; `ppm_6.1025...336`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.1119` -&gt; `ppm_6.1119...338`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.9010` -&gt; `ppm_6.9010...346`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.9154` -&gt; `ppm_6.9154...347`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.2185` -&gt; `ppm_7.2185...355`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.3015` -&gt; `ppm_7.3015...358`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.3409` -&gt; `ppm_7.3409...362`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.3817` -&gt; `ppm_7.3817...366`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.4459` -&gt; `ppm_7.4459...370`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.4881` -&gt; `ppm_7.4881...373`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.5417` -&gt; `ppm_7.5417...375`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.5555` -&gt; `ppm_7.5555...376`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_8.2015` -&gt; `ppm_8.2015...391`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_8.2457` -&gt; `ppm_8.2457...393`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_8.3516` -&gt; `ppm_8.3516...395`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_-0.0003` -&gt; `ppm_-0.0003...405`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8110` -&gt; `ppm_0.8110...415`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8333` -&gt; `ppm_0.8333...417`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8605` -&gt; `ppm_0.8605...420`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8784` -&gt; `ppm_0.8784...423`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8910` -&gt; `ppm_0.8910...424`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9034` -&gt; `ppm_0.9034...425`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9087` -&gt; `ppm_0.9087...426`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9197` -&gt; `ppm_0.9197...427`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9314` -&gt; `ppm_0.9314...428`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9437` -&gt; `ppm_0.9437...429`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9554` -&gt; `ppm_0.9554...430`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9658` -&gt; `ppm_0.9658...431`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0205` -&gt; `ppm_1.0205...436`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0717` -&gt; `ppm_1.0717...440`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0804` -&gt; `ppm_1.0804...441`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.1505` -&gt; `ppm_1.1505...445`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.1980` -&gt; `ppm_1.1980...446`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...448`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.2294` -&gt; `ppm_1.2294...449`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.3378` -&gt; `ppm_1.3378...454`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.4309` -&gt; `ppm_1.4309...455`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.4423` -&gt; `ppm_1.4423...456`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.5693` -&gt; `ppm_1.5693...465`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6195` -&gt; `ppm_1.6195...468`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6441` -&gt; `ppm_1.6441...471`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6562` -&gt; `ppm_1.6562...472`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6675` -&gt; `ppm_1.6675...473`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6677` -&gt; `ppm_1.6677...474`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6748` -&gt; `ppm_1.6748...475`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6798` -&gt; `ppm_1.6798...477`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6989` -&gt; `ppm_1.6989...479`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.7076` -&gt; `ppm_1.7076...480`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.7094` -&gt; `ppm_1.7094...481`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.7525` -&gt; `ppm_1.7525...486`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.7612` -&gt; `ppm_1.7612...487`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.8749` -&gt; `ppm_1.8749...496`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.9618` -&gt; `ppm_1.9618...503`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.0423` -&gt; `ppm_2.0423...512`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.0808` -&gt; `ppm_2.0808...516`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.0922` -&gt; `ppm_2.0922...517`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1069` -&gt; `ppm_2.1069...518`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1149` -&gt; `ppm_2.1149...519`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1193` -&gt; `ppm_2.1193...520`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...521`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1324` -&gt; `ppm_2.1324...522`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2371` -&gt; `ppm_2.2371...531`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2516` -&gt; `ppm_2.2516...534`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2644` -&gt; `ppm_2.2644...536`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2717` -&gt; `ppm_2.2717...537`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2951` -&gt; `ppm_2.2951...541`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3451` -&gt; `ppm_2.3451...546`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...547`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...548`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3646` -&gt; `ppm_2.3646...549`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3712` -&gt; `ppm_2.3712...550`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4063` -&gt; `ppm_2.4063...553`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4196` -&gt; `ppm_2.4196...554`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4457` -&gt; `ppm_2.4457...557`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4652` -&gt; `ppm_2.4652...560`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4952` -&gt; `ppm_2.4952...562`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.5282` -&gt; `ppm_2.5282...566`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.7994` -&gt; `ppm_2.7994...581`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.8052` -&gt; `ppm_2.8052...582`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.9338` -&gt; `ppm_2.9338...590`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.9482` -&gt; `ppm_2.9482...593`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.0406` -&gt; `ppm_3.0406...598`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.2673` -&gt; `ppm_3.2673...617`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.4083` -&gt; `ppm_3.4083...622`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.4186` -&gt; `ppm_3.4186...623`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.6499` -&gt; `ppm_3.6499...644`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7237` -&gt; `ppm_3.7237...648`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7347` -&gt; `ppm_3.7347...649`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7444` -&gt; `ppm_3.7444...650`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7643` -&gt; `ppm_3.7643...652`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7758` -&gt; `ppm_3.7758...653`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.8438` -&gt; `ppm_3.8438...658`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9917` -&gt; `ppm_3.9917...673`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.0020` -&gt; `ppm_4.0020...674`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.1781` -&gt; `ppm_4.1781...682`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.1925` -&gt; `ppm_4.1925...684`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2397` -&gt; `ppm_4.2397...689`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2567` -&gt; `ppm_4.2567...692`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2753` -&gt; `ppm_4.2753...696`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.3310` -&gt; `ppm_4.3310...702`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.4376` -&gt; `ppm_4.4376...707`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.5089` -&gt; `ppm_4.5089...711`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.5093` -&gt; `ppm_4.5093...712`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.5222` -&gt; `ppm_4.5222...713`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.5226` -&gt; `ppm_4.5226...714`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_5.0973` -&gt; `ppm_5.0973...718`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.1025` -&gt; `ppm_6.1025...737`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.9154` -&gt; `ppm_6.9154...751`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.9626` -&gt; `ppm_6.9626...752`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.2068` -&gt; `ppm_7.2068...756`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.2185` -&gt; `ppm_7.2185...757`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.2895` -&gt; `ppm_7.2895...760`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.3015` -&gt; `ppm_7.3015...761`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.3409` -&gt; `ppm_7.3409...765`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.4459` -&gt; `ppm_7.4459...773`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.4881` -&gt; `ppm_7.4881...775`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_8.2457` -&gt; `ppm_8.2457...795`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_8.4610` -&gt; `ppm_8.4610...797`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8110` -&gt; `ppm_0.8110...812`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.8656` -&gt; `ppm_0.8656...818`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9034` -&gt; `ppm_0.9034...822`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9158` -&gt; `ppm_0.9158...824`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9314` -&gt; `ppm_0.9314...826`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_0.9903` -&gt; `ppm_0.9903...831`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0020` -&gt; `ppm_1.0020...832`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0205` -&gt; `ppm_1.0205...834`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0208` -&gt; `ppm_1.0208...835`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0409` -&gt; `ppm_1.0409...836`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0526` -&gt; `ppm_1.0526...837`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.0717` -&gt; `ppm_1.0717...839`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.1505` -&gt; `ppm_1.1505...844`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.1980` -&gt; `ppm_1.1980...845`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.2083` -&gt; `ppm_1.2083...846`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.2179` -&gt; `ppm_1.2179...847`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.2294` -&gt; `ppm_1.2294...848`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.2720` -&gt; `ppm_1.2720...850`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.3261` -&gt; `ppm_1.3261...852`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.3378` -&gt; `ppm_1.3378...853`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.4309` -&gt; `ppm_1.4309...854`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.4423` -&gt; `ppm_1.4423...855`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.4792` -&gt; `ppm_1.4792...856`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.4914` -&gt; `ppm_1.4914...857`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6441` -&gt; `ppm_1.6441...868`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6675` -&gt; `ppm_1.6675...871`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6677` -&gt; `ppm_1.6677...872`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6801` -&gt; `ppm_1.6801...875`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.6934` -&gt; `ppm_1.6934...877`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.7076` -&gt; `ppm_1.7076...881`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.7094` -&gt; `ppm_1.7094...882`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.7351` -&gt; `ppm_1.7351...885`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.8754` -&gt; `ppm_1.8754...900`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.9210` -&gt; `ppm_1.9210...903`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_1.9313` -&gt; `ppm_1.9313...904`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.0306` -&gt; `ppm_2.0306...915`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.0808` -&gt; `ppm_2.0808...921`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1193` -&gt; `ppm_2.1193...925`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.1273` -&gt; `ppm_2.1273...926`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2371` -&gt; `ppm_2.2371...937`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2516` -&gt; `ppm_2.2516...939`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2644` -&gt; `ppm_2.2644...941`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2717` -&gt; `ppm_2.2717...942`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2834` -&gt; `ppm_2.2834...944`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.2951` -&gt; `ppm_2.2951...946`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3251` -&gt; `ppm_2.3251...949`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3513` -&gt; `ppm_2.3513...952`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.3575` -&gt; `ppm_2.3575...953`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4063` -&gt; `ppm_2.4063...958`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4196` -&gt; `ppm_2.4196...959`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4457` -&gt; `ppm_2.4457...962`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.4652` -&gt; `ppm_2.4652...965`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.5065` -&gt; `ppm_2.5065...969`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.6101` -&gt; `ppm_2.6101...975`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.6215` -&gt; `ppm_2.6215...976`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.7577` -&gt; `ppm_2.7577...986`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.8052` -&gt; `ppm_2.8052...989`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.9333` -&gt; `ppm_2.9333...996`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.9338` -&gt; `ppm_2.9338...997`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_2.9482` -&gt; `ppm_2.9482...999`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.0305` -&gt; `ppm_3.0305...1004`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.0406` -&gt; `ppm_3.0406...1005`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.0488` -&gt; `ppm_3.0488...1006`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.2320` -&gt; `ppm_3.2320...1018`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.2382` -&gt; `ppm_3.2382...1019`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.2673` -&gt; `ppm_3.2673...1021`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.3929` -&gt; `ppm_3.3929...1025`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.4083` -&gt; `ppm_3.4083...1027`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.4186` -&gt; `ppm_3.4186...1028`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.4243` -&gt; `ppm_3.4243...1029`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.4347` -&gt; `ppm_3.4347...1030`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.4830` -&gt; `ppm_3.4830...1036`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.5135` -&gt; `ppm_3.5135...1039`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.5371` -&gt; `ppm_3.5371...1041`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.5791` -&gt; `ppm_3.5791...1045`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.5981` -&gt; `ppm_3.5981...1047`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.6499` -&gt; `ppm_3.6499...1051`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7141` -&gt; `ppm_3.7141...1053`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7347` -&gt; `ppm_3.7347...1056`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.7444` -&gt; `ppm_3.7444...1057`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.8528` -&gt; `ppm_3.8528...1067`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.8886` -&gt; `ppm_3.8886...1070`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.8922` -&gt; `ppm_3.8922...1071`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9090` -&gt; `ppm_3.9090...1072`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9126` -&gt; `ppm_3.9126...1073`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9333` -&gt; `ppm_3.9333...1074`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9493` -&gt; `ppm_3.9493...1075`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_3.9573` -&gt; `ppm_3.9573...1076`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.0107` -&gt; `ppm_4.0107...1082`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.0974` -&gt; `ppm_4.0974...1084`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.1088` -&gt; `ppm_4.1088...1085`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.1320` -&gt; `ppm_4.1320...1087`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.1925` -&gt; `ppm_4.1925...1091`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2281` -&gt; `ppm_4.2281...1094`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2466` -&gt; `ppm_4.2466...1096`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2567` -&gt; `ppm_4.2567...1099`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2753` -&gt; `ppm_4.2753...1101`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.2865` -&gt; `ppm_4.2865...1103`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.4376` -&gt; `ppm_4.4376...1109`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.5089` -&gt; `ppm_4.5089...1112`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.5093` -&gt; `ppm_4.5093...1113`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.5219` -&gt; `ppm_4.5219...1114`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_4.5226` -&gt; `ppm_4.5226...1115`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_5.0973` -&gt; `ppm_5.0973...1121`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_5.2431` -&gt; `ppm_5.2431...1125`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.1025` -&gt; `ppm_6.1025...1145`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.1119` -&gt; `ppm_6.1119...1147`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.9010` -&gt; `ppm_6.9010...1155`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.9154` -&gt; `ppm_6.9154...1156`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_6.9626` -&gt; `ppm_6.9626...1157`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.2068` -&gt; `ppm_7.2068...1166`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.2895` -&gt; `ppm_7.2895...1169`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.3409` -&gt; `ppm_7.3409...1173`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.3817` -&gt; `ppm_7.3817...1175`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.5417` -&gt; `ppm_7.5417...1182`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_7.5555` -&gt; `ppm_7.5555...1183`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_8.2015` -&gt; `ppm_8.2015...1196`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_8.3516` -&gt; `ppm_8.3516...1199`</span>
+<span class="co">## <span style="color: #00BBBB;">•</span> `ppm_8.4610` -&gt; `ppm_8.4610...1200`</span></code></pre>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/get_integration_with_metadata.html">get_integration_with_metadata</a></span><span class="op">(</span><span class="va">peak_table_integration</span><span class="op">)</span></code></pre></div>
 <p>We can also integrate with a specific peak position and some
 arbitrary width:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span>
   <span class="fu"><a href="../reference/nmr_integrate_peak_positions.html">nmr_integrate_peak_positions</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="va">dataset_norm</span>,
                             peak_pos_ppm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.1925</span>, <span class="fl">4.183</span>, <span class="fl">4.1775</span>, <span class="fl">4.17</span><span class="op">)</span>,
                             peak_width_ppm <span class="op">=</span> <span class="fl">0.006</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="co">#&gt;      ppm_4.1925   ppm_4.1830   ppm_4.1775   ppm_4.1700</span>
-<span class="co">#&gt; 10 3.237471e-07 3.331809e-07 3.281015e-07 3.199705e-07</span>
-<span class="co">#&gt; 20 3.175618e-07 3.290769e-07 3.264927e-07 3.181403e-07</span>
-<span class="co">#&gt; 30 3.145632e-07 3.239251e-07 3.211770e-07 3.090236e-07</span></code></pre></div>
+<span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##      ppm_4.1925   ppm_4.1830   ppm_4.1775   ppm_4.1700</span>
+<span class="co">## 10 3.216942e-07 3.317667e-07 3.261840e-07 3.203905e-07</span>
+<span class="co">## 20 3.155648e-07 3.266500e-07 3.253073e-07 3.171275e-07</span>
+<span class="co">## 30 3.130383e-07 3.228140e-07 3.188012e-07 3.100572e-07</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="integration-based-on-peak-boundaries">2. Integration based on peak boundaries<a class="anchor" aria-label="anchor" href="#integration-based-on-peak-boundaries"></a>
 </h3>
 <p>Imagine we only want to integrate the four peaks corresponding to the
 pyroglutamic acid:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pyroglutamic_acid_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.15</span>, <span class="fl">4.20</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset_norm</span>, chemshift_range <span class="op">=</span> <span class="va">pyroglutamic_acid_region</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Pyroglutamic acid region"</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-25-1.png" width="672"></p>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
 <p>We define the peak regions and integrate them. Note how we can
 correct the baseline or not. If we correct the baseline, the limits of
 the integration will be connected with a straight line and that line
 will be used as the baseline, that will be subtracted.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pyroglutamic_acid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pyroglutamic_acid1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.19</span>, <span class="fl">4.195</span><span class="op">)</span>,
                           pyroglutamic_acid2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.18</span>, <span class="fl">4.186</span><span class="op">)</span>,
                           pyroglutamic_acid3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.175</span>, <span class="fl">4.18</span><span class="op">)</span>,
                           pyroglutamic_acid4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.165</span>, <span class="fl">4.172</span><span class="op">)</span><span class="op">)</span>
 <span class="va">regions_basel_corr_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_integrate_regions.html">nmr_integrate_regions</a></span><span class="op">(</span><span class="va">dataset_norm</span>, <span class="va">pyroglutamic_acid</span>, fix_baseline <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">regions_basel_corr_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span><span class="va">regions_basel_corr_ds</span><span class="op">)</span>
-<span class="va">regions_basel_corr_matrix</span>
-<span class="co">#&gt;    pyroglutamic_acid1 pyroglutamic_acid2 pyroglutamic_acid3 pyroglutamic_acid4</span>
-<span class="co">#&gt; 10       2.610786e-08       3.403464e-08       2.677797e-08       5.514992e-08</span>
-<span class="co">#&gt; 20       2.155472e-08       1.777468e-08       1.203120e-08       5.139145e-08</span>
-<span class="co">#&gt; 30       2.115166e-08       2.434735e-08       1.876817e-08       5.188576e-08</span>
-
-
-<span class="va">regions_basel_not_corr_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_integrate_regions.html">nmr_integrate_regions</a></span><span class="op">(</span><span class="va">dataset_norm</span>, <span class="va">pyroglutamic_acid</span>, fix_baseline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">regions_basel_corr_matrix</span></code></pre></div>
+<pre><code><span class="co">##    pyroglutamic_acid1 pyroglutamic_acid2 pyroglutamic_acid3 pyroglutamic_acid4</span>
+<span class="co">## 10       2.526946e-08       3.363212e-08       2.462879e-08       5.483867e-08</span>
+<span class="co">## 20       1.958030e-08       1.743380e-08       1.223585e-08       5.198760e-08</span>
+<span class="co">## 30       1.757233e-08       2.511201e-08       1.900462e-08       5.095320e-08</span></code></pre>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">regions_basel_not_corr_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_integrate_regions.html">nmr_integrate_regions</a></span><span class="op">(</span><span class="va">dataset_norm</span>, <span class="va">pyroglutamic_acid</span>, fix_baseline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">regions_basel_not_corr_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span><span class="va">regions_basel_not_corr_ds</span><span class="op">)</span>
-<span class="va">regions_basel_not_corr_matrix</span>
-<span class="co">#&gt;    pyroglutamic_acid1 pyroglutamic_acid2 pyroglutamic_acid3 pyroglutamic_acid4</span>
-<span class="co">#&gt; 10       2.789484e-07       3.331809e-07       2.702738e-07       3.786086e-07</span>
-<span class="co">#&gt; 20       2.724326e-07       3.290769e-07       2.670492e-07       3.792872e-07</span>
-<span class="co">#&gt; 30       2.699129e-07       3.239251e-07       2.636939e-07       3.681281e-07</span></code></pre></div>
+<span class="va">regions_basel_not_corr_matrix</span></code></pre></div>
+<pre><code><span class="co">##    pyroglutamic_acid1 pyroglutamic_acid2 pyroglutamic_acid3 pyroglutamic_acid4</span>
+<span class="co">## 10       2.655498e-07       3.317667e-07       2.794939e-07       3.759370e-07</span>
+<span class="co">## 20       2.595239e-07       3.266500e-07       2.775625e-07       3.771747e-07</span>
+<span class="co">## 30       2.574413e-07       3.228140e-07       2.727137e-07       3.654404e-07</span></code></pre>
 <p>We may plot the integral values to explore variation based on the
 baseline subtraction.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span>
   <span class="va">regions_basel_corr_matrix</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -896,7 +873,7 @@ baseline subtraction.</p>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>BaselineCorrected <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">NMRExperiment</span>, y <span class="op">=</span> <span class="va">area</span>, color <span class="op">=</span> <span class="va">metabolite_peak</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">BaselineCorrected</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-27-1.png" width="672"></p>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
 </div>
 </div>
 <div class="section level2">
@@ -907,7 +884,7 @@ the identification of features of interest through
 <code>nmr_identify_regions_blood</code>. The function gives 3
 posibilities sorted by the most probable metabolite (see
 <code>nmr_identify_regions_blood</code> for details).</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ppm_to_assign</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.060960203</span>, <span class="fl">3.048970634</span>,<span class="fl">2.405935596</span>,<span class="fl">0.990616851</span>,<span class="fl">0.986520147</span>, <span class="fl">1.044258467</span><span class="op">)</span>
 <span class="va">identification</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_identify_regions_blood.html">nmr_identify_regions_blood</a></span> <span class="op">(</span><span class="va">ppm_to_assign</span><span class="op">)</span></code></pre></div>
 </div>
@@ -922,21 +899,26 @@ can extract the raw matrix and manipulate it at will. As long as you
 don’t permute the rows, you can always replace the raw matrix of the
 <code>nmr_dataset_1D</code> object through the <code>nmr_data</code>
 function:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">full_spectra_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span>
-<span class="va">full_spectra_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span> <span class="co"># change it as you wish</span>
-<span class="co">#&gt;        -0.5 -0.49977  -0.49954  -0.49931  -0.49908  -0.49885</span>
-<span class="co">#&gt; 10 1672.044 1433.898 1072.3294 1401.1787 1634.7485 1344.6377</span>
-<span class="co">#&gt; 20 1927.617 2056.491 1848.7379 1584.5820 1970.5705 2469.3993</span>
-<span class="co">#&gt; 30 1337.001 1029.662  645.6248  641.0098  825.0757  799.6986</span>
-<span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">full_spectra_matrix</span> <span class="co"># Rewrite the matrix</span></code></pre></div>
+<span class="va">full_spectra_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span> <span class="co"># change it as you wish</span></code></pre></div>
+<pre><code><span class="co">##        -0.5 -0.499770761061104 -0.499541522122207 -0.499312283183311</span>
+<span class="co">## 10 1671.239           1434.691          1071.3369          1395.0343</span>
+<span class="co">## 20 1939.779           2068.711          1863.4407          1596.2486</span>
+<span class="co">## 30 1339.605           1033.933           650.0158           642.2514</span>
+<span class="co">##    -0.499083044244415 -0.498853805305519</span>
+<span class="co">## 10          1636.4862          1345.4378</span>
+<span class="co">## 20          1974.0769          2479.1349</span>
+<span class="co">## 30           826.7178           804.9558</span></code></pre>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">full_spectra_matrix</span> <span class="co"># Rewrite the matrix</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="creating-an-nmr_dataset_1d-object-from-a-matrix">Creating an <code>nmr_dataset_1D</code> object from a matrix<a class="anchor" aria-label="anchor" href="#creating-an-nmr_dataset_1d-object-from-a-matrix"></a>
 </h3>
 <p>You can also create an <code>nmr_dataset_1D</code> object from
 scratch with the <code>new_nmr_dataset_1D</code> function:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nsamp</span> <span class="op">&lt;-</span> <span class="fl">12</span>
 <span class="va">npoints</span> <span class="op">&lt;-</span> <span class="fl">20</span>
 <span class="co"># Create a random spectra matrix</span>
@@ -948,11 +930,12 @@ scratch with the <code>new_nmr_dataset_1D</code> function:</p>
 <span class="va">your_custom_nmr_dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nmr_dataset_1D.html">new_nmr_dataset_1D</a></span><span class="op">(</span>ppm_axis <span class="op">=</span> <span class="va">dummy_ppm_axis</span>,
                                                  data_1r <span class="op">=</span> <span class="va">dummy_spectra_matrix</span>,
                                                  metadata <span class="op">=</span> <span class="va">metadata</span><span class="op">)</span>
-<span class="va">your_custom_nmr_dataset_1D</span>
-<span class="co">#&gt; An nmr_dataset_1D (12 samples)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">your_custom_nmr_dataset_1D</span><span class="op">)</span> <span class="op">+</span>
+<span class="va">your_custom_nmr_dataset_1D</span></code></pre></div>
+<pre><code><span class="co">## An nmr_dataset_1D (12 samples)</span></code></pre>
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">your_custom_nmr_dataset_1D</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Of course those random values don't make much sense..."</span><span class="op">)</span></code></pre></div>
-<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-30-1.png" width="672"></p>
+<p><img src="introduction-to-alpsnmr_files/figure-html/unnamed-chunk-29-1.png" width="700"></p>
 </div>
 </div>
 <div class="section level2">
@@ -962,65 +945,68 @@ scratch with the <code>new_nmr_dataset_1D</code> function:</p>
 features have room for improvement, others are not fully described, and
 the reader will need to browse the documentation. Hopefully it is a good
 starting point for using the package.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; R version 4.1.3 (2022-03-10)</span>
-<span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">#&gt; Running under: Ubuntu 20.04.4 LTS</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Matrix products: default</span>
-<span class="co">#&gt; BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; locale:</span>
-<span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
-<span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
-<span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; attached base packages:</span>
-<span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] BiocParallel_1.28.3 ggplot2_3.3.6       AlpsNMR_3.7.1      </span>
-<span class="co">#&gt; [4] magrittr_2.0.3      future_1.26.1       dplyr_1.0.9        </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; loaded via a namespace (and not attached):</span>
-<span class="co">#&gt;   [1] matrixStats_0.62.0     fs_1.5.2               httr_1.4.3            </span>
-<span class="co">#&gt;   [4] RColorBrewer_1.1-3     rprojroot_2.0.3        doRNG_1.8.2           </span>
-<span class="co">#&gt;   [7] tools_4.1.3            bslib_0.3.1            utf8_1.2.2            </span>
-<span class="co">#&gt;  [10] R6_2.5.1               colorspace_2.0-3       withr_2.5.0           </span>
-<span class="co">#&gt;  [13] tidyselect_1.1.2       gridExtra_2.3          compiler_4.1.3        </span>
-<span class="co">#&gt;  [16] MassSpecWavelet_1.60.1 progressr_0.10.1       rvest_1.0.2           </span>
-<span class="co">#&gt;  [19] textshaping_0.3.6      cli_3.3.0              SparseM_1.81          </span>
-<span class="co">#&gt;  [22] xml2_1.3.3             desc_1.4.1             labeling_0.4.2        </span>
-<span class="co">#&gt;  [25] sass_0.4.1             scales_1.2.0           mvtnorm_1.1-3         </span>
-<span class="co">#&gt;  [28] randomForest_4.7-1.1   quadprog_1.5-8         pkgdown_2.0.4         </span>
-<span class="co">#&gt;  [31] systemfonts_1.0.4      stringr_1.4.0          digest_0.6.29         </span>
-<span class="co">#&gt;  [34] rmarkdown_2.14         pkgconfig_2.0.3        htmltools_0.5.2       </span>
-<span class="co">#&gt;  [37] parallelly_1.32.0      itertools_0.1-3        fastmap_1.1.0         </span>
-<span class="co">#&gt;  [40] highr_0.9              rlang_1.0.2            readxl_1.4.0          </span>
-<span class="co">#&gt;  [43] impute_1.68.0          jquerylib_0.1.4        farver_2.1.0          </span>
-<span class="co">#&gt;  [46] generics_0.1.2         jsonlite_1.8.0         speaq_2.7.0           </span>
-<span class="co">#&gt;  [49] Matrix_1.4-1           Rcpp_1.0.8.3           munsell_0.5.0         </span>
-<span class="co">#&gt;  [52] fansi_1.0.3            lifecycle_1.0.1        RcppZiggurat_0.1.6    </span>
-<span class="co">#&gt;  [55] stringi_1.7.6          yaml_2.3.5             MASS_7.3-57           </span>
-<span class="co">#&gt;  [58] plyr_1.8.7             grid_4.1.3             parallel_4.1.3        </span>
-<span class="co">#&gt;  [61] listenv_0.8.0          ggrepel_0.9.1          doSNOW_1.0.20         </span>
-<span class="co">#&gt;  [64] crayon_1.5.1           lattice_0.20-45        knitr_1.39            </span>
-<span class="co">#&gt;  [67] pillar_1.7.0           igraph_1.3.2           rngtools_1.5.2        </span>
-<span class="co">#&gt;  [70] corpcor_1.6.10         reshape2_1.4.4         codetools_0.2-18      </span>
-<span class="co">#&gt;  [73] mixOmics_6.18.1        lpSolve_5.6.15         glue_1.6.2            </span>
-<span class="co">#&gt;  [76] evaluate_0.15          data.table_1.14.2      missForest_1.5        </span>
-<span class="co">#&gt;  [79] foreach_1.5.2          vctrs_0.4.1            cellranger_1.1.0      </span>
-<span class="co">#&gt;  [82] gtable_0.3.0           purrr_0.3.4            tidyr_1.2.0           </span>
-<span class="co">#&gt;  [85] cachem_1.0.6           xfun_0.31              limSolve_1.5.6        </span>
-<span class="co">#&gt;  [88] Rfast_2.0.6            RSpectra_0.16-1        baseline_1.3-1        </span>
-<span class="co">#&gt;  [91] ragg_1.2.2             pcaPP_2.0-1            rARPACK_0.11-0        </span>
-<span class="co">#&gt;  [94] signal_0.7-7           tibble_3.1.7           snow_0.4-4            </span>
-<span class="co">#&gt;  [97] iterators_1.0.14       memoise_2.0.1          ellipse_0.4.3         </span>
-<span class="co">#&gt; [100] cluster_2.1.3          globals_0.15.0         ellipsis_0.3.2</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## R version 4.2.0 (2022-04-22)</span>
+<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
+<span class="co">## Running under: Ubuntu 20.04.4 LTS</span>
+<span class="co">## </span>
+<span class="co">## Matrix products: default</span>
+<span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span>
+<span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3</span>
+<span class="co">## </span>
+<span class="co">## locale:</span>
+<span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
+<span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
+<span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
+<span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
+<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
+<span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
+<span class="co">## </span>
+<span class="co">## attached base packages:</span>
+<span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
+<span class="co">## </span>
+<span class="co">## other attached packages:</span>
+<span class="co">## [1] AlpsNMR_3.7.1       magrittr_2.0.3      future_1.26.1      </span>
+<span class="co">## [4] BiocParallel_1.30.3 readxl_1.4.0        ggplot2_3.3.6      </span>
+<span class="co">## [7] dplyr_1.0.9         BiocStyle_2.24.0   </span>
+<span class="co">## </span>
+<span class="co">## loaded via a namespace (and not attached):</span>
+<span class="co">##   [1] matrixStats_0.62.0     fs_1.5.2               httr_1.4.3            </span>
+<span class="co">##   [4] RColorBrewer_1.1-3     rprojroot_2.0.3        doRNG_1.8.2           </span>
+<span class="co">##   [7] tools_4.2.0            bslib_0.3.1            utf8_1.2.2            </span>
+<span class="co">##  [10] R6_2.5.1               colorspace_2.0-3       withr_2.5.0           </span>
+<span class="co">##  [13] tidyselect_1.1.2       gridExtra_2.3          MassSpecWavelet_1.62.0</span>
+<span class="co">##  [16] compiler_4.2.0         progressr_0.10.1       rvest_1.0.2           </span>
+<span class="co">##  [19] textshaping_0.3.6      cli_3.3.0              SparseM_1.81          </span>
+<span class="co">##  [22] xml2_1.3.3             desc_1.4.1             labeling_0.4.2        </span>
+<span class="co">##  [25] bookdown_0.26          sass_0.4.1             scales_1.2.0          </span>
+<span class="co">##  [28] mvtnorm_1.1-3          randomForest_4.7-1.1   quadprog_1.5-8        </span>
+<span class="co">##  [31] pkgdown_2.0.4          systemfonts_1.0.4      stringr_1.4.0         </span>
+<span class="co">##  [34] digest_0.6.29          rmarkdown_2.14         pkgconfig_2.0.3       </span>
+<span class="co">##  [37] htmltools_0.5.2        parallelly_1.32.0      itertools_0.1-3       </span>
+<span class="co">##  [40] fastmap_1.1.0          highr_0.9              rlang_1.0.2           </span>
+<span class="co">##  [43] impute_1.70.0          jquerylib_0.1.4        generics_0.1.2        </span>
+<span class="co">##  [46] farver_2.1.0           jsonlite_1.8.0         speaq_2.7.0           </span>
+<span class="co">##  [49] Matrix_1.4-1           Rcpp_1.0.8.3           munsell_0.5.0         </span>
+<span class="co">##  [52] fansi_1.0.3            RcppZiggurat_0.1.6     lifecycle_1.0.1       </span>
+<span class="co">##  [55] stringi_1.7.6          yaml_2.3.5             MASS_7.3-57           </span>
+<span class="co">##  [58] plyr_1.8.7             grid_4.2.0             parallel_4.2.0        </span>
+<span class="co">##  [61] listenv_0.8.0          ggrepel_0.9.1          doSNOW_1.0.20         </span>
+<span class="co">##  [64] crayon_1.5.1           lattice_0.20-45        knitr_1.39            </span>
+<span class="co">##  [67] pillar_1.7.0           igraph_1.3.2           rngtools_1.5.2        </span>
+<span class="co">##  [70] corpcor_1.6.10         reshape2_1.4.4         codetools_0.2-18      </span>
+<span class="co">##  [73] mixOmics_6.20.0        lpSolve_5.6.15         glue_1.6.2            </span>
+<span class="co">##  [76] evaluate_0.15          data.table_1.14.2      BiocManager_1.30.18   </span>
+<span class="co">##  [79] missForest_1.5         foreach_1.5.2          vctrs_0.4.1           </span>
+<span class="co">##  [82] cellranger_1.1.0       gtable_0.3.0           purrr_0.3.4           </span>
+<span class="co">##  [85] tidyr_1.2.0            cachem_1.0.6           xfun_0.31             </span>
+<span class="co">##  [88] limSolve_1.5.6         Rfast_2.0.6            RSpectra_0.16-1       </span>
+<span class="co">##  [91] baseline_1.3-1         ragg_1.2.2             pcaPP_2.0-1           </span>
+<span class="co">##  [94] rARPACK_0.11-0         signal_0.7-7           tibble_3.1.7          </span>
+<span class="co">##  [97] snow_0.4-4             iterators_1.0.14       memoise_2.0.1         </span>
+<span class="co">## [100] ellipse_0.4.3          cluster_2.1.3          globals_0.15.0        </span>
+<span class="co">## [103] ellipsis_0.3.2</span></code></pre>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr>

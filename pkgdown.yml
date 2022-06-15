@@ -2,6 +2,7 @@ pandoc: 2.17.1.1
 pkgdown: 2.0.4
 pkgdown_sha: ~
 articles:
+  handling-metadata-and-annotations: handling-metadata-and-annotations.html
   introduction-to-alpsnmr: introduction-to-alpsnmr.html
-last_built: 2022-06-14T17:47Z
+last_built: 2022-06-15T14:15Z
 
