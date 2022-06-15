@@ -21,4 +21,3 @@ dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 is(dataset)
 
 }
-\concept{nmr_dataset manipulation functions}

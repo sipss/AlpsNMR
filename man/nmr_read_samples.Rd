@@ -52,20 +52,6 @@ dataset <- nmr_read_samples(sample_names = zip_files)
 
 }
 \seealso{
-Other nmr_dataset functions: 
-\code{\link{[.nmr_dataset}()},
-\code{\link{format.nmr_dataset}()},
-\code{\link{load_and_save_functions}},
-\code{\link{new_nmr_dataset}()},
-\code{\link{nmr_interpolate_1D}()},
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_ppm_resolution}()},
-\code{\link{print.nmr_dataset}()},
-\code{\link{validate_nmr_dataset}()}
-
 Other import/export functions: 
 \code{\link{Pipelines}},
 \code{\link{files_to_rDolphin}()},
@@ -79,4 +65,3 @@ Other import/export functions:
 \code{\link{to_ChemoSpec}()}
 }
 \concept{import/export functions}
-\concept{nmr_dataset functions}

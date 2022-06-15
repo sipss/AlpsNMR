@@ -45,9 +45,5 @@ Other import/export functions:
 \code{\link{nmr_zip_bruker_samples}()},
 \code{\link{save_files_to_rDolphin}()},
 \code{\link{to_ChemoSpec}()}
-
-Other to_rDolphin_blood functions: 
-\code{\link{save_files_to_rDolphin}()}
 }
 \concept{import/export functions}
-\concept{to_rDolphin_blood functions}

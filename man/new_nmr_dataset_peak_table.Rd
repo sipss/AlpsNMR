@@ -30,18 +30,6 @@ new <- new_nmr_dataset_peak_table(peak_table, metadata)
 
 }
 \seealso{
-Other nmr_dataset_peak_table functions: 
-\code{\link{[.nmr_dataset_peak_table}()},
-\code{\link{format.nmr_dataset_peak_table}()},
-\code{\link{is.nmr_dataset_peak_table}()},
-\code{\link{load_and_save_functions}},
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{print.nmr_dataset_peak_table}()},
-\code{\link{validate_nmr_dataset_peak_table}()}
-
 Other class helper functions: 
 \code{\link{format.nmr_dataset_1D}()},
 \code{\link{format.nmr_dataset_peak_table}()},
@@ -58,4 +46,3 @@ Other class helper functions:
 \code{\link{validate_nmr_dataset}()}
 }
 \concept{class helper functions}
-\concept{nmr_dataset_peak_table functions}

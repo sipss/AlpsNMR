@@ -40,4 +40,3 @@ Other class helper functions:
 \code{\link{validate_nmr_dataset}()}
 }
 \concept{class helper functions}
-\concept{nmr_dataset_family functions}

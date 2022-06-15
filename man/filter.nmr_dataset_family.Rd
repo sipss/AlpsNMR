@@ -35,5 +35,4 @@ Other subsetting functions:
 \code{\link{[.nmr_dataset}()},
 \code{\link{nmr_pca_outliers_filter}()}
 }
-\concept{nmr_dataset_family manipulation functions}
 \concept{subsetting functions}

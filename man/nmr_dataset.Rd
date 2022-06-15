@@ -25,7 +25,6 @@ shifts in the columns.
 \link[=load_and_save_functions]{Functions to save and load these objects}
 
 Other AlpsNMR dataset objects: 
-\code{\link{nmr_dataset_1D}},
 \code{\link{nmr_dataset_family}}
 }
 \concept{AlpsNMR dataset objects}
