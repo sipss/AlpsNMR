@@ -60,7 +60,6 @@ Other outlier detection functions:
 
 Other nmr_dataset_1D functions: 
 \code{\link{[.nmr_dataset_1D}()},
-\code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{files_to_rDolphin}()},
 \code{\link{format.nmr_dataset_1D}()},

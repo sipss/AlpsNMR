@@ -20,7 +20,6 @@ Get integrals with metadata from \verb{integrate peak positions}
 \seealso{
 Other peak integration functions: 
 \code{\link{Pipelines}},
-\code{\link{computes_peak_width_ppm}()},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},
@@ -29,7 +28,6 @@ Other peak integration functions:
 
 Other nmr_dataset_1D functions: 
 \code{\link{[.nmr_dataset_1D}()},
-\code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{files_to_rDolphin}()},
 \code{\link{format.nmr_dataset_1D}()},

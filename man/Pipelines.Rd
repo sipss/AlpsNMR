@@ -241,15 +241,13 @@ Other peak detection functions:
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_regions}()},
-\code{\link{regions_from_peak_table}()}
+\code{\link{nmr_integrate_regions}()}
 
 Other alignment functions: 
 \code{\link{nmr_align_find_ref}()},
 \code{\link{nmr_align}()}
 
 Other peak integration functions: 
-\code{\link{computes_peak_width_ppm}()},
 \code{\link{get_integration_with_metadata}()},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},

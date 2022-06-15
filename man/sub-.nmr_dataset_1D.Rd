@@ -31,7 +31,6 @@ Other subsetting functions:
 \code{\link{nmr_pca_outliers_filter}()}
 
 Other nmr_dataset_1D functions: 
-\code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{files_to_rDolphin}()},
 \code{\link{format.nmr_dataset_1D}()},

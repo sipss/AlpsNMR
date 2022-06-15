@@ -64,12 +64,10 @@ Other peak detection functions:
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_regions}()},
-\code{\link{regions_from_peak_table}()}
+\code{\link{nmr_integrate_regions}()}
 
 Other nmr_dataset_1D functions: 
 \code{\link{[.nmr_dataset_1D}()},
-\code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{files_to_rDolphin}()},
 \code{\link{format.nmr_dataset_1D}()},

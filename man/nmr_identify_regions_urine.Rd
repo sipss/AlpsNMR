@@ -41,12 +41,10 @@ Other peak detection functions:
 \code{\link{nmr_detect_peaks}()},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
-\code{\link{nmr_integrate_regions}()},
-\code{\link{regions_from_peak_table}()}
+\code{\link{nmr_integrate_regions}()}
 
 Other peak integration functions: 
 \code{\link{Pipelines}},
-\code{\link{computes_peak_width_ppm}()},
 \code{\link{get_integration_with_metadata}()},
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},

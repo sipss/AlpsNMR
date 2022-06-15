@@ -78,7 +78,6 @@ Other import/export functions:
 
 Other nmr_dataset_1D functions: 
 \code{\link{[.nmr_dataset_1D}()},
-\code{\link{computes_peak_width_ppm}()},
 \code{\link{file_lister}()},
 \code{\link{format.nmr_dataset_1D}()},
 \code{\link{get_integration_with_metadata}()},

@@ -42,7 +42,6 @@ Other peak detection functions:
 \code{\link{nmr_identify_regions_blood}()},
 \code{\link{nmr_identify_regions_cell}()},
 \code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_regions}()},
-\code{\link{regions_from_peak_table}()}
+\code{\link{nmr_integrate_regions}()}
 }
 \concept{peak detection functions}
