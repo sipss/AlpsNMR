@@ -7,6 +7,11 @@
 \description{
 The Human Metabolome DataBase multiplet table
 }
+\examples{
+# Get all the 1-Methylhistidine peaks:
+data("hmdb")
+hmdb[hmdb$Metabolite == "1-Methylhistidine", ]
+}
 \references{
 \url{https://hmdb.ca/}
 }

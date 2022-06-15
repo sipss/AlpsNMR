@@ -50,6 +50,9 @@ nmr_identify_regions_blood <- function(ppm_to_assign, num_proposed_compounds = 3
 #' @docType data
 #' @references \url{https://hmdb.ca/}
 #' @keywords data
+#' @examples 
+#' data("HMDB_blood")
+#' HMDB_blood[HMDB_blood$Metabolite == "1-Methylhistidine", ]
 NULL
 
 #' NMR peak identification (urine samples)
@@ -104,6 +107,9 @@ nmr_identify_regions_urine <- function(ppm_to_assign, num_proposed_compounds = 5
 #' @docType data
 #' @references \url{https://hmdb.ca/}
 #' @keywords data
+#' @examples 
+#' data("HMDB_urine")
+#' HMDB_urine[HMDB_urine$Metabolite == "1-Methyladenosine", ]
 NULL
 
 #' NMR peak identification (cell samples)
@@ -154,5 +160,7 @@ nmr_identify_regions_cell <- function(ppm_to_assign, num_proposed_compounds = 3,
 #' @docType data
 #' @references \url{https://hmdb.ca/}
 #' @keywords data
-#' 
+#' @examples 
+#' data("HMDB_cell")
+#' HMDB_cell[HMDB_cell$Metabolite == "Acetone", ]
 NULL

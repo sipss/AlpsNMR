@@ -20,6 +20,10 @@ NULL
 #' @docType data
 #' @references \url{https://hmdb.ca/}
 #' @keywords data
+#' @examples 
+#' # Get all the 1-Methylhistidine peaks:
+#' data("hmdb")
+#' hmdb[hmdb$Metabolite == "1-Methylhistidine", ]
 NULL
 
 

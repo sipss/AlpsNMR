@@ -7,6 +7,10 @@
 \description{
 The Human Metabolome DataBase multiplet table: cell metabolites normally found in NMR-based metabolomics
 }
+\examples{
+data("HMDB_cell")
+HMDB_cell[HMDB_cell$Metabolite == "Acetone", ]
+}
 \references{
 \url{https://hmdb.ca/}
 }

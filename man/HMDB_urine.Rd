@@ -7,6 +7,10 @@
 \description{
 The Human Metabolome DataBase multiplet table: urine metabolites normally found in NMR-based metabolomics
 }
+\examples{
+data("HMDB_urine")
+HMDB_urine[HMDB_urine$Metabolite == "1-Methyladenosine", ]
+}
 \references{
 \url{https://hmdb.ca/}
 }

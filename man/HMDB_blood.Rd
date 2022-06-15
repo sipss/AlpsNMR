@@ -7,6 +7,10 @@
 \description{
 The Human Metabolome DataBase multiplet table: blood metabolites normally found in NMR-based metabolomics
 }
+\examples{
+data("HMDB_blood")
+HMDB_blood[HMDB_blood$Metabolite == "1-Methylhistidine", ]
+}
 \references{
 \url{https://hmdb.ca/}
 }
