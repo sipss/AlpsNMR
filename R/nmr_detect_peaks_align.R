@@ -597,6 +597,7 @@ nmr_align_find_ref <- function(nmr_dataset, peak_data) {
 #' @return A list of regions suitable for [nmr_integrate_regions]
 #'
 #' @family peak detection functions
+#' @noRd
 regions_from_peak_table <- function(peak_pos_ppm, peak_width_ppm) {
     if (length(peak_width_ppm) == 1) {
         peak_width_ppm <- rep(peak_width_ppm, length(peak_pos_ppm))

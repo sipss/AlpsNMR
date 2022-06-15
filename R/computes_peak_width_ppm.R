@@ -8,7 +8,7 @@
 #' @family nmr_dataset_1D functions
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @return Numerical. A peak width (ppm) that may be set in `nmr_integrate_peak_positions`
-
+#' @noRd
 computes_peak_width_ppm = function(nmr_dataset) {
     ppms = nmr_dataset$axis
     alanine = which((nmr_dataset$axis > 1.485) &

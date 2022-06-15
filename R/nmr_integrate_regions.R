@@ -127,7 +127,8 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #' @return Integrate peak positions
 #' @name nmr_integrate_peak_positions
 #' @param samples A [nmr_dataset] object
-#' @inheritParams regions_from_peak_table
+#' @param peak_pos_ppm The peak positions, in ppm
+#' @param peak_width_ppm The peak widths (or a single peak width for all peaks)
 #' @inheritDotParams nmr_integrate_regions
 #'
 #' @inherit nmr_integrate_regions return
