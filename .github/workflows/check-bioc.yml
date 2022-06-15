@@ -181,7 +181,7 @@ jobs:
 
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
-          install.packages(c("rcmdcheck", "BiocCheck"), repos = gha_repos)
+          install.packages(c("rcmdcheck", "BiocCheck", "magick"), repos = gha_repos)
 
           ## Pass #1 at installing dependencies
           ## This pass uses AnVIL-powered fast binaries
