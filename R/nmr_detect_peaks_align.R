@@ -5,16 +5,27 @@
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(nmr_dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#'
-#' sample_10 <- filter(dataset_1D, NMRExperiment == "10")
+#' dataset_1D <- nmr_exclude_regions(dataset_1D, exclude = list(water = c(4.7, 5)))
+#' 
+#' # 1. Optimize peak detection parameters:
+#' range_without_peaks = c(9.5, 10)
+#' # Choose a region without peaks:
+#' plot(dataset_1D, chemshift_range = range_without_peaks)
+#' baselineThresh <- nmr_baseline_threshold(dataset_1D, range_without_peaks = range_without_peaks)
+#' # Plot to check the baseline estimations
+#' nmr_baseline_threshold_plot(dataset_1D, baselineThresh, NMRExperiment = "all", chemshift_range = range_without_peaks)
 #'
 #' # 1.Peak detection in the dataset.
-#' peak_data <- nmr_detect_peaks(dataset_1D,
-#'                               nDivRange_ppm = 0.1, # Size of detection segments
-#'                               scales = seq(1, 16, 2),
-#'                               baselineThresh = 0, # Minimum peak intensity
-#'                               SNR.Th = 4) # Signal to noise ratio
+#' peak_data <- nmr_detect_peaks(
+#'   dataset_1D,
+#'   nDivRange_ppm = 0.1, # Size of detection segments
+#'   scales = seq(1, 16, 2),
+#'   baselineThresh = NULL, # Minimum peak intensity
+#'   SNR.Th = 4, # Signal to noise ratio
+#'   range_without_peaks = c(9.5, 10), # To estimate
+#' )
 #'
+#' sample_10 <- filter(dataset_1D, NMRExperiment == "10")
 #' #nmr_detect_peaks_plot(sample_10, peak_data, "NMRExp_ref")
 #' 
 #' peaks_detected <- nmr_detect_peaks_tune_snr(

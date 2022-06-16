@@ -22,6 +22,13 @@
 #' @name nmr_dataset
 #' @family AlpsNMR dataset objects
 #' @seealso [Functions to save and load these objects][load_and_save_functions]
+#' @examples 
+#' metadata_1D <- list(external = data.frame(NMRExperiment = c("10", "20")))
+#' # Sample 10 and Sample 20 can have different lengths (due to different setups)
+#' data_fields_1D <- list(data_1r = list(runif(16), runif(32)))
+#' # Each sample has its own axis list, with one element (because this example is 1D)
+#' axis_1D <- list(list(1:16), list(1:32))
+#' my_1D_data <- new_nmr_dataset(metadata_1D, data_fields_1D, axis_1D)
 NULL
 
 
