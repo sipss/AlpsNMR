@@ -246,7 +246,7 @@ read_bin_data <- function(file_name, endian) {
         # By using a read size of 131073 integers in one read I know if I have
         # reached the end.
         chunksize <- 131073
-        num_reads = 1
+        num_reads <- 1
         data <- readBin(
             con,
             what = "integer",
