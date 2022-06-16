@@ -148,43 +148,15 @@ If the `axis = NULL` then the ppm axis is autodetected from the samples.
 
 # Plotting samples
 
-The `AlpsNMR` package offers the possibility to plot `nmr_dataset_1D` objects.
 Plotting many spectra with so many points is quite expensive so it is possible
 to include only some regions of the spectra or plot only some samples.
-
-Use `?plot.nmr_dataset_1D` to check the parameters, among them: 
-
-- `NMRExperiment`: A character vector with the NMR experiments to plot 
-- `chemshift_range`: A ppm range to plot only a small region, or to reduce the
-resolution 
-- `interactive`: To make the plot interactive - `...`: Can be used to
-pass additional parameters such as `color = "SubjectID"` that are passed as
-aesthetics to ggplot.
 
 ```{r}
 plot(dataset, NMRExperiment = c("10", "30"), chemshift_range = c(2.2, 2.8))
 ```
 
-
-## Creating interactive plots
-
-The option `interactive = TRUE` described above has some performance limitations.
-As high performance workaround, you can make many plots interactive with the
-function `plot_interactive`.
-
-This function will use WebGL technologies to create a webpage that, once opened,
-allows you to interact with the plot.
-
-Due to technical limitations, these plots need to be opened manually and can't
-be embedded in RMarkdown documents. Therefore, the function saves the plot in 
-the directory for further exploration. Additionally, some old web browsers may
-not be able to display these interactive plots correctly.
-
-```
-plt <- plot(dataset, NMRExperiment = c("10", "30"), chemshift_range = c(2.2, 2.8))
-plot_interactive(plt, "plot_region.html")
-```
-
+See the "Plotting Samples" vignette for more advanced plot options, or
+having interactive plots.
 
 # Exclude regions
 
