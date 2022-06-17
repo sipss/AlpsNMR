@@ -91,7 +91,7 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
                     'If you saved and restored a dataset from a previous AlpsNMR version, and you ',
                     'know the regions you excluded, you can set it manually: if `x` is your ',
                     'dataset, just use:\n  `x[["excluded_regions"]] <- list(water = c(4.7, 5.0))`\n',
-                    '  where the list can be just empty or whatever you passed to nmr_exclude_regions().'
+                    '  where the list can be just empty or whatever you passed to nmr_exclude_region().'
                 ),
                 "i" = "Otherwise, AlpsNMR will assume there are no excluded regions on some peak detection stages."
             )
