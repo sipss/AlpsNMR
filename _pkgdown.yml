@@ -74,7 +74,6 @@ reference:
   - nmr_read_samples
   - nmr_zip_bruker_samples
   - nmr_export_data_1r
-  - read_bruker_sample
   - files_to_rDolphin
   - save_files_to_rDolphin
   - nmr_data_1r_to_SummarizedExperiment
@@ -128,6 +127,7 @@ reference:
   - plot_webgl
   - plot.nmr_dataset_1D
   - print.nmr_dataset_1D
+  - tidy.nmr_dataset_1D
   - print.nmr_dataset_peak_table
   - print.nmr_dataset
   - "[.nmr_dataset_1D"
@@ -164,6 +164,7 @@ reference:
     Functions to remove or estimate the baseline
   contents:
   - nmr_baseline_removal
+  - nmr_baseline_estimation
 - title: "Peak detection"
   desc: >
     Functions to detect peaks and visualize the resulting peak lists
