@@ -172,6 +172,7 @@ peaklist_fit_lorentzians <- function(
     pb <- progress_bar_new(name = "Fitting lorentzians", total = nrow(peak_data))
 
     # For each peak:
+    has_warned_baseline <- FALSE
     for (i in seq_len(nrow(peak_data))) {
         progress_bar_update(pb)
         posi <- peak_data$pos[i]
@@ -182,12 +183,25 @@ peaklist_fit_lorentzians <- function(
         if (sindex != sindex_prev) {
             y <- nmr_dataset$data_1r[sindex,]
             if (amplitude_method == "intensity_without_baseline" || refine_peak_model == "peak") {
-                y_basel <- baseline::baseline.als(
-                    spectra = nmr_dataset$data_1r[sindex,, drop = FALSE],
-                    lambda = 6,
-                    p = 0.05,
-                    maxit = 20
-                )$baseline %>% as.numeric()
+                if ("data_1r_baseline" %in% names(unclass(nmr_dataset))) {
+                    y_basel <- as.numeric(nmr_dataset$data_1r_baseline[sindex,])
+                } else {
+                    if (!has_warned_baseline) {
+                        rlang::warn(
+                            c(
+                                "Estimating the baseline using ALS with lambda 9 and p = 0.05...",
+                                "i" = "Use nmr_baseline_estimation before calling this function to customize"
+                            )
+                        )
+                        has_warned_baseline <- TRUE
+                    }
+                    y_basel <- baseline::baseline.als(
+                        spectra = nmr_dataset$data_1r[sindex,, drop = FALSE],
+                        lambda = 9,
+                        p = 0.05,
+                        maxit = 20
+                    )$baseline %>% as.numeric()
+                }
                 y_nobasel <- y - y_basel
             }
             sgf <- signal::sgolayfilt(y, p = 2, n = 21, m = 2, ts = x[2] - x[1]) # 2nd derivative
