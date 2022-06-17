@@ -49,6 +49,16 @@ plt <- plot(dataset, NMRExperiment = c("10", "30"), chemshift_range = c(2.2, 2.8
 plot_interactive(plt, "plot_region.html")
 ```
 
+# Get data and do plots with ggplot:
+
+```
+spectra_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8), columns = "NMRExperiment")
+
+ggplot(mapping = aes(x = chemshift, y = intensity, color = NMRExperiment)) +
+    geom_line(data = spectra_to_plot)
+
+```
+
 
 # Session Information
 

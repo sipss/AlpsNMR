@@ -219,11 +219,14 @@ dataset <- nmr_baseline_estimation(dataset, lambda = 9, p = 0.01)
 And after:
 
 ```{r fig.height=10, fig.width=10}
-plot(dataset, chemshift_range = c(3.5,3.8)) +
-    ggplot2::geom_line(
-        data = tidy(dataset, chemshift_range = c(3.5,3.8), columns =  character(0), matrix_name = "data_1r_baseline"),
-        mapping = ggplot2::aes(x = chemshift, y = intensity, color = NMRExperiment)
-    ) + ggplot2::facet_wrap(~NMRExperiment, ncol = 1)
+spectra_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8), columns = "NMRExperiment")
+baseline_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8), columns = "NMRExperiment", matrix_name = "data_1r_baseline")
+
+ggplot(mapping = aes(x = chemshift, y = intensity, color = NMRExperiment)) +
+    geom_line(data = spectra_to_plot) +
+    geom_line(data = baseline_to_plot, linetype = "dashed") + 
+    facet_wrap(~NMRExperiment, ncol = 1)
+
 ```
 
 
