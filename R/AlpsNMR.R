@@ -28,3 +28,8 @@
 #'   nmr_normalize(method = "pqn") %>%
 #'   plot
 "_PACKAGE"
+
+
+#' @importFrom generics tidy
+#' @export
+generics::tidy
