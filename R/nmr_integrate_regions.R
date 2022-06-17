@@ -163,6 +163,16 @@ nmr_integrate_peak_positions <- function(samples,
 #' @family peak integration functions
 #' @family nmr_dataset_1D functions
 #' @return integration dataframe
+#' @examples 
+#' peak_table <- matrix(1:6, nrow = 2, ncol = 3)
+#' rownames(peak_table) <- c("10", "20")
+#' colnames(peak_table) <- c("ppm_1.2", "ppm1.4", "ppm1.6")
+#' 
+#' dataset <- new_nmr_peak_table(
+#'   peak_table = peak_table,
+#'   metadata = list(external = data.frame(NMRExperiment = c("10", "20"), Condition = c("A", "B")))
+#' )
+#' get_integration_with_metadata(dataset)
 get_integration_with_metadata <- function(integration_object) {
     integration_data <- nmr_data(integration_object)
     meta_data <- nmr_meta_get(integration_object, groups = "external")

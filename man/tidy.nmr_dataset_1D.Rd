@@ -30,6 +30,9 @@ to include the resolution in the third element (e.g. \code{c(0.2, 0.8, 0.005)})}
 
 \item{...}{arguments passed to \link[ggplot2:aes_]{ggplot2::aes_string}.}
 }
+\value{
+A data frame with \code{NMRExperiment}, \code{chemshift}, \code{intensity} and any additional column requested
+}
 \description{
 This dataframe is useful for plotting with ggplot, although it may be very
 long and therefore use a lot of RAM.

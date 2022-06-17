@@ -151,6 +151,7 @@ plot.nmr_dataset_1D <- function(x,
 #' @param matrix_name A string with the matrix name, typically "data_1r"
 #' @param axis_name A string with the axis name, for now "axis" is the only valid option
 #' @inheritParams plot.nmr_dataset_1D
+#' @return A data frame with `NMRExperiment`, `chemshift`, `intensity` and any additional column requested
 #' @importFrom generics tidy
 #' @export
 #' @examples 
