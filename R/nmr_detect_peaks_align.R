@@ -168,7 +168,12 @@ nmr_detect_peaks <- function(nmr_dataset,
         SIMPLIFY = FALSE
     )
     peak_data <- peakList_to_dataframe(nmr_dataset, peakList)
-    peak_data <- peaklist_fit_lorentzians(peak_data, nmr_dataset)
+    peak_data <- peaklist_fit_lorentzians(
+        peak_data,
+        nmr_dataset,
+        amplitude_method = "intensity_without_baseline", # This so far seems the best approach
+        refine_peak_model = "peak"
+    )
     # Remove peaks that cross excluded regions:
     # We may argue about areas, peak positions, fits... but these ones are clear:
     peaks_at_excl_regions <- are_ppm_regions_excluded(
