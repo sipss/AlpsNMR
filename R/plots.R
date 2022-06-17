@@ -53,7 +53,7 @@ plot.nmr_dataset_1D <- function(x,
         which(nmr_meta_get_column(x, "NMRExperiment") %in% NMRExperiment)
     
     longdf <- tidy(
-        nmr_data = x,
+        x,
         sample_idx = sample_idx,
         chemshift_range = chemshift_range
     )
