@@ -61,7 +61,7 @@ plot.nmr_dataset_1D <- function(x,
         list(x = "chemshift", y = "intensity", group = "NMRExperiment")
     dotdotdot_aes <- list(...)
     all_aes <- c(fixed_aes, dotdotdot_aes)
-    if (!"color" %in% names(all_aes)) {
+    if (!"color" %in% names(all_aes) && !"colour" %in% names(all_aes)) {
         all_aes <- c(all_aes, list(color = "NMRExperiment"))
     }
     
