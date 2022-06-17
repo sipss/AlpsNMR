@@ -145,7 +145,7 @@ plot.nmr_dataset_1D <- function(x,
 #' This dataframe is useful for plotting with ggplot, although it may be very
 #' long and therefore use a lot of RAM.
 #'
-#' @param nmr_data a \code{\link{nmr_dataset}} object
+#' @param x an \code{\link{nmr_dataset_1D}} object
 #' @param sample_idx numeric vector with the sample indices to include
 #' @param columns A character vector with the metadata columns to get, by default gets all of them
 #' @param matrix_name A string with the matrix name, typically "data_1r"
