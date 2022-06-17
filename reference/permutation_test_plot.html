@@ -47,7 +47,7 @@
     </li>
   </ul></li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../news/index.html">News</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/sipss/AlpsNMR" class="external-link">
@@ -166,63 +166,13 @@
 <span class="r-in">    data_analysis_method <span class="op">=</span> <span class="va">methodology</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="permutation_test_model.html">permutation_test_model</a></span><span class="op">(</span><span class="va">peak_table</span>,</span>
+<span class="r-in"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="permutation_test_model.html">permutation_test_model</a></span><span class="op">(</span><span class="va">peak_table</span>,</span>
 <span class="r-in">                           y_column <span class="op">=</span> <span class="st">"Condition"</span>,</span>
 <span class="r-in">                           identity_column <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span class="r-in">                           external_val <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iterations <span class="op">=</span> <span class="fl">3</span>, test_size <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span>,</span>
 <span class="r-in">                           internal_val <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iterations <span class="op">=</span> <span class="fl">3</span>, test_size <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span>,</span>
 <span class="r-in">                           data_analysis_method <span class="op">=</span> <span class="va">methodology</span>, </span>
 <span class="r-in">                           nPerm <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  permutation 1 of 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated time left: 0.03525 mins</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  permutation 2 of 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated time left: 0.031 mins</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  permutation 3 of 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated time left: 0.02788333 mins</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  permutation 4 of 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated time left: 0.023825 mins</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  permutation 5 of 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated time left: 0.0198 mins</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  permutation 6 of 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated time left: 0.01597778 mins</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  permutation 7 of 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated time left: 0.01192143 mins</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  permutation 8 of 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated time left: 0.0079625 mins</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  permutation 9 of 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated time left: 0.003972222 mins</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  permutation 10 of 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated time left: 0 mins</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in">                           </span>
 <span class="r-in"><span class="fu">permutation_test_plot</span><span class="op">(</span><span class="va">model</span>, <span class="va">p</span><span class="op">)</span></span>
 <span class="r-plt img"><img src="permutation_test_plot-1.png" alt="" width="700" height="433"></span>

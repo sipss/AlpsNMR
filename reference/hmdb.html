@@ -47,7 +47,7 @@
     </li>
   </ul></li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../news/index.html">News</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/sipss/AlpsNMR" class="external-link">
@@ -79,6 +79,22 @@
     <p><a href="https://hmdb.ca/" class="external-link">https://hmdb.ca/</a></p>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Get all the 1-Methylhistidine peaks:</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"hmdb"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">hmdb</span><span class="op">[</span><span class="va">hmdb</span><span class="op">$</span><span class="va">Metabolite</span> <span class="op">==</span> <span class="st">"1-Methylhistidine"</span>, <span class="op">]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Metabolite  pos_in_ppm couple_code J_constant relative_intens… Accession Blood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1-Methylhi…       7.67 0           <span style="color: #BB0000;">NA</span>                        1 HMDB0000… TRUE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 1-Methylhi…       7    0           <span style="color: #BB0000;">NA</span>                        1 HMDB0000… TRUE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 1-Methylhi…       3.96 1,1         7.66,4.92                 2 HMDB0000… TRUE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 1-Methylhi…       3.68 0           <span style="color: #BB0000;">NA</span>                        4 HMDB0000… TRUE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 5 more variables: Urine &lt;lgl&gt;, Solvent &lt;chr&gt;, ChemShiftRef &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   NMRFreq &lt;dbl&gt;, pH &lt;chr&gt;</span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

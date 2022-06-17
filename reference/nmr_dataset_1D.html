@@ -48,7 +48,7 @@ It is defined as an S3 class, and it can be treated as a regular list."><!-- mat
     </li>
   </ul></li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../news/index.html">News</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/sipss/AlpsNMR" class="external-link">
@@ -84,13 +84,22 @@ a given area (acquisition parameters, preprocessing parameters, general sample i
 <li><p><code>data_1r</code>: A matrix with one sample on each row and the chemical
 shifts in the columns.</p></li>
 </ul></div>
-    <div id="see-also">
-    <h2>See also</h2>
-    <div class="dont-index"><p>Other AlpsNMR dataset objects: 
-<code><a href="nmr_dataset_family.html">nmr_dataset_family</a></code>,
-<code><a href="nmr_dataset.html">nmr_dataset</a></code></p></div>
-    </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Create a random spectra matrix</span></span>
+<span class="r-in"><span class="va">nsamp</span> <span class="op">&lt;-</span> <span class="fl">12</span></span>
+<span class="r-in"><span class="va">npoints</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
+<span class="r-in"><span class="va">dummy_ppm_axis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">0.2</span>, to <span class="op">=</span> <span class="fl">10</span>, length.out <span class="op">=</span> <span class="va">npoints</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">dummy_spectra_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">nsamp</span><span class="op">*</span><span class="va">npoints</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="va">nsamp</span>, ncol <span class="op">=</span> <span class="va">npoints</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>external <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Sample"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>,</span>
+<span class="r-in">                                       DummyClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>,</span>
+<span class="r-in">                                       stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">dummy_nmr_dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nmr_dataset_1D.html">new_nmr_dataset_1D</a></span><span class="op">(</span>ppm_axis <span class="op">=</span> <span class="va">dummy_ppm_axis</span>,</span>
+<span class="r-in">                                           data_1r <span class="op">=</span> <span class="va">dummy_spectra_matrix</span>,</span>
+<span class="r-in">                                           metadata <span class="op">=</span> <span class="va">metadata</span><span class="op">)</span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

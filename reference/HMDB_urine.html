@@ -47,7 +47,7 @@
     </li>
   </ul></li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../news/index.html">News</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/sipss/AlpsNMR" class="external-link">
@@ -79,6 +79,40 @@
     <p><a href="https://hmdb.ca/" class="external-link">https://hmdb.ca/</a></p>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"HMDB_urine"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">HMDB_urine</span><span class="op">[</span><span class="va">HMDB_urine</span><span class="op">$</span><span class="va">Metabolite</span> <span class="op">==</span> <span class="st">"1-Methyladenosine"</span>, <span class="op">]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Metabolite HMDB_code Shift_ppm Type J_Hz Height Urine_concentration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 1-Methyladenosine HMDB03331     3.855    s      1.0000               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 1-Methyladenosine HMDB03331     3.945    t 3.33 0.0674               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 1-Methyladenosine HMDB03331     8.475    s      0.4054               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 1-Methyladenosine HMDB03331     3.925    t      0.1304               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 1-Methyladenosine HMDB03331     4.775    t 5.23 0.1088               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 1-Methyladenosine HMDB03331     3.885    t      0.1264               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 1-Methyladenosine HMDB03331     6.105    d 5.34 0.1879               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 1-Methyladenosine HMDB03331     6.025    d 6.05 0.0825               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1-Methyladenosine HMDB03331     4.475    t 4.73 0.1294               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 1-Methyladenosine HMDB03331     4.295    m      0.0988               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 1-Methyladenosine HMDB03331     8.415    s      0.3359               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 1-Methyladenosine HMDB03331     8.155    s      0.0508               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 1-Methyladenosine HMDB03331     8.265    s      0.1741               5.375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    n_reported_in_Urine Bouatra_2013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21                   7          yes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22                   7          yes</span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

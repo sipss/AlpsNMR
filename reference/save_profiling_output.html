@@ -47,7 +47,7 @@
     </li>
   </ul></li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../news/index.html">News</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/sipss/AlpsNMR" class="external-link">
@@ -111,16 +111,14 @@
 <code><a href="nmr_read_samples.html">nmr_read_samples</a>()</code>,
 <code><a href="nmr_zip_bruker_samples.html">nmr_zip_bruker_samples</a>()</code>,
 <code><a href="save_files_to_rDolphin.html">save_files_to_rDolphin</a>()</code>,
-<code><a href="to_ChemoSpec.html">to_ChemoSpec</a>()</code></p>
-<p>Other to_rDolphin_blood functions: 
-<code><a href="save_files_to_rDolphin.html">save_files_to_rDolphin</a>()</code></p></div>
+<code><a href="to_ChemoSpec.html">to_ChemoSpec</a>()</code></p></div>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">rDolphin_object</span> <span class="op">=</span> <span class="fu">to_rDolphin</span><span class="op">(</span><span class="va">parameters</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">targeted_profiling</span> <span class="op">=</span> <span class="fu">Automatic_targeted_profiling</span><span class="op">(</span><span class="va">rDolphin</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">rDolphin_object</span> <span class="op">&lt;-</span> <span class="fu">to_rDolphin</span><span class="op">(</span><span class="va">parameters</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">targeted_profiling</span> <span class="op">&lt;-</span> <span class="fu">Automatic_targeted_profiling</span><span class="op">(</span><span class="va">rDolphin</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">save_profiling_output</span><span class="op">(</span><span class="va">targeted_profiling</span>, <span class="va">output_directory</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>

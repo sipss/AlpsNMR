@@ -48,7 +48,7 @@ alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)"><
     </li>
   </ul></li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="../news/index.html">News</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/sipss/AlpsNMR" class="external-link">
@@ -81,6 +81,42 @@ alignment (by default, TSP 0.00 ppm), bucket resolution (by default, 0.00023)</p
     <p><a href="github.com/danielcanueto/rDolphin">github.com/danielcanueto/rDolphin</a></p>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Parameters_cell"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">Parameters_cell</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                   Parameter</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                                           nmr folder path</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                                                             1D data index</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                                                                   proc_no</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                      spectra dataset path</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                                Metadata path (csv format)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                                         ROI patterns file</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  Normalization (0=No;1=Eretic; 2=TSP; 3=Creatinine; 4=Spectra Sum; 5=PQN)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8                              Alignment (0=No;1=Glucose; 2=TSP; 3=Formate)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9                                                      Default Suppressions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10                                              Spectometer Frequency (MHz)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11                                                        Bucket resolution</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12                                                                 Biofluid</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13                                                                  2D-Path</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14                                              Specific dataset parameters</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                Value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    NMR_spectra.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  meta_rDolphin.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6            ROI.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7                  5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8                  2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10            600.04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11           0.00023</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12              cell</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14                  </span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

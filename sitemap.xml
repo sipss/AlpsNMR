@@ -13,6 +13,9 @@
     <loc>/articles/Vig02-handling-metadata-and-annotations.html</loc>
   </url>
   <url>
+    <loc>/articles/Vig03-plotting-samples.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
@@ -25,9 +28,6 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/AUC_model.html</loc>
-  </url>
-  <url>
     <loc>/reference/AlpsNMR-package.html</loc>
   </url>
   <url>
@@ -38,9 +38,6 @@
   </url>
   <url>
     <loc>/reference/HMDB_urine.html</loc>
-  </url>
-  <url>
-    <loc>/reference/MUVR_model_plot.html</loc>
   </url>
   <url>
     <loc>/reference/Parameters_blood.html</loc>
@@ -77,12 +74,6 @@
   </url>
   <url>
     <loc>/reference/bp_kfold_VIP_analysis.html</loc>
-  </url>
-  <url>
-    <loc>/reference/computes_peak_width_ppm.html</loc>
-  </url>
-  <url>
-    <loc>/reference/confusion_matrix.html</loc>
   </url>
   <url>
     <loc>/reference/download_MTBLS242.html</loc>
@@ -127,9 +118,6 @@
     <loc>/reference/load_and_save_functions.html</loc>
   </url>
   <url>
-    <loc>/reference/model_VIP.html</loc>
-  </url>
-  <url>
     <loc>/reference/models_stability_plot_bootstrap.html</loc>
   </url>
   <url>
@@ -149,6 +137,9 @@
   </url>
   <url>
     <loc>/reference/nmr_align_find_ref.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nmr_baseline_estimation.html</loc>
   </url>
   <url>
     <loc>/reference/nmr_baseline_removal.html</loc>
@@ -209,9 +200,6 @@
   </url>
   <url>
     <loc>/reference/nmr_detect_peaks_tune_snr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_diagnose-defunct.html</loc>
   </url>
   <url>
     <loc>/reference/nmr_exclude_region.html</loc>
@@ -292,9 +280,6 @@
     <loc>/reference/nmr_zip_bruker_samples.html</loc>
   </url>
   <url>
-    <loc>/reference/p_value_perm.html</loc>
-  </url>
-  <url>
     <loc>/reference/peaklist_accept_peaks.html</loc>
   </url>
   <url>
@@ -334,9 +319,6 @@
     <loc>/reference/plsda_auroc_vip_method.html</loc>
   </url>
   <url>
-    <loc>/reference/ppm_VIP_vector.html</loc>
-  </url>
-  <url>
     <loc>/reference/ppm_resolution.html</loc>
   </url>
   <url>
@@ -352,16 +334,7 @@
     <loc>/reference/random_subsampling.html</loc>
   </url>
   <url>
-    <loc>/reference/rdCV_PLS_RF.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rdCV_PLS_RF_ML.html</loc>
-  </url>
-  <url>
-    <loc>/reference/read_bruker_sample.html</loc>
-  </url>
-  <url>
-    <loc>/reference/regions_from_peak_table.html</loc>
+    <loc>/reference/reexports.html</loc>
   </url>
   <url>
     <loc>/reference/save_files_to_rDolphin.html</loc>
@@ -377,6 +350,9 @@
   </url>
   <url>
     <loc>/reference/sub-.nmr_dataset_peak_table.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tidy.nmr_dataset_1D.html</loc>
   </url>
   <url>
     <loc>/reference/to_ChemoSpec.html</loc>
