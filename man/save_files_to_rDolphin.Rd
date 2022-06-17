@@ -28,9 +28,8 @@ The function saves the CSV files required by to_rDolphin and Automatic_targeted_
 dataset <- system.file("dataset-demo", package = "AlpsNMR")
 excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 nmr_dataset <- nmr_read_samples_dir(dataset)
-files_rDolphin = files_to_rDolphin_blood(nmr_dataset)
-output_directory = "."
-save_files_to_rDolphin(files_rDolphin, output_directory)
+files_rDolphin <- files_to_rDolphin_blood(nmr_dataset)
+save_files_to_rDolphin(files_rDolphin, output_directory = ".")
 }
 }
 \seealso{

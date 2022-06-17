@@ -78,7 +78,7 @@ model <- nmr_data_analysis(
     data_analysis_method = methodology
 )
 
-p = permutation_test_model(peak_table,
+p <- permutation_test_model(peak_table,
                            y_column = "Condition",
                            identity_column = NULL,
                            external_val = list(iterations = 3, test_size = 0.25),

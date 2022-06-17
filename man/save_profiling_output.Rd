@@ -28,8 +28,8 @@ The function saves the output from Automatic_targeted_profiling function in CSV 
 }
 \examples{
 \dontrun{
-rDolphin_object = to_rDolphin(parameters)
-targeted_profiling = Automatic_targeted_profiling(rDolphin)
+rDolphin_object <- to_rDolphin(parameters)
+targeted_profiling <- Automatic_targeted_profiling(rDolphin)
 save_profiling_output(targeted_profiling, output_directory)
 }
 }
