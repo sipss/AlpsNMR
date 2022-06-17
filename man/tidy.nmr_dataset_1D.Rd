@@ -15,7 +15,7 @@
 )
 }
 \arguments{
-\item{x}{a \link{nmr_dataset_1D} object}
+\item{x}{an \code{\link{nmr_dataset_1D}} object}
 
 \item{sample_idx}{numeric vector with the sample indices to include}
 
@@ -29,8 +29,6 @@ to include the resolution in the third element (e.g. \code{c(0.2, 0.8, 0.005)})}
 \item{axis_name}{A string with the axis name, for now "axis" is the only valid option}
 
 \item{...}{arguments passed to \link[ggplot2:aes_]{ggplot2::aes_string}.}
-
-\item{nmr_data}{a \code{\link{nmr_dataset}} object}
 }
 \description{
 This dataframe is useful for plotting with ggplot, although it may be very
