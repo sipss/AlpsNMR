@@ -198,7 +198,7 @@ nmr_pca_outliers_plot(dataset, pca_outliers_rob)
 
 # Baseline removal
 
-Spectra may display an unstable baseline, specially when processing blood/fecal 
+Spectra may display an unstable baseline, specially when processing
 blood/fecal samples. If so, `nmr_baseline_removal` subtract the 
 baseline by means of Asymmetric Least Squares method.
 
@@ -208,11 +208,22 @@ See before:
 plot(dataset, chemshift_range = c(3.5,3.8))
 ```
 
-And after:
+Estimate the baseline:
 
 ```{r}
-dataset = nmr_baseline_removal(dataset, lambda = 6, p = 0.01)
-plot(dataset, chemshift_range = c(3.5,3.8))
+dataset <- nmr_baseline_estimation(dataset, lambda = 9, p = 0.01)
+```
+
+
+
+And after:
+
+```{r fig.height=10, fig.width=10}
+plot(dataset, chemshift_range = c(3.5,3.8)) +
+    ggplot2::geom_line(
+        data = tidy(dataset, chemshift_range = c(3.5,3.8), columns =  character(0), matrix_name = "data_1r_baseline"),
+        mapping = ggplot2::aes(x = chemshift, y = intensity, color = NMRExperiment)
+    ) + ggplot2::facet_wrap(~NMRExperiment, ncol = 1)
 ```
 
 
