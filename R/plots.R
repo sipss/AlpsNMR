@@ -52,7 +52,7 @@ plot.nmr_dataset_1D <- function(x,
     sample_idx <-
         which(nmr_meta_get_column(x, "NMRExperiment") %in% NMRExperiment)
     
-    longdf <- nmr_get_tidy_df(
+    longdf <- tidy(
         nmr_data = x,
         sample_idx = sample_idx,
         chemshift_range = chemshift_range
@@ -151,6 +151,7 @@ plot.nmr_dataset_1D <- function(x,
 #' @param matrix_name A string with the matrix name, typically "data_1r"
 #' @param axis_name A string with the axis name, for now "axis" is the only valid option
 #' @inheritParams plot.nmr_dataset_1D
+#' @importFrom generics tidy
 #' @export
 #' @examples 
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -159,26 +160,27 @@ plot.nmr_dataset_1D <- function(x,
 #' dummy_metadata <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 #' NMRExp_SubjID <- readxl::read_excel(dummy_metadata, sheet = 1)
 #' dataset_1D <- nmr_meta_add(dataset_1D, NMRExp_SubjID)
-#' df_for_ggplot <- nmr_get_tidy_df(dataset_1D, chemshift_range = c(1.2, 1.4), columns = "SubjectID")
+#' df_for_ggplot <- tidy(dataset_1D, chemshift_range = c(1.2, 1.4), columns = "SubjectID")
 #' head(df_for_ggplot)
-nmr_get_tidy_df <-
-    function(nmr_dataset,
+tidy.nmr_dataset_1D <-
+    function(x,
              sample_idx = NULL,
              chemshift_range = NULL,
              columns = NULL,
              matrix_name = "data_1r",
-             axis_name = "axis"
+             axis_name = "axis",
+             ...
              ) {
         if (is.null(sample_idx)) {
-            sample_idx <- seq_len(nmr_dataset$num_samples)
+            sample_idx <- seq_len(x$num_samples)
         }
-        chemshift_in_range <- decimate_axis(xaxis = nmr_dataset[[axis_name]],
+        chemshift_in_range <- decimate_axis(xaxis = x[[axis_name]],
                                             xrange = chemshift_range)
-        meta_df <- nmr_meta_get(nmr_dataset, columns = columns)
+        meta_df <- nmr_meta_get(x, columns = columns)
         NMRExperiments <- meta_df$NMRExperiment[sample_idx]
-        chemshifts <- nmr_dataset[[axis_name]][chemshift_in_range]
+        chemshifts <- x[[axis_name]][chemshift_in_range]
         raw_data <-
-            reshape2::melt(nmr_dataset[[matrix_name]][sample_idx, chemshift_in_range, drop = FALSE])
+            reshape2::melt(x[[matrix_name]][sample_idx, chemshift_in_range, drop = FALSE])
         raw_data$Var1 <- NMRExperiments[raw_data$Var1]
         raw_data$Var2 <- chemshifts[raw_data$Var2]
         colnames(raw_data) <-

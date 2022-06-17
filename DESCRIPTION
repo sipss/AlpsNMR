@@ -53,6 +53,7 @@ LazyData: FALSE
 Depends: R (>= 4.1), dplyr (>= 0.7.5), future (>= 1.10.0), magrittr (>= 1.5)
 Imports:
  utils,
+ generics,
  graphics,
  stats,
  grDevices,
