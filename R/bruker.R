@@ -267,7 +267,7 @@ read_bin_data <- function(file_name, endian) {
                     endian = endian
                 )
             )
-            num_reads = num_reads + 1
+            num_reads <- num_reads + 1
         }
     }, finally = {
         close(con)
@@ -486,9 +486,9 @@ read_bruker_pdata <- function(sample_path,
     
     # Open and read file
     if (output$procs$BYTORDP == 0) {
-        endian = 'little'
+        endian <- 'little'
     } else {
-        endian = 'big'
+        endian <- 'big'
     }
     
     if (isTRUE(read_pdata_title)) {
@@ -557,13 +557,13 @@ read_bruker_pdata <- function(sample_path,
     
     # Reorder submatrices (se XWinNMR-manual, chapter 17.5 (95.3))
     if (data_shapes$dimension == 2) {
-        SI1 = data_shapes$shape[1]
-        #SI2 = data_shapes$shape[2]
-        #XDIM1 = data_shapes$submatrix_shape[1]
-        XDIM2 = data_shapes$submatrix_shape[2]
+        SI1 <- data_shapes$shape[1]
+        #SI2 <- data_shapes$shape[2]
+        #XDIM1 <- data_shapes$submatrix_shape[1]
+        XDIM2 <- data_shapes$submatrix_shape[2]
         NoSM_along_dimensions <-
             data_shapes$shape / data_shapes$submatrix_shape
-        NoSM2 = NoSM_along_dimensions[length(NoSM_along_dimensions)] # No of SM along F1
+        NoSM2 <- NoSM_along_dimensions[length(NoSM_along_dimensions)] # No of SM along F1
         NoSM <-
             cumprod(NoSM_along_dimensions) # cummulative total number of Submatrices along dimensions
         num_submatrices <- NoSM[length(NoSM)]
@@ -626,7 +626,7 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
     output$dimension <- length(acqus_list)
     
     # The pulse sequence is not that obvious
-    experiment_name = acqus_list$acqus$EXP
+    experiment_name <- acqus_list$acqus$EXP
     NUCLEI <-
         paste0("NUC", seq_len(8)) # NUC1... NUC8 help to tell us the nuclei present
     

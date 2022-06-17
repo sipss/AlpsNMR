@@ -573,10 +573,10 @@ bp_VIP_analysis <- function(dataset,
         #if y_train_boots only have one class, plsda models give error
         if (length(unique(y_train_boots)) == 1) {
             #Replace the first element for the first element of another class
-            for(i in seq_len(y_train)){
-                if (y_train[i] != y_train_boots[1]){
-                    y_train_boots[1] = y_train[i]
-                    x_train_boots[1] = x_train[i]
+            for (i in seq_len(y_train)){
+                if (y_train[i] != y_train_boots[1]) {
+                    y_train_boots[1] <- y_train[i]
+                    x_train_boots[1] <- x_train[i]
                     break
                 }
             }
@@ -1220,7 +1220,7 @@ permutation_test_model <- function(
 #'     data_analysis_method = methodology
 #' )
 #' 
-#' p = permutation_test_model(peak_table,
+#' p <- permutation_test_model(peak_table,
 #'                            y_column = "Condition",
 #'                            identity_column = NULL,
 #'                            external_val = list(iterations = 3, test_size = 0.25),
@@ -1230,7 +1230,7 @@ permutation_test_model <- function(
 #'                            
 #' permutation_test_plot(model, p)
 #' 
-permutation_test_plot = function (nmr_data_analysis_model, 
+permutation_test_plot <- function(nmr_data_analysis_model, 
                                   permMatrix,
                                   xlab = "AUCs",
                                   xlim,
@@ -1239,26 +1239,26 @@ permutation_test_plot = function (nmr_data_analysis_model,
                                   main = "Permutation test")
 {
     
-    h0=permMatrix[,1]
-    if(missing(xlim)) {
-        xlim=c(0,1)
+    h0 <- permMatrix[,1]
+    if (missing(xlim)) {
+        xlim <- c(0,1)
     }
-    h=hist(permMatrix,breaks,xlim=xlim,ylim=ylim,axes=FALSE,xlab=xlab,freq=FALSE,main=main)
-    h2=max(h$density)*.75
+    h <- hist(permMatrix,breaks,xlim=xlim,ylim=ylim,axes=FALSE,xlab=xlab,freq=FALSE,main=main)
+    h2 <- max(h$density)*.75
     axis(1,pos=0)
     axis(2,pos=0,las=1)
     
-    model_auc = mean(nmr_data_analysis_model$outer_cv_results_digested$auroc$auc)
+    model_auc <- mean(nmr_data_analysis_model$outer_cv_results_digested$auroc$auc)
     lines(rep(model_auc,2),c(0,h2))
     
-    p=ecdf(h0)(model_auc) # Empirical
+    p <- ecdf(h0)(model_auc) # Empirical
     #p1Stud=pt((model_auc-(mean(h0)/2))/sd(h0/2),(length(h0)-1)) # Students
     
     # warning: sometimes the auc of the permutation is NaN
     h0_median <- apply(permMatrix,2,function(x) median(na.omit(x)))
     
-    pP=ifelse(model_auc<h0_median, p, 1-p)
-    if(pP<1/length(h0)){
+    pP <- ifelse(model_auc<h0_median, p, 1-p)
+    if (pP<1/length(h0)){
       text(h2,pos=2,labels=paste('p<',signif(1/length(h0),4),sep=''))
     } else {
       text(h2,pos=2,labels=paste('p=',signif(pP,4),sep=''))
@@ -1319,14 +1319,14 @@ permutation_test_plot = function (nmr_data_analysis_model,
 #' 
 #' #models_stability_plot_plsda(model)
 #' 
-models_stability_plot_plsda = function (model)
+models_stability_plot_plsda <- function (model)
 {
     # Loadings of the models
-    ex_n = length(model$outer_cv_results)
-    max_ncomp = 0
+    ex_n <- length(model$outer_cv_results)
+    max_ncomp <- 0
     for (n in seq_len(ex_n)) {
         if (model$outer_cv_results[[n]]$model$ncomp > max_ncomp) {
-            max_ncomp = model$outer_cv_results[[n]]$model$ncomp
+            max_ncomp <- model$outer_cv_results[[n]]$model$ncomp
         }
     }
     
@@ -1440,11 +1440,11 @@ models_stability_plot_plsda = function (model)
 #' 
 #' #models_stability_plot_bootstrap(bp_results)
 #' 
-models_stability_plot_bootstrap = function (bp_results)
+models_stability_plot_bootstrap <- function (bp_results)
 {
     # Loadings of the models
-    n_models = length(bp_results$kfold_results)
-    max_ncomp = bp_results$kfold_results[[1]]$general_model$ncomp
+    n_models <- length(bp_results$kfold_results)
+    max_ncomp <- bp_results$kfold_results[[1]]$general_model$ncomp
     
     loadings_sp <-
         matrix(nrow = n_models * max_ncomp, ncol = n_models * max_ncomp)
@@ -1562,8 +1562,8 @@ models_stability_plot_bootstrap = function (bp_results)
 #' 
 plot_bootstrap_multimodel <- function(bp_results, dataset, y_column, plot = TRUE) {
     
-    n_models = length(bp_results$kfold_results)
-    ncomp = bp_results$kfold_results[[1]]$general_model$ncomp
+    n_models <- length(bp_results$kfold_results)
+    ncomp <- bp_results$kfold_results[[1]]$general_model$ncomp
     # Extract data and split for train and test
     x_all <- dataset$peak_table
     y_all <- nmr_meta_get_column(dataset, column = y_column)

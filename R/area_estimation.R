@@ -187,7 +187,7 @@ peaklist_fit_lorentzians <- function(
                     lambda = 6,
                     p = 0.05,
                     maxit = 20
-                )$baseline |> as.numeric()
+                )$baseline %>% as.numeric()
                 y_nobasel <- y - y_basel
             }
             sgf <- signal::sgolayfilt(y, p = 2, n = 21, m = 2, ts = x[2] - x[1]) # 2nd derivative

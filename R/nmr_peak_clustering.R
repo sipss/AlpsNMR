@@ -76,10 +76,10 @@ nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
     peak_matrix <- matrix(peak_data$ppm, ncol = 1)
     rownames(peak_matrix) <- peak_data$peak_id
     peak2peak_dist <- peak2peak_distance(peak_matrix, distance_method = "euclidean")
-    peak_groups <- peak_data |>
-        dplyr::select(.data$NMRExperiment, .data$peak_id) |>
+    peak_groups <- peak_data %>%
+        dplyr::select(.data$NMRExperiment, .data$peak_id) %>%
         dplyr::group_by(.data$NMRExperiment) %>%
-        dplyr::summarise(peak_groups = list(.data$peak_id)) |>
+        dplyr::summarise(peak_groups = list(.data$peak_id)) %>%
         tibble::deframe()
     max_dist <- max(peak2peak_dist)
     peak2peak_dist <- set_peak_distances_within_groups(
@@ -150,15 +150,15 @@ nmr_build_peak_table <- function(peak_data) {
     if (!"cluster" %in% colnames(peak_data)) {
         stop("Please run nmr_peak_clustering() first")
     }
-    peak_data <- peak_data |>
-        dplyr::group_by(.data$cluster) |>
-        dplyr::mutate(ppm_ref = round(stats::median(.data$ppm), 4)) |>
+    peak_data <- peak_data %>%
+        dplyr::group_by(.data$cluster) %>%
+        dplyr::mutate(ppm_ref = round(stats::median(.data$ppm), 4)) %>%
         dplyr::ungroup()
     
-    peak_table <- peak_data |>
-        dplyr::select(.data$NMRExperiment, .data$ppm_ref, .data$area) |>
-        tidyr::pivot_wider(names_from = "ppm_ref", values_from = "area") |>
-        tibble::column_to_rownames("NMRExperiment") |>
+    peak_table <- peak_data %>%
+        dplyr::select(.data$NMRExperiment, .data$ppm_ref, .data$area) %>%
+        tidyr::pivot_wider(names_from = "ppm_ref", values_from = "area") %>%
+        tibble::column_to_rownames("NMRExperiment") %>%
         as.matrix()
     
     nmr_exp <- stringr::str_sort(unique(peak_data$NMRExperiment), numeric = TRUE)

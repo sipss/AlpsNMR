@@ -24,7 +24,6 @@ NULL
 #' @examples
 #' data("ROI_blood")
 #' ROI_blood[ROI_blood$Metabolite == "Valine", ]
-
 NULL
 
 #' Files to rDoplhin
@@ -78,13 +77,13 @@ NULL
 #' model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 #' }
 #' @export
-files_to_rDolphin = function (nmr_dataset, biological_origin) {
+files_to_rDolphin <- function (nmr_dataset, biological_origin) {
     message("you can edit obtained files for better performance in rDolphin")
-    meta_D_3col = c("NMRExperiment", "SubjectID", "Group")
-    meta_rDolphin = AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
-    newcolnames = c("sample", "individual", "type")
-    colnames(meta_rDolphin) = newcolnames
-    meta_rDolphin$type = as.numeric(as.factor(meta_rDolphin$type))
+    meta_D_3col <- c("NMRExperiment", "SubjectID", "Group")
+    meta_rDolphin <- AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
+    newcolnames <- c("sample", "individual", "type")
+    colnames(meta_rDolphin) <- newcolnames
+    meta_rDolphin$type <- as.numeric(as.factor(meta_rDolphin$type))
     
     NMR_spectra <- nmr_data(nmr_dataset)
     ROI <- NULL
@@ -110,7 +109,7 @@ files_to_rDolphin = function (nmr_dataset, biological_origin) {
         Parameters <- Parameters_cell
         ROI <- ROI_cell
     } else if (biological_origin == "urine"){
-        NMR_spectra = nmr_data(nmr_dataset)
+        NMR_spectra <- nmr_data(nmr_dataset)
         utils::data("Parameters_urine",
                     package = "AlpsNMR",
                     envir = environment())
@@ -122,8 +121,8 @@ files_to_rDolphin = function (nmr_dataset, biological_origin) {
         return(NULL)
     }
     
-    files_rDolphin = list(Parameters, meta_rDolphin, NMR_spectra, ROI)
-    names(files_rDolphin) = c("Parameters", "meta_rDolphin", "NMR_spectra", "ROI")
+    files_rDolphin <- list(Parameters, meta_rDolphin, NMR_spectra, ROI)
+    names(files_rDolphin) <- c("Parameters", "meta_rDolphin", "NMR_spectra", "ROI")
     return(files_rDolphin)
 }
 
@@ -196,12 +195,11 @@ NULL
 #' dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' excel_file <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 #' nmr_dataset <- nmr_read_samples_dir(dataset)
-#' files_rDolphin = files_to_rDolphin_blood(nmr_dataset)
-#' output_directory = "."
-#' save_files_to_rDolphin(files_rDolphin, output_directory)
+#' files_rDolphin <- files_to_rDolphin_blood(nmr_dataset)
+#' save_files_to_rDolphin(files_rDolphin, output_directory = ".")
 #' }
 #' @export
-save_files_to_rDolphin = function (files_rDolphin, output_directory) {
+save_files_to_rDolphin <- function (files_rDolphin, output_directory) {
     output_dir_10_rDolphin <- file.path(output_directory)
     fs::dir_create(output_dir_10_rDolphin)
     
@@ -236,12 +234,12 @@ save_files_to_rDolphin = function (files_rDolphin, output_directory) {
 #'
 #' @examples
 #' \dontrun{
-#' rDolphin_object = to_rDolphin(parameters)
-#' targeted_profiling = Automatic_targeted_profiling(rDolphin)
+#' rDolphin_object <- to_rDolphin(parameters)
+#' targeted_profiling <- Automatic_targeted_profiling(rDolphin)
 #' save_profiling_output(targeted_profiling, output_directory)
 #' }
 #' @export
-save_profiling_output = function (targeted_profiling, output_directory) {
+save_profiling_output <- function(targeted_profiling, output_directory) {
     output_dir_10_rDolphin <-
         file.path(output_directory, "rDolphin_output")
     fs::dir_create(output_dir_10_rDolphin)
