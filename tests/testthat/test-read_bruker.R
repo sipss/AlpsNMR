@@ -14,3 +14,15 @@ test_that("nmr_read_samples returns unique NMR experiments", {
   expect_false(any(duplicated(names(dataset))))
 })
 
+test_that("create_sample_names returns good unique guesses", {
+    sample_names <- c("a", "b")
+    expect_equal(create_sample_names(sample_names), sample_names)
+    sample_names <- c("a.zip", "b.zip")
+    expect_equal(create_sample_names(sample_names), c("a", "b"))
+    sample_names <- c("bar/a.zip", "bar/b.zip")
+    expect_equal(create_sample_names(sample_names), c("a", "b"))
+    sample_names <- c("bar/a.zip", "foo/b.zip")
+    expect_equal(create_sample_names(sample_names), c("a", "b"))
+    sample_names <- c("bar/a.zip", "foo/a.zip")
+    expect_equal(create_sample_names(sample_names), c("bar/a", "foo/a"))
+})

@@ -117,7 +117,12 @@ nmr_read_samples <- function(sample_names,
                              ...) {
     nn <- names(sample_names)
     sample_names <- as.character(sample_names)
-    names(sample_names) <- nn
+
+    if (is.null(nn)) {
+        names(sample_names) <- create_sample_names(sample_names)
+    } else {
+        names(sample_names) <- nn
+    }
 
     if (format == "bruker") {
         samples <- nmr_read_samples_bruker(
@@ -134,6 +139,23 @@ nmr_read_samples <- function(sample_names,
         stop("Unsupported format")
     }
     return(samples)
+}
+
+create_sample_names <- function(x) {
+    # 1. Use the basename without the extension
+    # 2. If there are repeated names, prepend the dirname
+    # 3. If there are repeated names, use vctrs::name_repair
+    remove_extensions <- tools::file_path_sans_ext(x)
+    xnames <- basename(remove_extensions)
+    if (anyDuplicated(xnames) == 0) {
+        return(xnames)
+    }
+    prepended_dirnames <- basename(dirname(remove_extensions))
+    xnames <- paste(prepended_dirnames, xnames, sep = "/")
+    if (anyDuplicated(xnames) == 0) {
+        return(xnames)
+    }
+    vctrs::vec_as_names(xnames, repair = "unique")
 }
 
 nmr_read_samples_bruker <-
