@@ -3,6 +3,7 @@ test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_pea
   dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
   data2 <- dataset[1:3]
   dataset <- nmr_interpolate_1D(dataset, axis = c(min = 1, max = 2, by = 0.002))
+  dataset <- nmr_baseline_estimation(dataset)
 
   peak_table <- nmr_detect_peaks(dataset,
                                  nDivRange_ppm = 0.1,
@@ -19,9 +20,10 @@ test_that("nmr_detect_peaks & nmr_align_find_ref & nmr_align & nmr_integrate_pea
   
   
   peak_table_integration = nmr_integrate_peak_positions(
-  samples = dataset,
-  peak_pos_ppm = list(c(2,3,4)),
-  peak_width_ppm = NULL)
+      samples = dataset,
+      peak_pos_ppm = list(c(2,3,4)),
+      peak_width_ppm = NULL
+  )
   expect_true(is.list(data2[["data_1r"]]))
   expect_true(is.numeric(peak_table_integration[["peak_table"]][[1]]))
   expect_true(is.integer(dim(peak_table)))
