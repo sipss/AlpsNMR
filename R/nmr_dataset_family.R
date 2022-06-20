@@ -110,25 +110,12 @@ filter.nmr_dataset_family <- function(.data, ...) {
 
 #' @export
 names.nmr_dataset_family <- function(x) {
-    if (rlang::ns_env_name() == "AlpsNMR") {
-        warn_or_abort <- rlang::abort
-    } else {
-        warn_or_abort <- rlang::warn
-    }
-    # TODO: Use Non-Standard-Evaluation magic to show the actual xname value
-    xname <- "x"
-    warn_or_abort(
-        message = c(
-            "Calling names() on a dataset object will change behaviour",
-            c("*" = "In a future version this function will return the sample names (the NMRExperiments)."),
-            c("*" = "Currently it treats the object as a list and returns its internal field names."),
-            c("i" = glue("Use names(unclass({xname})) instead to get the internal names (although the internal structure may change at any time)")),
-            c("i" = glue('Please use nmr_meta_get_column({xname}, "NMRExperiment") for now if you want the experiment names'))
-        )
-    )
-    # Return this instead:
-    #nmr_meta_get_column(x, "NMRExperiment")
-    names(unclass(x))
+    nmr_meta_get_column(x, "NMRExperiment")
+}
+
+#' @export
+.DollarNames.nmr_dataset_family <- function(x, pattern="") {
+    grep(pattern, names(unclass(x)), value = TRUE)
 }
 
 #' @export
@@ -140,6 +127,9 @@ names.nmr_dataset_family <- function(x) {
             )
         )
     }
+    if (anyDuplicated(value) > 0) (
+        rlang::abort("NMRExperiment names should not be repeated")
+    )
     for (table_name in names(x$metadata)) {
         x$metadata[[table_name]][["NMRExperiment"]] <- value
     }
