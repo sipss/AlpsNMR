@@ -84,7 +84,12 @@
 <span class="r-plt img"><img src="Peak_detection-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span class="va">baselineThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_baseline_threshold.html">nmr_baseline_threshold</a></span><span class="op">(</span><span class="va">dataset_1D</span>, range_without_peaks <span class="op">=</span> <span class="va">range_without_peaks</span><span class="op">)</span></span>
 <span class="r-in"><span class="co"># Plot to check the baseline estimations</span></span>
-<span class="r-in"><span class="fu"><a href="nmr_baseline_threshold_plot.html">nmr_baseline_threshold_plot</a></span><span class="op">(</span><span class="va">dataset_1D</span>, <span class="va">baselineThresh</span>, NMRExperiment <span class="op">=</span> <span class="st">"all"</span>, chemshift_range <span class="op">=</span> <span class="va">range_without_peaks</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="nmr_baseline_threshold_plot.html">nmr_baseline_threshold_plot</a></span><span class="op">(</span></span>
+<span class="r-in">  <span class="va">dataset_1D</span>,</span>
+<span class="r-in">  <span class="va">baselineThresh</span>,</span>
+<span class="r-in">  NMRExperiment <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span class="r-in">  chemshift_range <span class="op">=</span> <span class="va">range_without_peaks</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-plt img"><img src="Peak_detection-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># 1.Peak detection in the dataset.</span></span>
