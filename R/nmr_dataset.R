@@ -61,27 +61,9 @@ NULL
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' 
 nmr_read_samples_dir <- function(samples_dir,
-                                 format = "bruker",
-                                 pulse_sequence = NULL,
-                                 metadata_only = FALSE,
-                                 ...) {
-    nmr_read_samples_dir_internal(
-        samples_dir = samples_dir,
-        format = format,
-        pulse_sequence = pulse_sequence,
-        metadata_only = metadata_only,
-        ...
-    )
-}
-
-#' @noRd
-#' @inheritParams nmr_read_samples_dir
-#' @inheritParams nmr_read_samples_internal
-nmr_read_samples_dir_internal <- function(samples_dir,
                                           format = "bruker",
                                           pulse_sequence = NULL,
                                           metadata_only = FALSE,
-                                          overwrite_sample_names = NULL,
                                           ...) {
     samples_dir <- as.character(samples_dir)
     if (!dir.exists(samples_dir)) {
@@ -110,12 +92,11 @@ nmr_read_samples_dir_internal <- function(samples_dir,
         stop("Unsupported sample format: ", format)
     }
     all_samples <- stringr::str_sort(all_samples, numeric = TRUE)
-    dataset <- nmr_read_samples_internal(
+    dataset <- nmr_read_samples(
         sample_names = all_samples,
         format = format,
         pulse_sequence = pulse_sequence,
         metadata_only = metadata_only,
-        overwrite_sample_names = overwrite_sample_names,
         ...
     )
     return(dataset)
@@ -134,31 +115,15 @@ nmr_read_samples <- function(sample_names,
                              pulse_sequence = NULL,
                              metadata_only = FALSE,
                              ...) {
-    nmr_read_samples_internal(
-        sample_names = sample_names,
-        format = format,
-        pulse_sequence = pulse_sequence,
-        metadata_only = metadata_only,
-        ...
-    )
-}
-
-#' @noRd
-#' @inheritParams nmr_read_samples
-#' @inheritParams nmr_read_samples_bruker
-nmr_read_samples_internal <- function(sample_names,
-                                      format = "bruker",
-                                      pulse_sequence = NULL,
-                                      metadata_only = FALSE,
-                                      overwrite_sample_names = NULL,
-                                      ...) {
+    nn <- names(sample_names)
     sample_names <- as.character(sample_names)
+    names(sample_names) <- nn
+
     if (format == "bruker") {
         samples <- nmr_read_samples_bruker(
             sample_names = sample_names,
             metadata_only = metadata_only,
             pulse_sequence = pulse_sequence,
-            overwrite_sample_names = overwrite_sample_names,
             ...
         )
     } else if (format == "jdx") {
@@ -171,34 +136,19 @@ nmr_read_samples_internal <- function(sample_names,
     return(samples)
 }
 
-#' @param overwrite_sample_names This is only is used internally when downloading a
-#'    temporary file from irods. In that case we will want to replace the temporary
-#'    directory with the irods path if possible
-#' @noRd
 nmr_read_samples_bruker <-
     function(sample_names,
              pulse_sequence = NULL,
              metadata_only = FALSE,
-             overwrite_sample_names = NULL,
              ...) {
         if (length(sample_names) == 0) {
             stop("No samples to load")
         }
-        # overwrite_sample_names is used when downloading a temporary file from
-        # irods. In that case we want to preserve the irods path if possible
-        if (!is.null(overwrite_sample_names)) {
-            stopifnot(length(sample_names) == length(overwrite_sample_names))
-        } else {
-            # We overwrite with the same name:
-            overwrite_sample_names <- sample_names
-        }
-
         warn_future_to_biocparallel()
         list_of_samples <- BiocParallel::bplapply(
             X = seq_along(sample_names),
             FUN = function(sampl_idx, ...) {
                 sampl <- sample_names[sampl_idx]
-                overwr <- overwrite_sample_names[sampl_idx]
                 is_zip <- NULL
                 loaded_sample <-
                     tryCatch({
@@ -208,7 +158,7 @@ nmr_read_samples_bruker <-
                             NMRExperiment <- gsub(
                                 pattern = "\\.zip$",
                                 replacement = "",
-                                basename(overwr)
+                                basename(sampl)
                             )
                             sampl_temp_dir <-
                                 tempfile(pattern = paste0("nmr_sample_", NMRExperiment, "_"))
@@ -227,7 +177,7 @@ nmr_read_samples_bruker <-
                         if (is_zip) {
                             meta$info$file_format <- "Zipped Bruker NMR directory"
                         }
-                        meta$info$sample_path <- overwr
+                        meta$info$sample_path <- sampl
                         if (!is.null(pulse_sequence) &&
                             toupper(meta$info$pulse_sequence) != toupper(pulse_sequence)) {
                             return(NULL)
@@ -262,6 +212,8 @@ nmr_read_samples_bruker <-
         # Remove samples that could not be loaded:
         any_error <- purrr::map_lgl(list_of_samples, is.null)
         list_of_samples <- list_of_samples[!any_error]
+        sample_names <- sample_names[!any_error]
+
         
         if (length(list_of_samples) == 0) {
             stop("No samples loaded")
@@ -288,7 +240,11 @@ nmr_read_samples_bruker <-
             }
         }
 
-        nmr_experiment_col <- sample_meta[["info"]][["info_NMRExperiment"]]
+        if (!is.null(names(sample_names))) {
+            nmr_experiment_col <- names(sample_names)
+        } else {
+            nmr_experiment_col <- sample_meta[["info"]][["info_NMRExperiment"]]
+        }
         nmr_experiment_col <- vctrs::vec_as_names(nmr_experiment_col, repair = "unique")
         sample_meta <- purrr::map(sample_meta,
                                   function(x) {
@@ -314,9 +270,10 @@ nmr_read_samples_bruker <-
 # @rdname nmr_read_samples
 nmr_read_samples_jdx <-
     function(sample_names, metadata_only = FALSE) {
+        nn <- names(sample_names)
         sample_names <- normalizePath(sample_names, mustWork = FALSE)
-        raw_samples <-
-            read_jdx(sample_names, metadata_only = metadata_only)
+        names(sample_names) <- nn
+        raw_samples <- read_jdx(sample_names, metadata_only = metadata_only)
         # Assume 1-D
         if (!metadata_only) {
             block_with_data_per_sample <-
@@ -346,14 +303,24 @@ nmr_read_samples_jdx <-
             dplyr::bind_rows(lapply(raw_samples, create_df_from_jdx_sample))
         metadata$file_name <- sample_names
         # Make a reasonable NMRExperiment:
-        if (!("NMRExperiment" %in% colnames(metadata))) {
+        # 1. If it is given as the names of sample_names
+        # 2. If it is found in the metadata
+        # 3. Based on the filename
+        if (!is.null(nn)) {
+            if (anyDuplicated(nn) > 0) {
+                rlang::abort("names of samples must be unique")
+            }
+            NMRExperiments <- nn
+        } else if (!"NMRExperiment" %in% colnames(metadata)) {
             NMRExperiments <- basename(sample_names)
             if (any(duplicated(NMRExperiments))) {
                 NMRExperiments <- sample_names
             }
             NMRExperiments <- vctrs::vec_as_names(NMRExperiments, repair = "unique")
-            metadata$NMRExperiment <- NMRExperiments
+        } else {
+            NMRExperiments <- metadata$NMRExperiment
         }
+        metadata$NMRExperiment <- NMRExperiments
         metadata <-
             dplyr::select(metadata, .data$NMRExperiment, dplyr::everything())
         metadata_external <- tibble::tibble(NMRExperiment = metadata$NMRExperiment)
