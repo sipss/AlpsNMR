@@ -413,7 +413,7 @@ is.nmr_dataset <- function(x)
         metad[i, , drop = FALSE]
     })
     data_fields <-
-        names(output)[grepl(pattern = "^data_.*", x = names(output))]
+        names(unclass(output))[grepl(pattern = "^data_.*", x = names(unclass(output)))]
     
     output[["axis"]] <- output[["axis"]][i]
     for (data_field in data_fields) {
@@ -514,3 +514,4 @@ new_nmr_dataset <- function(metadata, data_fields, axis) {
     validate_nmr_dataset(samples)
     samples
 }
+

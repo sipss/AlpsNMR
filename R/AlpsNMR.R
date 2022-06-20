@@ -33,3 +33,8 @@
 #' @importFrom generics tidy
 #' @export
 generics::tidy
+
+
+#' @importFrom dplyr rename
+#' @export
+dplyr::rename

@@ -38,7 +38,7 @@ validate_nmr_dataset_family <- function(nmr_dataset_family) {
     num_samples <- nmr_dataset_family[["num_samples"]]
     
     abort_if_not(
-        "metadata" %in% names(nmr_dataset_family),
+        "metadata" %in% names(unclass(nmr_dataset_family)),
         message = "Missing metadata"
     )
 
@@ -106,4 +106,55 @@ filter.nmr_dataset_family <- function(.data, ...) {
     meta$tmp_row_idx <- seq_len(nrow(meta))
     indices_to_keep <- dplyr::filter(meta,!!!dots)$tmp_row_idx
     return(.data[indices_to_keep])
+}
+
+#' @export
+names.nmr_dataset_family <- function(x) {
+    if (rlang::ns_env_name() == "AlpsNMR") {
+        warn_or_abort <- rlang::abort
+    } else {
+        warn_or_abort <- rlang::warn
+    }
+    # TODO: Use Non-Standard-Evaluation magic to show the actual xname value
+    xname <- "x"
+    warn_or_abort(
+        message = c(
+            "Calling names() on a dataset object will change behaviour",
+            c("*" = "In a future version this function will return the sample names (the NMRExperiments)."),
+            c("*" = "Currently it treats the object as a list and returns its internal field names."),
+            c("i" = glue("Use names(unclass({xname})) instead to get the internal names (although the internal structure may change at any time)")),
+            c("i" = glue('Please use nmr_meta_get_column({xname}, "NMRExperiment") for now if you want the experiment names'))
+        )
+    )
+    # Return this instead:
+    #nmr_meta_get_column(x, "NMRExperiment")
+    names(unclass(x))
+}
+
+#' @export
+`names<-.nmr_dataset_family` <- function(x, value) {
+    if (length(value) != x$num_samples) {
+        rlang::abort(
+            message = c(
+                glue("names should be vector of length {x$num_samples}, but a vector of length {length(value)} was given instead")
+            )
+        )
+    }
+    for (table_name in names(x$metadata)) {
+        x$metadata[[table_name]][["NMRExperiment"]] <- value
+    }
+    invisible(x)
+}
+
+
+#' @export
+rename.nmr_dataset_family <- function(.data, ...) {
+    # Replace nmr_meta_get_column(.data) with names(.data) below, once names(.data) returns the NMRExperiment names
+    nmr_experiments <- nmr_meta_get_column(.data)
+    names(nmr_experiments) <- nmr_experiments
+    loc <- tidyselect::eval_rename(rlang::expr(c(...)), nmr_experiments)
+    # eval_rename() only returns changes
+    nmr_experiments[loc] <- names(loc)
+    names(.data) <- nmr_experiments
+    .data
 }

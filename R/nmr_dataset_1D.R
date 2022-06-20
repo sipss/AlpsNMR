@@ -53,11 +53,11 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
     )
     
     abort_if_not(
-        "axis" %in% names(nmr_dataset_1D),
+        "axis" %in% names(unclass(nmr_dataset_1D)),
         message = "nmr_dataset_1D must have a ppm axis"
     )
     abort_if_not(
-        "data_1r" %in% names(nmr_dataset_1D),
+        "data_1r" %in% names(unclass(nmr_dataset_1D)),
         message = "nmr_dataset_1D must have a data_1r matrix"
     )
     
@@ -83,7 +83,7 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
         message = "The num_samples value does not match nrow(data_1r)"
     )
     
-    if (!"excluded_regions" %in% names(nmr_dataset_1D)) {
+    if (!"excluded_regions" %in% names(unclass(nmr_dataset_1D))) {
         rlang::warn(
             message = c(
                 'The dataset should have a "excluded_regions" element with the excluded regions.',

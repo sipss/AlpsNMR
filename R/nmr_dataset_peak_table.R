@@ -33,7 +33,7 @@ validate_nmr_dataset_peak_table <- function(nmr_dataset_peak_table) {
     )
     
     abort_if_not(
-        "peak_table" %in% names(nmr_dataset_peak_table),
+        "peak_table" %in% names(unclass(nmr_dataset_peak_table)),
         message = "nmr_dataset_peak_table must have a peak_table matrix"
     )
     
