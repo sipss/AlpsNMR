@@ -391,7 +391,7 @@ nmr_detect_peaks_plot_peaks <- function(
 #' @return A data frame with NMRExperiment, ppm and intensity, among other columns
 #' @keywords internal
 peakList_to_dataframe <- function(nmr_dataset, peakList) {
-    NMRExperiment <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
+    NMRExperiment <- names(nmr_dataset)
     out <- purrr::imap_dfr(peakList, function(peak_idx,
                                        sample_idx,
                                        nmr_dataset,
@@ -458,8 +458,7 @@ nmr_detect_peaks_tune_snr <- function(
     ...
 ) {
         if (is.null(NMRExperiment)) {
-            NMRExperiment <-
-                utils::head(nmr_meta_get_column(ds, column = "NMRExperiment"), n = 1)
+            NMRExperiment <- utils::head(names(ds), n = 1)
         }
         ds1 <- filter(ds, NMRExperiment == !!NMRExperiment)
         names(SNR_thresholds) <- SNR_thresholds
@@ -570,7 +569,7 @@ nmr_align <- function(nmr_dataset,
     if (is.null(NMRExp_ref)) {
         NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
     }
-    NMRExp <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
+    NMRExp <- names(nmr_dataset)
     refInd <- which(NMRExp == NMRExp_ref)
     if (length(refInd) != 1) {
         stop("Wrong NMRExperiment as align_ref? Please check.")
@@ -600,8 +599,7 @@ nmr_align <- function(nmr_dataset,
 nmr_align_find_ref <- function(nmr_dataset, peak_data) {
     peakList <- peak_data_to_peakList(nmr_dataset, peak_data)
     resFindRef <- speaq::findRef(peakList)
-    NMRExperiment <-
-        nmr_meta_get_column(nmr_dataset, "NMRExperiment")
+    NMRExperiment <- names(nmr_dataset)
     c(NMRExperiment = NMRExperiment[resFindRef$refInd])
 }
 

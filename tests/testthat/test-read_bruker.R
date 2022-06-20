@@ -11,6 +11,6 @@ test_that("nmr_read_samples returns unique NMR experiments", {
       file.path(dir_to_demo_dataset, "10.zip"))
   )
   expect_equal(dataset$num_samples, 2)
-  expect_false(any(duplicated(nmr_meta_get_column(dataset, "NMRExperiment"))))
+  expect_false(any(duplicated(names(dataset))))
 })
 

@@ -41,24 +41,25 @@ plot.nmr_dataset_1D <- function(x,
     
     if (is.null(NMRExperiment)) {
         if (x$num_samples > 20) {
-            NMRExperiment <-
-                sample(nmr_meta_get_column(x, "NMRExperiment"), size = 10)
+            NMRExperiment <- sample(names(x), size = 10)
         } else {
-            NMRExperiment <- nmr_meta_get_column(x, "NMRExperiment")
+            NMRExperiment <- names(x)
         }
     } else if (identical(NMRExperiment, "all")) {
-        NMRExperiment <- nmr_meta_get_column(x, "NMRExperiment")
+        NMRExperiment <- names(x)
     }
-    sample_idx <-
-        which(nmr_meta_get_column(x, "NMRExperiment") %in% NMRExperiment)
+    sample_idx <- which(names(x) %in% NMRExperiment)
     
     longdf <- tidy(
         x,
         sample_idx = sample_idx,
         chemshift_range = chemshift_range
     )
-    fixed_aes <-
-        list(x = "chemshift", y = "intensity", group = "NMRExperiment")
+    fixed_aes <- list(
+        x = "chemshift",
+        y = "intensity",
+        group = "NMRExperiment"
+    )
     dotdotdot_aes <- list(...)
     all_aes <- c(fixed_aes, dotdotdot_aes)
     if (!"color" %in% names(all_aes) && !"colour" %in% names(all_aes)) {

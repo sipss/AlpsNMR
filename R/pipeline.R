@@ -255,12 +255,8 @@ pipe_outlier_detection <- function(nmr_dataset_rds, output_dir)    {
   pca_outliers <- nmr_pca_outliers_robust(nmr_dataset)
   gplt <- nmr_pca_outliers_plot(nmr_dataset, pca_outliers)
   
-  nmr_dataset_no_out <-
-    nmr_pca_outliers_filter(nmr_dataset, pca_outliers)
-  nmr_exp_all <- nmr_meta_get_column(nmr_dataset, "NMRExperiment")
-  nmr_exp_noout <-
-    nmr_meta_get_column(nmr_dataset_no_out, "NMRExperiment")
-  nmr_exp_out <- setdiff(nmr_exp_all, nmr_exp_noout)
+  nmr_dataset_no_out <- nmr_pca_outliers_filter(nmr_dataset, pca_outliers)
+  nmr_exp_out <- setdiff(names(nmr_dataset), names(nmr_dataset_no_out))
   
   message("Saving pipe_outlier_detection at ", Sys.time())
   nmr_export_data_1r(nmr_dataset_no_out, full_spectra_matrix_fn)

@@ -44,8 +44,7 @@ nmr_pca_build_model.nmr_dataset_1D <- function(nmr_dataset,
                                                scale = FALSE,
                                                ...) {
     data_1r <- nmr_dataset$data_1r
-    rownames(data_1r) <-
-        nmr_meta_get_column(nmr_dataset, column = "NMRExperiment")
+    rownames(data_1r) <- names(nmr_dataset)
     pca_model <-
         mixOmics::pca(
             X = data_1r,

@@ -28,7 +28,7 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = c(9.5, 10)
         spec_region <- nmr_dataset$data_1r[i, threshold_ind]
         out[i] <- stats::median(spec_region) + 3*stats::mad(spec_region)
     }
-    names(out) <- nmr_meta_get_column(nmr_dataset, column = "NMRExperiment")
+    names(out) <- names(nmr_dataset)
     out
 }
 
