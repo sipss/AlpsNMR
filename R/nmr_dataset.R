@@ -38,7 +38,7 @@ NULL
 #'
 #' @name nmr_read_samples
 #' @param sample_names A character vector with file or directory names.
-#' @param samples_dir A directory that contains multiple samples
+#' @param samples_dir A directory or directories that contain multiple samples
 #' @param format Either "bruker" or "jdx"
 #' @param metadata_only A logical, to load only metadata (default: `FALSE`)
 #' @param pulse_sequence If it is set to a pulse sequence
@@ -66,8 +66,9 @@ nmr_read_samples_dir <- function(samples_dir,
                                           metadata_only = FALSE,
                                           ...) {
     samples_dir <- as.character(samples_dir)
-    if (!dir.exists(samples_dir)) {
-        stop("Invalid directory: ", samples_dir)
+    dirs_that_dont_exist <- !dir.exists(samples_dir)
+    if (any(dirs_that_dont_exist)) {
+        rlang::abort(c("These directories do not exist:", samples_dir[dirs_that_dont_exist]))
     }
     if (format == "bruker") {
         all_samples <-

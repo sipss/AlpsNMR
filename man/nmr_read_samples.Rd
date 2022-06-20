@@ -22,7 +22,7 @@ nmr_read_samples(
 )
 }
 \arguments{
-\item{samples_dir}{A directory that contains multiple samples}
+\item{samples_dir}{A directory or directories that contain multiple samples}
 
 \item{format}{Either "bruker" or "jdx"}
 
