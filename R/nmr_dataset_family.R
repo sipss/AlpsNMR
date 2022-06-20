@@ -139,10 +139,11 @@ names.nmr_dataset_family <- function(x) {
 
 #' @export
 rename.nmr_dataset_family <- function(.data, ...) {
-    loc <- tidyselect::eval_rename(rlang::expr(c(...)), .data)
+    nmr_experiments <- names(.data)
+    names(nmr_experiments) <- nmr_experiments
+    loc <- tidyselect::eval_rename(rlang::expr(c(...)), nmr_experiments)
     # eval_rename() only returns changes
-    names_to_set <- names(.data)
-    names_to_set[loc] <- names(loc)
-    names(.data) <- names_to_set
+    nmr_experiments[loc] <- names(loc)
+    names(.data) <- nmr_experiments
     .data
 }
