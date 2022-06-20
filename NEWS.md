@@ -1,5 +1,8 @@
 # AlpsNMR 3.7.1 (2022-05-02)
 
+- You can now set experiment names (NMRExperiment) with `names(dataset) <- c("Sample1", "Sample2")`
+- You can now pass a named vector with the sample names to the read_samples function. The names
+  will be used as the sample names.
 - Set `fix_baseline = FALSE` in `nmr_integrate_regions()` as default
 - Peak detection has a more robust baseline threshold estimation
 - Peak detection estimates the baseline threshold on each sample individually.
