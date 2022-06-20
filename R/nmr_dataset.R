@@ -117,6 +117,9 @@ nmr_read_samples <- function(sample_names,
                              metadata_only = FALSE,
                              ...) {
     nn <- names(sample_names)
+    if (all(sample_names == nn)) {
+        nn <- NULL
+    }
     sample_names <- as.character(sample_names)
 
     if (is.null(nn)) {
