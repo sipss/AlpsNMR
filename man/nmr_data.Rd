@@ -2,20 +2,25 @@
 % Please edit documentation in R/nmr_data.R
 \name{nmr_data}
 \alias{nmr_data}
+\alias{nmr_data.nmr_dataset_1D}
 \alias{nmr_data<-}
 \alias{nmr_data<-.nmr_dataset_1D}
 \title{Set/Return the full spectra matrix}
 \usage{
 nmr_data(nmr_dataset, ...)
 
-nmr_data(nmr_dataset) <- value
+\method{nmr_data}{nmr_dataset_1D}(nmr_dataset, what = "data_1r", ...)
 
-\method{nmr_data}{nmr_dataset_1D}(nmr_dataset) <- value
+nmr_data(nmr_dataset, ...) <- value
+
+\method{nmr_data}{nmr_dataset_1D}(nmr_dataset, what = "data_1r", ...) <- value
 }
 \arguments{
 \item{nmr_dataset}{An object from the \link{nmr_dataset_family} to get the raw data from}
 
-\item{...}{Unused and left for future compatibility}
+\item{...}{Passed on to methods for compatibility}
+
+\item{what}{What data do we want to get (default: \code{data_1r})}
 
 \item{value}{A matrix}
 }
@@ -32,6 +37,10 @@ dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 dataset_data <- nmr_data(dataset_1D)
+dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+dataset_1D_data <- nmr_data(dataset_1D)
 }
 \seealso{
 Other import/export functions: 
