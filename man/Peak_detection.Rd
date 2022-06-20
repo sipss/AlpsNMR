@@ -18,7 +18,12 @@ range_without_peaks = c(9.5, 10)
 plot(dataset_1D, chemshift_range = range_without_peaks)
 baselineThresh <- nmr_baseline_threshold(dataset_1D, range_without_peaks = range_without_peaks)
 # Plot to check the baseline estimations
-nmr_baseline_threshold_plot(dataset_1D, baselineThresh, NMRExperiment = "all", chemshift_range = range_without_peaks)
+nmr_baseline_threshold_plot(
+  dataset_1D,
+  baselineThresh,
+  NMRExperiment = "all",
+  chemshift_range = range_without_peaks
+)
 
 # 1.Peak detection in the dataset.
 peak_data <- nmr_detect_peaks(
