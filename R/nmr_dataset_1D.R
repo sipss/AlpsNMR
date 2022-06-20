@@ -202,6 +202,9 @@ format.nmr_dataset_1D <- function(x, ...) {
         metad[i, , drop = FALSE]
     })
     output[["data_1r"]] <- output[["data_1r"]][i, , drop = FALSE]
+    if ("data_1r_baseline" %in% names(unclass(output))) {
+        output[["data_1r_baseline"]] <- output[["data_1r_baseline"]][i, , drop = FALSE]
+    }
     output$num_samples <- nrow(output$metadata[[1]])
     validate_nmr_dataset_1D(output)
 }
