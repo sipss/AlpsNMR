@@ -38,3 +38,18 @@ generics::tidy
 #' @importFrom dplyr rename
 #' @export
 dplyr::rename
+
+
+#' @importFrom dplyr filter
+#' @export
+dplyr::filter
+
+#' @importFrom magrittr %>%
+#' @export
+magrittr::`%>%`
+
+
+#' @importFrom utils .DollarNames
+#' @export
+utils::.DollarNames
+
