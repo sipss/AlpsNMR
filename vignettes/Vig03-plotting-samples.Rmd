@@ -21,6 +21,8 @@ library(AlpsNMR)
 
 (Vignette in progress)
 
+See `vignette("Vig01-introduction-to-alpsnmr", package = "AlpsNMR")`
+
 # Creating interactive plots
 
 Use `?plot.nmr_dataset_1D` to check the parameters, among them: 
