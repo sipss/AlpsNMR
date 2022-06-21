@@ -65,7 +65,10 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.7.1" id="alpsnmr-371-2022-05-02">AlpsNMR 3.7.1 (2022-05-02)<a class="anchor" aria-label="anchor" href="#alpsnmr-371-2022-05-02"></a></h2>
-<ul><li>Set <code>fix_baseline = FALSE</code> in <code><a href="../reference/nmr_integrate_regions.html">nmr_integrate_regions()</a></code> as default</li>
+<ul><li>You can now set experiment names (NMRExperiment) with <code>names(dataset) &lt;- c("Sample1", "Sample2")</code>
+</li>
+<li>You can now pass a named vector with the sample names to the read_samples function. The names will be used as the sample names.</li>
+<li>Set <code>fix_baseline = FALSE</code> in <code><a href="../reference/nmr_integrate_regions.html">nmr_integrate_regions()</a></code> as default</li>
 <li>Peak detection has a more robust baseline threshold estimation</li>
 <li>Peak detection estimates the baseline threshold on each sample individually. The threshold is calculated using only the sample where we are currently detecting the peaks</li>
 <li>Peak detection includes a simple but effective lorentzian fitting (for area and width estimation)</li>

@@ -71,10 +71,13 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_data</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">...</span><span class="op">)</span>
 
-<span class="fu">nmr_data</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
+<span class="co"># S3 method for nmr_dataset_1D</span>
+<span class="fu">nmr_data</span><span class="op">(</span><span class="va">nmr_dataset</span>, what <span class="op">=</span> <span class="st">"data_1r"</span>, <span class="va">...</span><span class="op">)</span>
+
+<span class="fu">nmr_data</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
 
 <span class="co"># S3 method for nmr_dataset_1D</span>
-<span class="fu">nmr_data</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></code></pre></div>
+<span class="fu">nmr_data</span><span class="op">(</span><span class="va">nmr_dataset</span>, what <span class="op">=</span> <span class="st">"data_1r"</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -84,7 +87,11 @@
 
 
 <dt>...</dt>
-<dd><p>Unused and left for future compatibility</p></dd>
+<dd><p>Passed on to methods for compatibility</p></dd>
+
+
+<dt>what</dt>
+<dd><p>What data do we want to get (default: <code>data_1r</code>)</p></dd>
 
 
 <dt>value</dt>
@@ -121,6 +128,10 @@
 <span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples_dir</a></span><span class="op">(</span><span class="va">dir_to_demo_dataset</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>, max <span class="op">=</span> <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">2.3E-4</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">dataset_data</span> <span class="op">&lt;-</span> <span class="fu">nmr_data</span><span class="op">(</span><span class="va">dataset_1D</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">dir_to_demo_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples_dir</a></span><span class="op">(</span><span class="va">dir_to_demo_dataset</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>, max <span class="op">=</span> <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">2.3E-4</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">dataset_1D_data</span> <span class="op">&lt;-</span> <span class="fu">nmr_data</span><span class="op">(</span><span class="va">dataset_1D</span><span class="op">)</span></span>
 </code></pre></div>
     </div>
   </div>
