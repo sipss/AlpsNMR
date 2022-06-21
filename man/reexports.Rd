@@ -5,6 +5,9 @@
 \alias{reexports}
 \alias{tidy}
 \alias{rename}
+\alias{filter}
+\alias{\%>\%}
+\alias{.DollarNames}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -12,8 +15,12 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dplyr}{\code{\link[dplyr]{rename}}}
+  \item{dplyr}{\code{\link[dplyr]{filter}}, \code{\link[dplyr]{rename}}}
 
   \item{generics}{\code{\link[generics]{tidy}}}
+
+  \item{magrittr}{\code{\link[magrittr:pipe]{\%>\%}}}
+
+  \item{utils}{\code{\link[utils:rcompgen]{.DollarNames}}}
 }}
 
