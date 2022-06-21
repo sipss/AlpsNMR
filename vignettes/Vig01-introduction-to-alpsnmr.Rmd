@@ -8,7 +8,8 @@ abstract: >
   annotations, preprocessing the spectra, detecting outliers, detecting peaks,
   aligning the samples and integrating the peaks to build a peak table.
 date: "`r format(Sys.Date(), '%F')`"
-output: "BiocStyle::pdf_document"
+output:
+  BiocStyle::pdf_document
 vignette: >
   %\VignetteIndexEntry{Vignette 01: Introduction to AlpsNMR (start here)}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,11 +19,11 @@ vignette: >
 
 # Getting started
 
-The `AlpsNMR` package has most of its functions prefixed with `nmr_`. The main
-reason for this is to avoid conflicts with other packages and to make it easy 
-for the user to discover the functions from the package using autocompletion.
-Most coding environments (e.g. RStudio), by typing `nmr_` followed by pressing
-the tab key, one can see most of the function names with their arguments.
+The `AlpsNMR` package has most of its functions prefixed with `nmr_`.
+The main reason for this is to avoid conflicts with other packages.
+Besides, it helps for autocompletion:
+Most coding environments such as RStudio will let you see most of the function
+names by typing `nmr_` followed by pressing the tab key.
 
 This vignette assumes some basic knowledge of NMR and data analysis, and some
 basic R programming.
@@ -43,7 +44,7 @@ library(AlpsNMR)
 This package is able to parallellize several functions through the use of the
 `BiocParallel` package. Whether to parallelize or not is left to the user
 that can control the parallellization registering backends. Please check
-the `BiocParallel` introduction for further details
+`vignette("Introduction_To_BiocParallel", package = "BiocParallel")`.
 
 ```{r}
 #register(SerialParam(), default = TRUE)  # disable parallellization
@@ -54,25 +55,25 @@ register(SnowParam(workers = 3), default = TRUE)  # enable parallellization with
 # Data: The `MeOH_plasma_extraction` dataset
 
 To explore the basics of the AlpsNMR package, we have included four NMR samples
-acquired in a 600 MHz Bruker instrument bundled with the package. The samples
-are pooled quality control plasma samples, that were extracted with methanol,
-and therefore only contain small molecules.
+acquired in a 600 MHz Bruker instrument bundled with the package.
+The samples are pooled quality control plasma samples, that were extracted with methanol.
+They only contain small molecules.
 
-If you have installed this package, you can obtain the directory where the four
-samples are with the command
+If you have installed this package, you can obtain the directory where the
+samples are with the command:
 
 ```{r}
 MeOH_plasma_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
 MeOH_plasma_extraction_dir
 ```
 
-The demo directory includes three zipped samples and a dummy Excel metadata file.
+The demo directory includes three zipped Bruker samples and a dummy Excel metadata file:
 
 ```{r}
 list.files(MeOH_plasma_extraction_dir)
 ```
 
-This is just some quality control dataset, the metadata is just a simple dummy table:
+Since these are quality control samples, the metadata is a dummy table:
 
 ```{r}
 MeOH_plasma_extraction_xlsx <- file.path(MeOH_plasma_extraction_dir, "dummy_metadata.xlsx")
@@ -82,7 +83,7 @@ annotations
 
 # Loading samples
 
-The function to read samples is called `nmr_read_samples`. It expects a
+The function to read samples is called `nmr_read_samples()`. It expects a
 character vector with the samples to load that can be paths to directories of
 Bruker format samples or paths to JDX files.
 
@@ -96,48 +97,57 @@ dataset <- nmr_read_samples(sample_names = zip_files)
 dataset
 ```
 
+If your samples happen to be in different **folders per class**, AlpsNMR provides
+convenience functions to read them as well. With this example:
 
+```
+- your_dataset/
+  + control/
+     * 10/
+     * 20/
+     * 30/
+  + mutated/
+     * 10/
+     * 20/
+     * 30/
+```
+
+You could use:
+
+```
+dataset <- nmr_read_samples_dir(c("your_dataset/control", "your_dataset/mutated"))
+dataset
+```
+
+If after reading the `?nmr_read_samples` page you still have issues, feel free
+to open an issue at [https://github.com/sipss/AlpsNMR/issues] and ask for
+clarification.
 
 # Adding annotations
 
-To explore the metadata and the annotations, see the handling metadata and annotations vignette. Here we just do a basic introduction:
+We can embed the external annotations we loaded above into the dataset:
 
-As we have not added any metadata to this dataset, the only column we see is
-the `NMRExperiment`:
+```{r}
+dataset <- nmr_meta_add(dataset, metadata = annotations, by = "NMRExperiment")
+```
+
+And retrieve them from the dataset:
 
 ```{r}
 nmr_meta_get(dataset, groups = "external")
 ```
 
 
-We can read some external metadata from excel:
-
-```{r}
-excel_file <- file.path(MeOH_plasma_extraction_dir, "dummy_metadata.xlsx")
-subject_timepoint <- read_excel(excel_file, sheet = 1)
-subject_timepoint
-```
-
-And add it to the dataset:
-
-```{r}
-dataset <- nmr_meta_add(dataset, metadata = subject_timepoint, by = "NMRExperiment")
-```
-
-The table information is now embedded in our dataset and we can make use of it in further data analysis steps.
-
-```{r}
-nmr_meta_get(dataset, groups = "external")
-```
+If you want to learn more about sample metadata (including acquisition and FID 
+processing parameters), as well as more complex ways of adding annotations,
+check out the `vignette("Vig02-handling-metadata-and-annotations", package = "AlpsNMR")`.
 
 
 # Interpolation
 
 1D NMR samples can be interpolated together, in order to arrange all the spectra 
-into a matrix, with one row per sample. The main parameters we would need is the 
-range of ppm values that we want to interpolate and the resolution.
-
-We can interpolate the dataset, obtaining an `nmr_dataset_1D` object:
+into a matrix, with one row per sample. Here we choose the 
+range of ppm values that we want to include in further analyses.
 
 ```{r}
 dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10))
@@ -145,6 +155,7 @@ dataset <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10))
 
 If the `axis = NULL` then the ppm axis is autodetected from the samples.
 
+See `nmr_interpolate_1D()` for further reference on the axis options.
 
 # Plotting samples
 
@@ -155,15 +166,12 @@ to include only some regions of the spectra or plot only some samples.
 plot(dataset, NMRExperiment = c("10", "30"), chemshift_range = c(2.2, 2.8))
 ```
 
-See the "Plotting Samples" vignette for more advanced plot options, or
+See `vignette("Vig03-plotting-samples", package="AlpsNMR")` for more advanced plot options, or
 having interactive plots.
 
 # Exclude regions
 
-Some regions can easily be excluded from the spectra with `nmr_exclude_region`.
-Note that the regions are fully removed and not zeroed, as using zeros complicates
-a lot the implementation^[e.g. it can inadvertedly distort the PQN normalization results]
-and has little advantages.
+Some regions can easily be excluded from the spectra with `nmr_exclude_region()`:
 
 ```{r}
 regions_to_exclude <- list(water = c(4.6, 5), methanol = c(3.33, 3.39))
@@ -187,8 +195,6 @@ nmr_meta_get(samples_10_20, groups = "external")
 # Robust PCA for outlier detection
 
 The AlpsNMR package includes robust PCA analysis for outlier detection.
-With such a small demo dataset, it is not practical to use, but check out the
-documentation of `nmr_pca_outliers_*` functions.
 
 ```{r}
 pca_outliers_rob <- nmr_pca_outliers_robust(dataset, ncomp = 3)
@@ -199,8 +205,12 @@ nmr_pca_outliers_plot(dataset, pca_outliers_rob)
 # Baseline removal
 
 Spectra may display an unstable baseline, specially when processing
-blood/fecal samples. If so, `nmr_baseline_removal` subtract the 
-baseline by means of Asymmetric Least Squares method.
+blood/fecal samples. 
+
+The peak detection and integration algorithms benefit from having
+an estimation of the baseline, so it is advisable to compute it first
+and check it fits as expected.
+
 
 See before:
 
@@ -219,6 +229,7 @@ dataset <- nmr_baseline_estimation(dataset, lambda = 9, p = 0.01)
 And after:
 
 ```{r fig.height=10, fig.width=10}
+# TODO: Simplify this plot
 spectra_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8), columns = "NMRExperiment")
 baseline_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8), columns = "NMRExperiment", matrix_name = "data_1r_baseline")
 
@@ -236,7 +247,7 @@ The peak detection is performed on short spectra segments using a continuous
 wavelet transform. See `?nmr_detect_peaks` for more information.
 
 Our current approach relies on the use of the baseline threshold 
-(`baselineThresh`) automatic calculated (see `?nmr_baseline_threshold`) 
+(`baselineThresh`) automatically calculated (see `?nmr_baseline_threshold`) 
 and the Signal to Noise Threshold (`SNR.Th`) to discriminate valid peaks 
 from noise. 
 
@@ -248,16 +259,49 @@ level on each spectra region independently, so in practice it can be used as
 a dynamic baseline threshold level.
 
 ```{r}
-peak_table <- nmr_detect_peaks(
+baselineThresh <- nmr_baseline_threshold(dataset, range_without_peaks = c(9.5, 10))
+nmr_baseline_threshold_plot(dataset, baselineThresh)
+```
+
+
+```{r}
+peak_list <- nmr_detect_peaks(
     dataset,
     nDivRange_ppm = 0.1,
     scales = seq(1, 16, 2),
-    baselineThresh = NULL,
+    baselineThresh = baselineThresh,
     SNR.Th = 3
 )
-NMRExp_ref <- nmr_align_find_ref(dataset, peak_table)
-message("Your reference is NMRExperiment ", NMRExp_ref)
-nmr_detect_peaks_plot(dataset, peak_table, NMRExperiment = "20", chemshift_range = c(3.5,3.8))
+```
+
+We can get an overview of the number of peaks we detect on each sample and each chemical shift region:
+
+```{r}
+nmr_detect_peaks_plot_overview(peak_list)
+```
+
+
+We can explore in a more detailed way the detected peaks:
+
+```{r}
+nmr_detect_peaks_plot(dataset, peak_list, NMRExperiment = "10", chemshift_range = c(3, 3.3))
+```
+
+Let's the detected peaks in a smaller region across samples:
+
+```{r}
+peak_list_in_range <- filter(peak_list, ppm > 3.22, ppm < 3.24)
+peak_list_in_range
+```
+
+```{r}
+plot(dataset, chemshift_range = c(3.22, 3.25))
+```
+
+
+```{r dev="cairo_pdf"}
+nmr_detect_peaks_plot_peaks(dataset, peak_list, peak_ids = peak_list_in_range$peak_id)
+
 ```
 
 
@@ -268,14 +312,27 @@ clustering method (see `?nmr_align` for further details).
 
 The `maxShift_ppm` limits the maximum shift allowed for the spectra.
 
+
 ```{r}
-nmr_exp_ref <- nmr_align_find_ref(dataset, peak_table)
-dataset_align <- nmr_align(dataset, peak_table, nmr_exp_ref, maxShift_ppm = 0.0015, acceptLostPeak = FALSE)
+NMRExp_ref <- nmr_align_find_ref(dataset, peak_list)
+message("Your reference is NMRExperiment ", NMRExp_ref)
+```
+
+
+```{r}
+dataset_align <- nmr_align(dataset, peak_list, NMRExp_ref, maxShift_ppm = 0.0015, acceptLostPeak = FALSE)
 ```
 
 ```{r}
 plot(dataset, chemshift_range = c(3.025, 3.063))
 plot(dataset_align, chemshift_range = c(3.025, 3.063))
+```
+
+```{r}
+cowplot::plot_grid(
+    plot(dataset, chemshift_range = c(3.22, 3.25)) + theme(legend.position = "none"),
+    plot(dataset_align, chemshift_range = c(3.22, 3.25)) + theme(legend.position = "none")
+)
 ```
 
 
@@ -295,7 +352,7 @@ normalization information with `nmr_normalize_extra_info(dataset)`, to explore
 the normalization factors applied to each sample:
 
 The plot shows the dispersion with respect to the median of the normalization
-factors, and can highlight samples with abnormaly large or small normalization
+factors, and can highlight samples with abnormally large or small normalization
 factors.
 
 ```{r}
@@ -317,7 +374,7 @@ the `peak_table` (ppm values corresponding to detected peaks).
 ```{r}
 peak_table_integration = nmr_integrate_peak_positions(
   samples = dataset_norm,
-  peak_pos_ppm = peak_table$ppm,
+  peak_pos_ppm = peak_list$ppm[peak_list$NMRExperiment == NMRExp_ref],
   peak_width_ppm = 0.006)
 
 peak_table_integration = get_integration_with_metadata(peak_table_integration)
