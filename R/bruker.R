@@ -6,7 +6,7 @@
 # The NMR import core functions are based on MATLAB code written by Nils Nyberg
 # and the nmrglue python package.
 #
-# The nmrglue python package does seem to have a more comprenhensive set of
+# The nmrglue python package does seem to have a more comprehensive set of
 # import routines for NMR data (and in particular for Bruker data).
 # http://www.nmrglue.com/
 
@@ -608,6 +608,7 @@ read_bruker_pdata <- function(sample_path,
 #' \item{MLEV -> TOCSY (alias)}
 #' \item{HSQC -> HSQC}
 #' \item{HMBC -> HMBC}
+#' \item{PROTON -> PROTON}
 #' }
 #'
 #' The nuclei in the sample are set according to the pulse sequence and the
@@ -627,8 +628,8 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
     
     # The pulse sequence is not that obvious
     experiment_name <- acqus_list$acqus$EXP
-    NUCLEI <-
-        paste0("NUC", seq_len(8)) # NUC1... NUC8 help to tell us the nuclei present
+    # NUC1... NUC8 help to tell us the nuclei present
+    NUCLEI <- paste0("NUC", seq_len(8))
     
     if (grepl(pattern = "NOESY",
                         x = experiment_name,
@@ -656,7 +657,9 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
                                      ignore.case = TRUE)) {
         output$pulse_sequence <- "JRES"
         output$nuclei <- acqus_list$acqus[["NUC1"]]
-        
+    } else if (grepl(pattern = "PROTON", x = experiment_name, ignore.case = TRUE)) {
+        output$pulse_sequence <- "PROTON"
+        output$nuclei <- acqus_list$acqus[["NUC1"]]
     } else if (grepl(pattern = "COSY",
                                      x = experiment_name,
                                      ignore.case = TRUE)) {
