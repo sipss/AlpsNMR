@@ -57,14 +57,14 @@ nmr_meta_get <- function(samples,
         } else {
             show_cols <- 5
         }
-        warning(
-            "Missing columns: ",
-            paste(utils::head(cols_miss, n = show_cols), collapse = ", "),
-            " and ",
-            length(cols_miss) - show_cols,
-            " columns more."
+        err_msg <- c(
+            "Some missing colums in the dataset were requested:",
+            utils::head(cols_miss, n = show_cols)
         )
-        rm(cols_miss, show_cols)
+        if (length(cols_miss) - show_cols > 0) {
+            err_msg <- c(err_msg, glue("and {length(cols_miss) - show_cols} more columns"))
+        }
+        rlang::abort(message = err_msg)
     }
     
     columns <- columns[columns %in% colnames(metadata)]
