@@ -19,16 +19,13 @@
 
 \item{sample_idx}{numeric vector with the sample indices to include}
 
-\item{chemshift_range}{range of the chemical shifts to be included. Can be of length 3
-to include the resolution in the third element (e.g. \code{c(0.2, 0.8, 0.005)})}
-
 \item{columns}{A character vector with the metadata columns to get, by default gets all of them}
 
 \item{matrix_name}{A string with the matrix name, typically "data_1r"}
 
 \item{axis_name}{A string with the axis name, for now "axis" is the only valid option}
 
-\item{...}{arguments passed to \link[ggplot2:aes_]{ggplot2::aes_string}.}
+\item{...}{Ignored}
 }
 \value{
 A data frame with \code{NMRExperiment}, \code{chemshift}, \code{intensity} and any additional column requested
