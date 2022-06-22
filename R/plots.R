@@ -49,11 +49,28 @@ plot.nmr_dataset_1D <- function(x,
         NMRExperiment <- names(x)
     }
     sample_idx <- which(names(x) %in% NMRExperiment)
+    aes_str <- as.character(list(...))
+    if (length(aes_str) > 0) {
+        columns_to_request <- unique(
+            c(
+                "NMRExperiment",
+                purrr::flatten_chr(
+                    purrr::map(
+                        rlang::parse_exprs(aes_str),
+                        all.vars
+                    )
+                )
+            )
+        )
+    } else {
+        columns_to_request <- "NMRExperiment"
+    }
     
     longdf <- tidy(
         x,
         sample_idx = sample_idx,
-        chemshift_range = chemshift_range
+        chemshift_range = chemshift_range,
+        columns = columns_to_request
     )
     fixed_aes <- list(
         x = "chemshift",
