@@ -88,7 +88,7 @@
                         <h4 data-toc-skip class="author">AlpsNMR
 authors</h4>
             
-            <h4 data-toc-skip class="date">2022-06-21</h4>
+            <h4 data-toc-skip class="date">2022-06-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/vignettes/Vig01-introduction-to-alpsnmr.Rmd" class="external-link"><code>vignettes/Vig01-introduction-to-alpsnmr.Rmd</code></a></small>
       <div class="hidden name"><code>Vig01-introduction-to-alpsnmr.Rmd</code></div>
@@ -146,7 +146,7 @@ packages:</p>
 use of the <code>BiocParallel</code> package. Whether to parallelize or
 not is left to the user that can control the parallellization
 registering backends. Please check
-<code><a href="https://cran.rstudio.com/web/packages/BiocParallel/vignettes/Introduction_To_BiocParallel.pdf" class="external-link">vignette("Introduction_To_BiocParallel", package = "BiocParallel")</a></code>.</p>
+<code><a href="https://bioconductor.org/packages/release/bioc/vignettes/BiocParallel/inst/doc/Introduction_To_BiocParallel.pdf" class="external-link">vignette("Introduction_To_BiocParallel", package = "BiocParallel")</a></code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#register(SerialParam(), default = TRUE)  # disable parallellization</span>
 <span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SnowParam-class.html" class="external-link">SnowParam</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, default <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># enable parallellization with 3 workers</span></code></pre></div>
