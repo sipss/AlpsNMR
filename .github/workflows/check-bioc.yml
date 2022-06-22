@@ -232,6 +232,8 @@ jobs:
         if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
           remotes::install_cran("pkgdown")
+          # Install downlit branch. Until https://github.com/r-lib/downlit/pull/145 is merged & released
+          remotes::install_github("zeehio/downlit@feat-bioconductor-vignettes")
         shell: Rscript {0}
 
       - name: Session info
