@@ -74,11 +74,11 @@ in human plasma/serum samples.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_identify_regions_blood</span><span class="op">(</span>
-  <span class="va">ppm_to_assign</span>,
-  num_proposed_compounds <span class="op">=</span> <span class="fl">3</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nmr_identify_regions_blood</span><span class="op">(</span></span>
+<span>  <span class="va">ppm_to_assign</span>,</span>
+<span>  num_proposed_compounds <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -124,10 +124,10 @@ in human plasma/serum samples.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># We identify regions from from the corresponding ppm storaged in a vector.</span></span>
-<span class="r-in"><span class="va">ppm_to_assign</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.060960203</span>, <span class="fl">3.048970634</span>,<span class="fl">2.405935596</span>,</span>
-<span class="r-in"><span class="fl">3.24146865</span>,<span class="fl">0.990616851</span>,<span class="fl">1.002075066</span>,<span class="fl">0.955325548</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">identification</span> <span class="op">&lt;-</span> <span class="fu">nmr_identify_regions_blood</span> <span class="op">(</span><span class="va">ppm_to_assign</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># We identify regions from from the corresponding ppm storaged in a vector.</span></span></span>
+<span class="r-in"><span><span class="va">ppm_to_assign</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.060960203</span>, <span class="fl">3.048970634</span>,<span class="fl">2.405935596</span>,</span></span>
+<span class="r-in"><span><span class="fl">3.24146865</span>,<span class="fl">0.990616851</span>,<span class="fl">1.002075066</span>,<span class="fl">0.955325548</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">identification</span> <span class="op">&lt;-</span> <span class="fu">nmr_identify_regions_blood</span> <span class="op">(</span><span class="va">ppm_to_assign</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>

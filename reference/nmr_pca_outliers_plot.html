@@ -72,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_pca_outliers_plot</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">pca_outliers</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nmr_pca_outliers_plot</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">pca_outliers</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -112,13 +112,13 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">#dir_to_demo_dataset &lt;- system.file("dataset-demo", package = "AlpsNMR")</span></span>
-<span class="r-in"><span class="co">#dataset &lt;- nmr_read_samples_dir(dir_to_demo_dataset)</span></span>
-<span class="r-in"><span class="co">#dataset_1D &lt;- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))</span></span>
-<span class="r-in"><span class="co">#model &lt;- nmr_pca_build_model(dataset_1D)</span></span>
-<span class="r-in"><span class="co">#outliers_info &lt;- nmr_pca_outliers(dataset_1D, model)</span></span>
-<span class="r-in"><span class="co">#nmr_pca_outliers_plot(dataset_1D, outliers_info)</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#dir_to_demo_dataset &lt;- system.file("dataset-demo", package = "AlpsNMR")</span></span></span>
+<span class="r-in"><span><span class="co">#dataset &lt;- nmr_read_samples_dir(dir_to_demo_dataset)</span></span></span>
+<span class="r-in"><span><span class="co">#dataset_1D &lt;- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))</span></span></span>
+<span class="r-in"><span><span class="co">#model &lt;- nmr_pca_build_model(dataset_1D)</span></span></span>
+<span class="r-in"><span><span class="co">#outliers_info &lt;- nmr_pca_outliers(dataset_1D, model)</span></span></span>
+<span class="r-in"><span><span class="co">#nmr_pca_outliers_plot(dataset_1D, outliers_info)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

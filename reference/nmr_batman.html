@@ -72,34 +72,34 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_batman_write_options</span><span class="op">(</span>
-  <span class="va">bopts</span>,
-  batman_dir <span class="op">=</span> <span class="st">"BatmanInput"</span>,
-  filename <span class="op">=</span> <span class="st">"batmanOptions.txt"</span>
-<span class="op">)</span>
-
-<span class="fu">nmr_batman_export_dataset</span><span class="op">(</span>
-  <span class="va">nmr_dataset</span>,
-  batman_dir <span class="op">=</span> <span class="st">"BatmanInput"</span>,
-  filename <span class="op">=</span> <span class="st">"NMRdata.txt"</span>
-<span class="op">)</span>
-
-<span class="fu">nmr_batman_multi_data_user_hmdb</span><span class="op">(</span>
-  batman_dir <span class="op">=</span> <span class="st">"BatmanInput"</span>,
-  filename <span class="op">=</span> <span class="st">"multi_data_user.csv"</span>
-<span class="op">)</span>
-
-<span class="fu">nmr_batman_multi_data_user</span><span class="op">(</span>
-  <span class="va">multiplet_table</span>,
-  batman_dir <span class="op">=</span> <span class="st">"BatmanInput"</span>,
-  filename <span class="op">=</span> <span class="st">"multi_data_user.csv"</span>
-<span class="op">)</span>
-
-<span class="fu">nmr_batman_metabolites_list</span><span class="op">(</span>
-  <span class="va">metabolite_names</span>,
-  batman_dir <span class="op">=</span> <span class="st">"BatmanInput"</span>,
-  filename <span class="op">=</span> <span class="st">"metabolitesList.csv"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nmr_batman_write_options</span><span class="op">(</span></span>
+<span>  <span class="va">bopts</span>,</span>
+<span>  batman_dir <span class="op">=</span> <span class="st">"BatmanInput"</span>,</span>
+<span>  filename <span class="op">=</span> <span class="st">"batmanOptions.txt"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">nmr_batman_export_dataset</span><span class="op">(</span></span>
+<span>  <span class="va">nmr_dataset</span>,</span>
+<span>  batman_dir <span class="op">=</span> <span class="st">"BatmanInput"</span>,</span>
+<span>  filename <span class="op">=</span> <span class="st">"NMRdata.txt"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">nmr_batman_multi_data_user_hmdb</span><span class="op">(</span></span>
+<span>  batman_dir <span class="op">=</span> <span class="st">"BatmanInput"</span>,</span>
+<span>  filename <span class="op">=</span> <span class="st">"multi_data_user.csv"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">nmr_batman_multi_data_user</span><span class="op">(</span></span>
+<span>  <span class="va">multiplet_table</span>,</span>
+<span>  batman_dir <span class="op">=</span> <span class="st">"BatmanInput"</span>,</span>
+<span>  filename <span class="op">=</span> <span class="st">"multi_data_user.csv"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">nmr_batman_metabolites_list</span><span class="op">(</span></span>
+<span>  <span class="va">metabolite_names</span>,</span>
+<span>  batman_dir <span class="op">=</span> <span class="st">"BatmanInput"</span>,</span>
+<span>  filename <span class="op">=</span> <span class="st">"metabolitesList.csv"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -142,24 +142,24 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">bopts</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_batman_options.html">nmr_batman_options</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># nmr_batman_write_options(bopts)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">dir_to_demo_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples_dir</a></span><span class="op">(</span><span class="va">dir_to_demo_dataset</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>, max <span class="op">=</span> <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">2.3E-4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="co">#nmr_batman_export_dataset(dataset_1D)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Use of multi_data_user_hmdb"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bopts</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_batman_options.html">nmr_batman_options</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># nmr_batman_write_options(bopts)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dir_to_demo_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples_dir</a></span><span class="op">(</span><span class="va">dir_to_demo_dataset</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>, max <span class="op">=</span> <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">2.3E-4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#nmr_batman_export_dataset(dataset_1D)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Use of multi_data_user_hmdb"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Use of multi_data_user_hmdb</span>
-<span class="r-in"><span class="co">#multi_data_user_hmdb &lt;- nmr_batman_multi_data_user_hmdb()</span></span>
-<span class="r-in"><span class="va">hmdb</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
-<span class="r-in"><span class="co">#utils::data("hmdb", package = "AlpsNMR", envir = environment())</span></span>
-<span class="r-in"><span class="co">#hmdb &lt;- nmr_batman_multi_data_user(hmbd)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">metabolite_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alanine"</span>, <span class="st">"glucose"</span><span class="op">)</span></span>
-<span class="r-in"><span class="co">#metabolite_names &lt;- nmr_batman_metabolites_list(metabolite_names)</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="co">#multi_data_user_hmdb &lt;- nmr_batman_multi_data_user_hmdb()</span></span></span>
+<span class="r-in"><span><span class="va">hmdb</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span><span class="co">#utils::data("hmdb", package = "AlpsNMR", envir = environment())</span></span></span>
+<span class="r-in"><span><span class="co">#hmdb &lt;- nmr_batman_multi_data_user(hmbd)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">metabolite_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alanine"</span>, <span class="st">"glucose"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#metabolite_names &lt;- nmr_batman_metabolites_list(metabolite_names)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

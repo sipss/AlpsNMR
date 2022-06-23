@@ -74,13 +74,13 @@ difference of data points.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span>
-
-<span class="co"># S3 method for nmr_dataset</span>
-<span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span>
-
-<span class="co"># S3 method for nmr_dataset_1D</span>
-<span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for nmr_dataset</span></span>
+<span><span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for nmr_dataset_1D</span></span>
+<span><span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -113,22 +113,22 @@ difference of data points.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_and_save_functions.html">nmr_dataset_load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"nmr_dataset.rds"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_and_save_functions.html">nmr_dataset_load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"nmr_dataset.rds"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.02</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"the ppm resolution of this dataset is "</span>, <span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span>, <span class="st">" ppm"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"the ppm resolution of this dataset is "</span>, <span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span>, <span class="st">" ppm"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> the ppm resolution of this dataset is 0.02 ppm</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_and_save_functions.html">nmr_dataset_load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"nmr_dataset.rds"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_and_save_functions.html">nmr_dataset_load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"nmr_dataset.rds"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.02</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"the ppm resolution of this dataset is "</span>, <span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span>, <span class="st">" ppm"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"the ppm resolution of this dataset is "</span>, <span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span>, <span class="st">" ppm"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> the ppm resolution of this dataset is 0.02 ppm</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_and_save_functions.html">nmr_dataset_load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"nmr_dataset.rds"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_and_save_functions.html">nmr_dataset_load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"nmr_dataset.rds"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.02</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"the ppm resolution of this dataset is "</span>, <span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span>, <span class="st">" ppm"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"the ppm resolution of this dataset is "</span>, <span class="fu">nmr_ppm_resolution</span><span class="op">(</span><span class="va">nmr_dataset</span><span class="op">)</span>, <span class="st">" ppm"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> the ppm resolution of this dataset is 0.02 ppm</span>
 </code></pre></div>
     </div>

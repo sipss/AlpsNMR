@@ -74,9 +74,9 @@ plotting spectra or further analysis (PCA...).</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_meta_add</span><span class="op">(</span><span class="va">nmr_data</span>, <span class="va">metadata</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span>
-
-<span class="fu">nmr_meta_add_tidy_excel</span><span class="op">(</span><span class="va">nmr_data</span>, <span class="va">excel_file</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nmr_meta_add</span><span class="op">(</span><span class="va">nmr_data</span>, <span class="va">metadata</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">nmr_meta_add_tidy_excel</span><span class="op">(</span><span class="va">nmr_data</span>, <span class="va">excel_file</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -147,76 +147,76 @@ example.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Load a demo dataset with four samples:</span></span>
-<span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples_dir</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># At first we just have the NMRExperiment column</span></span>
-<span class="r-in"><span class="fu"><a href="nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">nmr_dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Load a demo dataset with four samples:</span></span></span>
+<span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples_dir</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># At first we just have the NMRExperiment column</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">nmr_dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   NMRExperiment</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 10           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 20           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 30           </span>
-<span class="r-in"><span class="co"># Get a table with NMRExperiment -&gt; SubjectID</span></span>
-<span class="r-in"><span class="va">dummy_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, <span class="st">"dummy_metadata.xlsx"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">NMRExp_SubjID</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">dummy_metadata</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">NMRExp_SubjID</span></span>
+<span class="r-in"><span><span class="co"># Get a table with NMRExperiment -&gt; SubjectID</span></span></span>
+<span class="r-in"><span><span class="va">dummy_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, <span class="st">"dummy_metadata.xlsx"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">NMRExp_SubjID</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">dummy_metadata</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">NMRExp_SubjID</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   NMRExperiment SubjectID TimePoint</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 30            Elia      baseline </span>
-<span class="r-in"><span class="co"># We can link the SubjectID column of the first excel into the dataset</span></span>
-<span class="r-in"><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu">nmr_meta_add</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">NMRExp_SubjID</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">nmr_dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># We can link the SubjectID column of the first excel into the dataset</span></span></span>
+<span class="r-in"><span><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu">nmr_meta_add</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">NMRExp_SubjID</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">nmr_dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   NMRExperiment SubjectID TimePoint</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 30            Elia      baseline </span>
-<span class="r-in"><span class="co"># The second excel can use the SubjectID:</span></span>
-<span class="r-in"><span class="va">SubjID_Age</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">dummy_metadata</span>, sheet <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">SubjID_Age</span></span>
+<span class="r-in"><span><span class="co"># The second excel can use the SubjectID:</span></span></span>
+<span class="r-in"><span><span class="va">SubjID_Age</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">dummy_metadata</span>, sheet <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">SubjID_Age</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   SubjectID   Age</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Ana          29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Elia          0</span>
-<span class="r-in"><span class="co"># Add the metadata by its SubjectID:</span></span>
-<span class="r-in"><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu">nmr_meta_add</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">SubjID_Age</span>, by <span class="op">=</span> <span class="st">"SubjectID"</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># The final loaded metadata:</span></span>
-<span class="r-in"><span class="fu"><a href="nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">nmr_dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># Add the metadata by its SubjectID:</span></span></span>
+<span class="r-in"><span><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu">nmr_meta_add</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">SubjID_Age</span>, by <span class="op">=</span> <span class="st">"SubjectID"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># The final loaded metadata:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">nmr_dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   NMRExperiment SubjectID TimePoint   Age</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 10            Ana       baseline     29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 20            Ana       3 months     29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 30            Elia      baseline      0</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Read a tidy excel file:</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples_dir</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># At first we just have the NMRExperiment column</span></span>
-<span class="r-in"><span class="fu"><a href="nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">nmr_dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Read a tidy excel file:</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nmr_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples_dir</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># At first we just have the NMRExperiment column</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">nmr_dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   NMRExperiment</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 10           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 20           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 30           </span>
-<span class="r-in"><span class="co"># Get a table with NMRExperiment -&gt; SubjectID</span></span>
-<span class="r-in"><span class="va">dummy_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, <span class="st">"dummy_metadata.xlsx"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">nmr_dataset</span> <span class="op">&lt;-</span><span class="fu">nmr_meta_add_tidy_excel</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">dummy_metadata</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># Updated Metadata:</span></span>
-<span class="r-in"><span class="fu"><a href="nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">nmr_dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># Get a table with NMRExperiment -&gt; SubjectID</span></span></span>
+<span class="r-in"><span><span class="va">dummy_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, <span class="st">"dummy_metadata.xlsx"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">nmr_dataset</span> <span class="op">&lt;-</span><span class="fu">nmr_meta_add_tidy_excel</span><span class="op">(</span><span class="va">nmr_dataset</span>, <span class="va">dummy_metadata</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Updated Metadata:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">nmr_dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   NMRExperiment SubjectID TimePoint   Age</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>

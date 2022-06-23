@@ -74,16 +74,16 @@ long and therefore use a lot of RAM.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for nmr_dataset_1D</span>
-<span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span>
-  <span class="va">x</span>,
-  NMRExperiment <span class="op">=</span> <span class="cn">NULL</span>,
-  chemshift_range <span class="op">=</span> <span class="cn">NULL</span>,
-  columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span>,
-  matrix_name <span class="op">=</span> <span class="st">"data_1r"</span>,
-  axis_name <span class="op">=</span> <span class="st">"axis"</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for nmr_dataset_1D</span></span>
+<span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  NMRExperiment <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  chemshift_range <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span>,</span>
+<span>  matrix_name <span class="op">=</span> <span class="st">"data_1r"</span>,</span>
+<span>  axis_name <span class="op">=</span> <span class="st">"axis"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -126,14 +126,14 @@ to include the resolution in the third element (e.g. <code>c(0.2, 0.8, 0.005)</c
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">dir_to_demo_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples_dir</a></span><span class="op">(</span><span class="va">dir_to_demo_dataset</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">1.0</span>, max <span class="op">=</span> <span class="fl">1.6</span>, by <span class="op">=</span> <span class="fl">2.3E-4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dummy_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, <span class="st">"dummy_metadata.xlsx"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">NMRExp_SubjID</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">dummy_metadata</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset_1D</span>, <span class="va">NMRExp_SubjID</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">df_for_ggplot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">dataset_1D</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.2</span>, <span class="fl">1.4</span><span class="op">)</span>, columns <span class="op">=</span> <span class="st">"SubjectID"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_for_ggplot</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dir_to_demo_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples_dir</a></span><span class="op">(</span><span class="va">dir_to_demo_dataset</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>min <span class="op">=</span> <span class="op">-</span><span class="fl">1.0</span>, max <span class="op">=</span> <span class="fl">1.6</span>, by <span class="op">=</span> <span class="fl">2.3E-4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dummy_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, <span class="st">"dummy_metadata.xlsx"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">NMRExp_SubjID</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">dummy_metadata</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset_1D</span>, <span class="va">NMRExp_SubjID</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">df_for_ggplot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">dataset_1D</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.2</span>, <span class="fl">1.4</span><span class="op">)</span>, columns <span class="op">=</span> <span class="st">"SubjectID"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_for_ggplot</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   NMRExperiment chemshift intensity SubjectID</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1            10   1.20018  95475.63       Ana</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2            20   1.20018 126803.78       Ana</span>

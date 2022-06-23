@@ -112,20 +112,20 @@ authors</h4>
 <p>We start by loading <code>AlpsNMR</code> and some convenience
 libraries:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org" class="external-link">readxl</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sipss.github.io/AlpsNMR/" class="external-link">AlpsNMR</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org" class="external-link">readxl</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sipss.github.io/AlpsNMR/" class="external-link">AlpsNMR</a></span><span class="op">)</span></span></code></pre></div>
 <p>We also load the demo samples, see the introduction vignette for
 further details:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">MeOH_plasma_extraction_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span>
-<span class="va">zip_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/glob2rx.html" class="external-link">glob2rx</a></span><span class="op">(</span><span class="st">"*.zip"</span><span class="op">)</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_read_samples.html">nmr_read_samples</a></span><span class="op">(</span>sample_names <span class="op">=</span> <span class="va">zip_files</span><span class="op">)</span>
-<span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="va">dataset</span></code></pre></div>
-<pre><code><span class="co">## An nmr_dataset_1D (3 samples)</span></code></pre>
+<code class="sourceCode R"><span><span class="va">MeOH_plasma_extraction_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span>
+<span><span class="va">zip_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/glob2rx.html" class="external-link">glob2rx</a></span><span class="op">(</span><span class="st">"*.zip"</span><span class="op">)</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_read_samples.html">nmr_read_samples</a></span><span class="op">(</span>sample_names <span class="op">=</span> <span class="va">zip_files</span><span class="op">)</span></span>
+<span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_interpolate_1D.html">nmr_interpolate_1D</a></span><span class="op">(</span><span class="va">dataset</span>, axis <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="va">dataset</span></span></code></pre></div>
+<pre><code><span><span class="co">## An nmr_dataset_1D (3 samples)</span></span></code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.4</span>, <span class="fl">3.6</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.4</span>, <span class="fl">3.6</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vig02-handling-metadata-and-annotations_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -140,137 +140,137 @@ inspect it. Since there may be a lot of information, the data is stored
 in several data frames.</p>
 <p>The available data frames are:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/nmr_meta_groups.html">nmr_meta_groups</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] "info"     "orig"     "title"    "acqus"    "procs"    "levels"   "external"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_meta_groups.html">nmr_meta_groups</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "info"     "orig"     "title"    "acqus"    "procs"    "levels"   "external"</span></span></code></pre>
 <p>We can further explore each of those groups.</p>
 <p>For instance, for the <code>acqus</code> group we find 239
 columns:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">acqus_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"acqus"</span><span class="op">)</span>
-<span class="va">acqus_metadata</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 239</span></span>
-<span class="co">##   NMRExperiment acqus_TITLE           acqus_JCAMPDX acqus_DATATYPE acqus_NPOINTS</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 10            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>13\t$$ modi…</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 20            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>15\t$$ modi…</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 30            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>13\t$$ modi…</span>
-<span class="co">## <span style="color: #949494;"># … with 234 more variables: acqus_ORIGIN &lt;chr&gt;, acqus_OWNER &lt;chr&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   acqus_Stamp &lt;list&gt;, acqus_ACQT0 &lt;dbl&gt;, acqus_AMP &lt;list&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   acqus_AMPCOIL &lt;list&gt;, acqus_ANAVPT &lt;dbl&gt;, acqus_AQSEQ &lt;dbl&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   acqus_AQ_mod &lt;dbl&gt;, acqus_AUNM &lt;chr&gt;, acqus_AUTOPOS &lt;chr&gt;, acqus_BF1 &lt;dbl&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   acqus_BF2 &lt;dbl&gt;, acqus_BF3 &lt;dbl&gt;, acqus_BF4 &lt;dbl&gt;, acqus_BF5 &lt;dbl&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   acqus_BF6 &lt;dbl&gt;, acqus_BF7 &lt;dbl&gt;, acqus_BF8 &lt;dbl&gt;, acqus_BWFAC &lt;list&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   acqus_BYTORDA &lt;dbl&gt;, acqus_CAGPARS &lt;list&gt;, acqus_CHEMSTR &lt;chr&gt;, …</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">acqus_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"acqus"</span><span class="op">)</span></span>
+<span><span class="va">acqus_metadata</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 239</span></span></span>
+<span><span class="co">##   NMRExperiment acqus_TITLE           acqus_JCAMPDX acqus_DATATYPE acqus_NPOINTS</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 10            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>13\t$$ modi…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>15\t$$ modi…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>13\t$$ modi…</span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 234 more variables: acqus_ORIGIN &lt;chr&gt;, acqus_OWNER &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   acqus_Stamp &lt;list&gt;, acqus_ACQT0 &lt;dbl&gt;, acqus_AMP &lt;list&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   acqus_AMPCOIL &lt;list&gt;, acqus_ANAVPT &lt;dbl&gt;, acqus_AQSEQ &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   acqus_AQ_mod &lt;dbl&gt;, acqus_AUNM &lt;chr&gt;, acqus_AUTOPOS &lt;chr&gt;, acqus_BF1 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   acqus_BF2 &lt;dbl&gt;, acqus_BF3 &lt;dbl&gt;, acqus_BF4 &lt;dbl&gt;, acqus_BF5 &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   acqus_BF6 &lt;dbl&gt;, acqus_BF7 &lt;dbl&gt;, acqus_BF8 &lt;dbl&gt;, acqus_BWFAC &lt;list&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   acqus_BYTORDA &lt;dbl&gt;, acqus_CAGPARS &lt;list&gt;, acqus_CHEMSTR &lt;chr&gt;, …</span></span></span></code></pre>
 <p>Here follows a long list of all the columns available:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">acqus_metadata</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##   [1] "NMRExperiment"      "acqus_TITLE"        "acqus_JCAMPDX"     </span>
-<span class="co">##   [4] "acqus_DATATYPE"     "acqus_NPOINTS"      "acqus_ORIGIN"      </span>
-<span class="co">##   [7] "acqus_OWNER"        "acqus_Stamp"        "acqus_ACQT0"       </span>
-<span class="co">##  [10] "acqus_AMP"          "acqus_AMPCOIL"      "acqus_ANAVPT"      </span>
-<span class="co">##  [13] "acqus_AQSEQ"        "acqus_AQ_mod"       "acqus_AUNM"        </span>
-<span class="co">##  [16] "acqus_AUTOPOS"      "acqus_BF1"          "acqus_BF2"         </span>
-<span class="co">##  [19] "acqus_BF3"          "acqus_BF4"          "acqus_BF5"         </span>
-<span class="co">##  [22] "acqus_BF6"          "acqus_BF7"          "acqus_BF8"         </span>
-<span class="co">##  [25] "acqus_BWFAC"        "acqus_BYTORDA"      "acqus_CAGPARS"     </span>
-<span class="co">##  [28] "acqus_CHEMSTR"      "acqus_CNST"         "acqus_CPDPRG"      </span>
-<span class="co">##  [31] "acqus_D"            "acqus_DATE"         "acqus_DE"          </span>
-<span class="co">##  [34] "acqus_DECBNUC"      "acqus_DECIM"        "acqus_DECNUC"      </span>
-<span class="co">##  [37] "acqus_DECSTAT"      "acqus_DIGMOD"       "acqus_DIGTYP"      </span>
-<span class="co">##  [40] "acqus_DQDMODE"      "acqus_DR"           "acqus_DS"          </span>
-<span class="co">##  [43] "acqus_DSPFIRM"      "acqus_DSPFVS"       "acqus_DTYPA"       </span>
-<span class="co">##  [46] "acqus_EXP"          "acqus_FCUCHAN"      "acqus_FL1"         </span>
-<span class="co">##  [49] "acqus_FL2"          "acqus_FL3"          "acqus_FL4"         </span>
-<span class="co">##  [52] "acqus_FN_INDIRECT"  "acqus_FOV"          "acqus_FQ1LIST"     </span>
-<span class="co">##  [55] "acqus_FQ2LIST"      "acqus_FQ3LIST"      "acqus_FQ4LIST"     </span>
-<span class="co">##  [58] "acqus_FQ5LIST"      "acqus_FQ6LIST"      "acqus_FQ7LIST"     </span>
-<span class="co">##  [61] "acqus_FQ8LIST"      "acqus_FRQLO3"       "acqus_FRQLO3N"     </span>
-<span class="co">##  [64] "acqus_FS"           "acqus_FTLPGN"       "acqus_FW"          </span>
-<span class="co">##  [67] "acqus_FnILOOP"      "acqus_FnMODE"       "acqus_FnTYPE"      </span>
-<span class="co">##  [70] "acqus_GPNAM"        "acqus_GPX"          "acqus_GPY"         </span>
-<span class="co">##  [73] "acqus_GPZ"          "acqus_GRDPROG"      "acqus_GRPDLY"      </span>
-<span class="co">##  [76] "acqus_HDDUTY"       "acqus_HDRATE"       "acqus_HGAIN"       </span>
-<span class="co">##  [79] "acqus_HL1"          "acqus_HL2"          "acqus_HL3"         </span>
-<span class="co">##  [82] "acqus_HL4"          "acqus_HOLDER"       "acqus_HPMOD"       </span>
-<span class="co">##  [85] "acqus_HPPRGN"       "acqus_IN"           "acqus_INF"         </span>
-<span class="co">##  [88] "acqus_INP"          "acqus_INSTRUM"      "acqus_INTEGFAC"    </span>
-<span class="co">##  [91] "acqus_L"            "acqus_LFILTER"      "acqus_LGAIN"       </span>
-<span class="co">##  [94] "acqus_LINPSTP"      "acqus_LOCKED"       "acqus_LOCKFLD"     </span>
-<span class="co">##  [97] "acqus_LOCKGN"       "acqus_LOCKPOW"      "acqus_LOCKPPM"     </span>
-<span class="co">## [100] "acqus_LOCNUC"       "acqus_LOCPHAS"      "acqus_LOCSHFT"     </span>
-<span class="co">## [103] "acqus_LOCSW"        "acqus_LTIME"        "acqus_MASR"        </span>
-<span class="co">## [106] "acqus_MASRLST"      "acqus_MULEXPNO"     "acqus_NBL"         </span>
-<span class="co">## [109] "acqus_NC"           "acqus_NLOGCH"       "acqus_NOVFLW"      </span>
-<span class="co">## [112] "acqus_NS"           "acqus_NUC1"         "acqus_NUC2"        </span>
-<span class="co">## [115] "acqus_NUC3"         "acqus_NUC4"         "acqus_NUC5"        </span>
-<span class="co">## [118] "acqus_NUC6"         "acqus_NUC7"         "acqus_NUC8"        </span>
-<span class="co">## [121] "acqus_NUCLEUS"      "acqus_NUSLIST"      "acqus_NusAMOUNT"   </span>
-<span class="co">## [124] "acqus_NusFPNZ"      "acqus_NusJSP"       "acqus_NusSEED"     </span>
-<span class="co">## [127] "acqus_NusSPTYPE"    "acqus_NusT2"        "acqus_NusTD"       </span>
-<span class="co">## [130] "acqus_O1"           "acqus_O2"           "acqus_O3"          </span>
-<span class="co">## [133] "acqus_O4"           "acqus_O5"           "acqus_O6"          </span>
-<span class="co">## [136] "acqus_O7"           "acqus_O8"           "acqus_OVERFLW"     </span>
-<span class="co">## [139] "acqus_P"            "acqus_PACOIL"       "acqus_PAPS"        </span>
-<span class="co">## [142] "acqus_PARMODE"      "acqus_PCPD"         "acqus_PEXSEL"      </span>
-<span class="co">## [145] "acqus_PHCOR"        "acqus_PHLIST"       "acqus_PHP"         </span>
-<span class="co">## [148] "acqus_PH_ref"       "acqus_PL"           "acqus_PLSTEP"      </span>
-<span class="co">## [151] "acqus_PLSTRT"       "acqus_PLW"          "acqus_PLWMAX"      </span>
-<span class="co">## [154] "acqus_PQPHASE"      "acqus_PQSCALE"      "acqus_PR"          </span>
-<span class="co">## [157] "acqus_PRECHAN"      "acqus_PRGAIN"       "acqus_PROBHD"      </span>
-<span class="co">## [160] "acqus_PULPROG"      "acqus_PW"           "acqus_PYNM"        </span>
-<span class="co">## [163] "acqus_ProjAngle"    "acqus_QNP"          "acqus_RD"          </span>
-<span class="co">## [166] "acqus_RECCHAN"      "acqus_RECPH"        "acqus_RECPRE"      </span>
-<span class="co">## [169] "acqus_RECPRFX"      "acqus_RECSEL"       "acqus_RG"          </span>
-<span class="co">## [172] "acqus_RO"           "acqus_RSEL"         "acqus_S"           </span>
-<span class="co">## [175] "acqus_SELREC"       "acqus_SFO1"         "acqus_SFO2"        </span>
-<span class="co">## [178] "acqus_SFO3"         "acqus_SFO4"         "acqus_SFO5"        </span>
-<span class="co">## [181] "acqus_SFO6"         "acqus_SFO7"         "acqus_SFO8"        </span>
-<span class="co">## [184] "acqus_SOLVENT"      "acqus_SOLVOLD"      "acqus_SP"          </span>
-<span class="co">## [187] "acqus_SPECTR"       "acqus_SPINCNT"      "acqus_SPNAM"       </span>
-<span class="co">## [190] "acqus_SPOAL"        "acqus_SPOFFS"       "acqus_SPPEX"       </span>
-<span class="co">## [193] "acqus_SPW"          "acqus_SUBNAM"       "acqus_SW"          </span>
-<span class="co">## [196] "acqus_SWIBOX"       "acqus_SW_h"         "acqus_SWfinal"     </span>
-<span class="co">## [199] "acqus_SigLockShift" "acqus_TD"           "acqus_TD0"         </span>
-<span class="co">## [202] "acqus_TD_INDIRECT"  "acqus_TDav"         "acqus_TE"          </span>
-<span class="co">## [205] "acqus_TE1"          "acqus_TE2"          "acqus_TE3"         </span>
-<span class="co">## [208] "acqus_TE4"          "acqus_TEG"          "acqus_TE_MAGNET"   </span>
-<span class="co">## [211] "acqus_TE_PIDX"      "acqus_TE_STAB"      "acqus_TL"          </span>
-<span class="co">## [214] "acqus_TOTROT"       "acqus_TUBE_TYPE"    "acqus_USERA1"      </span>
-<span class="co">## [217] "acqus_USERA2"       "acqus_USERA3"       "acqus_USERA4"      </span>
-<span class="co">## [220] "acqus_USERA5"       "acqus_V9"           "acqus_VALIDCODE"   </span>
-<span class="co">## [223] "acqus_VALIST"       "acqus_VCLIST"       "acqus_VDLIST"      </span>
-<span class="co">## [226] "acqus_VPLIST"       "acqus_VTLIST"       "acqus_WBST"        </span>
-<span class="co">## [229] "acqus_WBSW"         "acqus_XGAIN"        "acqus_XL"          </span>
-<span class="co">## [232] "acqus_YL"           "acqus_YMAX_a"       "acqus_YMIN_a"      </span>
-<span class="co">## [235] "acqus_ZGOPTNS"      "acqus_ZL1"          "acqus_ZL2"         </span>
-<span class="co">## [238] "acqus_ZL3"          "acqus_ZL4"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">acqus_metadata</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   [1] "NMRExperiment"      "acqus_TITLE"        "acqus_JCAMPDX"     </span></span>
+<span><span class="co">##   [4] "acqus_DATATYPE"     "acqus_NPOINTS"      "acqus_ORIGIN"      </span></span>
+<span><span class="co">##   [7] "acqus_OWNER"        "acqus_Stamp"        "acqus_ACQT0"       </span></span>
+<span><span class="co">##  [10] "acqus_AMP"          "acqus_AMPCOIL"      "acqus_ANAVPT"      </span></span>
+<span><span class="co">##  [13] "acqus_AQSEQ"        "acqus_AQ_mod"       "acqus_AUNM"        </span></span>
+<span><span class="co">##  [16] "acqus_AUTOPOS"      "acqus_BF1"          "acqus_BF2"         </span></span>
+<span><span class="co">##  [19] "acqus_BF3"          "acqus_BF4"          "acqus_BF5"         </span></span>
+<span><span class="co">##  [22] "acqus_BF6"          "acqus_BF7"          "acqus_BF8"         </span></span>
+<span><span class="co">##  [25] "acqus_BWFAC"        "acqus_BYTORDA"      "acqus_CAGPARS"     </span></span>
+<span><span class="co">##  [28] "acqus_CHEMSTR"      "acqus_CNST"         "acqus_CPDPRG"      </span></span>
+<span><span class="co">##  [31] "acqus_D"            "acqus_DATE"         "acqus_DE"          </span></span>
+<span><span class="co">##  [34] "acqus_DECBNUC"      "acqus_DECIM"        "acqus_DECNUC"      </span></span>
+<span><span class="co">##  [37] "acqus_DECSTAT"      "acqus_DIGMOD"       "acqus_DIGTYP"      </span></span>
+<span><span class="co">##  [40] "acqus_DQDMODE"      "acqus_DR"           "acqus_DS"          </span></span>
+<span><span class="co">##  [43] "acqus_DSPFIRM"      "acqus_DSPFVS"       "acqus_DTYPA"       </span></span>
+<span><span class="co">##  [46] "acqus_EXP"          "acqus_FCUCHAN"      "acqus_FL1"         </span></span>
+<span><span class="co">##  [49] "acqus_FL2"          "acqus_FL3"          "acqus_FL4"         </span></span>
+<span><span class="co">##  [52] "acqus_FN_INDIRECT"  "acqus_FOV"          "acqus_FQ1LIST"     </span></span>
+<span><span class="co">##  [55] "acqus_FQ2LIST"      "acqus_FQ3LIST"      "acqus_FQ4LIST"     </span></span>
+<span><span class="co">##  [58] "acqus_FQ5LIST"      "acqus_FQ6LIST"      "acqus_FQ7LIST"     </span></span>
+<span><span class="co">##  [61] "acqus_FQ8LIST"      "acqus_FRQLO3"       "acqus_FRQLO3N"     </span></span>
+<span><span class="co">##  [64] "acqus_FS"           "acqus_FTLPGN"       "acqus_FW"          </span></span>
+<span><span class="co">##  [67] "acqus_FnILOOP"      "acqus_FnMODE"       "acqus_FnTYPE"      </span></span>
+<span><span class="co">##  [70] "acqus_GPNAM"        "acqus_GPX"          "acqus_GPY"         </span></span>
+<span><span class="co">##  [73] "acqus_GPZ"          "acqus_GRDPROG"      "acqus_GRPDLY"      </span></span>
+<span><span class="co">##  [76] "acqus_HDDUTY"       "acqus_HDRATE"       "acqus_HGAIN"       </span></span>
+<span><span class="co">##  [79] "acqus_HL1"          "acqus_HL2"          "acqus_HL3"         </span></span>
+<span><span class="co">##  [82] "acqus_HL4"          "acqus_HOLDER"       "acqus_HPMOD"       </span></span>
+<span><span class="co">##  [85] "acqus_HPPRGN"       "acqus_IN"           "acqus_INF"         </span></span>
+<span><span class="co">##  [88] "acqus_INP"          "acqus_INSTRUM"      "acqus_INTEGFAC"    </span></span>
+<span><span class="co">##  [91] "acqus_L"            "acqus_LFILTER"      "acqus_LGAIN"       </span></span>
+<span><span class="co">##  [94] "acqus_LINPSTP"      "acqus_LOCKED"       "acqus_LOCKFLD"     </span></span>
+<span><span class="co">##  [97] "acqus_LOCKGN"       "acqus_LOCKPOW"      "acqus_LOCKPPM"     </span></span>
+<span><span class="co">## [100] "acqus_LOCNUC"       "acqus_LOCPHAS"      "acqus_LOCSHFT"     </span></span>
+<span><span class="co">## [103] "acqus_LOCSW"        "acqus_LTIME"        "acqus_MASR"        </span></span>
+<span><span class="co">## [106] "acqus_MASRLST"      "acqus_MULEXPNO"     "acqus_NBL"         </span></span>
+<span><span class="co">## [109] "acqus_NC"           "acqus_NLOGCH"       "acqus_NOVFLW"      </span></span>
+<span><span class="co">## [112] "acqus_NS"           "acqus_NUC1"         "acqus_NUC2"        </span></span>
+<span><span class="co">## [115] "acqus_NUC3"         "acqus_NUC4"         "acqus_NUC5"        </span></span>
+<span><span class="co">## [118] "acqus_NUC6"         "acqus_NUC7"         "acqus_NUC8"        </span></span>
+<span><span class="co">## [121] "acqus_NUCLEUS"      "acqus_NUSLIST"      "acqus_NusAMOUNT"   </span></span>
+<span><span class="co">## [124] "acqus_NusFPNZ"      "acqus_NusJSP"       "acqus_NusSEED"     </span></span>
+<span><span class="co">## [127] "acqus_NusSPTYPE"    "acqus_NusT2"        "acqus_NusTD"       </span></span>
+<span><span class="co">## [130] "acqus_O1"           "acqus_O2"           "acqus_O3"          </span></span>
+<span><span class="co">## [133] "acqus_O4"           "acqus_O5"           "acqus_O6"          </span></span>
+<span><span class="co">## [136] "acqus_O7"           "acqus_O8"           "acqus_OVERFLW"     </span></span>
+<span><span class="co">## [139] "acqus_P"            "acqus_PACOIL"       "acqus_PAPS"        </span></span>
+<span><span class="co">## [142] "acqus_PARMODE"      "acqus_PCPD"         "acqus_PEXSEL"      </span></span>
+<span><span class="co">## [145] "acqus_PHCOR"        "acqus_PHLIST"       "acqus_PHP"         </span></span>
+<span><span class="co">## [148] "acqus_PH_ref"       "acqus_PL"           "acqus_PLSTEP"      </span></span>
+<span><span class="co">## [151] "acqus_PLSTRT"       "acqus_PLW"          "acqus_PLWMAX"      </span></span>
+<span><span class="co">## [154] "acqus_PQPHASE"      "acqus_PQSCALE"      "acqus_PR"          </span></span>
+<span><span class="co">## [157] "acqus_PRECHAN"      "acqus_PRGAIN"       "acqus_PROBHD"      </span></span>
+<span><span class="co">## [160] "acqus_PULPROG"      "acqus_PW"           "acqus_PYNM"        </span></span>
+<span><span class="co">## [163] "acqus_ProjAngle"    "acqus_QNP"          "acqus_RD"          </span></span>
+<span><span class="co">## [166] "acqus_RECCHAN"      "acqus_RECPH"        "acqus_RECPRE"      </span></span>
+<span><span class="co">## [169] "acqus_RECPRFX"      "acqus_RECSEL"       "acqus_RG"          </span></span>
+<span><span class="co">## [172] "acqus_RO"           "acqus_RSEL"         "acqus_S"           </span></span>
+<span><span class="co">## [175] "acqus_SELREC"       "acqus_SFO1"         "acqus_SFO2"        </span></span>
+<span><span class="co">## [178] "acqus_SFO3"         "acqus_SFO4"         "acqus_SFO5"        </span></span>
+<span><span class="co">## [181] "acqus_SFO6"         "acqus_SFO7"         "acqus_SFO8"        </span></span>
+<span><span class="co">## [184] "acqus_SOLVENT"      "acqus_SOLVOLD"      "acqus_SP"          </span></span>
+<span><span class="co">## [187] "acqus_SPECTR"       "acqus_SPINCNT"      "acqus_SPNAM"       </span></span>
+<span><span class="co">## [190] "acqus_SPOAL"        "acqus_SPOFFS"       "acqus_SPPEX"       </span></span>
+<span><span class="co">## [193] "acqus_SPW"          "acqus_SUBNAM"       "acqus_SW"          </span></span>
+<span><span class="co">## [196] "acqus_SWIBOX"       "acqus_SW_h"         "acqus_SWfinal"     </span></span>
+<span><span class="co">## [199] "acqus_SigLockShift" "acqus_TD"           "acqus_TD0"         </span></span>
+<span><span class="co">## [202] "acqus_TD_INDIRECT"  "acqus_TDav"         "acqus_TE"          </span></span>
+<span><span class="co">## [205] "acqus_TE1"          "acqus_TE2"          "acqus_TE3"         </span></span>
+<span><span class="co">## [208] "acqus_TE4"          "acqus_TEG"          "acqus_TE_MAGNET"   </span></span>
+<span><span class="co">## [211] "acqus_TE_PIDX"      "acqus_TE_STAB"      "acqus_TL"          </span></span>
+<span><span class="co">## [214] "acqus_TOTROT"       "acqus_TUBE_TYPE"    "acqus_USERA1"      </span></span>
+<span><span class="co">## [217] "acqus_USERA2"       "acqus_USERA3"       "acqus_USERA4"      </span></span>
+<span><span class="co">## [220] "acqus_USERA5"       "acqus_V9"           "acqus_VALIDCODE"   </span></span>
+<span><span class="co">## [223] "acqus_VALIST"       "acqus_VCLIST"       "acqus_VDLIST"      </span></span>
+<span><span class="co">## [226] "acqus_VPLIST"       "acqus_VTLIST"       "acqus_WBST"        </span></span>
+<span><span class="co">## [229] "acqus_WBSW"         "acqus_XGAIN"        "acqus_XL"          </span></span>
+<span><span class="co">## [232] "acqus_YL"           "acqus_YMAX_a"       "acqus_YMIN_a"      </span></span>
+<span><span class="co">## [235] "acqus_ZGOPTNS"      "acqus_ZL1"          "acqus_ZL2"         </span></span>
+<span><span class="co">## [238] "acqus_ZL3"          "acqus_ZL4"</span></span></code></pre>
 <p>We can check for instance that the nuclei used on all samples is
 1H:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">acqus_metadata</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NMRExperiment"</span>, <span class="st">"acqus_NUC1"</span><span class="op">)</span><span class="op">]</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 2</span></span>
-<span class="co">##   NMRExperiment acqus_NUC1</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 10            1H        </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 20            1H        </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 30            1H</span></code></pre>
+<code class="sourceCode R"><span><span class="va">acqus_metadata</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NMRExperiment"</span>, <span class="st">"acqus_NUC1"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 2</span></span></span>
+<span><span class="co">##   NMRExperiment acqus_NUC1</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 10            1H        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            1H        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            1H</span></span></code></pre>
 <p>Similarly, we can obtain the processing settings:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">procs_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"procs"</span><span class="op">)</span>
-<span class="va">procs_metadata</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 137</span></span>
-<span class="co">##   NMRExperiment procs_TITLE           procs_JCAMPDX procs_DATATYPE procs_NPOINTS</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 10            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>6\t$$ modif…</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 20            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>11\t$$ modi…</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 30            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>6\t$$ modif…</span>
-<span class="co">## <span style="color: #949494;"># … with 132 more variables: procs_ORIGIN &lt;chr&gt;, procs_OWNER &lt;chr&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   procs_Stamp &lt;list&gt;, procs_ABSF1 &lt;dbl&gt;, procs_ABSF2 &lt;dbl&gt;, procs_ABSG &lt;dbl&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   procs_ABSL &lt;dbl&gt;, procs_ALPHA &lt;dbl&gt;, procs_AQORDER &lt;dbl&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   procs_ASSFAC &lt;dbl&gt;, procs_ASSFACI &lt;dbl&gt;, procs_ASSFACX &lt;dbl&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   procs_ASSWID &lt;dbl&gt;, procs_AUNMP &lt;chr&gt;, procs_AXLEFT &lt;dbl&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   procs_AXNAME &lt;chr&gt;, procs_AXNUC &lt;chr&gt;, procs_AXRIGHT &lt;dbl&gt;,</span></span>
-<span class="co">## <span style="color: #949494;">#   procs_AXTYPE &lt;dbl&gt;, procs_AXUNIT &lt;chr&gt;, procs_AZFE &lt;dbl&gt;, …</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">procs_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"procs"</span><span class="op">)</span></span>
+<span><span class="va">procs_metadata</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 137</span></span></span>
+<span><span class="co">##   NMRExperiment procs_TITLE           procs_JCAMPDX procs_DATATYPE procs_NPOINTS</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 10            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>6\t$$ modif…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>11\t$$ modi…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Parameter file, TopS…             5 Parameter Val… <span style="color: #949494;">"</span>6\t$$ modif…</span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 132 more variables: procs_ORIGIN &lt;chr&gt;, procs_OWNER &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   procs_Stamp &lt;list&gt;, procs_ABSF1 &lt;dbl&gt;, procs_ABSF2 &lt;dbl&gt;, procs_ABSG &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   procs_ABSL &lt;dbl&gt;, procs_ALPHA &lt;dbl&gt;, procs_AQORDER &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   procs_ASSFAC &lt;dbl&gt;, procs_ASSFACI &lt;dbl&gt;, procs_ASSFACX &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   procs_ASSWID &lt;dbl&gt;, procs_AUNMP &lt;chr&gt;, procs_AXLEFT &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   procs_AXNAME &lt;chr&gt;, procs_AXNUC &lt;chr&gt;, procs_AXRIGHT &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   procs_AXTYPE &lt;dbl&gt;, procs_AXUNIT &lt;chr&gt;, procs_AZFE &lt;dbl&gt;, …</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="sample-annotations">Sample annotations<a class="anchor" aria-label="anchor" href="#sample-annotations"></a>
@@ -284,34 +284,34 @@ from data frames.</p>
 <p>Let’s load a table from an Excel file, that has some annotations for
 our demo dataset:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">excel_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, <span class="st">"dummy_metadata.xlsx"</span><span class="op">)</span>
-<span class="va">subject_timepoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">excel_file</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="va">subject_timepoint</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span>
-<span class="co">##   NMRExperiment SubjectID TimePoint</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline</span></code></pre>
+<code class="sourceCode R"><span><span class="va">excel_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, <span class="st">"dummy_metadata.xlsx"</span><span class="op">)</span></span>
+<span><span class="va">subject_timepoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">excel_file</span>, sheet <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">subject_timepoint</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">##   NMRExperiment SubjectID TimePoint</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline</span></span></code></pre>
 <p>Note how this table includes a first column named
 <code>NMRExperiment</code>. This column allows us to match the rows in
 the table with our samples.</p>
 <p>We can embed these external annotations in our dataset:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, metadata <span class="op">=</span> <span class="va">subject_timepoint</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, metadata <span class="op">=</span> <span class="va">subject_timepoint</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span></span></code></pre></div>
 <p>We can retrieve these <em>external</em> columns from the dataset:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span>
-<span class="co">##   NMRExperiment SubjectID TimePoint</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">##   NMRExperiment SubjectID TimePoint</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline</span></span></code></pre>
 <p>After adding the annotations to the dataset, we can use them in
 plots:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, color <span class="op">=</span> <span class="st">"TimePoint"</span>, linetype <span class="op">=</span> <span class="st">"SubjectID"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.4</span>, <span class="fl">3.6</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, color <span class="op">=</span> <span class="st">"TimePoint"</span>, linetype <span class="op">=</span> <span class="st">"SubjectID"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.4</span>, <span class="fl">3.6</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vig02-handling-metadata-and-annotations_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -321,58 +321,58 @@ plots:</p>
 want to match with our data.</p>
 <p>For instance, a collaborator just sent us this table:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">additional_annotations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
-    NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"20"</span>, <span class="st">"30"</span><span class="op">)</span>,
-    SampleCollectionDay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">91</span>, <span class="fl">3</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="va">additional_annotations</span></code></pre></div>
-<pre><code><span class="co">##   NMRExperiment SampleCollectionDay</span>
-<span class="co">## 1            10                   1</span>
-<span class="co">## 2            20                  91</span>
-<span class="co">## 3            30                   3</span></code></pre>
+<code class="sourceCode R"><span><span class="va">additional_annotations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"20"</span>, <span class="st">"30"</span><span class="op">)</span>,</span>
+<span>    SampleCollectionDay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">91</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">additional_annotations</span></span></code></pre></div>
+<pre><code><span><span class="co">##   NMRExperiment SampleCollectionDay</span></span>
+<span><span class="co">## 1            10                   1</span></span>
+<span><span class="co">## 2            20                  91</span></span>
+<span><span class="co">## 3            30                   3</span></span></code></pre>
 <p>Since we have the <code>NMRExperiment</code> column it is very easy
 to include it:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">additional_annotations</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">additional_annotations</span><span class="op">)</span></span></code></pre></div>
 <p>And the column has been added:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 4</span></span>
-<span class="co">##   NMRExperiment SubjectID TimePoint SampleCollectionDay</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline                    1</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months                   91</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline                    3</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 4</span></span></span>
+<span><span class="co">##   NMRExperiment SubjectID TimePoint SampleCollectionDay</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline                    1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months                   91</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline                    3</span></span></code></pre>
 <p>We received further information, but this time it is related to the
 <code>SubjectID</code> that we added before:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">subject_related_information</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
-    SubjectID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ana"</span>, <span class="st">"Elia"</span><span class="op">)</span>,
-    Age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">33</span>, <span class="fl">3</span><span class="op">)</span>,
-    Sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"female"</span>, <span class="st">"female"</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="va">subject_related_information</span></code></pre></div>
-<pre><code><span class="co">##   SubjectID Age    Sex</span>
-<span class="co">## 1       Ana  33 female</span>
-<span class="co">## 2      Elia   3 female</span></code></pre>
+<code class="sourceCode R"><span><span class="va">subject_related_information</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    SubjectID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ana"</span>, <span class="st">"Elia"</span><span class="op">)</span>,</span>
+<span>    Age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">33</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>    Sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"female"</span>, <span class="st">"female"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">subject_related_information</span></span></code></pre></div>
+<pre><code><span><span class="co">##   SubjectID Age    Sex</span></span>
+<span><span class="co">## 1       Ana  33 female</span></span>
+<span><span class="co">## 2      Elia   3 female</span></span></code></pre>
 <p>Note how in this case we only have two rows, and we don’t have the
 <code>NMRExperiment</code> column anymore.</p>
 <p>We can specify the <code>by</code> argument in
 <code><a href="../reference/nmr_meta_add.html">nmr_meta_add()</a></code> to use another column for merging:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">subject_related_information</span>, by <span class="op">=</span> <span class="st">"SubjectID"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">subject_related_information</span>, by <span class="op">=</span> <span class="st">"SubjectID"</span><span class="op">)</span></span></code></pre></div>
 <p>And the Sex and Age columns will have been added:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 6</span></span>
-<span class="co">##   NMRExperiment SubjectID TimePoint SampleCollectionDay   Age Sex   </span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline                    1    33 female</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months                   91    33 female</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline                    3     3 female</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
+<span><span class="co">##   NMRExperiment SubjectID TimePoint SampleCollectionDay   Age Sex   </span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline                    1    33 female</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months                   91    33 female</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline                    3     3 female</span></span></code></pre>
 <p>We can also use it in a plot:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, color <span class="op">=</span> <span class="st">"SubjectID"</span>, linetype <span class="op">=</span> <span class="st">"as.factor(Age)"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7.7</span>, <span class="fl">7.8</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"Age"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, color <span class="op">=</span> <span class="st">"SubjectID"</span>, linetype <span class="op">=</span> <span class="st">"as.factor(Age)"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7.7</span>, <span class="fl">7.8</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"Age"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vig02-handling-metadata-and-annotations_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -415,58 +415,58 @@ functions:</p>
 <h2 id="session-information">Session Information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## R version 4.2.0 (2022-04-22)</span>
-<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">## Running under: Ubuntu 20.04.4 LTS</span>
-<span class="co">## </span>
-<span class="co">## Matrix products: default</span>
-<span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span>
-<span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3</span>
-<span class="co">## </span>
-<span class="co">## locale:</span>
-<span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
-<span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
-<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
-<span class="co">## </span>
-<span class="co">## attached base packages:</span>
-<span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
-<span class="co">## </span>
-<span class="co">## other attached packages:</span>
-<span class="co">## [1] AlpsNMR_3.99.1   future_1.26.1    readxl_1.4.0     dplyr_1.0.9     </span>
-<span class="co">## [5] BiocStyle_2.24.0</span>
-<span class="co">## </span>
-<span class="co">## loaded via a namespace (and not attached):</span>
-<span class="co">##  [1] sass_0.4.1          tidyr_1.2.0         jsonlite_1.8.0     </span>
-<span class="co">##  [4] ellipse_0.4.3       bslib_0.3.1         highr_0.9          </span>
-<span class="co">##  [7] BiocManager_1.30.18 cellranger_1.1.0    yaml_2.3.5         </span>
-<span class="co">## [10] ggrepel_0.9.1       globals_0.15.0      pillar_1.7.0       </span>
-<span class="co">## [13] lattice_0.20-45     glue_1.6.2          digest_0.6.29      </span>
-<span class="co">## [16] RColorBrewer_1.1-3  colorspace_2.0-3    htmltools_0.5.2    </span>
-<span class="co">## [19] Matrix_1.4-1        plyr_1.8.7          pkgconfig_2.0.3    </span>
-<span class="co">## [22] mixOmics_6.20.0     listenv_0.8.0       bookdown_0.27      </span>
-<span class="co">## [25] purrr_0.3.4         corpcor_1.6.10      scales_1.2.0       </span>
-<span class="co">## [28] RSpectra_0.16-1     BiocParallel_1.30.3 tibble_3.1.7       </span>
-<span class="co">## [31] farver_2.1.0        generics_0.1.2      ggplot2_3.3.6      </span>
-<span class="co">## [34] ellipsis_0.3.2      cachem_1.0.6        cli_3.3.0          </span>
-<span class="co">## [37] magrittr_2.0.3      crayon_1.5.1        memoise_2.0.1      </span>
-<span class="co">## [40] evaluate_0.15       fs_1.5.2            fansi_1.0.3        </span>
-<span class="co">## [43] parallelly_1.32.0   MASS_7.3-57         progressr_0.10.1   </span>
-<span class="co">## [46] textshaping_0.3.6   tools_4.2.0         lifecycle_1.0.1    </span>
-<span class="co">## [49] matrixStats_0.62.0  stringr_1.4.0       munsell_0.5.0      </span>
-<span class="co">## [52] compiler_4.2.0      pkgdown_2.0.4       jquerylib_0.1.4    </span>
-<span class="co">## [55] signal_0.7-7        systemfonts_1.0.4   rlang_1.0.2        </span>
-<span class="co">## [58] grid_4.2.0          igraph_1.3.2        labeling_0.4.2     </span>
-<span class="co">## [61] rmarkdown_2.14      gtable_0.3.0        codetools_0.2-18   </span>
-<span class="co">## [64] rARPACK_0.11-0      reshape2_1.4.4      R6_2.5.1           </span>
-<span class="co">## [67] gridExtra_2.3       knitr_1.39          fastmap_1.1.0      </span>
-<span class="co">## [70] utf8_1.2.2          rprojroot_2.0.3     ragg_1.2.2         </span>
-<span class="co">## [73] desc_1.4.1          stringi_1.7.6       parallel_4.2.0     </span>
-<span class="co">## [76] Rcpp_1.0.8.3        vctrs_0.4.1         tidyselect_1.1.2   </span>
-<span class="co">## [79] xfun_0.31</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## R version 4.2.0 (2022-04-22)</span></span>
+<span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">## Running under: Ubuntu 20.04.4 LTS</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Matrix products: default</span></span>
+<span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
+<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## locale:</span></span>
+<span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span><span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span><span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attached base packages:</span></span>
+<span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## other attached packages:</span></span>
+<span><span class="co">## [1] AlpsNMR_3.99.1   future_1.26.1    readxl_1.4.0     dplyr_1.0.9     </span></span>
+<span><span class="co">## [5] BiocStyle_2.24.0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span><span class="co">##  [1] sass_0.4.1          tidyr_1.2.0         jsonlite_1.8.0     </span></span>
+<span><span class="co">##  [4] ellipse_0.4.3       bslib_0.3.1         highr_0.9          </span></span>
+<span><span class="co">##  [7] BiocManager_1.30.18 cellranger_1.1.0    yaml_2.3.5         </span></span>
+<span><span class="co">## [10] ggrepel_0.9.1       globals_0.15.0      pillar_1.7.0       </span></span>
+<span><span class="co">## [13] lattice_0.20-45     glue_1.6.2          digest_0.6.29      </span></span>
+<span><span class="co">## [16] RColorBrewer_1.1-3  colorspace_2.0-3    htmltools_0.5.2    </span></span>
+<span><span class="co">## [19] Matrix_1.4-1        plyr_1.8.7          pkgconfig_2.0.3    </span></span>
+<span><span class="co">## [22] mixOmics_6.20.0     listenv_0.8.0       bookdown_0.27      </span></span>
+<span><span class="co">## [25] purrr_0.3.4         corpcor_1.6.10      scales_1.2.0       </span></span>
+<span><span class="co">## [28] RSpectra_0.16-1     BiocParallel_1.30.3 tibble_3.1.7       </span></span>
+<span><span class="co">## [31] farver_2.1.0        generics_0.1.2      ggplot2_3.3.6      </span></span>
+<span><span class="co">## [34] ellipsis_0.3.2      cachem_1.0.6        cli_3.3.0          </span></span>
+<span><span class="co">## [37] magrittr_2.0.3      crayon_1.5.1        memoise_2.0.1      </span></span>
+<span><span class="co">## [40] evaluate_0.15       fs_1.5.2            fansi_1.0.3        </span></span>
+<span><span class="co">## [43] parallelly_1.32.0   MASS_7.3-57         progressr_0.10.1   </span></span>
+<span><span class="co">## [46] textshaping_0.3.6   tools_4.2.0         lifecycle_1.0.1    </span></span>
+<span><span class="co">## [49] matrixStats_0.62.0  stringr_1.4.0       munsell_0.5.0      </span></span>
+<span><span class="co">## [52] compiler_4.2.0      pkgdown_2.0.4       jquerylib_0.1.4    </span></span>
+<span><span class="co">## [55] signal_0.7-7        systemfonts_1.0.4   rlang_1.0.2        </span></span>
+<span><span class="co">## [58] grid_4.2.0          igraph_1.3.2        labeling_0.4.2     </span></span>
+<span><span class="co">## [61] rmarkdown_2.14      gtable_0.3.0        codetools_0.2-18   </span></span>
+<span><span class="co">## [64] rARPACK_0.11-0      reshape2_1.4.4      R6_2.5.1           </span></span>
+<span><span class="co">## [67] gridExtra_2.3       knitr_1.39          fastmap_1.1.0      </span></span>
+<span><span class="co">## [70] utf8_1.2.2          rprojroot_2.0.3     ragg_1.2.2         </span></span>
+<span><span class="co">## [73] desc_1.4.1          stringi_1.7.6       parallel_4.2.0     </span></span>
+<span><span class="co">## [76] Rcpp_1.0.8.3        vctrs_0.4.1         tidyselect_1.1.2   </span></span>
+<span><span class="co">## [79] xfun_0.31</span></span></code></pre>
 </div>
   </div>
 

@@ -72,36 +72,36 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_batman_options</span><span class="op">(</span>
-  ppmRange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3.1</span>, <span class="fl">3.6</span>, <span class="fl">3.7</span>, <span class="fl">3.9</span>, <span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">4.1</span>, <span class="fl">6.95</span>, <span class="fl">7.05</span>, <span class="fl">7.6</span>, <span class="fl">7.7</span>, <span class="fl">7.8</span>,
-    <span class="fl">7.9</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-  specNo <span class="op">=</span> <span class="st">"1"</span>,
-  paraProc <span class="op">=</span> <span class="fl">4L</span>,
-  negThresh <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>,
-  scaleFac <span class="op">=</span> <span class="fl">1e+06</span>,
-  downSamp <span class="op">=</span> <span class="fl">1</span>,
-  hiresFlag <span class="op">=</span> <span class="fl">1</span>,
-  randSeed <span class="op">=</span> <span class="fl">100025L</span>,
-  nItBurnin <span class="op">=</span> <span class="fl">200L</span>,
-  nItPostBurnin <span class="op">=</span> <span class="fl">5000L</span>,
-  multFile <span class="op">=</span> <span class="fl">2L</span>,
-  thinning <span class="op">=</span> <span class="fl">50L</span>,
-  cfeFlag <span class="op">=</span> <span class="fl">0</span>,
-  nItRerun <span class="op">=</span> <span class="fl">5000L</span>,
-  startTemp <span class="op">=</span> <span class="fl">1000</span>,
-  specFreq <span class="op">=</span> <span class="fl">600</span>,
-  a <span class="op">=</span> <span class="fl">1e-05</span>,
-  b <span class="op">=</span> <span class="fl">1e-09</span>,
-  muMean <span class="op">=</span> <span class="fl">1.1</span>,
-  muVar <span class="op">=</span> <span class="fl">0.2</span>,
-  muVar_prop <span class="op">=</span> <span class="fl">0.002</span>,
-  nuMVar <span class="op">=</span> <span class="fl">0.0025</span>,
-  nuMVarProp <span class="op">=</span> <span class="fl">0.1</span>,
-  tauMean <span class="op">=</span> <span class="op">-</span><span class="fl">0.05</span>,
-  tauPrec <span class="op">=</span> <span class="fl">2</span>,
-  rdelta <span class="op">=</span> <span class="fl">0.02</span>,
-  csFlag <span class="op">=</span> <span class="fl">0</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nmr_batman_options</span><span class="op">(</span></span>
+<span>  ppmRange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3.1</span>, <span class="fl">3.6</span>, <span class="fl">3.7</span>, <span class="fl">3.9</span>, <span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">4.1</span>, <span class="fl">6.95</span>, <span class="fl">7.05</span>, <span class="fl">7.6</span>, <span class="fl">7.7</span>, <span class="fl">7.8</span>,</span>
+<span>    <span class="fl">7.9</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>  specNo <span class="op">=</span> <span class="st">"1"</span>,</span>
+<span>  paraProc <span class="op">=</span> <span class="fl">4L</span>,</span>
+<span>  negThresh <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>,</span>
+<span>  scaleFac <span class="op">=</span> <span class="fl">1e+06</span>,</span>
+<span>  downSamp <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  hiresFlag <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  randSeed <span class="op">=</span> <span class="fl">100025L</span>,</span>
+<span>  nItBurnin <span class="op">=</span> <span class="fl">200L</span>,</span>
+<span>  nItPostBurnin <span class="op">=</span> <span class="fl">5000L</span>,</span>
+<span>  multFile <span class="op">=</span> <span class="fl">2L</span>,</span>
+<span>  thinning <span class="op">=</span> <span class="fl">50L</span>,</span>
+<span>  cfeFlag <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  nItRerun <span class="op">=</span> <span class="fl">5000L</span>,</span>
+<span>  startTemp <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  specFreq <span class="op">=</span> <span class="fl">600</span>,</span>
+<span>  a <span class="op">=</span> <span class="fl">1e-05</span>,</span>
+<span>  b <span class="op">=</span> <span class="fl">1e-09</span>,</span>
+<span>  muMean <span class="op">=</span> <span class="fl">1.1</span>,</span>
+<span>  muVar <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  muVar_prop <span class="op">=</span> <span class="fl">0.002</span>,</span>
+<span>  nuMVar <span class="op">=</span> <span class="fl">0.0025</span>,</span>
+<span>  nuMVarProp <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  tauMean <span class="op">=</span> <span class="op">-</span><span class="fl">0.05</span>,</span>
+<span>  tauPrec <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  rdelta <span class="op">=</span> <span class="fl">0.02</span>,</span>
+<span>  csFlag <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -228,7 +228,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">bopts</span> <span class="op">&lt;-</span> <span class="fu">nmr_batman_options</span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bopts</span> <span class="op">&lt;-</span> <span class="fu">nmr_batman_options</span><span class="op">(</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
