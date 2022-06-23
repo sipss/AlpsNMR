@@ -48,7 +48,6 @@ plot.nmr_dataset_1D <- function(x,
     } else if (identical(NMRExperiment, "all")) {
         NMRExperiment <- names(x)
     }
-    sample_idx <- which(names(x) %in% NMRExperiment)
     aes_str <- as.character(list(...))
     if (length(aes_str) > 0) {
         columns_to_request <- unique(
@@ -68,7 +67,7 @@ plot.nmr_dataset_1D <- function(x,
     
     longdf <- tidy(
         x,
-        sample_idx = sample_idx,
+        NMRExperiment = NMRExperiment,
         chemshift_range = chemshift_range,
         columns = columns_to_request
     )
@@ -164,10 +163,10 @@ plot.nmr_dataset_1D <- function(x,
 #' long and therefore use a lot of RAM.
 #'
 #' @param x an \code{\link{nmr_dataset_1D}} object
-#' @param sample_idx numeric vector with the sample indices to include
+#' @param NMRExperiment A character vector with the NMRExperiments to include. `NULL` means all.
 #' @param chemshift_range range of the chemical shifts to be included. Can be of length 3
 #'                to include the resolution in the third element (e.g. `c(0.2, 0.8, 0.005)`)
-#' @param columns A character vector with the metadata columns to get, by default gets all of them
+#' @param columns A character vector with the metadata columns to get, use `NULL` to get all of them.
 #' @param matrix_name A string with the matrix name, typically "data_1r"
 #' @param axis_name A string with the axis name, for now "axis" is the only valid option
 #' @param ... Ignored
@@ -185,29 +184,31 @@ plot.nmr_dataset_1D <- function(x,
 #' head(df_for_ggplot)
 tidy.nmr_dataset_1D <-
     function(x,
-             sample_idx = NULL,
+             NMRExperiment = NULL,
              chemshift_range = NULL,
-             columns = NULL,
+             columns = character(0L),
              matrix_name = "data_1r",
              axis_name = "axis",
              ...
              ) {
-        if (is.null(sample_idx)) {
-            sample_idx <- seq_len(x$num_samples)
+        if (is.null(NMRExperiment)) {
+            NMRExperiment <- names(x)
+            sample_idx <- seq_along(NMRExperiment)
+        } else {
+            sample_idx <- match(NMRExperiment, names(x))
         }
         chemshift_in_range <- decimate_axis(xaxis = x[[axis_name]],
                                             xrange = chemshift_range)
         meta_df <- nmr_meta_get(x, columns = columns)
-        NMRExperiments <- meta_df$NMRExperiment[sample_idx]
         chemshifts <- x[[axis_name]][chemshift_in_range]
-        raw_data <-
-            reshape2::melt(x[[matrix_name]][sample_idx, chemshift_in_range, drop = FALSE])
-        raw_data$Var1 <- NMRExperiments[raw_data$Var1]
+        mat <- x[[matrix_name]][sample_idx, chemshift_in_range, drop = FALSE]
+        rownames(mat) <- colnames(mat) <- NULL
+        raw_data <- reshape2::melt(mat)
+        rm(mat)
+        raw_data$Var1 <- NMRExperiment[raw_data$Var1]
         raw_data$Var2 <- chemshifts[raw_data$Var2]
-        colnames(raw_data) <-
-            c("NMRExperiment", "chemshift", "intensity")
-        result <-
-            dplyr::left_join(raw_data, meta_df, by = "NMRExperiment")
+        colnames(raw_data) <- c("NMRExperiment", "chemshift", "intensity")
+        result <- dplyr::left_join(raw_data, meta_df, by = "NMRExperiment")
         return(result)
     }
 
