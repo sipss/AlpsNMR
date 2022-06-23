@@ -110,7 +110,8 @@ nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
 #' peak_data <- data.frame(
 #'   NMRExperiment = c("10", "10", "20", "20"),
 #'   peak_id = paste0("Peak", 1:4),
-#'   ppm = c(1, 2, 1.1, 3)
+#'   ppm = c(1, 2, 1.1, 2.2),
+#'   gamma_ppb = 100
 #' )
 #' clustering_result <- nmr_peak_clustering(peak_data)
 #' peak_data <- clustering_result$peak_data
@@ -198,7 +199,13 @@ estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
         dplyr::group_by(.data$NMRExperiment) |> 
         dplyr::summarize(n = dplyr::n()) |>
         dplyr::pull("n")
-    num_clusters_coarse <- seq.int(from = max(peaks_per_sample), to = sum(peaks_per_sample), by = 10)
+    min_clusters_to_test <- max(peaks_per_sample)
+    max_clusters_to_test <- sum(peaks_per_sample)
+    if ((max_clusters_to_test - min_clusters_to_test) > 20) {
+        num_clusters_coarse <- seq.int(from = max(peaks_per_sample), to = sum(peaks_per_sample), by = 10)
+    } else {
+        num_clusters_coarse <- seq.int(from = max(peaks_per_sample), to = sum(peaks_per_sample), by = 1)
+    }
     max_dist_coarse <- purrr::map_dbl(
         num_clusters_coarse,
         get_max_dist_ppb_for_num_clusters,
@@ -207,10 +214,9 @@ estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
     )
     num_clusters <- num_clusters_coarse[max_dist_coarse < max_dist_thresh_ppb][1]
     # Refine:
-    num_clusters_fine <- c(
-        seq.int(from = num_clusters - 19, to = num_clusters - 11),
-        seq.int(from = num_clusters - 9, to = num_clusters - 1),
-        seq.int(from = num_clusters + 1, to = num_clusters + 9)
+    num_clusters_fine <- seq.int(
+        from = max(min_clusters_to_test, num_clusters - 19),
+        to = min(max_clusters_to_test, num_clusters + 11)
     )
     max_dist_fine <- purrr::map_dbl(
         num_clusters_fine,
@@ -222,7 +228,7 @@ estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
     num_clusters_vs_max_distance <- data.frame(
         num_clusters = c(num_clusters_coarse, num_clusters_fine),
         max_distance_ppb = c(max_dist_coarse, max_dist_fine)
-    ) |> dplyr::arrange(num_clusters)
+    ) |> dplyr::arrange(num_clusters) |> dplyr::distinct()
     num_clusters <- num_clusters_vs_max_distance |>
         dplyr::filter(.data$max_distance_ppb < !!max_dist_thresh_ppb) |>
         dplyr::pull("num_clusters")
@@ -308,7 +314,7 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
 #' Build a peak table from the clustered peak list
 #'
 #' @param peak_data A peak list, with the cluster column
-#' @param dataset A [nmr_dataset_1D] object, to get the matadata
+#' @param dataset A [nmr_dataset_1D] object, to get the metadata
 #' @return An [nmr_dataset_peak_table], containing the peak table and the annotations
 #' @export
 #' @examples
@@ -322,21 +328,32 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
 #' peak_data <- clustering_result$peak_data
 #' peak_table <- nmr_build_peak_table(peak_data)
 #' stopifnot(ncol(peak_table) == 2)
-nmr_build_peak_table <- function(peak_data, dataset) {
+nmr_build_peak_table <- function(peak_data, dataset = NULL) {
     if (!"cluster" %in% colnames(peak_data)) {
         stop("Please run nmr_peak_clustering() first")
     }
-    
+
     peak_table <- peak_data %>%
         dplyr::select(.data$NMRExperiment, .data$ppm_ref, .data$area) %>%
         dplyr::mutate(ppm_ref = format(.data$ppm_ref)) %>%
         tidyr::pivot_wider(names_from = "ppm_ref", values_from = "area") %>%
         tibble::column_to_rownames("NMRExperiment") %>%
         as.matrix()
+
     
-    nmr_exp <- stringr::str_sort(unique(peak_data$NMRExperiment), numeric = TRUE)
-    new_nmr_dataset_peak_table(
-        peak_table = peak_table[nmr_exp, , drop = FALSE],
-        metadata = list(external = nmr_meta_get(dataset, groups = "external"))
-    )
+    if (!is.null(dataset)) {
+        external_meta <- nmr_meta_get(dataset, groups = "external")
+        peak_table <- peak_table[external_meta$NMRExperiment, , drop = FALSE]
+        new_nmr_dataset_peak_table(
+            peak_table = peak_table,
+            metadata = list(external = external_meta)
+        )
+    } else {
+        nmr_exp <- stringr::str_sort(unique(peak_data$NMRExperiment), numeric = TRUE)
+        new_nmr_dataset_peak_table(
+            peak_table = peak_table[nmr_exp, , drop = FALSE],
+            metadata = list(external = data.frame(NMRExperiment = nmr_exp))
+        )
+        
+    }
 }
