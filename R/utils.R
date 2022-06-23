@@ -302,3 +302,24 @@ require_pkgs <- function(pkg, msgs = NULL, ...) {
         )
     }
 }
+
+
+get_geom_text <- function() {
+    has_ggrepel <- requireNamespace("ggrepel", quietly = TRUE)
+    if (!has_ggrepel) {
+        rlang::warn(
+            message = c(
+                "Text labels in the plot may overlap",
+                "i" = 'You may use `install.packages("ggrepel")` to install the ggrepel package',
+                "i" = "Otherwise you can safely ignore this warning"
+            ),
+            .frequency = "once", 
+            .frequency_id = "install_ggrepel"
+        )
+    }
+    if (has_ggrepel) {
+        ggrepel::geom_text_repel
+    } else {
+        ggplot2::geom_text
+    }
+}
