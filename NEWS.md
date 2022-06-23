@@ -1,4 +1,19 @@
-# AlpsNMR 3.7.1 (2022-05-02)
+# AlpsNMR 4.0.0 (under development)
+
+## Breaking changes
+
+Many functions, including baseline estimation, spectra alignment, peak integration
+have undergone a review with some breaking changes. Besides, parallellization
+has changed from relying on the great `future` package to the also great
+`BiocParallel` package, for better integration with the Bioconductor ecosystem.
+
+The vignette has also been updated to reflect those changes, and to offer more
+detailed and streamlined workflow. Additional vignettes support it for more
+in-depth analyses.
+
+Please update your scripts following the new vignette to ensure improved and
+more reliable results.
+
 
 - You can now set experiment names (NMRExperiment) with `names(dataset) <- c("Sample1", "Sample2")`
 - You can now pass a named vector with the sample names to the read_samples function. The names
