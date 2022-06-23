@@ -162,10 +162,11 @@ nmr_normalize_extra_info <- function(samples) {
 }
 
 nmr_normalize_add_extra_info <- function(samples, norm_factor) {
+    median_of_raw_norm_factors <- stats::median(norm_factor)
     norm_factor_df <- data.frame(
         NMRExperiment = names(samples),
         norm_factor = norm_factor,
-        norm_factor_norm = norm_factor / stats::median(norm_factor)
+        norm_factor_norm = norm_factor / median_of_raw_norm_factors
     )
 
     gplt <- ggplot2::ggplot(norm_factor_df) +
@@ -177,7 +178,8 @@ nmr_normalize_add_extra_info <- function(samples, norm_factor) {
         ggplot2::labs(caption = "Each sample was divided by the corresponding factor")
     attr(samples, "normalize_extra_info") <- list(
         norm_factor = norm_factor_df,
-        plot = gplt
+        plot = gplt,
+        median_of_raw_norm_factors = median_of_raw_norm_factors
     )
     samples
 }
