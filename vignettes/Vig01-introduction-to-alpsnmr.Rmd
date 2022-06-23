@@ -120,7 +120,7 @@ dataset
 ```
 
 If after reading the `?nmr_read_samples` page you still have issues, feel free
-to open an issue at [https://github.com/sipss/AlpsNMR/issues] and ask for
+to open an issue at https://github.com/sipss/AlpsNMR/issues and ask for
 clarification.
 
 # Adding annotations
@@ -201,6 +201,9 @@ pca_outliers_rob <- nmr_pca_outliers_robust(dataset, ncomp = 3)
 nmr_pca_outliers_plot(dataset, pca_outliers_rob)
 ```
 
+Samples with greater QResiduals and Tscores than the threshold defined by the red line
+are candidates for further exploration and exclusion. With this small dataset,
+there is not much to see.
 
 # Baseline removal
 
@@ -213,6 +216,11 @@ and check it fits as expected.
 
 
 See before:
+
+```{r}
+plot(dataset, chemshift_range = c(1.37, 2.5))
+```
+
 
 ```{r}
 plot(dataset, chemshift_range = c(3.5,3.8))
@@ -228,10 +236,25 @@ dataset <- nmr_baseline_estimation(dataset, lambda = 9, p = 0.01)
 
 And after:
 
+
 ```{r fig.height=10, fig.width=10}
 # TODO: Simplify this plot
-spectra_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8), columns = "NMRExperiment")
-baseline_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8), columns = "NMRExperiment", matrix_name = "data_1r_baseline")
+spectra_to_plot <- tidy(dataset, chemshift_range = c(1.37, 2.5))
+baseline_to_plot <- tidy(dataset, chemshift_range = c(1.37, 2.5), matrix_name = "data_1r_baseline")
+
+ggplot(mapping = aes(x = chemshift, y = intensity, color = NMRExperiment)) +
+    geom_line(data = spectra_to_plot) +
+    geom_line(data = baseline_to_plot, linetype = "dashed") + 
+    facet_wrap(~NMRExperiment, ncol = 1)
+
+```
+
+
+
+```{r fig.height=10, fig.width=10}
+# TODO: Simplify this plot
+spectra_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8))
+baseline_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8), matrix_name = "data_1r_baseline")
 
 ggplot(mapping = aes(x = chemshift, y = intensity, color = NMRExperiment)) +
     geom_line(data = spectra_to_plot) +
@@ -244,19 +267,14 @@ ggplot(mapping = aes(x = chemshift, y = intensity, color = NMRExperiment)) +
 # Peak detection
 
 The peak detection is performed on short spectra segments using a continuous
-wavelet transform. See `?nmr_detect_peaks` for more information.
+wavelet transform. Peaks below a threshold intensity are automatically discarded.
 
 Our current approach relies on the use of the baseline threshold 
 (`baselineThresh`) automatically calculated (see `?nmr_baseline_threshold`) 
 and the Signal to Noise Threshold (`SNR.Th`) to discriminate valid peaks 
-from noise. 
+from noise.
 
-The combination of the `baselineThresh` and the `SNR.Th` optimizes 
-the number of actual peaks from noise.
-
-The advantage of the `SNR.Th` method is that it estimates the noise
-level on each spectra region independently, so in practice it can be used as
-a dynamic baseline threshold level.
+See `?nmr_detect_peaks` for more information.
 
 ```{r}
 baselineThresh <- nmr_baseline_threshold(dataset, range_without_peaks = c(9.5, 10))
@@ -265,7 +283,7 @@ nmr_baseline_threshold_plot(dataset, baselineThresh)
 
 
 ```{r}
-peak_list <- nmr_detect_peaks(
+peak_list_initial <- nmr_detect_peaks(
     dataset,
     nDivRange_ppm = 0.1,
     scales = seq(1, 16, 2),
@@ -277,20 +295,20 @@ peak_list <- nmr_detect_peaks(
 We can get an overview of the number of peaks we detect on each sample and each chemical shift region:
 
 ```{r}
-nmr_detect_peaks_plot_overview(peak_list)
+nmr_detect_peaks_plot_overview(peak_list_initial)
 ```
 
 
 We can explore in a more detailed way the detected peaks:
 
 ```{r}
-nmr_detect_peaks_plot(dataset, peak_list, NMRExperiment = "10", chemshift_range = c(3, 3.3))
+nmr_detect_peaks_plot(dataset, peak_list_initial, NMRExperiment = "10", chemshift_range = c(3, 3.3))
 ```
 
 Let's the detected peaks in a smaller region across samples:
 
 ```{r}
-peak_list_in_range <- filter(peak_list, ppm > 3.22, ppm < 3.24)
+peak_list_in_range <- filter(peak_list_initial, ppm > 3.22, ppm < 3.24)
 peak_list_in_range
 ```
 
@@ -299,29 +317,68 @@ plot(dataset, chemshift_range = c(3.22, 3.25))
 ```
 
 
-```{r dev="cairo_pdf"}
-nmr_detect_peaks_plot_peaks(dataset, peak_list, peak_ids = peak_list_in_range$peak_id)
+```{r}
+nmr_detect_peaks_plot_peaks(
+    dataset,
+    peak_list_initial,
+    peak_ids = peak_list_in_range$peak_id,
+    caption = paste("{peak_id}",
+                    "(NMRExp.\u00A0{NMRExperiment},",
+                    "gamma(ppb)\u00a0=\u00a0{gamma_ppb},",
+                    "\narea\u00a0=\u00a0{area},",
+                    "nrmse\u00a0=\u00a0{norm_rmse})")
+)
 
 ```
 
 
+```{r}
+peak_list_initial_accepted <- peaklist_accept_peaks(
+    peak_list_initial,
+    dataset,
+    area_min = 50, 
+    keep_rejected = FALSE,
+    verbose = TRUE
+)
+```
+
 # Spectra alignment
 
-To align the sample, we use the `nmr_align` function, which in turn uses a hierarchical
-clustering method (see `?nmr_align` for further details).
+Once we have a preliminary peak list, we can align the spectra using the
+`nmr_align()` function. We expect shifts between the spectra, this becomes
+necessary so we can cluster the peaks correctly afterwards and build a peak table.
 
-The `maxShift_ppm` limits the maximum shift allowed for the spectra.
+The alignment process takes several parameters, including:
+
+- `NMRExp_ref`: An NMRExperiment with a reference sample. Usually it should be a pool
+  of all samples if it is available. Otherwise, you can use `nmr_align_find_ref()`
+  to find a sample. Depending on how heterogeneous your dataset is, there may
+  not be a good reference sample (even if the function picks one, the alignment
+  might not succeed), so please always check the results afterwards.
+ 
+- `maxShift_ppm`: The maximum shift allowed when aligning the spectra.
+- `acceptLostPeak`: Set it to `TRUE` if you want to accept some peaks getting
+   lost during the alignment process. Since the peak detection is never perfect,
+   it is reasonable to accept some lost peaks.
 
 
 ```{r}
-NMRExp_ref <- nmr_align_find_ref(dataset, peak_list)
+NMRExp_ref <- nmr_align_find_ref(dataset, peak_list_initial_accepted)
 message("Your reference is NMRExperiment ", NMRExp_ref)
 ```
 
 
 ```{r}
-dataset_align <- nmr_align(dataset, peak_list, NMRExp_ref, maxShift_ppm = 0.0015, acceptLostPeak = FALSE)
+dataset_align <- nmr_align(
+    nmr_dataset = dataset, 
+    peak_data = peak_list_initial_accepted, 
+    NMRExp_ref = NMRExp_ref, 
+    maxShift_ppm = 0.0015, 
+    acceptLostPeak = TRUE
+)
 ```
+
+Compare the dataset before and after alignment, to verify the quality of the alignment:
 
 ```{r}
 plot(dataset, chemshift_range = c(3.025, 3.063))
@@ -338,170 +395,161 @@ cowplot::plot_grid(
 
 # Normalization
 
+With the spectra correctly aligned, you can use spectra normalization techniques.
+We normalize after alignment because some of the normalization techniques are
+sensitive to misalignments.
+
 There are multiple normalization techniques available. The most strongly 
-recommended is the `pqn` normalization, but it may not be fully reliable
-when the number of samples is small, as it needs a  computation of the 
-median spectra. Nevertheless, it is possible to compute it:
+recommended is the Probabilistic Quantile Normalization (`pqn`), but it requires
+more samples for its internal estimations to be reliable, as it needs a
+computation of the  median spectra. Nevertheless, it is possible to compute it:
 
 ```{r}
 dataset_norm <- nmr_normalize(dataset_align, method = "pqn")
 ```
 
-The `AlpsNMR` package offers the possibility to extract additional 
-normalization information with `nmr_normalize_extra_info(dataset)`, to explore
-the normalization factors applied to each sample:
+The normalization essentially computes a normalization factor for each sample.
 
 The plot shows the dispersion with respect to the median of the normalization
 factors, and can highlight samples with abnormally large or small normalization
 factors.
 
 ```{r}
-diagnostic <- nmr_normalize_extra_info(dataset_norm)
-diagnostic$norm_factor
-diagnostic$plot
+normalization_info <- nmr_normalize_extra_info(dataset_norm)
+normalization_info$norm_factor
+normalization_info$plot
 ```
 
-
-# Peak integration
-
-## 1. Integration based on peak center and width
-
-If we want to integrate the whole spectra, we need ppm from the `peak_table`. 
-See `Peak detection` section. The function `nmr_integrate_peak_positions`
-generates a new `nmr_dataset_1D` object containing the integrals from 
-the `peak_table` (ppm values corresponding to detected peaks).
+We can confirm sample 20 is now slightly more diluted:
 
 ```{r}
-peak_table_integration = nmr_integrate_peak_positions(
-  samples = dataset_norm,
-  peak_pos_ppm = peak_list$ppm[peak_list$NMRExperiment == NMRExp_ref],
-  peak_width_ppm = 0.006)
+to_plot <- dplyr::bind_rows(
+    tidy(dataset_align, NMRExperiment = "20", chemshift_range = c(2,2.5)) |>
+        mutate(Normalized = "No"),
+    tidy(dataset_norm, NMRExperiment = "20", chemshift_range = c(2,2.5)) |>
+        mutate(Normalized = "Yes"),
+)
+ggplot(data = to_plot, mapping = aes(x = chemshift, y = intensity, color = Normalized)) + 
+    geom_line() +
+    scale_x_reverse() +
+    labs(y = "Intensity", x = "Chemical shift (ppm)",
+         caption = "The normalization slightly diluted experiment 20")
 
-peak_table_integration = get_integration_with_metadata(peak_table_integration)
+
 ```
 
-
-We can also integrate with a specific peak position and some arbitrary width:
+And all samples are more homogeneous now:
 
 ```{r}
-nmr_data(
-  nmr_integrate_peak_positions(samples = dataset_norm,
-                            peak_pos_ppm = c(4.1925, 4.183, 4.1775, 4.17),
-                            peak_width_ppm = 0.006)
+cowplot::plot_grid(
+    plot(dataset_align, chemshift_range = c(2, 2.5)) + labs(title="Before Normalization"),
+    plot(dataset_norm, chemshift_range = c(2, 2.5)) + labs(title="After Normalization"),
+    ncol = 1
 )
 ```
 
 
-## 2. Integration based on peak boundaries
+# Peak grouping
 
-Imagine we only want to integrate the four peaks corresponding to the pyroglutamic
-acid:
+
+If you align or normalize your samples, you should rerun the peak detection to ensure the peak
+positions and estimations are well calculated:
+
 
 ```{r}
-pyroglutamic_acid_region <- c(4.15, 4.20)
-plot(dataset_norm, chemshift_range = pyroglutamic_acid_region) +
-  ggplot2::ggtitle("Pyroglutamic acid region")
+baselineThresh <- nmr_baseline_threshold(dataset_norm, range_without_peaks = c(9.5, 10))
+nmr_baseline_threshold_plot(dataset_norm, baselineThresh)
 ```
 
-We define the peak regions and integrate them. Note how we can correct the
-baseline or not. If we correct the baseline, the limits of the integration will
-be connected with a straight line and that line will be used as the baseline,
-that will be subtracted.
-
 ```{r}
-pyroglutamic_acid <- list(pyroglutamic_acid1 = c(4.19, 4.195),
-                          pyroglutamic_acid2 = c(4.18, 4.186),
-                          pyroglutamic_acid3 = c(4.175, 4.18),
-                          pyroglutamic_acid4 = c(4.165, 4.172))
-regions_basel_corr_ds <- nmr_integrate_regions(dataset_norm, pyroglutamic_acid, fix_baseline = TRUE)
-regions_basel_corr_matrix <- nmr_data(regions_basel_corr_ds)
-regions_basel_corr_matrix
-
-
-regions_basel_not_corr_ds <- nmr_integrate_regions(dataset_norm, pyroglutamic_acid, fix_baseline = FALSE)
-regions_basel_not_corr_matrix <- nmr_data(regions_basel_not_corr_ds)
-regions_basel_not_corr_matrix
-```
-
-We may plot the integral values to explore variation based on the baseline
-subtraction.
-
-```{r}
-dplyr::bind_rows(
-  regions_basel_corr_matrix %>%
-    as.data.frame() %>%
-    tibble::rownames_to_column("NMRExperiment") %>%
-    tidyr::gather("metabolite_peak", "area", -NMRExperiment) %>%
-    dplyr::mutate(BaselineCorrected = TRUE),
-  regions_basel_not_corr_matrix %>%
-    as.data.frame() %>%
-    tibble::rownames_to_column("NMRExperiment") %>%
-    tidyr::gather("metabolite_peak", "area", -NMRExperiment) %>%
-    dplyr::mutate(BaselineCorrected = FALSE)
-) %>% ggplot() + geom_point(aes(x = NMRExperiment, y = area, color = metabolite_peak)) +
-  facet_wrap(~BaselineCorrected)
+peak_list_for_clustering_unfiltered <- nmr_detect_peaks(
+    dataset_norm,
+    nDivRange_ppm = 0.1,
+    scales = seq(1, 16, 2),
+    baselineThresh = baselineThresh,
+    SNR.Th = 3,
+    verbose = TRUE
+)
+peak_list_for_clustering <- peaklist_accept_peaks(
+    peak_list_for_clustering_unfiltered,
+    dataset_norm,
+    area_min = 50, 
+    keep_rejected = FALSE,
+    verbose = TRUE
+)
 
 ```
 
+Feel free to plot, explore and further curate your peak list. Or proceed with the current one:
 
-# Identification
 
-After applying any feature selection or machine learning, Alps allows the 
-identification of features of interest through `nmr_identify_regions_blood`. 
-The function gives 3 posibilities sorted by the most probable metabolite 
-(see `nmr_identify_regions_blood` for details).
+Once we have a peak list for each sample `peak_list`, we need to turn it into
+a table, merging peaks from different samples together.
 
 ```{r}
-ppm_to_assign <- c(4.060960203, 3.048970634,2.405935596,0.990616851,0.986520147, 1.044258467)
-identification <- nmr_identify_regions_blood (ppm_to_assign)
+clustering <- nmr_peak_clustering(peak_list_for_clustering, verbose = TRUE)
+```
+```{r}
+cowplot::plot_grid(
+    clustering$num_cluster_estimation$plot + labs(title = "Full"),
+    clustering$num_cluster_estimation$plot +
+        xlim(clustering$num_cluster_estimation$num_clusters-50, clustering$num_cluster_estimation$num_clusters+50) +
+        ylim(0, 10*clustering$num_cluster_estimation$max_dist_thresh_ppb) +
+        labs(title = "Fine region")
+)
 ```
 
 
-# Free experimentation
-
-## Getting the spectra and manipulating it manually
-
-Besides all those techniques, you can easily implement your own. You can extract
-the raw matrix and manipulate it at will. As long as you don't
-permute the rows, you can always replace the raw matrix of the `nmr_dataset_1D`
-object through the `nmr_data` function:
 
 ```{r}
-full_spectra_matrix <- nmr_data(dataset)
-full_spectra_matrix[1:3, 1:6] # change it as you wish
-nmr_data(dataset) <- full_spectra_matrix # Rewrite the matrix
+peak_list_clustered <- clustering$peak_data
+
 ```
 
 
-## Creating an `nmr_dataset_1D` object from a matrix
-
-You can also create an `nmr_dataset_1D` object from scratch with the
-`new_nmr_dataset_1D` function:
-
 ```{r}
-nsamp <- 12
-npoints <- 20
-# Create a random spectra matrix
-dummy_ppm_axis <- seq(from = 0.2, to = 10, length.out = npoints)
-dummy_spectra_matrix <- matrix(runif(nsamp*npoints), nrow = nsamp, ncol = npoints)
-metadata <- list(external = data.frame(NMRExperiment = paste0("Sample", 1:12),
-                                       DummyClass = c("a", "b"),
-                                       stringsAsFactors = FALSE))
-your_custom_nmr_dataset_1D <- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
-                                                 data_1r = dummy_spectra_matrix,
-                                                 metadata = metadata)
-your_custom_nmr_dataset_1D
-plot(your_custom_nmr_dataset_1D) +
-  ggtitle("Of course those random values don't make much sense...")
+nmr_peak_clustering_plot(
+    dataset = dataset_norm,
+    peak_list_clustered = peak_list_clustered,
+    NMRExperiments = c("10", "20"),
+    chemshift_range = c(2.4, 3.0)
+)
 ```
 
 
-# Final thoughts
 
-This vignette shows many of the features of the package, some features have
-room for improvement, others are not fully described, and the reader will need
-to browse the documentation. Hopefully it is a good starting point for using the
-package.
+```{r}
+nmr_peak_clustering_plot(dataset_norm, peak_list_clustered, NMRExperiments = c("10", "20"), chemshift_range = c(4.5, 4.6))
+```
+
+
+
+
+```{r}
+peak_table <- nmr_build_peak_table(peak_list_clustered, dataset_norm)
+peak_table
+```
+
+
+```{r}
+peak_matrix <- nmr_data(peak_table)
+peak_matrix[1:3, 1:8]
+```
+
+Or you can get a data frame with the corresponding annotations:
+
+```{r}
+get_integration_with_metadata(peak_table)
+```
+
+From this peak table you can proceed to use statistical testing, machine learning,
+and any downstream analysis you may be interested in.
+
+See `vignette("Vig04-from-peak-table-to-differential-analysis", package = "AlpsNMR")`
+for more.
+
+
+# Session Info:
 
 ```{r}
 sessionInfo()
