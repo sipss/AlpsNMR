@@ -18,7 +18,7 @@ to a given criteria."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
       </span>
     </div>
 
@@ -40,6 +40,9 @@ to a given criteria."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
     </li>
     <li>
       <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
+    </li>
+    <li>
+      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -115,7 +118,10 @@ and can be extracted by calling <code>nmr_normalize_extra_info()</code> afterwar
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>The <code>nmr_normalize_extra_info</code> function is used to extract additional information
+    <p>The aim is to correct from changes between samples, so no matter the criteria
+used to normalize, once we get the factors (e.g. the areas), we divide them by
+the median normalization factor to avoid introducing global scaling factors.</p>
+<p>The <code>nmr_normalize_extra_info</code> function is used to extract additional information
 after the normalization. Typically, we want to know what was the actual normalization
 factor applied to each sample. The extra information includes a plot, representing
 the dispersion of the normalization factor for each sample.</p>

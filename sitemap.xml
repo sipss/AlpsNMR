@@ -16,6 +16,9 @@
     <loc>/articles/Vig03-plotting-samples.html</loc>
   </url>
   <url>
+    <loc>/articles/Vig04-from-peak-table-to-differential-analysis.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
@@ -266,6 +269,9 @@
   </url>
   <url>
     <loc>/reference/nmr_peak_clustering.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nmr_peak_clustering_plot.html</loc>
   </url>
   <url>
     <loc>/reference/nmr_ppm_resolution.html</loc>

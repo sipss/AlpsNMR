@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
       </span>
     </div>
 
@@ -39,6 +39,9 @@
     </li>
     <li>
       <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
+    </li>
+    <li>
+      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -69,7 +72,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_peak_clustering</span><span class="op">(</span><span class="va">peak_data</span>, peak2peak_dist <span class="op">=</span> <span class="cn">NULL</span>, num_clusters <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_peak_clustering</span><span class="op">(</span>
+  <span class="va">peak_data</span>,
+  peak2peak_dist <span class="op">=</span> <span class="cn">NULL</span>,
+  num_clusters <span class="op">=</span> <span class="cn">NULL</span>,
+  max_dist_thresh_ppb <span class="op">=</span> <span class="cn">NULL</span>,
+  verbose <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -84,24 +93,35 @@ If NULL it is computed from <code>peak_data</code></p></dd>
 
 
 <dt>num_clusters</dt>
-<dd><p>If you want to fix the number of clusters. Leave it to <code>NULL</code> to use a rough estimation</p></dd>
+<dd><p>If you want to fix the number of clusters. Leave <code>NULL</code> if you want to estimate it</p></dd>
+
+
+<dt>max_dist_thresh_ppb</dt>
+<dd><p>To estimate the number of clusters, we enforce a limit on how far two peaks of the same cluster may be. By default
+this threshold will be computed as 3 times the median peak width (gamma), as given in the peak list.</p></dd>
+
+
+<dt>verbose</dt>
+<dd><p>A logical vector to print additional information</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>A list including: The <code>peak_data</code> with an
-additional "cluster" column, cluster (the hierarchical cluster),
-num_clusters (an estimation of the number of clusters)</p>
-    </div>
+<p>A list including:</p><ul><li><p>The <code>peak_data</code> with an additional "cluster" column</p></li>
+<li><p>cluster: the hierarchical cluster</p></li>
+<li><p>num_clusters: an estimation of the number of clusters</p></li>
+<li><p>num_cluster_estimation: A list with tables and plots to justify the number of cluster estimation</p></li>
+</ul></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">peak_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span class="r-in">  NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"10"</span>, <span class="st">"20"</span>, <span class="st">"20"</span><span class="op">)</span>,</span>
 <span class="r-in">  peak_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Peak"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span class="r-in">  ppm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1.1</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span class="r-in">  ppm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1.1</span>, <span class="fl">2.2</span><span class="op">)</span>,</span>
+<span class="r-in">  gamma_ppb <span class="op">=</span> <span class="fl">100</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="va">clustering_result</span> <span class="op">&lt;-</span> <span class="fu">nmr_peak_clustering</span><span class="op">(</span><span class="va">peak_data</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">peak_data</span> <span class="op">&lt;-</span> <span class="va">clustering_result</span><span class="op">$</span><span class="va">peak_data</span></span>

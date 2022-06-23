@@ -18,7 +18,7 @@ long and therefore use a lot of RAM."><!-- mathjax --><script src="https://cdnjs
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
       </span>
     </div>
 
@@ -40,6 +40,9 @@ long and therefore use a lot of RAM."><!-- mathjax --><script src="https://cdnjs
     </li>
     <li>
       <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
+    </li>
+    <li>
+      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -74,9 +77,9 @@ long and therefore use a lot of RAM.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for nmr_dataset_1D</span>
 <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span>
   <span class="va">x</span>,
-  sample_idx <span class="op">=</span> <span class="cn">NULL</span>,
+  NMRExperiment <span class="op">=</span> <span class="cn">NULL</span>,
   chemshift_range <span class="op">=</span> <span class="cn">NULL</span>,
-  columns <span class="op">=</span> <span class="cn">NULL</span>,
+  columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span>,
   matrix_name <span class="op">=</span> <span class="st">"data_1r"</span>,
   axis_name <span class="op">=</span> <span class="st">"axis"</span>,
   <span class="va">...</span>
@@ -89,8 +92,8 @@ long and therefore use a lot of RAM.</p>
 <dd><p>an <code><a href="nmr_dataset_1D.html">nmr_dataset_1D</a></code> object</p></dd>
 
 
-<dt>sample_idx</dt>
-<dd><p>numeric vector with the sample indices to include</p></dd>
+<dt>NMRExperiment</dt>
+<dd><p>A character vector with the NMRExperiments to include. <code>NULL</code> means all.</p></dd>
 
 
 <dt>chemshift_range</dt>
@@ -99,7 +102,7 @@ to include the resolution in the third element (e.g. <code>c(0.2, 0.8, 0.005)</c
 
 
 <dt>columns</dt>
-<dd><p>A character vector with the metadata columns to get, by default gets all of them</p></dd>
+<dd><p>A character vector with the metadata columns to get, use <code>NULL</code> to get all of them.</p></dd>
 
 
 <dt>matrix_name</dt>

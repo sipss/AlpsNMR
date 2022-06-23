@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
       </span>
     </div>
 
@@ -39,6 +39,9 @@
     </li>
     <li>
       <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
+    </li>
+    <li>
+      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -64,7 +67,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="3.7.1" id="alpsnmr-371-2022-05-02">AlpsNMR 3.7.1 (2022-05-02)<a class="anchor" aria-label="anchor" href="#alpsnmr-371-2022-05-02"></a></h2>
+<h2 class="page-header" data-toc-text="3.99.1" id="alpsnmr-3991-under-development">AlpsNMR 3.99.1 (under development)<a class="anchor" aria-label="anchor" href="#alpsnmr-3991-under-development"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-3-99-1">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-3-99-1"></a></h3>
+<p>Many functions, including baseline estimation, spectra alignment, peak integration have undergone a review with some breaking changes. Besides, parallellization has changed from relying on the great <code>future</code> package to the also great <code>BiocParallel</code> package, for better integration with the Bioconductor ecosystem.</p>
+<p>The vignette has also been updated to reflect those changes, and to offer more detailed and streamlined workflow. Additional vignettes support it for more in-depth analyses.</p>
+<p>Please update your scripts following the new vignette to ensure improved and more reliable results.</p>
 <ul><li>You can now set experiment names (NMRExperiment) with <code>names(dataset) &lt;- c("Sample1", "Sample2")</code>
 </li>
 <li>You can now pass a named vector with the sample names to the read_samples function. The names will be used as the sample names.</li>
@@ -81,6 +89,7 @@
 <li>Remove unused deprecated imports from the <code>future</code> package (<a href="https://github.com/sipss/AlpsNMR/issues/65" class="external-link">#65</a>, thanks to <a href="https://github.com/HenrikBengtsson" class="external-link">@HenrikBengtsson</a>)</li>
 <li>Add URL and BugReports to the DESCRIPTION (<a href="https://github.com/sipss/AlpsNMR/issues/64" class="external-link">#64</a>, thanks to <a href="https://github.com/HenrikBengtsson" class="external-link">@HenrikBengtsson</a>)</li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="3.5.1" id="alpsnmr-351-2022-04-07">AlpsNMR 3.5.1 (2022-04-07)<a class="anchor" aria-label="anchor" href="#alpsnmr-351-2022-04-07"></a></h2>
 <ul><li>

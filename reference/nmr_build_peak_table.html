@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
       </span>
     </div>
 
@@ -39,6 +39,9 @@
     </li>
     <li>
       <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
+    </li>
+    <li>
+      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -69,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_build_peak_table</span><span class="op">(</span><span class="va">peak_data</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nmr_build_peak_table</span><span class="op">(</span><span class="va">peak_data</span>, dataset <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -77,12 +80,16 @@
     <dl><dt>peak_data</dt>
 <dd><p>A peak list, with the cluster column</p></dd>
 
+
+<dt>dataset</dt>
+<dd><p>A <a href="nmr_dataset_1D.html">nmr_dataset_1D</a> object, to get the metadata</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>A matrix, with one row per sample and one column per peak</p>
+<p>An <a href="nmr_dataset_peak_table.html">nmr_dataset_peak_table</a>, containing the peak table and the annotations</p>
     </div>
 
     <div id="ref-examples">
