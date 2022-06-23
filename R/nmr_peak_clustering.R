@@ -340,10 +340,11 @@ nmr_build_peak_table <- function(peak_data, dataset = NULL) {
         tibble::column_to_rownames("NMRExperiment") %>%
         as.matrix()
 
+    ppm_ref_sorted <- stringr::str_sort(colnames(peak_table), numeric = TRUE)
     
     if (!is.null(dataset)) {
         external_meta <- nmr_meta_get(dataset, groups = "external")
-        peak_table <- peak_table[external_meta$NMRExperiment, , drop = FALSE]
+        peak_table <- peak_table[external_meta$NMRExperiment, ppm_ref_sorted, drop = FALSE]
         new_nmr_dataset_peak_table(
             peak_table = peak_table,
             metadata = list(external = external_meta)
@@ -351,9 +352,8 @@ nmr_build_peak_table <- function(peak_data, dataset = NULL) {
     } else {
         nmr_exp <- stringr::str_sort(unique(peak_data$NMRExperiment), numeric = TRUE)
         new_nmr_dataset_peak_table(
-            peak_table = peak_table[nmr_exp, , drop = FALSE],
+            peak_table = peak_table[nmr_exp, ppm_ref_sorted, drop = FALSE],
             metadata = list(external = data.frame(NMRExperiment = nmr_exp))
         )
-        
     }
 }
