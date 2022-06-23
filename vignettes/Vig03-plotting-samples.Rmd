@@ -21,7 +21,7 @@ library(AlpsNMR)
 
 (Vignette in progress)
 
-See `vignette("Vig01-introduction-to-alpsnmr", package = "AlpsNMR")`
+For now see `vignette("Vig01-introduction-to-alpsnmr", package = "AlpsNMR")`
 
 # Creating interactive plots
 
@@ -54,12 +54,50 @@ plot_interactive(plt, "plot_region.html")
 # Get data and do plots with ggplot:
 
 ```
-spectra_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8), columns = "NMRExperiment")
+spectra_to_plot <- tidy(dataset, chemshift_range = c(3.5, 3.8))
 
 ggplot(mapping = aes(x = chemshift, y = intensity, color = NMRExperiment)) +
     geom_line(data = spectra_to_plot)
 
 ```
+
+## Getting the spectra and manipulating it manually
+
+Besides all those techniques, you can easily implement your own. You can extract
+the raw matrix and manipulate it at will. As long as you don't
+permute the rows, you can always replace the raw matrix of the `nmr_dataset_1D`
+object through the `nmr_data` function:
+
+```
+full_spectra_matrix <- nmr_data(dataset)
+full_spectra_matrix[1:3, 1:6] # change it as you wish
+nmr_data(dataset) <- full_spectra_matrix # Rewrite the matrix
+```
+
+
+## Creating an `nmr_dataset_1D` object from a matrix
+
+You can also create an `nmr_dataset_1D` object from scratch with the
+`new_nmr_dataset_1D` function:
+
+```
+nsamp <- 12
+npoints <- 20
+# Create a random spectra matrix
+dummy_ppm_axis <- seq(from = 0.2, to = 10, length.out = npoints)
+dummy_spectra_matrix <- matrix(runif(nsamp*npoints), nrow = nsamp, ncol = npoints)
+metadata <- list(external = data.frame(NMRExperiment = paste0("Sample", 1:12),
+                                       DummyClass = c("a", "b"),
+                                       stringsAsFactors = FALSE))
+your_custom_nmr_dataset_1D <- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
+                                                 data_1r = dummy_spectra_matrix,
+                                                 metadata = metadata)
+your_custom_nmr_dataset_1D
+plot(your_custom_nmr_dataset_1D) +
+  ggtitle("Of course those random values don't make much sense...")
+```
+
+
 
 
 # Session Information
