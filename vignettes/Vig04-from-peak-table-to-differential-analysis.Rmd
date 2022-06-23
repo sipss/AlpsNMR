@@ -1,8 +1,10 @@
 ---
 title: "From the peak table to the differential analysis"
-output: rmarkdown::html_vignette
+date: "`r format(Sys.Date(), '%F')`"
+output:
+  BiocStyle::pdf_document
 vignette: >
-  %\VignetteIndexEntry{Vig04-from-peak-table-to-differential-analysis}
+  %\VignetteIndexEntry{Vignette 04: From peak table to differential analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
