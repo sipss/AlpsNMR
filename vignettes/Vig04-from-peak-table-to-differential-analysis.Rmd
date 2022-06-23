@@ -51,3 +51,10 @@ ppm_to_assign <- c(4.060960203, 3.048970634,2.405935596,0.990616851,0.986520147,
 identification <- nmr_identify_regions_blood(ppm_to_assign)
 identification
 ```
+
+
+# Session Info:
+
+```{r}
+sessionInfo()
+```
