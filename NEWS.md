@@ -1,4 +1,4 @@
-# AlpsNMR 4.0.0 (under development)
+# AlpsNMR 3.99.1 (under development)
 
 ## Breaking changes
 
