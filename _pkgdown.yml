@@ -155,6 +155,7 @@ reference:
     Functions to build peak tables from peak lists
   contents:
   - nmr_peak_clustering
+  - nmr_peak_clustering_plot
   - nmr_build_peak_table
   - nmr_get_peak_distances
   - nmr_integrate_regions
