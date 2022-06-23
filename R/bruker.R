@@ -751,9 +751,9 @@ read_bruker_metadata <-
         }
         
         
-        if (!any(c("fid", "ser") %in% list.files(sample_path))) {
-            stop("No raw data available in ", sample_path)
-        }
+        # if (!any(c("fid", "ser") %in% list.files(sample_path))) {
+        #     stop("No raw data available in ", sample_path)
+        # }
         return(output)
     }
 
