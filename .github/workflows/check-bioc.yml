@@ -40,7 +40,7 @@ env:
   pkgdown_repo: 'sipss/AlpsNMR'
   uses_latex: true
   has_RUnit: 'false'
-  cache-version: 'cache-v1'
+  cache-version: 'cache-v2'
   run_docker: 'false'
 
 jobs:
@@ -169,6 +169,7 @@ jobs:
           ## Install tinytex
           install.packages('tinytex')
           tinytex::install_tinytex()
+          tinytex::tlmgr_install("pdfcrop")
         shell: Rscript {0}
 
       - name: Install dependencies pass 1
