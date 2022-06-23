@@ -5,7 +5,9 @@ package: AlpsNMR
 abstract: >
   Plotting samples and data
 date: "`r format(Sys.Date(), '%F')`"
-output: "BiocStyle::pdf_document"
+output:
+  BiocStyle::pdf_document:
+    latex_engine: xelatex
 vignette: >
   %\VignetteIndexEntry{Vignette03: Plotting NMR samples}
   %\VignetteEngine{knitr::rmarkdown}
