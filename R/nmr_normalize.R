@@ -18,16 +18,27 @@ norm_pqn <- function(spectra, basel = NULL) {
             )
         )
     }
+    if (is.null(basel)) {
+        spectra_minus_basel <- spectra
+    } else {
+        spectra_minus_basel <- spectra - basel
+    }
     # Normalize to the area
-    areas <- rowSums(spectra - basel)
+    areas <- rowSums(spectra_minus_basel)
     areas <- areas/stats::median(areas)
     if (num_samples == 1) {
         # We have warned, and here there is nothing to do anymore
         rlang::warn("PQN is meaningless with a single sample. We have normalized it to the area.")
-        return(list(spectra = spectra / areas,
-                    norm_factor = areas))
+        out <- list(
+            spectra = spectra / areas,
+            norm_factor = areas
+        )
+        if (!is.null(basel)) {
+            out$basel <- basel / areas
+        }
+        return(out)
     }
-    spectra2 <- (spectra - basel) / areas
+    spectra2 <- spectra_minus_basel / areas
     # Move spectra above zero:
     if (any(spectra2 < 0)) {
         spectra2 <- spectra2 - min(spectra2)
@@ -104,13 +115,15 @@ nmr_normalize <- function(samples,
     spec <- samples[["data_1r"]]
     if ("data_1r_baseline" %in% names(unclass(samples))) {
         basel <- samples[["data_1r_baseline"]]
+        spec_minus_basel <- spec - basel
     } else {
         basel <- NULL
+        spec_minus_basel <- spec
     }
     if (method == "area") {
-        norm_factor <- rowSums(spec - basel)
+        norm_factor <- rowSums(spec_minus_basel)
     } else if (method == "max") {
-        norm_factor <- apply(spec - basel, 1, max)
+        norm_factor <- apply(spec_minus_basel, 1, max)
     } else if (method == "value") {
         norm_factor <- dots[["values"]]
     } else if (method == "region") {
