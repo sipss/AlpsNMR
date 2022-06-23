@@ -4,7 +4,13 @@
 \alias{nmr_peak_clustering}
 \title{Peak clustering}
 \usage{
-nmr_peak_clustering(peak_data, peak2peak_dist = NULL, num_clusters = NULL)
+nmr_peak_clustering(
+  peak_data,
+  peak2peak_dist = NULL,
+  num_clusters = NULL,
+  max_dist_thresh_ppb = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{peak_data}{The peak list}
@@ -12,12 +18,21 @@ nmr_peak_clustering(peak_data, peak2peak_dist = NULL, num_clusters = NULL)
 \item{peak2peak_dist}{The distances obtained with \link{nmr_get_peak_distances}.
 If NULL it is computed from \code{peak_data}}
 
-\item{num_clusters}{If you want to fix the number of clusters. Leave it to \code{NULL} to use a rough estimation}
+\item{num_clusters}{If you want to fix the number of clusters. Leave \code{NULL} if you want to estimate it}
+
+\item{max_dist_thresh_ppb}{To estimate the number of clusters, we enforce a limit on how far two peaks of the same cluster may be. By default
+this threshold will be computed as 3 times the median peak width (gamma), as given in the peak list.}
+
+\item{verbose}{A logical vector to print additional information}
 }
 \value{
-A list including: The \code{peak_data} with an
-additional "cluster" column, cluster (the hierarchical cluster),
-num_clusters (an estimation of the number of clusters)
+A list including:
+\itemize{
+\item The \code{peak_data} with an additional "cluster" column
+\item cluster: the hierarchical cluster
+\item num_clusters: an estimation of the number of clusters
+\item num_cluster_estimation: A list with tables and plots to justify the number of cluster estimation
+}
 }
 \description{
 Peak clustering

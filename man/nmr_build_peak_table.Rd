@@ -4,13 +4,15 @@
 \alias{nmr_build_peak_table}
 \title{Build a peak table from the clustered peak list}
 \usage{
-nmr_build_peak_table(peak_data)
+nmr_build_peak_table(peak_data, dataset)
 }
 \arguments{
 \item{peak_data}{A peak list, with the cluster column}
+
+\item{dataset}{A \link{nmr_dataset_1D} object, to get the matadata}
 }
 \value{
-A matrix, with one row per sample and one column per peak
+An \link{nmr_dataset_peak_table}, containing the peak table and the annotations
 }
 \description{
 Build a peak table from the clustered peak list

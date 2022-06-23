@@ -41,6 +41,10 @@ The \code{nmr_normalize} function is used to normalize all the samples according
 to a given criteria.
 }
 \details{
+The aim is to correct from changes between samples, so no matter the criteria
+used to normalize, once we get the factors (e.g. the areas), we divide them by
+the median normalization factor to avoid introducing global scaling factors.
+
 The \code{nmr_normalize_extra_info} function is used to extract additional information
 after the normalization. Typically, we want to know what was the actual normalization
 factor applied to each sample. The extra information includes a plot, representing
