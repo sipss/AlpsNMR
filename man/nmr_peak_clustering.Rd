@@ -41,7 +41,8 @@ Peak clustering
 peak_data <- data.frame(
   NMRExperiment = c("10", "10", "20", "20"),
   peak_id = paste0("Peak", 1:4),
-  ppm = c(1, 2, 1.1, 3)
+  ppm = c(1, 2, 1.1, 2.2),
+  gamma_ppb = 100
 )
 clustering_result <- nmr_peak_clustering(peak_data)
 peak_data <- clustering_result$peak_data
