@@ -140,7 +140,11 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters =
     # Estimate the ppm_ref
     # The digits are at least four. However if the max_dist_thresh is very small
     # then we need ppm references with more resolution as well.
-    digits_for_ppmref <- min(4, 3 - floor(log10(max_dist_thresh_ppb)) + 1)
+    if (!is.null(max_dist_thresh_ppb)) {
+        digits_for_ppmref <- min(4, 3 - floor(log10(max_dist_thresh_ppb)) + 1)
+    } else {
+        digits_for_ppmref <- 4
+    }
     peak_data <- peak_data %>%
         dplyr::group_by(.data$cluster) %>%
         dplyr::mutate(ppm_ref = round(stats::median(.data$ppm), !!digits_for_ppmref)) %>%
