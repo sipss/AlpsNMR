@@ -359,14 +359,6 @@ nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
 #' #nmr_pca_outliers_plot(dataset_1D, outliers_info)
 #' 
 nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
-    has_ggrepel <- requireNamespace("ggrepel", quietly = TRUE)
-    if (!has_ggrepel) {
-        rlang::warn(
-            message = "Please install ggrepel to avoid overlap of text labels in the plot",
-            .frequency = "once", 
-            .frequency_id = "install_ggrepel"
-        )
-    }
     outlier_info <- pca_outliers[["outlier_info"]]
     tscore_crit <- pca_outliers[["Tscore_critical"]]
     qres_crit <- pca_outliers[["QResidual_critical"]]
@@ -382,19 +374,13 @@ nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
         .data$Tscores > tscore_crit | .data$QResiduals > qres_crit
     )
     
+    geom_txt <- get_geom_text()
     gplt <- ggplot2::ggplot(
         pca_outliers_with_meta,
         ggplot2::aes_string(x = "Tscores", y = "QResiduals", label = "NMRExperiment")
     ) +
-        ggplot2::geom_point(ggplot2::aes_string(...))
-    if (has_ggrepel) {
-        gplt <- gplt +
-            ggrepel::geom_text_repel(data = pca_outliers_with_meta_only_out)
-    } else {
-        gplt <- gplt +
-            ggplot2::geom_text(data = pca_outliers_with_meta_only_out)
-    }
-    gplt <- gplt +
+        ggplot2::geom_point(ggplot2::aes_string(...)) +
+        geom_txt(data = pca_outliers_with_meta_only_out) +
         ggplot2::geom_vline(xintercept = tscore_crit,
                             colour = "red",
                             linetype = "dashed") +
