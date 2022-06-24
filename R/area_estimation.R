@@ -171,12 +171,17 @@ peaklist_fit_lorentzians <- function(
     all_errors <- list(peak_id = character(0L), error_msg = character(0L))
     pb <- progress_bar_new(name = "Fitting lorentzians", total = nrow(peak_data))
 
+    nmr_exp_to_sample_idx <- purrr::set_names(
+        seq_len(nmr_dataset$num_samples),
+        names(nmr_dataset)
+    )
+
     # For each peak:
     has_warned_baseline <- FALSE
     for (i in seq_len(nrow(peak_data))) {
         progress_bar_update(pb)
         posi <- peak_data$pos[i]
-        sindex <- peak_data$sample_idx[i]
+        sindex <- nmr_exp_to_sample_idx[peak_data$NMRExperiment[i]]
         peak_pos_ppm <- peak_data$ppm[i]
         # We want to estimate a lorentzian in a computationally fast way.
         # peak_data is sorted by sample, so we avoid recalculating.
@@ -404,7 +409,6 @@ peaklist_fit_lorentzians <- function(
 #' peak_data <- data.frame(
 #'   peak_id = c("Peak1", "Peak2"),
 #'   NMRExperiment = c("10", "10"),
-#'   sample_idx = c(1L,1L),
 #'   ppm = c(5, 9),
 #'   pos = c(5, 9),
 #'   intensity = c(5, 3),

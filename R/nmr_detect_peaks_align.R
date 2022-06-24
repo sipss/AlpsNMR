@@ -391,23 +391,24 @@ nmr_detect_peaks_plot_peaks <- function(
 #' @return A data frame with NMRExperiment, ppm and intensity, among other columns
 #' @keywords internal
 peakList_to_dataframe <- function(nmr_dataset, peakList) {
-    NMRExperiment <- names(nmr_dataset)
-    out <- purrr::imap_dfr(peakList, function(peak_idx,
-                                       sample_idx,
-                                       nmr_dataset,
-                                       NMRExperiment) {
-        num_of_peaks_in_sample <- length(peak_idx)
-        spec <- as.numeric(nmr_dataset$data_1r[sample_idx, ])
-        data.frame(
-            peak_id = "",
-            NMRExperiment = rep(NMRExperiment[sample_idx], num_of_peaks_in_sample),
-            sample_idx = rep(sample_idx, num_of_peaks_in_sample),
-            ppm = nmr_dataset$axis[peak_idx],
-            pos = peak_idx,
-            intensity = spec[peak_idx],
-            stringsAsFactors = FALSE
-        )
-    }, nmr_dataset = nmr_dataset, NMRExperiment = NMRExperiment)
+    NMRExperiments <- names(nmr_dataset)
+    out <- purrr::imap_dfr(
+        peakList,
+        function(peak_idx, sample_idx, nmr_dataset, NMRExperiments) {
+            num_of_peaks_in_sample <- length(peak_idx)
+            spec <- as.numeric(nmr_dataset$data_1r[sample_idx, ])
+            data.frame(
+                peak_id = "",
+                NMRExperiment = rep(NMRExperiments[sample_idx], num_of_peaks_in_sample),
+                ppm = nmr_dataset$axis[peak_idx],
+                pos = peak_idx,
+                intensity = spec[peak_idx],
+                stringsAsFactors = FALSE
+            )
+        },
+        nmr_dataset = nmr_dataset,
+        NMRExperiments = NMRExperiments
+    )
     num_digits <- nchar(format(nrow(out)))
     fmt_str <- sprintf("Peak%%0%dd", num_digits)
     out$peak_id <- sprintf(fmt_str, seq_len(nrow(out)))
@@ -422,14 +423,18 @@ peakList_to_dataframe <- function(nmr_dataset, peakList) {
 #' @importFrom rlang .data
 #' @keywords internal
 peak_data_to_peakList <- function(nmr_dataset, peak_data) {
+    nmr_exp_to_sample_idx <- purrr::set_names(
+        seq_len(nmr_dataset$num_samples),
+        names(nmr_dataset)
+    )
+    peak_data$sample_idx <- nmr_exp_to_sample_idx[peak_data$NMRExperiment]
     peakList <- rep(list(numeric(0)), nmr_dataset$num_samples)
     sample_idx_peaks <- peak_data %>%
         dplyr::arrange(.data$sample_idx, .data$pos) %>%
         dplyr::group_by(.data$sample_idx) %>%
         dplyr::summarise(peak_pos = list(.data$pos)) %>%
         dplyr::ungroup()
-    peakList[sample_idx_peaks$sample_idx] <-
-        sample_idx_peaks$peak_pos
+    peakList[sample_idx_peaks$sample_idx] <- sample_idx_peaks$peak_pos
     peakList
 }
 

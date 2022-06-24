@@ -51,7 +51,6 @@ nmr_dataset <- new_nmr_dataset_1D(
 peak_data <- data.frame(
   peak_id = c("Peak1", "Peak2"),
   NMRExperiment = c("10", "10"),
-  sample_idx = c(1L,1L),
   ppm = c(5, 9),
   pos = c(5, 9),
   intensity = c(5, 3),
