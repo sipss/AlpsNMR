@@ -184,6 +184,13 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters =
     )
 }
 
+#' @param num_clusters: A numeric vector with candidates for the number of clusters to choose
+#' @param peak_list: A data frame with peaks, including "peak_id" and "ppm" columns
+#' @param cluster: The outcome of the hierarchical clustering
+#' @param max_dist_thresh_ppb, the maximum distance allowed within a cluster
+#' @return A data frame with two columns: The given num_clusters and the maximum measured cluster size within
+#'         clusters
+#' @noRd
 get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster, max_dist_thresh_ppb) {
     peak_assignments <- stats::cutree(cluster, k = num_clusters)
     peak_assignments <- peak_assignments[peak_list$peak_id, ]
@@ -211,6 +218,8 @@ get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster, 
     )
 }
 
+#' @param peak_list A peak list with NMRExperiment, peak_id and ppm columsn (at least)
+#' @param cluster The result of the clustering
 estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
     peaks_per_sample <- peak_list |> 
         dplyr::group_by(.data$NMRExperiment) |> 
@@ -238,12 +247,26 @@ estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
     num_clusters <- num_clusters_vs_max_distance |>
         dplyr::filter(.data$max_distance_ppb < !!max_dist_thresh_ppb) |>
         dplyr::pull("num_clusters")
-    num_clusters <- num_clusters[1]
     gplt <- ggplot2::ggplot() +
         ggplot2::geom_point(ggplot2::aes(x = .data$num_clusters, y = .data$max_distance_ppb), data = num_clusters_vs_max_distance, na.rm = TRUE) +
         ggplot2::geom_hline(yintercept = max_dist_thresh_ppb, color = "gray") + 
-        ggplot2::geom_vline(xintercept = num_clusters, color = "red") +
         ggplot2::labs(x = "Number of clusters", y = "Max distance within cluster (ppb)")
+    if (length(num_clusters) == 0) {
+        rlang::abort(
+            c(
+                "Can't find a suitable number of clusters",
+                "Probably the distance threshold is too small",
+                "i" = "Please consider increasing the threshold of the maximum distance",
+                "i" = glue("Current threshold is max_dist_thresh_ppb={max_dist_thresh_ppb} ppb.)"),
+                "i" = "Remember that the distance is given in ppbs, so a maximum distance of 0.1ppm would be given as 100.",
+                "i" = "Use `rlang::last_error()$plot` to see a plot showing the maximum distance vs the number of clusters explored and guide you"
+            ),
+            plot = gplt
+        )
+    }
+    num_clusters <- num_clusters[1]
+    gplt <- gplt +
+        ggplot2::geom_vline(xintercept = num_clusters, color = "red")
     list(
         num_clusters = num_clusters,
         table = num_clusters_vs_max_distance,
