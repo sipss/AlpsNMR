@@ -1,10 +1,10 @@
 pandoc: 2.17.1.1
-pkgdown: 2.0.4
+pkgdown: 2.0.5
 pkgdown_sha: ~
 articles:
   Vig01-introduction-to-alpsnmr: Vig01-introduction-to-alpsnmr.html
   Vig02-handling-metadata-and-annotations: Vig02-handling-metadata-and-annotations.html
   Vig03-plotting-samples: Vig03-plotting-samples.html
   Vig04-from-peak-table-to-differential-analysis: Vig04-from-peak-table-to-differential-analysis.html
-last_built: 2022-06-23T23:10Z
+last_built: 2022-06-25T07:22Z
 
