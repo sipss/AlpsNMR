@@ -206,7 +206,7 @@ get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster, 
             max()
         max_dist_ppbs[i] <- 1000*max_dist_ppm
         if (!is.null(max_dist_thresh_ppb) && is.null(break_in) && max_dist_ppbs[i] < max_dist_thresh_ppb) {
-            break_in <- i+10
+            break_in <- i + 10
         }
         if (!is.null(break_in) && i > break_in) {
             break
