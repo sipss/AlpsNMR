@@ -184,14 +184,31 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters =
     )
 }
 
-get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster) {
-    peak_list$cluster <- stats::cutree(cluster, k = num_clusters)
-    max_dist_ppm <- peak_list |>
-        dplyr::group_by(.data$cluster) |> 
-        dplyr::summarize(max_dist = max(.data$ppm) - min(.data$ppm), .groups = "drop") |>
-        dplyr::pull("max_dist") |>
-        max()
-    1000*max_dist_ppm
+get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster, max_dist_thresh_ppb) {
+    peak_assignments <- stats::cutree(cluster, k = num_clusters)
+    peak_assignments <- peak_assignments[peak_list$peak_id, ]
+    peak_list$cluster <- NULL
+    max_dist_ppbs <- numeric(length(num_clusters))
+    break_in <- NULL
+    for (i in seq_len(ncol(peak_assignments))) {
+        peak_list$cluster <- peak_assignments[,i]
+        max_dist_ppm <- peak_list |>
+            dplyr::group_by(.data$cluster) |> 
+            dplyr::summarize(max_dist = max(.data$ppm) - min(.data$ppm), .groups = "drop") |>
+            dplyr::pull("max_dist") |>
+            max()
+        max_dist_ppbs[i] <- 1000*max_dist_ppm
+        if (!is.null(max_dist_thresh_ppb) && is.null(break_in) && max_dist_ppbs[i] < max_dist_thresh_ppb) {
+            break_in <- i+10
+        }
+        if (!is.null(break_in) && i > break_in) {
+            break
+        }
+    }
+    data.frame(
+        num_clusters = num_clusters[seq_len(i)],
+        max_distance_ppb = max_dist_ppbs[seq_len(i)]
+    )
 }
 
 estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
@@ -206,29 +223,18 @@ estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
     } else {
         num_clusters_coarse <- seq.int(from = max(peaks_per_sample), to = sum(peaks_per_sample), by = 1)
     }
-    max_dist_coarse <- purrr::map_dbl(
-        num_clusters_coarse,
-        get_max_dist_ppb_for_num_clusters,
-        peak_list = peak_list,
-        cluster = cluster
-    )
-    num_clusters <- num_clusters_coarse[max_dist_coarse < max_dist_thresh_ppb][1]
+    clust_dist <- get_max_dist_ppb_for_num_clusters(num_clusters_coarse, peak_list, cluster, max_dist_thresh_ppb)
+    num_clusters <- clust_dist$num_clusters[clust_dist$max_distance_ppb < max_dist_thresh_ppb][1]
     # Refine:
     num_clusters_fine <- seq.int(
         from = max(min_clusters_to_test, num_clusters - 19),
         to = min(max_clusters_to_test, num_clusters + 11)
     )
-    max_dist_fine <- purrr::map_dbl(
-        num_clusters_fine,
-        get_max_dist_ppb_for_num_clusters,
-        peak_list = peak_list,
-        cluster = cluster
-    )
+    clust_dist2 <- get_max_dist_ppb_for_num_clusters(num_clusters_fine, peak_list, cluster, max_dist_thresh_ppb = NULL)
     # Combine:
-    num_clusters_vs_max_distance <- data.frame(
-        num_clusters = c(num_clusters_coarse, num_clusters_fine),
-        max_distance_ppb = c(max_dist_coarse, max_dist_fine)
-    ) |> dplyr::arrange(num_clusters) |> dplyr::distinct()
+    num_clusters_vs_max_distance <- dplyr::bind_rows(clust_dist, clust_dist2) |>
+        dplyr::arrange(num_clusters) |>
+        dplyr::distinct()
     num_clusters <- num_clusters_vs_max_distance |>
         dplyr::filter(.data$max_distance_ppb < !!max_dist_thresh_ppb) |>
         dplyr::pull("num_clusters")
@@ -305,7 +311,7 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
         geom_txt(ggplot2::aes(x = .data$ppm.x, y = .data$intensity.x, color = .data$NMRExperiment.x, label = signif(.data$area.x, 4)), data = for_segments_12) + 
         geom_txt(ggplot2::aes(x = .data$ppm.y, y = .data$intensity.y, color = .data$NMRExperiment.y, label = signif(.data$area.y, 4)), data = for_segments_12) + 
         ggplot2::scale_x_reverse() +
-        ggplot2::scale_y_continuous(labels = scales::label_number (scale_cut = scales::cut_si(""))) +
+        ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si(""))) +
         ggplot2::labs(x = "Chemical shift (ppm)", y = "Intensity")
 }
 
