@@ -182,7 +182,8 @@ show_progress_bar <- function(...) {
 progress_bar_new <- function(name, total) {
   have_pkg_progressr <- requireNamespace("progressr", quietly = TRUE)
   if (have_pkg_progressr) {
-    return(progressr::progressor(steps = total, message = name))
+      e <- rlang::caller_env()
+      return(progressr::progressor(steps = total, message = name, envir = e))
   }
   # fallback txtprogressbar:
   return(utils::txtProgressBar(min = 0, max = total, style = 3))
