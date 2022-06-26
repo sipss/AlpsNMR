@@ -55,7 +55,7 @@ register(SnowParam(workers = 3), default = TRUE)  # enable parallellization with
 
 # Data: The `MeOH_plasma_extraction` dataset
 
-To explore the basics of the AlpsNMR package, we have included four NMR samples
+To explore the basics of the AlpsNMR package, we have included three NMR samples
 acquired in a 600 MHz Bruker instrument bundled with the package.
 The samples are pooled quality control plasma samples, that were extracted with methanol.
 They only contain small molecules.
