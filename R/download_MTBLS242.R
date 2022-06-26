@@ -28,7 +28,7 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
     # utils::download.file(meta_url, method = "auto", destfile = meta_dst, mode = "wb")
     annotations_destfile <- file.path(dest_dir, "sample_annotations.tsv")
     if (!file.exists(annotations_destfile) || force) {
-        rlang::inform("Downloading sample annotations, keeping only preop and 3 months after surgery timepoints...")
+        rlang::inform(c("i" = "Downloading sample annotations, keeping only preop and 3 months after surgery timepoints..."))
         sample_annot <- tibble::as_tibble(
             utils::read.table(
                 meta_url,
@@ -69,16 +69,17 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
         
         utils::write.table(sample_annot, file = annotations_destfile, sep = "\t", row.names = FALSE)
     } else {
-        rlang::inform(glue("Annotations were previously downloaded. Loading {annotations_destfile}"))
-        sample_annot <- readr::read_tsv(annotations_destfile)
+        rlang::inform(c("i" = glue("Annotations were previously downloaded. Loading {annotations_destfile}")))
+        sample_annot <- readr::read_tsv(annotations_destfile, show_col_types = FALSE)
     }
-    rlang::inform("Downloading samples and keeping CPMG spectra, please wait...")
+    rlang::inform(c("i" = "Downloading samples and keeping CPMG spectra, please wait..."))
     pb <- progress_bar_new(
         name = "Preparing samples",
         total = length(sample_annot$NMRExperiment)
     )
     dst_rootdir <- file.path(dest_dir, "samples")
     dir.create(dst_rootdir, recursive = TRUE, showWarnings = FALSE)
+    report_skipped_downloads <- FALSE
     purrr::walk(
         sample_annot$NMRExperiment,
         function(filename_base, url, dst_rootdir, keep_only_CPMG_1r) {
@@ -88,7 +89,10 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
             final_dst_file <- file.path(dst_rootdir, filename)
             intermediate_dst_file <- file.path(dst_rootdir, paste0(filename, "intermediate.zip"))
             if (file.exists(final_dst_file) && !force) {
-                rlang::inform(glue("Skipping download of {filename_base} since it was previously downloaded."))
+                if (!report_skipped_downloads) {
+                    rlang::inform(c("i" = "Skipping re-download of previously downloadeded samples."))
+                    report_skipped_downloads <<- TRUE
+                }
                 return()
             }
             curl::curl_download(url = src_url, destfile = intermediate_dst_file)
