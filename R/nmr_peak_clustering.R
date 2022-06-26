@@ -220,6 +220,8 @@ get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster, 
 
 #' @param peak_list A peak list with NMRExperiment, peak_id and ppm columsn (at least)
 #' @param cluster The result of the clustering
+#' @param max_dist_thresh_ppb The maximum distance allowed within two peaks in a cluster
+#' @noRd
 estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
     peaks_per_sample <- peak_list |> 
         dplyr::group_by(.data$NMRExperiment) |> 
