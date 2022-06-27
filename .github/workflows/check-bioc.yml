@@ -54,13 +54,29 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest, r: '4.2', bioc: '3.15', cont: "bioconductor/bioconductor_docker:RELEASE_3_15", rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+          - {
+              os: ubuntu-latest,
+              r: '4.2',
+              bioc: '3.15',
+              cont: "bioconductor/bioconductor_docker:RELEASE_3_15",
+              rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
+            }
+          - {
+              os: ubuntu-r41,
+              r: '4.1',
+              bioc: '3.14',
+              cont: "bioconductor/bioconductor_docker:RELEASE_3_14",
+              rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/2022-04-21"
+            }
           #- { os: macOS-latest, r: '4.2', bioc: '3.15'}
           #- { os: windows-latest, r: '4.2', bioc: '3.15'}
           ## Check https://github.com/r-lib/actions/tree/master/examples
           ## for examples using the http-user-agent
     env:
+      CONF_NAME: ${{ matrix.config.os }}
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      R_VERSION: ${{ matrix.config.r }}
+      BIOC_VERSION: ${{ matrix.config.bioc }}
       RSPM: ${{ matrix.config.rspm }}
       NOT_CRAN: true
       TZ: UTC
@@ -107,16 +123,16 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_3_15-r-4.2-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_3_15-r-4.2-
+          key: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_${{ env.BIOC_VERSION }}-r-${{ env.R_VERSION }}-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_${{ env.BIOC_VERSION }}-r-${{ env.R_VERSION }}-
 
       - name: Cache R packages on Linux
         if: "!contains(github.event.head_commit.message, '/nocache') && runner.os == 'Linux' "
         uses: actions/cache@v2
         with:
           path: /home/runner/work/_temp/Library
-          key: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_3_15-r-4.2-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_3_15-r-4.2-
+          key: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_${{ env.BIOC_VERSION }}-r-${{ env.R_VERSION }}-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_${{ env.BIOC_VERSION }}-r-${{ env.R_VERSION }}-
 
       - name: Install Linux system dependencies
         if: runner.os == 'Linux'
@@ -188,7 +204,7 @@ jobs:
           gha_repos <- if(
               .Platform$OS.type == "unix" && Sys.info()["sysname"] != "Darwin"
           ) c(
-              "AnVIL" = "https://bioconductordocker.blob.core.windows.net/packages/3.15/bioc",
+              "AnVIL" = sprintf("https://bioconductordocker.blob.core.windows.net/packages/%s/bioc", BiocManager::version()),
               BiocManager::repositories()
               ) else BiocManager::repositories()
 
@@ -283,7 +299,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Test coverage
-        if: github.ref == 'refs/heads/master' && env.run_covr == 'true' && runner.os == 'Linux'
+        if: github.ref == 'refs/heads/master' && env.run_covr == 'true' && runner.os == 'Linux' && env.CONF_NAME == 'ubuntu-latest'
         run: |
           covr::codecov()
         shell: Rscript {0}
@@ -293,7 +309,7 @@ jobs:
         run: R CMD INSTALL .
 
       - name: Build and deploy pkgdown site
-        if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true' && runner.os == 'Linux' && github.repository == env.pkgdown_repo
+        if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true' && runner.os == 'Linux' && github.repository == env.pkgdown_repo  && env.CONF_NAME == 'ubuntu-latest'
         run: |
           git config --global --add safe.directory /__w/AlpsNMR/AlpsNMR
           git config --local user.name "$GITHUB_ACTOR"
