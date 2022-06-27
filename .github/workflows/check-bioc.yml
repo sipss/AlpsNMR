@@ -56,13 +56,15 @@ jobs:
         config:
           - {
               os: ubuntu-latest,
+              conf_name: 'ubuntu-latest',
               r: '4.2',
               bioc: '3.15',
               cont: "bioconductor/bioconductor_docker:RELEASE_3_15",
               rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
             }
           - {
-              os: ubuntu-r41,
+              os: ubuntu-latest,
+              conf_name: 'ubuntu-r4.1',
               r: '4.1',
               bioc: '3.14',
               cont: "bioconductor/bioconductor_docker:RELEASE_3_14",
@@ -73,7 +75,7 @@ jobs:
           ## Check https://github.com/r-lib/actions/tree/master/examples
           ## for examples using the http-user-agent
     env:
-      CONF_NAME: ${{ matrix.config.os }}
+      CONF_NAME: ${{ matrix.config.conf_name }}
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       R_VERSION: ${{ matrix.config.r }}
       BIOC_VERSION: ${{ matrix.config.bioc }}
