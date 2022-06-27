@@ -70,7 +70,7 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
         utils::write.table(sample_annot, file = annotations_destfile, sep = "\t", row.names = FALSE)
     } else {
         rlang::inform(c("i" = glue("Annotations were previously downloaded. Loading {annotations_destfile}")))
-        sample_annot <- readr::read_tsv(annotations_destfile, show_col_types = FALSE)
+        sample_annot <- utils::read.csv(annotations_destfile, header = TRUE, sep = "\t")
     }
     rlang::inform(c("i" = "Downloading samples and keeping CPMG spectra, please wait..."))
     pb <- progress_bar_new(
