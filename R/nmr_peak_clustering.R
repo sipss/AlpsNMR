@@ -199,10 +199,10 @@ get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster, 
     break_in <- NULL
     for (i in seq_len(ncol(peak_assignments))) {
         peak_list$cluster <- peak_assignments[,i]
-        max_dist_ppm <- peak_list |>
-            dplyr::group_by(.data$cluster) |> 
-            dplyr::summarize(max_dist = max(.data$ppm) - min(.data$ppm), .groups = "drop") |>
-            dplyr::pull("max_dist") |>
+        max_dist_ppm <- peak_list %>%
+            dplyr::group_by(.data$cluster)  %>%
+            dplyr::summarize(max_dist = max(.data$ppm) - min(.data$ppm), .groups = "drop")  %>%
+            dplyr::pull("max_dist") %>%
             max()
         max_dist_ppbs[i] <- 1000*max_dist_ppm
         if (!is.null(max_dist_thresh_ppb) && is.null(break_in) && max_dist_ppbs[i] < max_dist_thresh_ppb) {
@@ -223,9 +223,9 @@ get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster, 
 #' @param max_dist_thresh_ppb The maximum distance allowed within two peaks in a cluster
 #' @noRd
 estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
-    peaks_per_sample <- peak_list |> 
-        dplyr::group_by(.data$NMRExperiment) |> 
-        dplyr::summarize(n = dplyr::n()) |>
+    peaks_per_sample <- peak_list %>% 
+        dplyr::group_by(.data$NMRExperiment) %>% 
+        dplyr::summarize(n = dplyr::n()) %>%
         dplyr::pull("n")
     min_clusters_to_test <- max(peaks_per_sample)
     max_clusters_to_test <- sum(peaks_per_sample)
@@ -243,11 +243,11 @@ estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
     )
     clust_dist2 <- get_max_dist_ppb_for_num_clusters(num_clusters_fine, peak_list, cluster, max_dist_thresh_ppb = NULL)
     # Combine:
-    num_clusters_vs_max_distance <- dplyr::bind_rows(clust_dist, clust_dist2) |>
-        dplyr::arrange(num_clusters) |>
+    num_clusters_vs_max_distance <- dplyr::bind_rows(clust_dist, clust_dist2) %>%
+        dplyr::arrange(num_clusters) %>%
         dplyr::distinct()
-    num_clusters <- num_clusters_vs_max_distance |>
-        dplyr::filter(.data$max_distance_ppb < !!max_dist_thresh_ppb) |>
+    num_clusters <- num_clusters_vs_max_distance %>%
+        dplyr::filter(.data$max_distance_ppb < !!max_dist_thresh_ppb) %>%
         dplyr::pull("num_clusters")
     gplt <- ggplot2::ggplot() +
         ggplot2::geom_point(ggplot2::aes(x = .data$num_clusters, y = .data$max_distance_ppb), data = num_clusters_vs_max_distance, na.rm = TRUE) +
@@ -308,18 +308,18 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
     peak_list_clustered2$intensity[plc_rows_2] <- peak_list_clustered2$intensity[plc_rows_2] + offset_for_plotting
     
     for_segments <- dplyr::full_join(
-        peak_list_clustered2 |>
-            dplyr::filter(.data$NMRExperiment == !!NMRExperiments[1]) |>
+        peak_list_clustered2 %>%
+            dplyr::filter(.data$NMRExperiment == !!NMRExperiments[1]) %>%
             dplyr::select(.data$NMRExperiment, .data$ppm, .data$intensity, .data$cluster, .data$area),
-        peak_list_clustered2 |>
-            dplyr::filter(.data$NMRExperiment == !!NMRExperiments[2]) |>
+        peak_list_clustered2 %>%
+            dplyr::filter(.data$NMRExperiment == !!NMRExperiments[2]) %>%
             dplyr::select(.data$NMRExperiment, .data$ppm, .data$intensity, .data$cluster, .data$area),
         by = "cluster"
     )
     
-    only_on_1 <- for_segments |> filter(is.na(.data$NMRExperiment.y))
-    only_on_2 <- for_segments |> filter(is.na(.data$NMRExperiment.x))
-    for_segments_12 <- for_segments |> filter(!is.na(.data$NMRExperiment.x), !is.na(.data$NMRExperiment.y))
+    only_on_1 <- for_segments %>% filter(is.na(.data$NMRExperiment.y))
+    only_on_2 <- for_segments %>% filter(is.na(.data$NMRExperiment.x))
+    for_segments_12 <- for_segments %>% filter(!is.na(.data$NMRExperiment.x), !is.na(.data$NMRExperiment.y))
     
     geom_txt <- get_geom_text()
     ggplot2::ggplot() +

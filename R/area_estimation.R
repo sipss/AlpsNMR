@@ -315,14 +315,14 @@ peaklist_fit_lorentzians <- function(
     # the inflection point between the two maxima.
     # These two peaks should ideally be merged into one, so we will take
     # arbitrarily the one with higher intensity and ignore the other one:
-    peak_data <- peak_data |>
-        dplyr::group_by(.data$NMRExperiment, .data$ppm_infl_min, .data$ppm_infl_max) |>
+    peak_data <- peak_data %>%
+        dplyr::group_by(.data$NMRExperiment, .data$ppm_infl_min, .data$ppm_infl_max) %>%
         dplyr::mutate(
             group_max_intensity = max(.data$intensity),
             group_size = dplyr::n()
-        ) |>
-        dplyr::ungroup() |>
-        dplyr::filter(.data$group_size == 1 | (.data$group_size > 1 & .data$intensity == .data$group_max_intensity)) |>
+        ) %>%
+        dplyr::ungroup() %>%
+        dplyr::filter(.data$group_size == 1 | (.data$group_size > 1 & .data$intensity == .data$group_max_intensity)) %>%
         dplyr::select(-.data$group_size, -.data$group_max_intensity)
     # Corner case solved.
     

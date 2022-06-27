@@ -425,9 +425,9 @@ We can confirm sample 20 is now slightly more diluted:
 
 ```{r}
 to_plot <- dplyr::bind_rows(
-    tidy(dataset_align, NMRExperiment = "20", chemshift_range = c(2,2.5)) |>
+    tidy(dataset_align, NMRExperiment = "20", chemshift_range = c(2,2.5)) %>%
         mutate(Normalized = "No"),
-    tidy(dataset_norm, NMRExperiment = "20", chemshift_range = c(2,2.5)) |>
+    tidy(dataset_norm, NMRExperiment = "20", chemshift_range = c(2,2.5)) %>%
         mutate(Normalized = "Yes"),
 )
 ggplot(data = to_plot, mapping = aes(x = chemshift, y = intensity, color = Normalized)) + 
