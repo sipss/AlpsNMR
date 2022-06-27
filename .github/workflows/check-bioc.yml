@@ -203,12 +203,17 @@ jobs:
           ## Alternatively use https://storage.googleapis.com/bioconductor_docker/packages/
           ## though based on https://bit.ly/bioc2021-package-binaries
           ## the Azure link will be the main one going forward.
-          gha_repos <- if(
+          if(
               .Platform$OS.type == "unix" && Sys.info()["sysname"] != "Darwin"
-          ) c(
+          ) {
+              gha_repos <- c(
               "AnVIL" = sprintf("https://bioconductordocker.blob.core.windows.net/packages/%s/bioc", BiocManager::version()),
               BiocManager::repositories()
-              ) else BiocManager::repositories()
+              )
+              gha_repos["CRAN"] <- Sys.getenv("RSPM") 
+          }  else {
+              gha_repos <- BiocManager::repositories()
+          }
 
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
@@ -231,7 +236,9 @@ jobs:
           ## that have seen been updated in Bioconductor
           message(paste('****', Sys.time(), 'pass number 2 at installing dependencies: any remaining dependencies ****'))
           options(install.packages.check.source = "no")
-          remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), build_vignettes = TRUE, upgrade = TRUE, force = TRUE)
+          gha_repos <- BiocManager::repositories()
+          gha_repos["CRAN"] <- Sys.getenv("RSPM")
+          remotes::install_local(dependencies = TRUE, repos = gha_repos, build_vignettes = TRUE, upgrade = TRUE, force = TRUE)
         shell: Rscript {0}
 
       - name: Install BiocGenerics
