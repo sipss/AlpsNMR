@@ -124,7 +124,7 @@ nmr_detect_peaks <- function(nmr_dataset,
         if (isTRUE(verbose)) {
             rlang::inform(
                 message = c(
-                    "i" = glue::glue("Using baselineThresh={baselineThresh}", baselineThresh=baselineThresh)
+                    "i" = glue::glue("Using baselineThresh={baselineThresh}", baselineThresh = baselineThresh)
                 )
             )
             rlang::inform(
@@ -148,10 +148,17 @@ nmr_detect_peaks <- function(nmr_dataset,
         baselineThresh <- rep(baselineThresh, times = nmr_dataset$num_samples)
     }
 
-    data_matrix_to_list <-
-        lapply(seq_len(nrow(nmr_dataset$data_1r)),
-               function(i)
-                   matrix(nmr_dataset$data_1r[i, ], nrow = 1))
+    if ("data_1r_baseline" %in% names(unclass(nmr_dataset))) {
+        data_matrix_to_list <-
+            lapply(seq_len(nrow(nmr_dataset$data_1r)),
+                   function(i)
+                       matrix(nmr_dataset$data_1r[i, ] - nmr_dataset$data_1r_baseline[i, ], nrow = 1))
+    } else {
+        data_matrix_to_list <-
+            lapply(seq_len(nrow(nmr_dataset$data_1r)),
+                   function(i)
+                       matrix(nmr_dataset$data_1r[i, ], nrow = 1))
+    }
 
     warn_future_to_biocparallel()
     peakList <- BiocParallel::bpmapply(
@@ -172,6 +179,7 @@ nmr_detect_peaks <- function(nmr_dataset,
         ),
         SIMPLIFY = FALSE
     )
+    
     peak_data <- peakList_to_dataframe(nmr_dataset, peakList)
     peak_data <- peaklist_fit_lorentzians(
         peak_data,
@@ -397,13 +405,18 @@ peakList_to_dataframe <- function(nmr_dataset, peakList) {
         function(peak_idx, sample_idx, nmr_dataset, NMRExperiments) {
             num_of_peaks_in_sample <- length(peak_idx)
             spec <- as.numeric(nmr_dataset$data_1r[sample_idx, ])
+            if ("data_1r_baseline" %in% names(unclass(nmr_dataset))) {
+                basel <- as.numeric(nmr_dataset$data_1r_baseline[sample_idx, ])
+            } else {
+                basel <- 0*spec
+            }
             data.frame(
                 peak_id = "",
                 NMRExperiment = rep(NMRExperiments[sample_idx], num_of_peaks_in_sample),
                 ppm = nmr_dataset$axis[peak_idx],
                 pos = peak_idx,
-                intensity = spec[peak_idx],
-                stringsAsFactors = FALSE
+                intensity_raw = spec[peak_idx],
+                intensity = (spec - basel)[peak_idx]
             )
         },
         nmr_dataset = nmr_dataset,
