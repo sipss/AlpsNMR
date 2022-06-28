@@ -309,8 +309,10 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
     spec_rows_2 <- spectra$NMRExperiment == NMRExperiments[2]
     spectra$intensity[spec_rows_2] <- spectra$intensity[spec_rows_2] + offset_for_plotting
 
-    thresh_rows_2 <- thresholds$NMRExperiment == NMRExperiments[2]
-    thresholds$intensity[thresh_rows_2] <- thresholds$intensity[thresh_rows_2] + offset_for_plotting
+    if (!is.null(thresholds)) {
+        thresh_rows_2 <- thresholds$NMRExperiment == NMRExperiments[2]
+        thresholds$intensity[thresh_rows_2] <- thresholds$intensity[thresh_rows_2] + offset_for_plotting
+    }
     
     peak_list_clustered2 <- dplyr::filter(
         peak_list_clustered,
@@ -337,14 +339,17 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
     for_segments_12 <- for_segments %>% filter(!is.na(.data$NMRExperiment.x), !is.na(.data$NMRExperiment.y))
     
     geom_txt <- get_geom_text()
-    ggplot2::ggplot() +
+    gplt <- ggplot2::ggplot() +
         # The spectra:
         ggplot2::geom_line(ggplot2::aes(x = .data$chemshift, y = .data$intensity, color = .data$NMRExperiment), data = spectra) +
-        ggplot2::geom_hline(yintercept = c(0, offset_for_plotting), color = "gray") +
+        ggplot2::geom_hline(yintercept = c(0, offset_for_plotting), color = "gray")
 
-        # The thresholds:
-        ggplot2::geom_line(ggplot2::aes(x = .data$chemshift, y = .data$intensity, color = .data$NMRExperiment), data = thresholds, linetype = "dashed") +
-
+    if (!is.null(thresholds)) {
+        gplt <- gplt +
+            ggplot2::geom_line(ggplot2::aes(x = .data$chemshift, y = .data$intensity, color = .data$NMRExperiment), data = thresholds, linetype = "dashed")
+    }
+    
+    gplt <- gplt +
         # Peaks not detected on sample 2
         ggplot2::geom_point(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x), data = only_on_1) + 
         geom_txt(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x, color = .data$NMRExperiment.x, label = signif(.data$area.x, 4)), data = only_on_1) + 
@@ -362,6 +367,7 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
         ggplot2::scale_x_reverse() +
         ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si(""))) +
         ggplot2::labs(x = "Chemical shift (ppm)", y = "Intensity")
+    gplt
 }
 
 
