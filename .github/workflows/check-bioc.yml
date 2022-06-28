@@ -142,7 +142,7 @@ jobs:
           sysreqs=$(Rscript -e 'cat("apt-get update -y && apt-get install -y", paste(gsub("apt-get install -y ", "", remotes::system_requirements("ubuntu", "20.04")), collapse = " "))')
           echo $sysreqs
           sudo -s eval "$sysreqs"
-          sudo apt-get install -y texlive-extra-utils texlive-latex-extra texlive-latex-base texlive-latex-recommended lmodern texlive-luatex
+          sudo apt-get install -y texlive-extra-utils texlive-latex-extra texlive-latex-base texlive-latex-recommended lmodern texlive-luatex texlive-full
 
       - name: Install macOS system dependencies
         if: matrix.config.os == 'macOS-latest'
