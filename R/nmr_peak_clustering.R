@@ -283,20 +283,35 @@ estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
 #' @param peak_list_clustered A peak list table with a clustered column
 #' @param NMRExperiments Two and only two experiments to compare in the plot
 #' @param chemshift_range A region, make it so it does not cover a huge range (maybe 1ppm or less)
+#' @param baselineThresh If given (as returned from the `nmr_baseline_threshold()`) the
+#'  baseline threshold will be plotted. This can be useful to diagnose whether a peak is missing due to
+#'  this threshold or due to other parameters (e.g. `SNR.Th`). See `nmr_detect_peaks()`.
 #'
 #' @return A plot of the two experiments in the given chemshift range, with
 #'  lines connecting peaks identified as the same and dots showing peaks without pairs
 #' @export
 #'
-nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiments, chemshift_range) {
+nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiments, chemshift_range, baselineThresh = NULL) {
     if (length(NMRExperiments) != 2) {
         rlang::abort("Please provide 2 and only 2 NMRExperiments")
     }
     
-    spectra <- tidy(dataset, chemshift_range = chemshift_range, NMRExperiment = NMRExperiments)
+    tidy_data <- tidy_spectra_baseline_and_threshold(
+        dataset = dataset, 
+        thresholds = baselineThresh, 
+        chemshift_range = chemshift_range,
+        NMRExperiment = NMRExperiments
+    ) 
+    spectra <- tidy_data$spectra
+    thresholds <- tidy_data$thresholds
+
     offset_for_plotting <- 0.2*diff(range(spectra$intensity))
     spec_rows_2 <- spectra$NMRExperiment == NMRExperiments[2]
     spectra$intensity[spec_rows_2] <- spectra$intensity[spec_rows_2] + offset_for_plotting
+
+    thresh_rows_2 <- thresholds$NMRExperiment == NMRExperiments[2]
+    thresholds$intensity[thresh_rows_2] <- thresholds$intensity[thresh_rows_2] + offset_for_plotting
+    
     peak_list_clustered2 <- dplyr::filter(
         peak_list_clustered,
         .data$NMRExperiment %in% !!NMRExperiments,
@@ -305,15 +320,15 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
     )
     
     plc_rows_2 <- peak_list_clustered2$NMRExperiment == NMRExperiments[2]
-    peak_list_clustered2$intensity[plc_rows_2] <- peak_list_clustered2$intensity[plc_rows_2] + offset_for_plotting
+    peak_list_clustered2$intensity_raw[plc_rows_2] <- peak_list_clustered2$intensity_raw[plc_rows_2] + offset_for_plotting
     
     for_segments <- dplyr::full_join(
         peak_list_clustered2 %>%
             dplyr::filter(.data$NMRExperiment == !!NMRExperiments[1]) %>%
-            dplyr::select(.data$NMRExperiment, .data$ppm, .data$intensity, .data$cluster, .data$area),
+            dplyr::select(.data$NMRExperiment, .data$ppm, .data$intensity_raw, .data$cluster, .data$area),
         peak_list_clustered2 %>%
             dplyr::filter(.data$NMRExperiment == !!NMRExperiments[2]) %>%
-            dplyr::select(.data$NMRExperiment, .data$ppm, .data$intensity, .data$cluster, .data$area),
+            dplyr::select(.data$NMRExperiment, .data$ppm, .data$intensity_raw, .data$cluster, .data$area),
         by = "cluster"
     )
     
@@ -323,18 +338,27 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
     
     geom_txt <- get_geom_text()
     ggplot2::ggplot() +
+        # The spectra:
         ggplot2::geom_line(ggplot2::aes(x = .data$chemshift, y = .data$intensity, color = .data$NMRExperiment), data = spectra) +
         ggplot2::geom_hline(yintercept = c(0, offset_for_plotting), color = "gray") +
 
-        ggplot2::geom_point(ggplot2::aes(x = .data$ppm.x, y = .data$intensity.x), data = only_on_1) + 
-        geom_txt(ggplot2::aes(x = .data$ppm.x, y = .data$intensity.x, color = .data$NMRExperiment.x, label = signif(.data$area.x, 4)), data = only_on_1) + 
+        # The thresholds:
+        ggplot2::geom_line(ggplot2::aes(x = .data$chemshift, y = .data$intensity, color = .data$NMRExperiment), data = thresholds, linetype = "dashed") +
 
-        ggplot2::geom_point(ggplot2::aes(x = .data$ppm.y, y = .data$intensity.y), data = only_on_2) +
-        geom_txt(ggplot2::aes(x = .data$ppm.y, y = .data$intensity.y, color = .data$NMRExperiment.y, label = signif(.data$area.y, 4)), data = only_on_2) + 
+        # Peaks not detected on sample 2
+        ggplot2::geom_point(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x), data = only_on_1) + 
+        geom_txt(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x, color = .data$NMRExperiment.x, label = signif(.data$area.x, 4)), data = only_on_1) + 
 
-        ggplot2::geom_segment(ggplot2::aes(x = .data$ppm.x, y = .data$intensity.x, xend = .data$ppm.y, yend = .data$intensity.y), data = for_segments_12) +
-        geom_txt(ggplot2::aes(x = .data$ppm.x, y = .data$intensity.x, color = .data$NMRExperiment.x, label = signif(.data$area.x, 4)), data = for_segments_12) + 
-        geom_txt(ggplot2::aes(x = .data$ppm.y, y = .data$intensity.y, color = .data$NMRExperiment.y, label = signif(.data$area.y, 4)), data = for_segments_12) + 
+        # Peaks not detected on sample 1
+        ggplot2::geom_point(ggplot2::aes(x = .data$ppm.y, y = .data$intensity_raw.y), data = only_on_2) +
+        geom_txt(ggplot2::aes(x = .data$ppm.y, y = .data$intensity_raw.y, color = .data$NMRExperiment.y, label = signif(.data$area.y, 4)), data = only_on_2) + 
+
+        # Peaks detected in both samples:
+        ggplot2::geom_segment(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x, xend = .data$ppm.y, yend = .data$intensity_raw.y), data = for_segments_12) +
+        geom_txt(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x, color = .data$NMRExperiment.x, label = signif(.data$area.x, 4)), data = for_segments_12) + 
+        geom_txt(ggplot2::aes(x = .data$ppm.y, y = .data$intensity_raw.y, color = .data$NMRExperiment.y, label = signif(.data$area.y, 4)), data = for_segments_12) + 
+
+        # Plot options:
         ggplot2::scale_x_reverse() +
         ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si(""))) +
         ggplot2::labs(x = "Chemical shift (ppm)", y = "Intensity")
