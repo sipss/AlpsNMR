@@ -72,46 +72,18 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
     
     aes_str <- as.character(list(...))
     columns_to_request <- c("NMRExperiment", get_vars_from_aes_string(aes_str))
-    to_plot <- tidy(
-        nmr_dataset,
+    tidy_data <- tidy_spectra_baseline_and_threshold(
+        dataset = nmr_dataset,
+        thresholds = thresholds, 
         chemshift_range = chemshift_range,
         NMRExperiment = NMRExperiment,
-        columns = columns_to_request,
-        matrix_name = "data_1r"
+        columns = columns_to_request
     )
-    
-    if ("data_1r_baseline" %in% names(unclass(nmr_dataset))) {
-        to_plot_baseline <- tidy(
-            nmr_dataset,
-            chemshift_range = chemshift_range,
-            NMRExperiment = NMRExperiment,
-            columns = columns_to_request,
-            matrix_name = "data_1r_baseline"
-        )
-        to_plot_threshold <- dplyr::left_join(
-            to_plot_baseline,
-            tibble::enframe(
-                thresholds,
-                name = "NMRExperiment",
-                value = "threshold"
-            ),
-            by = "NMRExperiment"
-        )
-        to_plot_threshold$intensity <- to_plot_threshold$intensity + to_plot_threshold$threshold
-    } else {
-        to_plot_baseline <- NULL
-        to_plot_threshold <-  dplyr::left_join(
-            to_plot,
-            tibble::enframe(
-                thresholds,
-                name = "NMRExperiment",
-                value = "threshold"
-            ),
-            by = "NMRExperiment"
-        )
-        to_plot_threshold$intensity <- to_plot_threshold$threshold
-    }
-    
+    to_plot <- tidy_data$spectra
+    to_plot_baseline <- tidy_data$baselines
+    to_plot_threshold <- tidy_data$thresholds
+
+
     dotdotdot_aes <- list(...)
     fixed_aes <- list(
         x = "chemshift",
@@ -125,16 +97,75 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
     ymax <- 1.5*max(to_plot_threshold$intensity)
 
     gplt <- ggplot2::ggplot() +
+        # The spectra:
         ggplot2::geom_line(mapping = do.call(ggplot2::aes_string, all_aes), data = to_plot)
-    if (!is.null(to_plot_baseline)) {
+
+        if (!is.null(to_plot_baseline)) {
+            # The baseline:
         gplt <- gplt + ggplot2::geom_line(mapping = do.call(ggplot2::aes_string, all_aes), data = to_plot_baseline, linetype = "dashed")
     }
     gplt <- gplt +
+        # The threshold
         ggplot2::geom_line(mapping = do.call(ggplot2::aes_string, all_aes), data = to_plot_threshold, linetype = "dashed", color = "black") +
+        # Other plotting options
         ggplot2::labs(x = "Chemical Shift (ppm)", y = "Intensity (a.u.)") +
         ggplot2::scale_x_reverse(limits = rev(chemshift_range[seq_len(2)])) +
         ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si("")), limits = c(0, ymax)) +
         ggplot2::facet_wrap(~factor(NMRExperiment, levels = unique(NMRExperiment))) +
         ggplot2::theme(legend.position = "none")
     gplt
+}
+
+tidy_spectra_baseline_and_threshold <- function(dataset, thresholds, chemshift_range, NMRExperiment, columns = character(0L)) {
+    to_plot <- tidy(
+        dataset,
+        chemshift_range = chemshift_range,
+        NMRExperiment = NMRExperiment,
+        columns = columns,
+        matrix_name = "data_1r"
+    )
+    if ("data_1r_baseline" %in% names(unclass(dataset))) {
+        to_plot_baseline <- tidy(
+            dataset,
+            chemshift_range = chemshift_range,
+            NMRExperiment = NMRExperiment,
+            columns = columns,
+            matrix_name = "data_1r_baseline"
+        )
+        if (is.null(thresholds)) {
+            to_plot_threshold <- NULL
+        } else {
+            to_plot_threshold <- dplyr::left_join(
+                to_plot_baseline,
+                tibble::enframe(
+                    thresholds,
+                    name = "NMRExperiment",
+                    value = "threshold"
+                ),
+                by = "NMRExperiment"
+            )
+            to_plot_threshold$intensity <- to_plot_threshold$intensity + to_plot_threshold$threshold
+        }
+    } else {
+        to_plot_baseline <- NULL
+        if (is.null(thresholds)) {
+            to_plot_threshold <- NULL
+        } else {
+            to_plot_threshold <-  dplyr::left_join(
+                to_plot,
+                tibble::enframe(
+                    thresholds,
+                    name = "NMRExperiment",
+                    value = "threshold"
+                ),
+                by = "NMRExperiment"
+            )
+            to_plot_threshold$intensity <- to_plot_threshold$threshold
+        }
+    }
+    list(
+        spectra = to_plot,
+        baselines = to_plot_baseline,
+        thresholds = to_plot_threshold
+    )
 }
