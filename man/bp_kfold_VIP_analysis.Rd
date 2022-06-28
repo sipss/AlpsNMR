@@ -48,8 +48,7 @@ num_samples <- 64 # use an even number in this example
 num_peaks <- 20
 metadata <- data.frame(
     NMRExperiment = as.character(1:num_samples),
-    Condition = rep(c("A", "B"), times = num_samples/2),
-    stringsAsFactors = FALSE
+    Condition = rep(c("A", "B"), times = num_samples/2)
 )
 
 ### The matrix with peaks
