@@ -91,7 +91,7 @@
                         <h4 data-toc-skip class="author">AlpsNMR
 authors</h4>
             
-            <h4 data-toc-skip class="date">2022-06-27</h4>
+            <h4 data-toc-skip class="date">2022-06-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/vignettes/Vig03-plotting-samples.Rmd" class="external-link"><code>vignettes/Vig03-plotting-samples.Rmd</code></a></small>
       <div class="hidden name"><code>Vig03-plotting-samples.Rmd</code></div>
@@ -172,20 +172,19 @@ function:</p>
 </h3>
 <p>You can also create an <code>nmr_dataset_1D</code> object from
 scratch with the <code>new_nmr_dataset_1D</code> function:</p>
-<pre><code><span><span class="va">nsamp</span> <span class="op">&lt;-</span> <span class="fl">12</span></span>
-<span><span class="va">npoints</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
-<span><span class="co"># Create a random spectra matrix</span></span>
-<span><span class="va">dummy_ppm_axis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">0.2</span>, to <span class="op">=</span> <span class="fl">10</span>, length.out <span class="op">=</span> <span class="va">npoints</span><span class="op">)</span></span>
-<span><span class="va">dummy_spectra_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">nsamp</span><span class="op">*</span><span class="va">npoints</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="va">nsamp</span>, ncol <span class="op">=</span> <span class="va">npoints</span><span class="op">)</span></span>
-<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>external <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Sample"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>,</span>
-<span>                                       DummyClass <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>,</span>
-<span>                                       stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">your_custom_nmr_dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nmr_dataset_1D.html">new_nmr_dataset_1D</a></span><span class="op">(</span>ppm_axis <span class="op">=</span> <span class="va">dummy_ppm_axis</span>,</span>
-<span>                                                 data_1r <span class="op">=</span> <span class="va">dummy_spectra_matrix</span>,</span>
-<span>                                                 metadata <span class="op">=</span> <span class="va">metadata</span><span class="op">)</span></span>
-<span><span class="va">your_custom_nmr_dataset_1D</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">your_custom_nmr_dataset_1D</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Of course those random values don't make much sense..."</span><span class="op">)</span></span></code></pre>
+<pre><code>nsamp &lt;- 12
+npoints &lt;- 20
+# Create a random spectra matrix
+dummy_ppm_axis &lt;- seq(from = 0.2, to = 10, length.out = npoints)
+dummy_spectra_matrix &lt;- matrix(runif(nsamp*npoints), nrow = nsamp, ncol = npoints)
+metadata &lt;- list(external = data.frame(NMRExperiment = paste0("Sample", 1:12),
+                                       DummyClass = c("a", "b"))
+your_custom_nmr_dataset_1D &lt;- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
+                                                 data_1r = dummy_spectra_matrix,
+                                                 metadata = metadata)
+your_custom_nmr_dataset_1D
+plot(your_custom_nmr_dataset_1D) +
+  ggtitle("Of course those random values don't make much sense...")</code></pre>
 </div>
 </div>
 <div class="section level2">

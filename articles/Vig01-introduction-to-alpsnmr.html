@@ -91,7 +91,7 @@
                         <h4 data-toc-skip class="author">AlpsNMR
 authors</h4>
             
-            <h4 data-toc-skip class="date">2022-06-27</h4>
+            <h4 data-toc-skip class="date">2022-06-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/vignettes/Vig01-introduction-to-alpsnmr.Rmd" class="external-link"><code>vignettes/Vig01-introduction-to-alpsnmr.Rmd</code></a></small>
       <div class="hidden name"><code>Vig01-introduction-to-alpsnmr.Rmd</code></div>
@@ -386,16 +386,17 @@ sample and each chemical shift region:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_list_in_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">peak_list_initial</span>, <span class="va">ppm</span> <span class="op">&gt;</span> <span class="fl">3.22</span>, <span class="va">ppm</span> <span class="op">&lt;</span> <span class="fl">3.24</span><span class="op">)</span></span>
 <span><span class="va">peak_list_in_range</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
-<span><span class="co">##   peak_id  NMRExperiment   ppm   pos intensity ppm_infl_min ppm_infl_max</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> Peak0236 10             3.23 <span style="text-decoration: underline;">16</span>281   <span style="text-decoration: underline;">239</span>459.         3.23         3.23</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> Peak0237 10             3.24 <span style="text-decoration: underline;">16</span>308   <span style="text-decoration: underline;">358</span>753.         3.24         3.24</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> Peak0738 20             3.23 <span style="text-decoration: underline;">16</span>283   <span style="text-decoration: underline;">291</span>094.         3.23         3.23</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span> Peak0739 20             3.24 <span style="text-decoration: underline;">16</span>309   <span style="text-decoration: underline;">399</span>656.         3.24         3.24</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span> Peak1248 30             3.23 <span style="text-decoration: underline;">16</span>281   <span style="text-decoration: underline;">243</span>670.         3.23         3.23</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span> Peak1249 30             3.24 <span style="text-decoration: underline;">16</span>308   <span style="text-decoration: underline;">464</span>835.         3.24         3.24</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 3 more variables: gamma_ppb &lt;dbl&gt;, area &lt;dbl&gt;, norm_rmse &lt;dbl&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 11</span></span></span>
+<span><span class="co">##   peak_id  NMRExperiment   ppm   pos intensity_raw intensity ppm_infl_min</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> Peak0211 10             3.23 <span style="text-decoration: underline;">16</span>281       <span style="text-decoration: underline;">239</span>459.   <span style="text-decoration: underline;">224</span>420.         3.23</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> Peak0212 10             3.24 <span style="text-decoration: underline;">16</span>308       <span style="text-decoration: underline;">358</span>753.   <span style="text-decoration: underline;">343</span>534.         3.24</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> Peak0603 20             3.23 <span style="text-decoration: underline;">16</span>283       <span style="text-decoration: underline;">291</span>094.   <span style="text-decoration: underline;">267</span>693.         3.23</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> Peak0604 20             3.24 <span style="text-decoration: underline;">16</span>309       <span style="text-decoration: underline;">399</span>656.   <span style="text-decoration: underline;">375</span>897.         3.24</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> Peak1002 30             3.23 <span style="text-decoration: underline;">16</span>281       <span style="text-decoration: underline;">243</span>670.   <span style="text-decoration: underline;">232</span>273.         3.23</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> Peak1003 30             3.24 <span style="text-decoration: underline;">16</span>308       <span style="text-decoration: underline;">464</span>835.   <span style="text-decoration: underline;">453</span>429.         3.24</span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 4 more variables: ppm_infl_max &lt;dbl&gt;, gamma_ppb &lt;dbl&gt;, area &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   norm_rmse &lt;dbl&gt;</span></span></span></code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.22</span>, <span class="fl">3.25</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
@@ -420,8 +421,8 @@ sample and each chemical shift region:</p>
 <span>    verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Acceptance report</span></span>
-<span><span class="co">## <span style="color: #0000BB;">ℹ</span> 825/1474 peaks accepted. (56%)</span></span>
-<span><span class="co">## <span style="color: #0000BB;">ℹ</span> Removing 649 peaks</span></span></code></pre>
+<span><span class="co">## <span style="color: #0000BB;">ℹ</span> 833/1127 peaks accepted. (73.9%)</span></span>
+<span><span class="co">## <span style="color: #0000BB;">ℹ</span> Removing 294 peaks</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="spectra-alignment">Spectra alignment<a class="anchor" aria-label="anchor" href="#spectra-alignment"></a>
@@ -498,8 +499,8 @@ or small normalization factors.</p>
 <code class="sourceCode R"><span><span class="va">normalization_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_normalize.html">nmr_normalize_extra_info</a></span><span class="op">(</span><span class="va">dataset_norm</span><span class="op">)</span></span>
 <span><span class="va">normalization_info</span><span class="op">$</span><span class="va">norm_factor</span></span></code></pre></div>
 <pre><code><span><span class="co">##   NMRExperiment norm_factor norm_factor_norm</span></span>
-<span><span class="co">## 1            10   0.8477963        0.8477963</span></span>
-<span><span class="co">## 2            20   1.1417341        1.1417341</span></span>
+<span><span class="co">## 1            10   0.8478185        0.8478185</span></span>
+<span><span class="co">## 2            20   1.1417458        1.1417458</span></span>
 <span><span class="co">## 3            30   1.0000000        1.0000000</span></span></code></pre>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">normalization_info</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
@@ -554,8 +555,8 @@ calculated:</p>
 <span>    verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Acceptance report</span></span>
-<span><span class="co">## <span style="color: #0000BB;">ℹ</span> 831/1470 peaks accepted. (56.5%)</span></span>
-<span><span class="co">## <span style="color: #0000BB;">ℹ</span> Removing 639 peaks</span></span></code></pre>
+<span><span class="co">## <span style="color: #0000BB;">ℹ</span> 837/1128 peaks accepted. (74.2%)</span></span>
+<span><span class="co">## <span style="color: #0000BB;">ℹ</span> Removing 291 peaks</span></span></code></pre>
 <p>Feel free to plot, explore and further curate your peak list. Or
 proceed with the current one:</p>
 <p>Once we have a peak list for each sample <code>peak_list</code>, we
@@ -576,6 +577,13 @@ together.</p>
 <p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-37-1.png" width="700"></p>
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_list_clustered</span> <span class="op">&lt;-</span> <span class="va">clustering</span><span class="op">$</span><span class="va">peak_data</span></span></code></pre></div>
+<p>We can plot the samples, with the detected peaks and how they have
+been connected. This allows us to compare the peak detection across
+samples, and check how good the peak matching is.</p>
+<p>If peaks are matched they are connected with a black segment. If
+peaks are detected but not matched, they appear as a dot. If you see a
+peak, without a point on top then it means the peak was not detected or
+it was filtered out.</p>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_peak_clustering_plot.html">nmr_peak_clustering_plot</a></span><span class="op">(</span></span>
 <span>    dataset <span class="op">=</span> <span class="va">dataset_norm</span>,</span>
@@ -584,36 +592,46 @@ together.</p>
 <span>    chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.4</span>, <span class="fl">3.0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-39-1.png" width="700"></p>
+<p>Sometimes we see peaks and we wonder why are they not detected. We
+can include the <code>baselineThresh</code> to plot it in the sample as
+well. This can help to diagnose if the <code>baselineThresh</code>
+argument is the cause of a peak not being detected.</p>
 <div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_peak_clustering_plot.html">nmr_peak_clustering_plot</a></span><span class="op">(</span><span class="va">dataset_norm</span>, <span class="va">peak_list_clustered</span>, NMRExperiments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"20"</span><span class="op">)</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.5</span>, <span class="fl">4.6</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_peak_clustering_plot.html">nmr_peak_clustering_plot</a></span><span class="op">(</span></span>
+<span>    <span class="va">dataset_norm</span>,</span>
+<span>    <span class="va">peak_list_clustered</span>, </span>
+<span>    NMRExperiments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"20"</span><span class="op">)</span>,</span>
+<span>    chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.2</span>, <span class="fl">4.6</span><span class="op">)</span>,</span>
+<span>    baselineThresh <span class="op">=</span> <span class="va">baselineThresh</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-40-1.png" width="700"></p>
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_build_peak_table.html">nmr_build_peak_table</a></span><span class="op">(</span><span class="va">peak_list_clustered</span>, <span class="va">dataset_norm</span><span class="op">)</span></span>
 <span><span class="va">peak_table</span></span></code></pre></div>
-<pre><code><span><span class="co">## An nmr_dataset_peak_table (3 samples, and 321 peaks)</span></span></code></pre>
+<pre><code><span><span class="co">## An nmr_dataset_peak_table (3 samples, and 327 peaks)</span></span></code></pre>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span><span class="va">peak_table</span><span class="op">)</span></span>
 <span><span class="va">peak_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">##      0.8119   0.8225   0.8247    0.8333    0.8447   0.8479    0.8559   0.8605</span></span>
-<span><span class="co">## 10 248.1332       NA       NA  576.0294  583.9907 584.6776  234.5657 316.6311</span></span>
-<span><span class="co">## 20 411.9937 1448.253 651.2407 1062.1882 1039.3547       NA 1628.5143 426.1614</span></span>
-<span><span class="co">## 30 286.1166       NA 963.8638  886.4544  859.2279       NA 1761.5320 574.4401</span></span></code></pre>
+<pre><code><span><span class="co">##      0.8119   0.8223   0.8247    0.8333    0.8447   0.8479    0.8553   0.8605</span></span>
+<span><span class="co">## 10 248.1267       NA       NA  576.0143  583.9754 584.6623  234.5596 316.6228</span></span>
+<span><span class="co">## 20 411.9895 1448.242 651.2340 1062.1773 1039.3440       NA 1628.4975 426.1570</span></span>
+<span><span class="co">## 30 286.1166       NA 963.8638  886.4544  859.2279       NA 1761.5354 574.4401</span></span></code></pre>
 <p>Or you can get a data frame with the corresponding annotations:</p>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_integration_with_metadata.html">get_integration_with_metadata</a></span><span class="op">(</span><span class="va">peak_table</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 324</span></span></span>
-<span><span class="co">##   NMRExperiment SubjectID TimePoint ` 0.8119` ` 0.8225` ` 0.8247` ` 0.8333`</span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 330</span></span></span>
+<span><span class="co">##   NMRExperiment SubjectID TimePoint ` 0.8119` ` 0.8223` ` 0.8247` ` 0.8333`</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline       248.       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>       576.</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months       412.     <span style="text-decoration: underline;">1</span>448.      651.     <span style="text-decoration: underline;">1</span>062.</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline       286.       <span style="color: #BB0000;">NA</span>       964.      886.</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 317 more variables: ` 0.8447` &lt;dbl&gt;, ` 0.8479` &lt;dbl&gt;, ` 0.8559` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 323 more variables: ` 0.8447` &lt;dbl&gt;, ` 0.8479` &lt;dbl&gt;, ` 0.8553` &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   ` 0.8605` &lt;dbl&gt;, ` 0.8656` &lt;dbl&gt;, ` 0.8729` &lt;dbl&gt;, ` 0.8784` &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   ` 0.8910` &lt;dbl&gt;, ` 0.9034` &lt;dbl&gt;, ` 0.9087` &lt;dbl&gt;, ` 0.9158` &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   ` 0.9197` &lt;dbl&gt;, ` 0.9314` &lt;dbl&gt;, ` 0.9437` &lt;dbl&gt;, ` 0.9554` &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   ` 0.9658` &lt;dbl&gt;, ` 0.9758` &lt;dbl&gt;, ` 0.9903` &lt;dbl&gt;, ` 1.0020` &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   ` 1.0091` &lt;dbl&gt;, ` 1.0208` &lt;dbl&gt;, ` 1.0409` &lt;dbl&gt;, ` 1.0526` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ` 1.0595` &lt;dbl&gt;, ` 1.0717` &lt;dbl&gt;, ` 1.1757` &lt;dbl&gt;, ` 1.1870` &lt;dbl&gt;, …</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #949494;">#   ` 1.0595` &lt;dbl&gt;, ` 1.0717` &lt;dbl&gt;, ` 1.1749` &lt;dbl&gt;, ` 1.1870` &lt;dbl&gt;, …</span></span></span></code></pre>
 <p>From this peak table you can proceed to use statistical testing,
 machine learning, and any downstream analysis you may be interested
 in.</p>
