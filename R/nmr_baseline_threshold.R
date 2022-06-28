@@ -81,7 +81,7 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
     )
     
     if ("data_1r_baseline" %in% names(unclass(nmr_dataset))) {
-        to_plot_threshold <- tidy(
+        to_plot_baseline <- tidy(
             nmr_dataset,
             chemshift_range = chemshift_range,
             NMRExperiment = NMRExperiment,
@@ -89,7 +89,7 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
             matrix_name = "data_1r_baseline"
         )
         to_plot_threshold <- dplyr::left_join(
-            to_plot_threshold,
+            to_plot_baseline,
             tibble::enframe(
                 thresholds,
                 name = "NMRExperiment",
@@ -99,6 +99,7 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
         )
         to_plot_threshold$intensity <- to_plot_threshold$intensity + to_plot_threshold$threshold
     } else {
+        to_plot_baseline <- NULL
         to_plot_threshold <-  dplyr::left_join(
             to_plot,
             tibble::enframe(
@@ -124,7 +125,11 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
     ymax <- 1.5*max(to_plot_threshold$intensity)
 
     gplt <- ggplot2::ggplot() +
-        ggplot2::geom_line(mapping = do.call(ggplot2::aes_string, all_aes), data = to_plot) +
+        ggplot2::geom_line(mapping = do.call(ggplot2::aes_string, all_aes), data = to_plot)
+    if (!is.null(to_plot_baseline)) {
+        gplt <- gplt + ggplot2::geom_line(mapping = do.call(ggplot2::aes_string, all_aes), data = to_plot_baseline, linetype = "dashed")
+    }
+    gplt <- gplt +
         ggplot2::geom_line(mapping = do.call(ggplot2::aes_string, all_aes), data = to_plot_threshold, linetype = "dashed", color = "black") +
         ggplot2::labs(x = "Chemical Shift (ppm)", y = "Intensity (a.u.)") +
         ggplot2::scale_x_reverse(limits = rev(chemshift_range[seq_len(2)])) +
