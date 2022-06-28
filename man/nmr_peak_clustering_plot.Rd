@@ -8,7 +8,8 @@ nmr_peak_clustering_plot(
   dataset,
   peak_list_clustered,
   NMRExperiments,
-  chemshift_range
+  chemshift_range,
+  baselineThresh = NULL
 )
 }
 \arguments{
@@ -19,6 +20,10 @@ nmr_peak_clustering_plot(
 \item{NMRExperiments}{Two and only two experiments to compare in the plot}
 
 \item{chemshift_range}{A region, make it so it does not cover a huge range (maybe 1ppm or less)}
+
+\item{baselineThresh}{If given (as returned from the \code{nmr_baseline_threshold()}) the
+baseline threshold will be plotted. This can be useful to diagnose whether a peak is missing due to
+this threshold or due to other parameters (e.g. \code{SNR.Th}). See \code{nmr_detect_peaks()}.}
 }
 \value{
 A plot of the two experiments in the given chemshift range, with
