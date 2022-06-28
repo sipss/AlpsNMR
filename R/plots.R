@@ -49,22 +49,8 @@ plot.nmr_dataset_1D <- function(x,
         NMRExperiment <- names(x)
     }
     aes_str <- as.character(list(...))
-    if (length(aes_str) > 0) {
-        columns_to_request <- unique(
-            c(
-                "NMRExperiment",
-                purrr::flatten_chr(
-                    purrr::map(
-                        rlang::parse_exprs(aes_str),
-                        all.vars
-                    )
-                )
-            )
-        )
-    } else {
-        columns_to_request <- "NMRExperiment"
-    }
-    
+    columns_to_request <- c("NMRExperiment", get_vars_from_aes_string(aes_str))
+
     longdf <- tidy(
         x,
         NMRExperiment = NMRExperiment,
@@ -211,6 +197,21 @@ tidy.nmr_dataset_1D <-
         result <- dplyr::left_join(raw_data, meta_df, by = "NMRExperiment")
         return(result)
     }
+
+get_vars_from_aes_string <- function(aes_str) {
+    if (length(aes_str) == 0) {
+        return(character(0L))
+    }
+    unique(
+        purrr::flatten_chr(
+            purrr::map(
+                rlang::parse_exprs(aes_str),
+                all.vars
+            )
+        )
+    )
+}
+
 
 decimate_axis <- function(xaxis, xrange = NULL) {
     if (is.null(xrange)) {
