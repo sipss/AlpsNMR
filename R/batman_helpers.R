@@ -302,8 +302,7 @@ nmr_batman_multi_data_user <- function(multiplet_table,
                 "overwrite_truncation",
                 "Include_multiplet"
             ),
-            value = c(-50, -50, 1),
-            stringsAsFactors = FALSE
+            value = c(-50, -50, 1)
         )
     
     for (i in seq_len(nrow(col_def))) {

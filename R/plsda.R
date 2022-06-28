@@ -82,8 +82,7 @@ plsda_auroc <-
         list(
             aucs = data.frame(
                 ncomp = ncomps,
-                auc = aucs,
-                stringsAsFactors = FALSE
+                auc = aucs
             ),
             aucs_full = aucs_full
         )
@@ -276,8 +275,7 @@ fun_choose_best_ncomp_auc_threshold <-
                 auroc %>% dplyr::select(.data$auc) %>% dplyr::mutate(Group = !!group_name)
             })
         
-        toplot <-
-            do.call(rbind, c(auroc_tables, list(stringsAsFactors = FALSE)))
+        toplot <- do.call(rbind, auroc_tables)
         box_plot <- ggplot2::ggplot(toplot) +
             ggplot2::geom_boxplot(ggplot2::aes(
                 x = .data$Group,
@@ -385,8 +383,7 @@ plsda_auroc_vip_method <- function(ncomp, auc_increment_threshold = 0.05) {
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks
@@ -450,8 +447,7 @@ plsda_auroc_vip_compare <- function(...) {
             auroc %>% dplyr::select(.data$auc) %>% dplyr::mutate(Group = !!group_name)
         })
     
-    toplot <-
-        do.call(rbind, c(auroc_tables, list(stringsAsFactors = FALSE)))
+    toplot <- do.call(rbind, auroc_tables)
     ggplot2::ggplot(toplot) +
         ggplot2::geom_boxplot(ggplot2::aes(
             x = .data$Group,
@@ -482,8 +478,7 @@ plsda_auroc_vip_compare <- function(...) {
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks
@@ -623,8 +618,7 @@ plot_plsda_samples <- function(model, newdata = NULL, plot = TRUE) {
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks

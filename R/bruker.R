@@ -47,7 +47,7 @@ read_bruker_param <- function(file_name) {
         ),
         ncol = 2,
         byrow = TRUE
-    ), stringsAsFactors = FALSE)
+    ))
     colnames(R) <- c("pattern", "name")
 
     # Match each pattern to all lines. If there is a match and there was no

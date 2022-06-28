@@ -311,8 +311,7 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks
@@ -472,8 +471,7 @@ nmr_data_analysis <- function(dataset,
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks
@@ -789,8 +787,7 @@ bp_VIP_analysis <- function(dataset,
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks
@@ -945,8 +942,7 @@ bp_kfold_VIP_analysis <- function(dataset,
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks
@@ -1088,8 +1084,7 @@ new_nmr_data_analysis_method <- function(train_evaluate_model,
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks
@@ -1186,8 +1181,7 @@ permutation_test_model <- function(
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks
@@ -1283,8 +1277,7 @@ permutation_test_plot <- function(nmr_data_analysis_model,
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks
@@ -1405,8 +1398,7 @@ models_stability_plot_plsda <- function (model)
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks
@@ -1525,8 +1517,7 @@ models_stability_plot_bootstrap <- function (bp_results)
 #' num_peaks <- 20
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples/2),
-#'     stringsAsFactors = FALSE
+#'     Condition = rep(c("A", "B"), times = num_samples/2)
 #' )
 #' 
 #' ### The matrix with peaks

@@ -137,12 +137,10 @@ process_block <- function(lines, metadata_only = FALSE) {
                     data <- strsplit(lines[i_data_start:i], "[,;[:blank:]]+")
                     data <- unlist(data)
                     data <- matrix(as.numeric(data), nrow = 2)
-                    block[[field_name]] <-
-                        data.frame(
-                            x = data[1,],
-                            y = data[2,],
-                            stringsAsFactors = FALSE
-                        )
+                    block[[field_name]] <- data.frame(
+                        x = data[1,],
+                        y = data[2,]
+                    )
                 }
                 next
             }
@@ -181,12 +179,10 @@ process_block <- function(lines, metadata_only = FALSE) {
                         unlist(lapply(strsplit(cleaned_spaces, split = "[[:blank:]]+"),
                                       function(x)
                                           as.numeric(x[2:length(x)])))
-                    block[[field_name]] <-
-                        data.frame(
-                            x = NA,
-                            y = y,
-                            stringsAsFactors = FALSE
-                        )
+                    block[[field_name]] <- data.frame(
+                        x = NA,
+                        y = y
+                    )
                 }
                 next
             }

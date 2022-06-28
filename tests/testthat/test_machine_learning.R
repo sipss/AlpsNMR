@@ -10,8 +10,7 @@
 #     data_1r = matrix(sample(0:99,replace = TRUE), nrow = 10),
 #     metadata = list(external = data.frame(
 #       NMRExperiment = c("10", "20", "30", "40", "50", "60", "70", "80", "90", "100"),
-#       group = c("A", "A", "A", "A", "A", "B", "B", "B", "B", "B"), 
-#       stringsAsFactors = FALSE))
+#       group = c("A", "A", "A", "A", "A", "B", "B", "B", "B", "B"))
 #   )
 #   meta <- nmr_meta_get(dataset, groups = "external")
 #   model <- rdCV_PLS_RF(nmr_data(dataset),Y = meta$group, nOuter = 3, nInner = 2, nRep = 2, parallel = FALSE)

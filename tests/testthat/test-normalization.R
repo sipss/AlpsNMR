@@ -3,8 +3,7 @@ test_that("nmr_normalize & nmr_normalize_extra_info work", {
     ppm_axis = 1:10,
     data_1r = matrix(sample(0:99,replace = TRUE), nrow = 10),
     metadata = list(external = data.frame(
-      NMRExperiment = c("10", "20", "30", "40", "50", "60", "70", "80", "90", "100"),
-      stringsAsFactors = FALSE
+      NMRExperiment = c("10", "20", "30", "40", "50", "60", "70", "80", "90", "100")
     ))
   )
   dataset <- nmr_normalize(dataset, method = "pqn")

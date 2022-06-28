@@ -101,8 +101,7 @@ test_that("split_double_cv works", {
   metadata <- data.frame(
     NMRExperiment = as.character(seq(from = 10, by = 10, length.out = nsamples)),
     SubjectID = subject_id,
-    Replicate = replicate,
-    stringsAsFactors = FALSE
+    Replicate = replicate
   )
   dataset <- new_nmr_dataset_1D(
     ppm_axis = 1:10,
