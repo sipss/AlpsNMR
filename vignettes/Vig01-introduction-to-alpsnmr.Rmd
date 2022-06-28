@@ -507,6 +507,14 @@ peak_list_clustered <- clustering$peak_data
 
 ```
 
+We can plot the samples, with the detected peaks and how they have been connected.
+This allows us to compare the peak detection across samples, and check how good
+the peak matching is.
+
+If peaks are matched they are connected with a black segment. If peaks are detected
+but not matched, they appear as a dot. If you see a peak, without a point on top
+then it means the peak was not detected or it was filtered out.
+
 
 ```{r}
 nmr_peak_clustering_plot(
@@ -517,10 +525,19 @@ nmr_peak_clustering_plot(
 )
 ```
 
+Sometimes we see peaks and we wonder why are they not detected. We can include
+the `baselineThresh` to plot it in the sample as well. This can help to diagnose
+if the `baselineThresh` argument is the cause of a peak not being detected.
 
 
 ```{r}
-nmr_peak_clustering_plot(dataset_norm, peak_list_clustered, NMRExperiments = c("10", "20"), chemshift_range = c(4.5, 4.6))
+nmr_peak_clustering_plot(
+    dataset_norm,
+    peak_list_clustered, 
+    NMRExperiments = c("10", "20"),
+    chemshift_range = c(4.2, 4.6),
+    baselineThresh = baselineThresh
+)
 ```
 
 
