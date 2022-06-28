@@ -40,7 +40,7 @@ env:
   pkgdown_repo: 'sipss/AlpsNMR'
   uses_latex: true
   has_RUnit: 'false'
-  cache-version: 'cache-v2'
+  cache-version: 'cache-v3'
   run_docker: 'false'
 
 jobs:
@@ -142,6 +142,7 @@ jobs:
           sysreqs=$(Rscript -e 'cat("apt-get update -y && apt-get install -y", paste(gsub("apt-get install -y ", "", remotes::system_requirements("ubuntu", "20.04")), collapse = " "))')
           echo $sysreqs
           sudo -s eval "$sysreqs"
+          sudo apt install texlive-extra-utils # pdfcrop
 
       - name: Install macOS system dependencies
         if: matrix.config.os == 'macOS-latest'
