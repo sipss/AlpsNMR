@@ -1,4 +1,4 @@
-# AlpsNMR <img src='man/figures/AlpsNMRlogo.png' align="right" width="120" height="139" />
+# AlpsNMR <a href="https://sipss.github.io/AlpsNMR"><img src='man/figures/AlpsNMRlogo.png' align="right" width="120" height="139" /></a>
 
 [![Build Status](https://github.com/sipss/AlpsNMR/workflows/R-CMD-check/badge.svg?branch=master)](https://github.com/sipss/AlpsNMR/actions/)
 [![codecov.io](https://codecov.io/github/sipss/AlpsNMR/coverage.svg?branch=master)](https://codecov.io/github/sipss/AlpsNMR)
