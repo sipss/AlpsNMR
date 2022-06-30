@@ -90,7 +90,7 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
             intermediate_dst_file <- file.path(dst_rootdir, paste0(filename, "intermediate.zip"))
             if (file.exists(final_dst_file) && !force) {
                 if (!report_skipped_downloads) {
-                    rlang::inform(c("i" = "Skipping re-download of previously downloadeded samples."))
+                    rlang::inform(c("i" = "Skipping re-download of previously downloaded samples."))
                     report_skipped_downloads <<- TRUE
                 }
                 return()
