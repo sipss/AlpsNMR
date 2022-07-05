@@ -125,6 +125,11 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
                 # b) zip::zip() segfaults
                 #zip::zip(zipfile = final_dst_file, files = filename_base, root = dst_rootdir)
                 # c) archive (yet another package)
+                # I have to put everything in a folder:
+                tmpname <- paste0(filename_base, "-base")
+                dir.create(tmpname)
+                file.rename(filename_base, file.path(tmpname, filename_base))
+                file.rename(tmpname, filename_base)
                 archive::archive_write_dir(archive = filename, dir = filename_base)
                 setwd(cwd)
                 # And once you have the zip file, remove the directory:
