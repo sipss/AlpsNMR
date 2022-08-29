@@ -91,7 +91,7 @@
                         <h4 data-toc-skip class="author">AlpsNMR
 authors</h4>
             
-            <h4 data-toc-skip class="date">2022-07-05</h4>
+            <h4 data-toc-skip class="date">2022-08-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/vignettes/Vig01-introduction-to-alpsnmr.Rmd" class="external-link"><code>vignettes/Vig01-introduction-to-alpsnmr.Rmd</code></a></small>
       <div class="hidden name"><code>Vig01-introduction-to-alpsnmr.Rmd</code></div>
@@ -387,16 +387,17 @@ sample and each chemical shift region:</p>
 <code class="sourceCode R"><span><span class="va">peak_list_in_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">peak_list_initial</span>, <span class="va">ppm</span> <span class="op">&gt;</span> <span class="fl">3.22</span>, <span class="va">ppm</span> <span class="op">&lt;</span> <span class="fl">3.24</span><span class="op">)</span></span>
 <span><span class="va">peak_list_in_range</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 11</span></span></span>
-<span><span class="co">##   peak_id  NMRExperiment   ppm   pos intensity_raw intensity ppm_infl_min</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> Peak0211 10             3.23 <span style="text-decoration: underline;">16</span>281       <span style="text-decoration: underline;">239</span>459.   <span style="text-decoration: underline;">224</span>420.         3.23</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> Peak0212 10             3.24 <span style="text-decoration: underline;">16</span>308       <span style="text-decoration: underline;">358</span>753.   <span style="text-decoration: underline;">343</span>534.         3.24</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> Peak0603 20             3.23 <span style="text-decoration: underline;">16</span>283       <span style="text-decoration: underline;">291</span>094.   <span style="text-decoration: underline;">267</span>693.         3.23</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span> Peak0604 20             3.24 <span style="text-decoration: underline;">16</span>309       <span style="text-decoration: underline;">399</span>656.   <span style="text-decoration: underline;">375</span>897.         3.24</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span> Peak1002 30             3.23 <span style="text-decoration: underline;">16</span>281       <span style="text-decoration: underline;">243</span>670.   <span style="text-decoration: underline;">232</span>273.         3.23</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span> Peak1003 30             3.24 <span style="text-decoration: underline;">16</span>308       <span style="text-decoration: underline;">464</span>835.   <span style="text-decoration: underline;">453</span>429.         3.24</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 4 more variables: ppm_infl_max &lt;dbl&gt;, gamma_ppb &lt;dbl&gt;, area &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   norm_rmse &lt;dbl&gt;</span></span></span></code></pre>
+<span><span class="co">##   peak_id  NMRExperi…¹   ppm   pos inten…² inten…³ ppm_i…⁴ ppm_i…⁵ gamma…⁶  area</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> Peak0211 10           3.23 <span style="text-decoration: underline;">16</span>281 <span style="text-decoration: underline;">239</span>459. <span style="text-decoration: underline;">224</span>420.    3.23    3.23    1.80 <span style="text-decoration: underline;">1</span>272.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> Peak0212 10           3.24 <span style="text-decoration: underline;">16</span>308 <span style="text-decoration: underline;">358</span>753. <span style="text-decoration: underline;">343</span>534.    3.24    3.24    1.23 <span style="text-decoration: underline;">1</span>358.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> Peak0603 20           3.23 <span style="text-decoration: underline;">16</span>283 <span style="text-decoration: underline;">291</span>094. <span style="text-decoration: underline;">267</span>693.    3.23    3.23    2.71 <span style="text-decoration: underline;">2</span>241.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> Peak0604 20           3.24 <span style="text-decoration: underline;">16</span>309 <span style="text-decoration: underline;">399</span>656. <span style="text-decoration: underline;">375</span>897.    3.24    3.24    1.80 <span style="text-decoration: underline;">1</span>986.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> Peak1002 30           3.23 <span style="text-decoration: underline;">16</span>281 <span style="text-decoration: underline;">243</span>670. <span style="text-decoration: underline;">232</span>273.    3.23    3.23    2.32 <span style="text-decoration: underline;">1</span>704.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> Peak1003 30           3.24 <span style="text-decoration: underline;">16</span>308 <span style="text-decoration: underline;">464</span>835. <span style="text-decoration: underline;">453</span>429.    3.24    3.24    1.79 <span style="text-decoration: underline;">2</span>543.</span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 1 more variable: norm_rmse &lt;dbl&gt;, and abbreviated variable names</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ¹​NMRExperiment, ²​intensity_raw, ³​intensity, ⁴​ppm_infl_min, ⁵​ppm_infl_max,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ⁶​gamma_ppb</span></span></span></code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.22</span>, <span class="fl">3.25</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
@@ -613,25 +614,25 @@ argument is the cause of a peak not being detected.</p>
 <code class="sourceCode R"><span><span class="va">peak_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span><span class="va">peak_table</span><span class="op">)</span></span>
 <span><span class="va">peak_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##      0.8119   0.8223   0.8247    0.8333    0.8447   0.8479    0.8553   0.8605</span></span>
-<span><span class="co">## 10 248.1267       NA       NA  576.0143  583.9754 584.6623  234.5596 316.6228</span></span>
-<span><span class="co">## 20 411.9895 1448.242 651.2340 1062.1773 1039.3440       NA 1628.4975 426.1570</span></span>
-<span><span class="co">## 30 286.1166       NA 963.8638  886.4544  859.2279       NA 1761.5354 574.4401</span></span></code></pre>
+<span><span class="co">## 10 248.1267       NA       NA  576.0143  583.9753 584.6623  234.5596 316.6228</span></span>
+<span><span class="co">## 20 411.9895 1448.242 651.2340 1062.1772 1039.3439       NA 1628.4974 426.1569</span></span>
+<span><span class="co">## 30 286.1166       NA 963.8636  886.4543  859.2278       NA 1761.5356 574.4400</span></span></code></pre>
 <p>Or you can get a data frame with the corresponding annotations:</p>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_integration_with_metadata.html">get_integration_with_metadata</a></span><span class="op">(</span><span class="va">peak_table</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 330</span></span></span>
-<span><span class="co">##   NMRExperiment SubjectID TimePoint ` 0.8119` ` 0.8223` ` 0.8247` ` 0.8333`</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana       baseline       248.       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>       576.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months       412.     <span style="text-decoration: underline;">1</span>448.      651.     <span style="text-decoration: underline;">1</span>062.</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline       286.       <span style="color: #BB0000;">NA</span>       964.      886.</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 323 more variables: ` 0.8447` &lt;dbl&gt;, ` 0.8479` &lt;dbl&gt;, ` 0.8553` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ` 0.8605` &lt;dbl&gt;, ` 0.8656` &lt;dbl&gt;, ` 0.8729` &lt;dbl&gt;, ` 0.8784` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ` 0.8910` &lt;dbl&gt;, ` 0.9034` &lt;dbl&gt;, ` 0.9087` &lt;dbl&gt;, ` 0.9158` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ` 0.9197` &lt;dbl&gt;, ` 0.9314` &lt;dbl&gt;, ` 0.9437` &lt;dbl&gt;, ` 0.9554` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ` 0.9658` &lt;dbl&gt;, ` 0.9758` &lt;dbl&gt;, ` 0.9903` &lt;dbl&gt;, ` 1.0020` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ` 1.0091` &lt;dbl&gt;, ` 1.0208` &lt;dbl&gt;, ` 1.0409` &lt;dbl&gt;, ` 1.0526` &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ` 1.0595` &lt;dbl&gt;, ` 1.0717` &lt;dbl&gt;, ` 1.1749` &lt;dbl&gt;, ` 1.1870` &lt;dbl&gt;, …</span></span></span></code></pre>
+<span><span class="co">##   NMRExperiment Subjec…¹ TimeP…²  0.81…³  0.82…⁴  0.82…⁵  0.83…⁶  0.84…⁷  0.84…⁸</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 10            Ana      baseli…    248.     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     576.    584.    585.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana      3 mont…    412.   <span style="text-decoration: underline;">1</span>448.    651.   <span style="text-decoration: underline;">1</span>062.   <span style="text-decoration: underline;">1</span>039.     <span style="color: #BB0000;">NA</span> </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia     baseli…    286.     <span style="color: #BB0000;">NA</span>     964.    886.    859.     <span style="color: #BB0000;">NA</span> </span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 321 more variables: ` 0.8553` &lt;dbl&gt;, ` 0.8605` &lt;dbl&gt;, ` 0.8656` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ` 0.8729` &lt;dbl&gt;, ` 0.8784` &lt;dbl&gt;, ` 0.8910` &lt;dbl&gt;, ` 0.9034` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ` 0.9087` &lt;dbl&gt;, ` 0.9158` &lt;dbl&gt;, ` 0.9197` &lt;dbl&gt;, ` 0.9314` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ` 0.9437` &lt;dbl&gt;, ` 0.9554` &lt;dbl&gt;, ` 0.9658` &lt;dbl&gt;, ` 0.9758` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ` 0.9903` &lt;dbl&gt;, ` 1.0020` &lt;dbl&gt;, ` 1.0091` &lt;dbl&gt;, ` 1.0208` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ` 1.0409` &lt;dbl&gt;, ` 1.0526` &lt;dbl&gt;, ` 1.0595` &lt;dbl&gt;, ` 1.0717` &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ` 1.1749` &lt;dbl&gt;, ` 1.1870` &lt;dbl&gt;, ` 1.1980` &lt;dbl&gt;, ` 1.2085` &lt;dbl&gt;, …</span></span></span></code></pre>
 <p>From this peak table you can proceed to use statistical testing,
 machine learning, and any downstream analysis you may be interested
 in.</p>
@@ -644,7 +645,7 @@ for more.</p>
 </h2>
 <div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R version 4.2.0 (2022-04-22)</span></span>
+<pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
 <span><span class="co">## Running under: Ubuntu 20.04.4 LTS</span></span>
 <span><span class="co">## </span></span>
@@ -664,46 +665,46 @@ for more.</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] AlpsNMR_3.99.1      future_1.26.1       BiocParallel_1.30.3</span></span>
-<span><span class="co">## [4] readxl_1.4.0        ggplot2_3.3.6       dplyr_1.0.9        </span></span>
+<span><span class="co">## [1] AlpsNMR_3.99.1      future_1.27.0       BiocParallel_1.30.3</span></span>
+<span><span class="co">## [4] readxl_1.4.1        ggplot2_3.3.6       dplyr_1.0.9        </span></span>
 <span><span class="co">## [7] BiocStyle_2.24.0   </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##   [1] matrixStats_0.62.0     fs_1.5.2               httr_1.4.3            </span></span>
+<span><span class="co">##   [1] matrixStats_0.62.0     fs_1.5.2               httr_1.4.4            </span></span>
 <span><span class="co">##   [4] RColorBrewer_1.1-3     rprojroot_2.0.3        doRNG_1.8.2           </span></span>
-<span><span class="co">##   [7] tools_4.2.0            bslib_0.3.1            utf8_1.2.2            </span></span>
+<span><span class="co">##   [7] tools_4.2.1            bslib_0.4.0            utf8_1.2.2            </span></span>
 <span><span class="co">##  [10] R6_2.5.1               colorspace_2.0-3       withr_2.5.0           </span></span>
 <span><span class="co">##  [13] tidyselect_1.1.2       gridExtra_2.3          MassSpecWavelet_1.62.0</span></span>
-<span><span class="co">##  [16] compiler_4.2.0         progressr_0.10.1       rvest_1.0.2           </span></span>
+<span><span class="co">##  [16] compiler_4.2.1         progressr_0.10.1       rvest_1.0.3           </span></span>
 <span><span class="co">##  [19] textshaping_0.3.6      cli_3.3.0              SparseM_1.81          </span></span>
 <span><span class="co">##  [22] xml2_1.3.3             desc_1.4.1             labeling_0.4.2        </span></span>
-<span><span class="co">##  [25] bookdown_0.27          sass_0.4.1             scales_1.2.0          </span></span>
+<span><span class="co">##  [25] bookdown_0.28          sass_0.4.2             scales_1.2.1          </span></span>
 <span><span class="co">##  [28] mvtnorm_1.1-3          randomForest_4.7-1.1   quadprog_1.5-8        </span></span>
-<span><span class="co">##  [31] pkgdown_2.0.5          systemfonts_1.0.4      stringr_1.4.0         </span></span>
-<span><span class="co">##  [34] digest_0.6.29          rmarkdown_2.14         pkgconfig_2.0.3       </span></span>
-<span><span class="co">##  [37] htmltools_0.5.2        parallelly_1.32.0      itertools_0.1-3       </span></span>
-<span><span class="co">##  [40] fastmap_1.1.0          highr_0.9              rlang_1.0.3           </span></span>
-<span><span class="co">##  [43] impute_1.70.0          jquerylib_0.1.4        generics_0.1.2        </span></span>
-<span><span class="co">##  [46] farver_2.1.0           jsonlite_1.8.0         speaq_2.7.0           </span></span>
-<span><span class="co">##  [49] magrittr_2.0.3         Matrix_1.4-1           Rcpp_1.0.8.3          </span></span>
+<span><span class="co">##  [31] pkgdown_2.0.6          systemfonts_1.0.4      stringr_1.4.1         </span></span>
+<span><span class="co">##  [34] digest_0.6.29          rmarkdown_2.16         pkgconfig_2.0.3       </span></span>
+<span><span class="co">##  [37] htmltools_0.5.3        parallelly_1.32.1      itertools_0.1-3       </span></span>
+<span><span class="co">##  [40] fastmap_1.1.0          highr_0.9              rlang_1.0.4           </span></span>
+<span><span class="co">##  [43] impute_1.70.0          jquerylib_0.1.4        generics_0.1.3        </span></span>
+<span><span class="co">##  [46] farver_2.1.1           jsonlite_1.8.0         speaq_2.7.0           </span></span>
+<span><span class="co">##  [49] magrittr_2.0.3         Matrix_1.4-1           Rcpp_1.0.9            </span></span>
 <span><span class="co">##  [52] munsell_0.5.0          fansi_1.0.3            RcppZiggurat_0.1.6    </span></span>
-<span><span class="co">##  [55] lifecycle_1.0.1        stringi_1.7.6          yaml_2.3.5            </span></span>
-<span><span class="co">##  [58] MASS_7.3-57            plyr_1.8.7             grid_4.2.0            </span></span>
-<span><span class="co">##  [61] parallel_4.2.0         listenv_0.8.0          ggrepel_0.9.1         </span></span>
+<span><span class="co">##  [55] lifecycle_1.0.1        stringi_1.7.8          yaml_2.3.5            </span></span>
+<span><span class="co">##  [58] MASS_7.3-58.1          plyr_1.8.7             grid_4.2.1            </span></span>
+<span><span class="co">##  [61] parallel_4.2.1         listenv_0.8.0          ggrepel_0.9.1         </span></span>
 <span><span class="co">##  [64] doSNOW_1.0.20          crayon_1.5.1           lattice_0.20-45       </span></span>
-<span><span class="co">##  [67] cowplot_1.1.1          knitr_1.39             pillar_1.7.0          </span></span>
-<span><span class="co">##  [70] igraph_1.3.2           rngtools_1.5.2         corpcor_1.6.10        </span></span>
+<span><span class="co">##  [67] cowplot_1.1.1          knitr_1.40             pillar_1.8.1          </span></span>
+<span><span class="co">##  [70] igraph_1.3.4           rngtools_1.5.2         corpcor_1.6.10        </span></span>
 <span><span class="co">##  [73] reshape2_1.4.4         codetools_0.2-18       mixOmics_6.20.0       </span></span>
-<span><span class="co">##  [76] lpSolve_5.6.15         glue_1.6.2             evaluate_0.15         </span></span>
+<span><span class="co">##  [76] lpSolve_5.6.15         glue_1.6.2             evaluate_0.16         </span></span>
 <span><span class="co">##  [79] data.table_1.14.2      BiocManager_1.30.18    missForest_1.5        </span></span>
 <span><span class="co">##  [82] foreach_1.5.2          vctrs_0.4.1            cellranger_1.1.0      </span></span>
 <span><span class="co">##  [85] gtable_0.3.0           purrr_0.3.4            tidyr_1.2.0           </span></span>
-<span><span class="co">##  [88] cachem_1.0.6           xfun_0.31              limSolve_1.5.6        </span></span>
-<span><span class="co">##  [91] Rfast_2.0.6            RSpectra_0.16-1        baseline_1.3-1        </span></span>
-<span><span class="co">##  [94] ragg_1.2.2             pcaPP_2.0-1            rARPACK_0.11-0        </span></span>
-<span><span class="co">##  [97] signal_0.7-7           tibble_3.1.7           snow_0.4-4            </span></span>
+<span><span class="co">##  [88] cachem_1.0.6           xfun_0.32              limSolve_1.5.6        </span></span>
+<span><span class="co">##  [91] Rfast_2.0.6            RSpectra_0.16-1        baseline_1.3-4        </span></span>
+<span><span class="co">##  [94] ragg_1.2.2             pcaPP_2.0-2            rARPACK_0.11-0        </span></span>
+<span><span class="co">##  [97] signal_0.7-7           tibble_3.1.8           snow_0.4-4            </span></span>
 <span><span class="co">## [100] iterators_1.0.14       memoise_2.0.1          ellipse_0.4.3         </span></span>
-<span><span class="co">## [103] cluster_2.1.3          globals_0.15.1         ellipsis_0.3.2</span></span></code></pre>
+<span><span class="co">## [103] cluster_2.1.4          globals_0.16.0         ellipsis_0.3.2</span></span></code></pre>
 </div>
   </div>
 
@@ -724,7 +725,7 @@ for more.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

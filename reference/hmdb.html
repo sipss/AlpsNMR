@@ -83,14 +83,15 @@
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"hmdb"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">hmdb</span><span class="op">[</span><span class="va">hmdb</span><span class="op">$</span><span class="va">Metabolite</span> <span class="op">==</span> <span class="st">"1-Methylhistidine"</span>, <span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Metabolite  pos_in_ppm couple_code J_constant relative_intens… Accession Blood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1-Methylhi…       7.67 0           <span style="color: #BB0000;">NA</span>                        1 HMDB0000… TRUE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 1-Methylhi…       7    0           <span style="color: #BB0000;">NA</span>                        1 HMDB0000… TRUE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 1-Methylhi…       3.96 1,1         7.66,4.92                 2 HMDB0000… TRUE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 1-Methylhi…       3.68 0           <span style="color: #BB0000;">NA</span>                        4 HMDB0000… TRUE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 5 more variables: Urine &lt;lgl&gt;, Solvent &lt;chr&gt;, ChemShiftRef &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   NMRFreq &lt;dbl&gt;, pH &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Metabolite pos_i…¹ coupl…² J_con…³ relat…⁴ Acces…⁵ Blood Urine Solvent ChemS…⁶</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1-Methylh…    7.67 0       <span style="color: #BB0000;">NA</span>            1 HMDB00… TRUE  TRUE  Water   DSS    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 1-Methylh…    7    0       <span style="color: #BB0000;">NA</span>            1 HMDB00… TRUE  TRUE  Water   DSS    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 1-Methylh…    3.96 1,1     7.66,4…       2 HMDB00… TRUE  TRUE  Water   DSS    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 1-Methylh…    3.68 0       <span style="color: #BB0000;">NA</span>            4 HMDB00… TRUE  TRUE  Water   DSS    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 2 more variables: NMRFreq &lt;dbl&gt;, pH &lt;chr&gt;, and abbreviated variable</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   names ¹​pos_in_ppm, ²​couple_code, ³​J_constant, ⁴​relative_intensity,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁵​Accession, ⁶​ChemShiftRef</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -105,7 +106,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
