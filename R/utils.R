@@ -221,7 +221,7 @@ warn_future_to_biocparallel <- function() {
     rlang::warn(
         message = c(
             "AlpsNMR now uses BiocParallel instead of future for parallellization",
-            "i" = "If you used plan(multisession), plan(multiprocess), or other plan(), consider removing all plan() calls and use:\n    library(BiocParallel)\n    register(SnowParam(workers = 3), default = TRUE)",
+            "i" = "If you used plan(multisession) or other plan(), consider removing all plan() calls and use:\n    library(BiocParallel)\n    register(SnowParam(workers = 3), default = TRUE)",
             "i" = 'You just need to place that code once, typically at the beginning of your script'
         ),
         class = "AlpsNMR-future-to-biocparallel-warning",

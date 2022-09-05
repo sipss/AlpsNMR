@@ -67,7 +67,7 @@ library(AlpsNMR)
 # Output directory:
 output_dir_load <- file.path(output_dir, "01-load-samples")
 
-plan(multiprocess, workers = num_workers)
+plan(multisession, workers = num_workers)
 # Load all samples ending in "0":
 pipe_load_samples(samples_dir = load_samples_input_dir,
                   glob = load_samples_glob,
@@ -120,7 +120,7 @@ pipe_filter_samples(nmr_dataset_rds, samples_to_keep_conditions, output_dir_filt
 nmr_dataset_rds <- file.path(output_dir_filter, "nmr_dataset.rds")
 output_dir_alignment <- file.path(output_dir, "07-alignment")
 
-plan(multiprocess, workers = num_workers)
+plan(multisession, workers = num_workers)
 pipe_peakdet_align(nmr_dataset_rds,
                    nDivRange_ppm = nDivRange_ppm, scales = seq(1, 16, 2),
                    baselineThresh = baselineThresh, SNR.Th = SNR.Th,
