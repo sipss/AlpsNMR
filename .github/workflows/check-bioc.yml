@@ -260,9 +260,6 @@ jobs:
         if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
           remotes::install_cran("pkgdown")
-          # Install downlit from github. Until downlit v.0.4.1 is released
-          # See https://github.com/r-lib/downlit/pull/145
-          remotes::install_github("r-lib/downlit")
         shell: Rscript {0}
 
       - name: Session info
