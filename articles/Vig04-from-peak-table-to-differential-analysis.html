@@ -90,7 +90,7 @@
       <h1 data-toc-skip>From the peak table to the differential
 analysis</h1>
             
-            <h4 data-toc-skip class="date">2022-08-29</h4>
+            <h4 data-toc-skip class="date">2022-10-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/vignettes/Vig04-from-peak-table-to-differential-analysis.Rmd" class="external-link"><code>vignettes/Vig04-from-peak-table-to-differential-analysis.Rmd</code></a></small>
       <div class="hidden name"><code>Vig04-from-peak-table-to-differential-analysis.Rmd</code></div>
@@ -205,29 +205,29 @@ posibilities sorted by the most probable metabolite (see
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] AlpsNMR_3.99.1   future_1.27.0    BiocStyle_2.24.0</span></span>
+<span><span class="co">#&gt; [1] AlpsNMR_3.99.1   future_1.28.0    BiocStyle_2.24.0</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] ggrepel_0.9.1       Rcpp_1.0.9          lattice_0.20-45    </span></span>
-<span><span class="co">#&gt;  [4] tidyr_1.2.0         corpcor_1.6.10      listenv_0.8.0      </span></span>
+<span><span class="co">#&gt;  [4] tidyr_1.2.1         corpcor_1.6.10      listenv_0.8.0      </span></span>
 <span><span class="co">#&gt;  [7] rprojroot_2.0.3     digest_0.6.29       utf8_1.2.2         </span></span>
 <span><span class="co">#&gt; [10] RSpectra_0.16-1     parallelly_1.32.1   plyr_1.8.7         </span></span>
 <span><span class="co">#&gt; [13] R6_2.5.1            ellipse_0.4.3       evaluate_0.16      </span></span>
-<span><span class="co">#&gt; [16] ggplot2_3.3.6       pillar_1.8.1        rlang_1.0.4        </span></span>
-<span><span class="co">#&gt; [19] jquerylib_0.1.4     Matrix_1.4-1        rmarkdown_2.16     </span></span>
-<span><span class="co">#&gt; [22] pkgdown_2.0.6       textshaping_0.3.6   desc_1.4.1         </span></span>
+<span><span class="co">#&gt; [16] ggplot2_3.3.6       pillar_1.8.1        rlang_1.0.6        </span></span>
+<span><span class="co">#&gt; [19] jquerylib_0.1.4     Matrix_1.5-1        rmarkdown_2.16     </span></span>
+<span><span class="co">#&gt; [22] pkgdown_2.0.6       textshaping_0.3.6   desc_1.4.2         </span></span>
 <span><span class="co">#&gt; [25] rARPACK_0.11-0      BiocParallel_1.30.3 stringr_1.4.1      </span></span>
-<span><span class="co">#&gt; [28] igraph_1.3.4        munsell_0.5.0       compiler_4.2.1     </span></span>
-<span><span class="co">#&gt; [31] xfun_0.32           pkgconfig_2.0.3     systemfonts_1.0.4  </span></span>
-<span><span class="co">#&gt; [34] globals_0.16.0      htmltools_0.5.3     tidyselect_1.1.2   </span></span>
-<span><span class="co">#&gt; [37] tibble_3.1.8        gridExtra_2.3       bookdown_0.28      </span></span>
+<span><span class="co">#&gt; [28] igraph_1.3.5        munsell_0.5.0       compiler_4.2.1     </span></span>
+<span><span class="co">#&gt; [31] xfun_0.33           pkgconfig_2.0.3     systemfonts_1.0.4  </span></span>
+<span><span class="co">#&gt; [34] globals_0.16.1      htmltools_0.5.3     tidyselect_1.1.2   </span></span>
+<span><span class="co">#&gt; [37] tibble_3.1.8        gridExtra_2.3       bookdown_0.29      </span></span>
 <span><span class="co">#&gt; [40] codetools_0.2-18    matrixStats_0.62.0  fansi_1.0.3        </span></span>
-<span><span class="co">#&gt; [43] dplyr_1.0.9         MASS_7.3-58.1       grid_4.2.1         </span></span>
-<span><span class="co">#&gt; [46] jsonlite_1.8.0      gtable_0.3.0        lifecycle_1.0.1    </span></span>
-<span><span class="co">#&gt; [49] magrittr_2.0.3      scales_1.2.1        cli_3.3.0          </span></span>
+<span><span class="co">#&gt; [43] dplyr_1.0.10        MASS_7.3-58.1       grid_4.2.1         </span></span>
+<span><span class="co">#&gt; [46] jsonlite_1.8.0      gtable_0.3.1        lifecycle_1.0.2    </span></span>
+<span><span class="co">#&gt; [49] magrittr_2.0.3      scales_1.2.1        cli_3.4.1          </span></span>
 <span><span class="co">#&gt; [52] stringi_1.7.8       cachem_1.0.6        reshape2_1.4.4     </span></span>
-<span><span class="co">#&gt; [55] fs_1.5.2            bslib_0.4.0         ragg_1.2.2         </span></span>
-<span><span class="co">#&gt; [58] generics_0.1.3      vctrs_0.4.1         RColorBrewer_1.1-3 </span></span>
+<span><span class="co">#&gt; [55] fs_1.5.2            bslib_0.4.0         ragg_1.2.3         </span></span>
+<span><span class="co">#&gt; [58] generics_0.1.3      vctrs_0.4.2         RColorBrewer_1.1-3 </span></span>
 <span><span class="co">#&gt; [61] mixOmics_6.20.0     tools_4.2.1         glue_1.6.2         </span></span>
 <span><span class="co">#&gt; [64] purrr_0.3.4         parallel_4.2.1      fastmap_1.1.0      </span></span>
 <span><span class="co">#&gt; [67] yaml_2.3.5          colorspace_2.0-3    BiocManager_1.30.18</span></span>
