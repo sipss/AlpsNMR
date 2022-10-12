@@ -4,10 +4,12 @@
 \alias{download_MTBLS242}
 \title{Download MTBLS242}
 \usage{
-download_MTBLS242(dest_dir = "MTBLS242")
+download_MTBLS242(dest_dir = "MTBLS242", force = FALSE)
 }
 \arguments{
 \item{dest_dir}{Directory where the dataset should be saved}
+
+\item{force}{Logical. If \code{TRUE} we do not re-download files if they exist}
 }
 \value{
 A data frame with the downloaded samples

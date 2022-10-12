@@ -5,8 +5,8 @@
 \title{Batman Options helper}
 \usage{
 nmr_batman_options(
-  ppmRange = matrix(c(3, 3.1, 3.6, 3.7, 3.9, 4, 4, 4.1, 6.95, 7.05, 7.6, 7.7, 7.8,
-    7.9), ncol = 2, byrow = TRUE),
+  ppmRange = matrix(c(3, 3.1, 3.6, 3.7, 3.9, 4, 4, 4.1, 6.95, 7.05, 7.6, 7.7, 7.8, 7.9),
+    ncol = 2, byrow = TRUE),
   specNo = "1",
   paraProc = 4L,
   negThresh = -0.5,
