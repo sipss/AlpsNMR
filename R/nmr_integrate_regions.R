@@ -146,7 +146,7 @@ nmr_integrate_peak_positions <- function(samples,
     # dataframe as input
     if (is.data.frame(peak_pos_ppm)) {
         message("peak_pos_ppm input introduced as dataframe")
-        peak_pos_ppm = peak_pos_ppm$ppm
+        peak_pos_ppm <- peak_pos_ppm$ppm
     }
     
     regions <- regions_from_peak_table(peak_pos_ppm, peak_width_ppm)

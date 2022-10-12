@@ -515,7 +515,7 @@ plot_plsda_samples <- function(model, newdata = NULL, plot = TRUE) {
     if(model$ncomp == 1){
         # This is needed if the model only have one component
         # Hidding the plot
-        t = tempfile()
+        t <- tempfile()
         pdf(file=t)
         ploty <- mixOmics::plotIndiv(model, comp = c(1, 1))
         dev.off()
@@ -542,14 +542,14 @@ plot_plsda_samples <- function(model, newdata = NULL, plot = TRUE) {
         
     } else {
         # Hidding the plot
-        t = tempfile()
+        t <- tempfile()
         pdf(file=t)
         ploty <- mixOmics::plotIndiv(model)
         dev.off()
         file.remove(t)
         
-        tr_y = ploty$graph$data$y
-        te_y = predictions$variates[, 2]
+        tr_y <- ploty$graph$data$y
+        te_y <- predictions$variates[, 2]
         
         
         tr_data <- data.frame(x = ploty$graph$data$x,
@@ -646,18 +646,18 @@ plot_plsda_samples <- function(model, newdata = NULL, plot = TRUE) {
 #' 
 plot_plsda_multimodel <- function(model, plot = TRUE) {
     
-    n_models = length(model$outer_cv_results)
-    min_ncomp = model$outer_cv_results[[1]]$model$ncomp
+    n_models <- length(model$outer_cv_results)
+    min_ncomp <- model$outer_cv_results[[1]]$model$ncomp
     for (n in seq_len(n_models)) {
         if (model$outer_cv_results[[n]]$model$ncomp < min_ncomp) {
-            min_ncomp = model$outer_cv_results[[n]]$model$ncomp
+            min_ncomp <- model$outer_cv_results[[n]]$model$ncomp
         }
     }
     
     tr_data <- data.frame()
     te_data <- data.frame()
     # Hidding the plots
-    t = tempfile()
+    t <- tempfile()
     pdf(file=t)
     for(i in seq_len(n_models)){
         # Predictions of test set
