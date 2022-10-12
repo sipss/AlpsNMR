@@ -4,12 +4,14 @@
 \alias{plot_webgl}
 \title{Plot a dataset into a HTML file}
 \usage{
-plot_webgl(nmr_dataset, html_filename, ...)
+plot_webgl(nmr_dataset, html_filename, overwrite = NULL, ...)
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D}}
 
 \item{html_filename}{The output HTML filename to be created}
+
+\item{overwrite}{Overwrite the lib/ directory (use \code{NULL} to prompt the user)}
 
 \item{...}{
   Arguments passed on to \code{\link[=plot.nmr_dataset_1D]{plot.nmr_dataset_1D}}
