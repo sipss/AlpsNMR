@@ -1126,30 +1126,27 @@ permutation_test_model = function (dataset,
     #colnames(permMatrix)=c('Min','Mid','Max')
     dataset_perm <- dataset
     y_all <- nmr_meta_get_column(dataset, column = y_column)
-    for (p in seq_len(nPerm)) {
-        cat('\n permutation ',p,' of ',nPerm,'\n',sep = '')
-        
-        #Permutar columna y_colum del dataset
-        YPerm=sample(y_all)
-        dataset_perm[["metadata"]][["external"]][[y_column]] <- YPerm
-        # print(sum(y_test!=y_all))
-        permMod=nmr_data_analysis(dataset_perm,
-                                  y_column = y_column,
-                                  identity_column = identity_column,
-                                  external_val = external_val,
-                                  internal_val = internal_val,
-                                  data_analysis_method = data_analysis_method)
-        
-        # I will use the mean of the auc of all the outer_cv for the test static
-        test_stat = mean(permMod$outer_cv_results_digested$auroc$auc)
-
-        permMatrix[p,1] = test_stat
-        nowTime=proc.time()[3]
-        timePerRep=(nowTime-startTime)/p
-        timeLeft=(timePerRep*(nPerm-p))/60
-        cat('\nEstimated time left:',timeLeft,'mins\n\n')
-    }
-
+    permMatrix <- BiocParallel::bplapply(
+        seq_len(nPerm),
+        function(p) {
+            #Permutar columna y_colum del dataset
+            YPerm=sample(y_all)
+            dataset_perm[["metadata"]][["external"]][[y_column]] <- YPerm
+            # print(sum(y_test!=y_all))
+            permMod <- nmr_data_analysis(
+                dataset_perm,
+                y_column = y_column,
+                identity_column = identity_column,
+                external_val = external_val,
+                internal_val = internal_val,
+                data_analysis_method = data_analysis_method
+            )
+            # I will use the mean of the auc of all the outer_cv for the test static
+            test_stat = mean(permMod$outer_cv_results_digested$auroc$auc)
+            test_stat
+        }
+    )
+    permMatrix <- matrix(unlist(permMatrix), ncol=1)
     return (permMatrix)
 }
 
