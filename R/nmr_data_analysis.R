@@ -857,7 +857,7 @@ bp_kfold_VIP_analysis <- function(dataset,
         k_fold_index[[i]] <- seq_len(length(y_all))[-k_fold_split[[i]]]
     }
     
-    results <- BiocParallel::bplapply(
+    results <- lapply(
         k_fold_index, function(index, dataset = dataset, y_column = y_column,
                                ncomp = ncomp, nbootstrap = nbootstrap) {
         bp_VIP_analysis(
