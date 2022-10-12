@@ -1122,15 +1122,12 @@ permutation_test_model = function (dataset,
                                    nPerm = 50)
 {
     startTime=proc.time()[3]
-    permMatrix=matrix(ncol=1,nrow=nPerm)
-    #colnames(permMatrix)=c('Min','Mid','Max')
-    dataset_perm <- dataset
-    y_all <- nmr_meta_get_column(dataset, column = y_column)
     permMatrix <- BiocParallel::bplapply(
         seq_len(nPerm),
-        function(p) {
-            #Permutar columna y_colum del dataset
-            YPerm=sample(y_all)
+        function(p, dataset, y_column, identity_column, external_val, internal_val, data_analysis_method) {
+            dataset_perm <- dataset
+            y_all <- nmr_meta_get_column(dataset, column = y_column)
+            YPerm <- sample(y_all)
             dataset_perm[["metadata"]][["external"]][[y_column]] <- YPerm
             # print(sum(y_test!=y_all))
             permMod <- nmr_data_analysis(
@@ -1144,7 +1141,13 @@ permutation_test_model = function (dataset,
             # I will use the mean of the auc of all the outer_cv for the test static
             test_stat = mean(permMod$outer_cv_results_digested$auroc$auc)
             test_stat
-        }
+        },
+        dataset = dataset,
+        y_column = y_column,
+        identity_column = identity_column,
+        external_val = external_val,
+        internal_val = internal_val,
+        data_analysis_method = data_analysis_method
     )
     permMatrix <- matrix(unlist(permMatrix), ncol=1)
     return (permMatrix)
