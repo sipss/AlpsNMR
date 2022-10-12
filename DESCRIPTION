@@ -77,6 +77,7 @@ Imports:
  vctrs (>= 0.3.0),
  BiocParallel
 Suggests:
+    archive,
     DT (>= 0.5),
     testthat (>= 2.0.0),
     plotly (>= 4.7.1),

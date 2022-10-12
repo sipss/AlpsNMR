@@ -534,96 +534,120 @@ bp_VIP_analysis <- function(dataset,
         stop("Only one class in test set, please increase number of samples")
     }
     
-    n <- dim(x_all)[2]
+    num_features <- n <- ncol(x_all)
     names <- colnames(x_all)
     #some checks
     if (length(names) == 0) {
         stop("Error in bp_VIP_analysis, the dataset peak_table don't have colnames.")
     }
     
-    pls_vip <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
-    pls_vip_perm <- matrix(nrow = n, ncol = n, dimnames = list(names, NULL))
-    pls_vip_perm_score <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
-    pls_vip_perm_sd <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL))
-    pls_vip_score_diff <- matrix(nrow = n, ncol = nbootstrap, dimnames = list(names, NULL)) # Bootstrap with replacement nbootstraps datasets
+    pls_vip <- matrix(nrow = num_features, ncol = nbootstrap, dimnames = list(names, NULL))
+    pls_vip_perm_score <- matrix(nrow = num_features, ncol = nbootstrap, dimnames = list(names, NULL))
+    pls_vip_score_diff <- matrix(nrow = num_features, ncol = nbootstrap, dimnames = list(names, NULL)) # Bootstrap with replacement nbootstraps datasets
     pls_models <- list()
     pls_perm_models <- list()
     CR <- list()
     
     # Bootstrap with replacement nbootstraps datasets
-    for (i in seq_len(nbootstrap)) {
-        index <- sample(seq_len(nrow(x_train)),nrow(x_train), replace = TRUE)
-        x_train_boots <- x_train[index,]
-        y_train_boots <- y_train[index]
-        
-        #if y_train_boots only have one class, plsda models give error
-        if (length(unique(y_train_boots)) == 1) {
-            #Replace the first element for the first element of another class
-            for(i in seq_len(y_train)){
-                if (y_train[i] != y_train_boots[1]){
-                    y_train_boots[1] <- y_train[i]
-                    x_train_boots[1] <- x_train[i]
-                    break
+    res <- BiocParallel::bplapply(
+        seq_len(nbootstrap),
+        function(i, x_train, y_train, ncomp) {
+            num_features <- ncol(x_train)
+            index <- sample(seq_len(nrow(x_train)),nrow(x_train), replace = TRUE)
+            x_train_boots <- x_train[index,]
+            y_train_boots <- y_train[index]
+
+            #if y_train_boots only have one class, plsda models give error
+            if (length(unique(y_train_boots)) == 1) {
+                #Replace the first element for the first element of another class
+                for(i in seq_len(y_train)){
+                    if (y_train[i] != y_train_boots[1]){
+                        y_train_boots[1] <- y_train[i]
+                        x_train_boots[1, ] <- x_train[i, ]
+                        break
+                    }
                 }
             }
-        }
-        
-        # Rename rownames, because if they are repeated, plsda fails
-        rownames(x_train_boots) <- paste0("Sample", seq_len(dim(x_train_boots)[1]))
-        
-        # Fit PLS model
-        model <-
-            plsda_build(
-                x = x_train_boots,
-                y = y_train_boots,
-                identity = NULL,
-                ncomp = ncomp
-            )
-        # VIPs per component extraction
-        pls_vip_comps <- plsda_vip(model)
-        # Sum contributions of VIPs to each component
-        pls_vip[,i] <- sqrt(rowSums(pls_vip_comps^2)/ncomp)
-        # Measure the classification rate (CR) of the bootstrap model
-        perf <- mixOmics::perf(model, newdata = x_test)
-        CR[[i]] <- 1 - perf$error.rate$overall[1]
-                 
-        # Permutation of variables
-        for (j in seq_len(n)) {
-            random_pos <- sample(seq_len(n), 1)
-            x_train_boots_perm <- x_train_boots
-            x_train_boots_perm[,j] <- x_train_boots[, random_pos]
 
-            # Refit model with permuted variables
-            model_perm <-
+            # Rename rownames, because if they are repeated, plsda fails
+            rownames(x_train_boots) <- paste0("Sample", seq_len(nrow(x_train_boots)))
+
+            # Fit PLS model
+            model <-
                 plsda_build(
-                    x = x_train_boots_perm,
+                    x = x_train_boots,
                     y = y_train_boots,
                     identity = NULL,
                     ncomp = ncomp
                 )
-            # VIPs per component extraction
-            pls_vip_comps_perm <- plsda_vip(model_perm)
-            # Sum contributions of VIPs to each component
-            pls_vip_perm[,j] <- sqrt(rowSums(pls_vip_comps_perm^2)/ncomp)
-        }
 
-        # bootsrapped and randomly permuted PLS-VIPs
-        pls_vip_perm_score[,i] <- colSums(pls_vip_perm)/n
-        # bootsrapped and randomly permuted difference
-        pls_vip_score_diff[,i] <- pls_vip[,i] - pls_vip_perm_score[,i]
-        pls_models[[i]] <- model
-        pls_perm_models[[i]] <- model_perm
-    }
+            # VIPs per component extraction
+            pls_vip_comps <- plsda_vip(model)
+
+            # Sum contributions of VIPs to each component
+            pls_vip <- sqrt(rowSums(pls_vip_comps^2)/ncomp)
+
+            # Measure the classification rate (CR) of the bootstrap model
+            perf <- mixOmics::perf(model, newdata = x_test)
+            CR <- 1 - perf$error.rate$overall[1]
+            pls_vip_perm <- matrix(nrow = n, ncol = n, dimnames = list(names, NULL))
+            # Permutation of variables
+            for (j in seq_len(num_features)) {
+                random_pos <- sample(seq_len(num_features), 1)
+                x_train_boots_perm <- x_train_boots
+                x_train_boots_perm[,j] <- x_train_boots[, random_pos]
+
+                # Refit model with permuted variables
+                model_perm <-
+                    plsda_build(
+                        x = x_train_boots_perm,
+                        y = y_train_boots,
+                        identity = NULL,
+                        ncomp = ncomp
+                    )
+                # VIPs per component extraction
+                pls_vip_comps_perm <- plsda_vip(model_perm)
+                # Sum contributions of VIPs to each component
+                pls_vip_perm[,j] <- sqrt(rowSums(pls_vip_comps_perm^2)/ncomp)
+            }
+            # bootsrapped and randomly permuted PLS-VIPs
+            pls_vip_perm_score <- colSums(pls_vip_perm)/n
+
+            # bootsrapped and randomly permuted difference
+            pls_vip_score_diff <- pls_vip - pls_vip_perm_score
+
+            list(
+                pls_vip = pls_vip,
+                pls_vip_perm_score = pls_vip_perm_score,
+                pls_vip_score_diff = pls_vip_score_diff,
+                model = model,
+                model_perm = model_perm,
+                CR = CR
+            )
+        },
+        x_train = x_train,
+        y_train = y_train,
+        ncomp = ncomp
+    )
+    pls_vip <- do.call(cbind, purrr::map(res, "pls_vip"))
+    rownames(pls_vip) <- names
+    pls_vip_perm_score <- do.call(cbind, purrr::map(res, "pls_vip_perm_score"))
+    rownames(pls_vip_perm_score) <- names
+    pls_vip_score_diff <- do.call(cbind, purrr::map(res, "pls_vip_score_diff"))
+    rownames(pls_vip_score_diff) <- names
+    pls_models <- purrr::map(res, "model")
+    pls_perm_models <- purrr::map(res, "model_perm")
+    CR <- purrr::map(res, "CR")
 
     # Normalization of the difference vector for each variable to
     # its corresponding standard deviation and construct
     # 95% confidence intervals around the differences
-    boots_vip <- matrix(nrow = n, dimnames = list(names))
-    boots_vip_sd <- matrix(nrow = n, dimnames = list(names))
-    error <- matrix(nrow = n, dimnames = list(names))
-    lower_bound <- matrix(nrow = n, dimnames = list(names))
-    upper_bound <- matrix(nrow = n, dimnames = list(names))
-    for (k in seq_len(n)){
+    boots_vip <- matrix(nrow = num_features, dimnames = list(names))
+    boots_vip_sd <- matrix(nrow = num_features, dimnames = list(names))
+    error <- matrix(nrow = num_features, dimnames = list(names))
+    lower_bound <- matrix(nrow = num_features, dimnames = list(names))
+    upper_bound <- matrix(nrow = num_features, dimnames = list(names))
+    for (k in seq_len(num_features)){
         element <- pls_vip_score_diff[k,] / sd(pls_vip_score_diff[k,])
         boots_vip[k] <- sum(element)/nbootstrap
         boots_vip_sd[k] <- sqrt(sum((element - boots_vip[k])^2)/(nbootstrap-1))
@@ -635,7 +659,7 @@ bp_VIP_analysis <- function(dataset,
     important_vips <- names[lower_bound > qt(0.975, df = nbootstrap - 1)]
     relevant_vips <- names[lower_bound > 0]
     
-    # Chequing performance
+    # Checking performance
     # Fit PLS model
     general_model <-
         plsda_build(
@@ -652,8 +676,7 @@ bp_VIP_analysis <- function(dataset,
     if (length(important_vips) == 0) {
         if (length(relevant_vips) == 0) {
             warning(
-                "Error in bp_VIP_analysis, none of the variables seems relevant:\n
-             try increasing the number of bootstraps"
+                "Error in bp_VIP_analysis, none of the variables seems relevant:\nTry increasing the number of bootstraps"
             )
         }
         warning(
