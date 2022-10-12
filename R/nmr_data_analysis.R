@@ -528,10 +528,10 @@ bp_VIP_analysis <- function(dataset,
     y_test <- y_all[-train_index]
     
     if (length(unique(y_train)) == 1) {
-        stop("Only one class in train set, increase number of samples")
+        stop("Only one class in train set, please increase number of samples")
     }
     if (length(unique(y_test)) == 1) {
-        stop("Only one class in test set, increase number of samples")
+        stop("Only one class in test set, please increase number of samples")
     }
     
     n <- dim(x_all)[2]
@@ -561,8 +561,8 @@ bp_VIP_analysis <- function(dataset,
             #Replace the first element for the first element of another class
             for(i in seq_len(y_train)){
                 if (y_train[i] != y_train_boots[1]){
-                    y_train_boots[1] = y_train[i]
-                    x_train_boots[1] = x_train[i]
+                    y_train_boots[1] <- y_train[i]
+                    x_train_boots[1] <- x_train[i]
                     break
                 }
             }
@@ -662,7 +662,7 @@ bp_VIP_analysis <- function(dataset,
         vips_model <- NULL
         vips_CR <- 0
     } else {
-        # Chequing performance of selected vips
+        # Checking performance of selected vips
         if (length(important_vips) == 1) {
             if (length(relevant_vips) == 1) {
                 warning(
@@ -1555,8 +1555,8 @@ models_stability_plot_bootstrap = function (bp_results)
 #' 
 plot_bootstrap_multimodel <- function(bp_results, dataset, y_column, plot = TRUE) {
     
-    n_models = length(bp_results$kfold_results)
-    ncomp = bp_results$kfold_results[[1]]$general_model$ncomp
+    n_models <- length(bp_results$kfold_results)
+    ncomp <- bp_results$kfold_results[[1]]$general_model$ncomp
     # Extract data and split for train and test
     x_all <- dataset$peak_table
     y_all <- nmr_meta_get_column(dataset, column = y_column)

@@ -6,7 +6,7 @@
 # The NMR import core functions are based on MATLAB code written by Nils Nyberg
 # and the nmrglue python package.
 #
-# The nmrglue python package does seem to have a more comprenhensive set of
+# The nmrglue python package does seem to have a more comprehensive set of
 # import routines for NMR data (and in particular for Bruker data).
 # http://www.nmrglue.com/
 
@@ -246,7 +246,7 @@ read_bin_data <- function(file_name, endian) {
         # By using a read size of 131073 integers in one read I know if I have
         # reached the end.
         chunksize <- 131073
-        num_reads = 1
+        num_reads <- 1
         data <- readBin(
             con,
             what = "integer",
@@ -267,7 +267,7 @@ read_bin_data <- function(file_name, endian) {
                     endian = endian
                 )
             )
-            num_reads = num_reads + 1
+            num_reads <- num_reads + 1
         }
     }, finally = {
         close(con)
@@ -486,9 +486,9 @@ read_bruker_pdata <- function(sample_path,
     
     # Open and read file
     if (output$procs$BYTORDP == 0) {
-        endian = 'little'
+        endian <- 'little'
     } else {
-        endian = 'big'
+        endian <- 'big'
     }
     
     if (isTRUE(read_pdata_title)) {
@@ -557,13 +557,13 @@ read_bruker_pdata <- function(sample_path,
     
     # Reorder submatrices (se XWinNMR-manual, chapter 17.5 (95.3))
     if (data_shapes$dimension == 2) {
-        SI1 = data_shapes$shape[1]
-        #SI2 = data_shapes$shape[2]
-        #XDIM1 = data_shapes$submatrix_shape[1]
-        XDIM2 = data_shapes$submatrix_shape[2]
+        SI1 <- data_shapes$shape[1]
+        #SI2 <- data_shapes$shape[2]
+        #XDIM1 <- data_shapes$submatrix_shape[1]
+        XDIM2 <- data_shapes$submatrix_shape[2]
         NoSM_along_dimensions <-
             data_shapes$shape / data_shapes$submatrix_shape
-        NoSM2 = NoSM_along_dimensions[length(NoSM_along_dimensions)] # No of SM along F1
+        NoSM2 <- NoSM_along_dimensions[length(NoSM_along_dimensions)] # No of SM along F1
         NoSM <-
             cumprod(NoSM_along_dimensions) # cummulative total number of Submatrices along dimensions
         num_submatrices <- NoSM[length(NoSM)]
@@ -608,6 +608,7 @@ read_bruker_pdata <- function(sample_path,
 #' \item{MLEV -> TOCSY (alias)}
 #' \item{HSQC -> HSQC}
 #' \item{HMBC -> HMBC}
+#' \item{PROTON -> PROTON}
 #' }
 #'
 #' The nuclei in the sample are set according to the pulse sequence and the
@@ -626,9 +627,9 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
     output$dimension <- length(acqus_list)
     
     # The pulse sequence is not that obvious
-    experiment_name = acqus_list$acqus$EXP
-    NUCLEI <-
-        paste0("NUC", seq_len(8)) # NUC1... NUC8 help to tell us the nuclei present
+    experiment_name <- acqus_list$acqus$EXP
+    # NUC1... NUC8 help to tell us the nuclei present
+    NUCLEI <- paste0("NUC", seq_len(8))
     
     if (grepl(pattern = "NOESY",
                         x = experiment_name,
@@ -657,6 +658,9 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
         output$pulse_sequence <- "JRES"
         output$nuclei <- acqus_list$acqus[["NUC1"]]
         
+    } else if (grepl(pattern = "PROTON", x = experiment_name, ignore.case = TRUE)) {
+        output$pulse_sequence <- "PROTON"
+        output$nuclei <- acqus_list$acqus[["NUC1"]]
     } else if (grepl(pattern = "COSY",
                                      x = experiment_name,
                                      ignore.case = TRUE)) {
@@ -748,9 +752,9 @@ read_bruker_metadata <-
         }
         
         
-        if (!any(c("fid", "ser") %in% list.files(sample_path))) {
-            stop("No raw data available in ", sample_path)
-        }
+        # if (!any(c("fid", "ser") %in% list.files(sample_path))) {
+        #     stop("No raw data available in ", sample_path)
+        # }
         return(output)
     }
 
