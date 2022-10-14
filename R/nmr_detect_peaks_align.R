@@ -27,7 +27,7 @@
 #'   scales = seq(1, 16, 2),
 #'   baselineThresh = NULL, # Minimum peak intensity
 #'   SNR.Th = 4, # Signal to noise ratio
-#'   range_without_peaks = c(9.5, 10), # To estimate
+#'   range_without_peaks = range_without_peaks, # To estimate
 #' )
 #'
 #' sample_10 <- filter(dataset_1D, NMRExperiment == "10")
@@ -77,7 +77,7 @@ NULL
 #' smaller segments and uses [MassSpecWavelet::peakDetectionCWT] for peak
 #' detection.
 #' 
-#' Afterwards, the peak apex and the peak inflection points are used to efficiently
+#' Optionally afterwards, the peak apex and the peak inflection points are used to efficiently
 #' adjust a lorentzian to each peak, and compute the peak area and width, as well as
 #' the error of the fit. These peak features can be used afterwards to reject false
 #' detections.
@@ -90,10 +90,10 @@ NULL
 #' @param baselineThresh All peaks with intensities below the thresholds are excluded. Either:
 #'   - A numeric vector of length the number of samples. Each number is a threshold for that sample
 #'   - A single number. All samples use this number as baseline threshold.
-#'   - A function, that takes the `nmr_dataset` and `range_without_peaks` and returns a numeric vector with the thresholds.
 #'   - `NULL`. If that's the case, a default function is used ([nmr_baseline_threshold()])
 #' @inheritParams speaq::detectSpecPeaks
 #' @param range_without_peaks A numeric vector of length two with a region without peaks, only used when `baselineThresh = NULL`
+#' @param fit_lorentzians If `TRUE`, fit a lorentzian to each detected peak, to infer its inflection points. For now disabled for backwards compatibility.
 #' @param verbose Logical (`TRUE` or `FALSE`). Show informational messages, such as the estimated baseline
 #' @return A data frame with the NMRExperiment, the sample index, the position
 #'     in ppm and index and the peak intensity
@@ -105,6 +105,7 @@ nmr_detect_peaks <- function(nmr_dataset,
                              baselineThresh = NULL,
                              SNR.Th = 3,
                              range_without_peaks = c(9.5, 10),
+                             fit_lorentzians = FALSE
                              verbose = FALSE) {
     nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
     
@@ -113,14 +114,8 @@ nmr_detect_peaks <- function(nmr_dataset,
     nDivRange <- round(nDivRange_ppm / ppm_resolution)
     
     # Computes the Baseline Threshold
-    baselineThresh_fun <- NULL
     if (is.null(baselineThresh)) {
-        baselineThresh_fun <- nmr_baseline_threshold
-    } else if (rlang::is_function(baselineThresh)) {
-        baselineThresh_fun <- baselineThresh
-    }
-    if (!is.null(baselineThresh_fun)) {
-        baselineThresh <- rlang::exec(baselineThresh_fun, nmr_dataset, range_without_peaks = range_without_peaks)
+        baselineThresh <- nmr_baseline_threshold(nmr_dataset, range_without_peaks = range_without_peaks, method = "mean3sd")
         if (isTRUE(verbose)) {
             rlang::inform(
                 message = c(
@@ -181,6 +176,7 @@ nmr_detect_peaks <- function(nmr_dataset,
     )
     
     peak_data <- peakList_to_dataframe(nmr_dataset, peakList)
+    if (isTRUE(fit_lorentzians)) {
     peak_data <- peaklist_fit_lorentzians(
         peak_data,
         nmr_dataset,
@@ -195,6 +191,7 @@ nmr_detect_peaks <- function(nmr_dataset,
         nmr_get_excluded_regions(nmr_dataset)
     )
     peak_data <- peak_data[!peaks_at_excl_regions, , drop = FALSE]
+    }
     peak_data
 }
 
