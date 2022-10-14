@@ -105,7 +105,7 @@ nmr_detect_peaks <- function(nmr_dataset,
                              baselineThresh = NULL,
                              SNR.Th = 3,
                              range_without_peaks = c(9.5, 10),
-                             fit_lorentzians = FALSE
+                             fit_lorentzians = FALSE,
                              verbose = FALSE) {
     nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
     
