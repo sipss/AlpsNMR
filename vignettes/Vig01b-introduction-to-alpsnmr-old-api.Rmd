@@ -4,9 +4,7 @@ author: "AlpsNMR authors"
 package: AlpsNMR
 abstract: >
   An introduction to the AlpsNMR package, showing the most relevant functions and
-  a proposed workflow. This includes loading bruker NMR samples, adding sample
-  annotations, preprocessing the spectra, detecting outliers, detecting peaks,
-  aligning the samples and integrating the peaks to build a peak table.
+  a proposed workflow, using the older workflow.
 date: "`r format(Sys.Date(), '%F')`"
 output:
   BiocStyle::pdf_document:
@@ -53,6 +51,7 @@ pipeline_example
 
 
 ```{r}
+library(BiocParallel)
 library(AlpsNMR)
 library(ggplot2)
 ```
@@ -68,7 +67,7 @@ the `BiocParallel` introduction for further details
 ```{r}
 library(BiocParallel)
 #register(SerialParam(), default = TRUE)  # disable parallellization
-register(SnowParam(workers = 4), default = TRUE)  # enable parallellization with 4 workers
+register(SnowParam(workers = 3, exportglobals = FALSE), default = TRUE)  # enable parallellization with 4 workers
 ```
 
 
@@ -450,45 +449,7 @@ The function gives 3 posibilities sorted by the most probable metabolite
 ```{r}
 ppm_to_assign <- c(4.060960203, 3.048970634,2.405935596,0.990616851,0.986520147, 1.044258467)
 identification <- nmr_identify_regions_blood (ppm_to_assign)
-```
-
-
-# Free experimentation
-
-## Getting the spectra and manipulating it manually
-
-Besides all those techniques, you can easily implement your own. You can extract
-the raw matrix and manipulate it at will. As long as you don't
-permute the rows, you can always replace the raw matrix of the `nmr_dataset_1D`
-object through the `nmr_data` function:
-
-```{r}
-full_spectra_matrix <- nmr_data(dataset)
-full_spectra_matrix[1:3, 1:6] # change it as you wish
-nmr_data(dataset) <- full_spectra_matrix # Rewrite the matrix
-```
-
-
-## Creating an `nmr_dataset_1D` object from a matrix
-
-You can also create an `nmr_dataset_1D` object from scratch with the
-`new_nmr_dataset_1D` function:
-
-```{r}
-nsamp <- 12
-npoints <- 20
-# Create a random spectra matrix
-dummy_ppm_axis <- seq(from = 0.2, to = 10, length.out = npoints)
-dummy_spectra_matrix <- matrix(runif(nsamp*npoints), nrow = nsamp, ncol = npoints)
-metadata <- list(external = data.frame(NMRExperiment = paste0("Sample", 1:12),
-                                       DummyClass = c("a", "b"),
-                                       stringsAsFactors = FALSE))
-your_custom_nmr_dataset_1D <- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
-                                                 data_1r = dummy_spectra_matrix,
-                                                 metadata = metadata)
-your_custom_nmr_dataset_1D
-plot(your_custom_nmr_dataset_1D) +
-  ggtitle("Of course those random values don't make much sense...")
+identification[!is.na(identification$Metabolite), ]
 ```
 
 
