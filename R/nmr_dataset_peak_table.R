@@ -292,7 +292,8 @@ SummarizedExperiment_to_nmr_dataset_peak_table <- function(se) {
 
 
 #' @describeIn nmr_dataset_peak_table Convert to a data frame
-#' @param x An nmr_dataset_peak_table object
+#' @param x An nmr_dataset_peak_table object,
+#' @param ... ignored
 #' @return A data frame with the sample metadata and the peak table
 #' @export
 as.data.frame.nmr_dataset_peak_table <- function(x, ...) {
