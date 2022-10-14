@@ -251,6 +251,7 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #' @family plotting nmr datasets
 #' @param nmr_dataset An [nmr_dataset_1D]
 #' @param html_filename The output HTML filename to be created
+#' @param overwrite Overwrite the lib/ directory (use `NULL` to prompt the user)
 #' @inheritDotParams plot.nmr_dataset_1D
 #'
 #' @return the html filename created
@@ -261,9 +262,9 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #' #dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' #html_plot <- plot_webgl(dataset_1D, "html_plot.html")
 #' 
-plot_webgl <- function(nmr_dataset, html_filename, ...) {
+plot_webgl <- function(nmr_dataset, html_filename, overwrite = NULL, ...) {
     plt <- plot(nmr_dataset, ...)
-    plot_interactive(plt = plt, html_filename = html_filename)
+    plot_interactive(plt = plt, html_filename = html_filename, overwrite = overwrite)
     html_filename
 }
 
