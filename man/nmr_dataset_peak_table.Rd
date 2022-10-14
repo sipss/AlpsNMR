@@ -2,7 +2,17 @@
 % Please edit documentation in R/nmr_dataset_peak_table.R
 \name{nmr_dataset_peak_table}
 \alias{nmr_dataset_peak_table}
+\alias{as.data.frame.nmr_dataset_peak_table}
 \title{nmr_dataset_peak_table (S3 class)}
+\usage{
+\method{as.data.frame}{nmr_dataset_peak_table}(x, ...)
+}
+\arguments{
+\item{x}{An nmr_dataset_peak_table object}
+}
+\value{
+A data frame with the sample metadata and the peak table
+}
 \description{
 An \code{nmr_dataset_peak_table} represents a peak table with metadata.
 It is defined as an S3 class, and it can be treated as a regular list.
@@ -15,3 +25,8 @@ the list only has one data frame named "external".
 columns
 }
 }
+\section{Methods (by generic)}{
+\itemize{
+\item \code{as.data.frame(nmr_dataset_peak_table)}: Convert to a data frame
+
+}}
