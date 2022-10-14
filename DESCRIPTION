@@ -53,7 +53,7 @@ License: MIT + file LICENSE
 URL: https://sipss.github.io/AlpsNMR/, https://github.com/sipss/AlpsNMR
 BugReports: https://github.com/sipss/AlpsNMR/issues
 LazyData: FALSE
-Depends: R (>= 4.1), future (>= 1.10.0)
+Depends: R (>= 4.2), future (>= 1.10.0)
 Imports:
  utils,
  generics,
