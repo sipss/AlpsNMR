@@ -4,20 +4,39 @@
 \alias{nmr_baseline_threshold}
 \title{Threshold estimation for peak detection}
 \usage{
-nmr_baseline_threshold(nmr_dataset, range_without_peaks = c(9.5, 10))
+nmr_baseline_threshold(
+  nmr_dataset,
+  range_without_peaks = c(9.5, 10),
+  method = c("mean3sd", "median3mad")
+)
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D}.}
 
 \item{range_without_peaks}{A vector with two doubles describing a range without peaks suitable for baseline detection}
+
+\item{method}{Either "mean3sd" or the more robust "median3mad". See the details.}
 }
 \value{
 Numerical. A threshold value in intensity below that no peak is detected.
 }
 \description{
-Estimates a robust baseline threshold value for peak detection on an \link{nmr_dataset_1D} object.
-This is performed computing the median and the mean absolute deviation of each spectrum
-in the 9.5-10 ppm range. The threshold is computed as the \code{median+3*mad}.
+Estimates the threshold value for peak detection on an \link{nmr_dataset_1D} object by examining
+a range without peaks, by default the 9.5 - 10 ppm range.
+}
+\details{
+Two methods can be used:
+\itemize{
+\item "mean3sd": The mean3sd method computes the mean and the standard deviation of each spectrum
+in the 9.5 - 10 ppm range. The mean spectrum and the mean standard deviation are both vectors
+of length equal to the number of points in the given range. The mean of the mean spectrum
+the noise. The threshold is defined as \verb{center + 3 dispersion}, and it is one single threshold
+for the whole dataset. This is the default for backwards compatibility.
+\item "median3mad": First we take the data matrix. If we have estimated a baseline already,
+subtract it. In the defined region without peaks, estimate the median of each sample and
+its median absolute deviation. Return a vector of length equal to the number of samples
+with the \verb{median+3mad} for each sample. This is a new more robust method.
+}
 }
 \examples{
 dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")

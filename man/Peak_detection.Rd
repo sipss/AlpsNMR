@@ -32,7 +32,7 @@ peak_data <- nmr_detect_peaks(
   scales = seq(1, 16, 2),
   baselineThresh = NULL, # Minimum peak intensity
   SNR.Th = 4, # Signal to noise ratio
-  range_without_peaks = c(9.5, 10), # To estimate
+  range_without_peaks = range_without_peaks, # To estimate
 )
 
 sample_10 <- filter(dataset_1D, NMRExperiment == "10")

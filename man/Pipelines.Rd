@@ -106,7 +106,6 @@ for peaks.}
 \itemize{
 \item A numeric vector of length the number of samples. Each number is a threshold for that sample
 \item A single number. All samples use this number as baseline threshold.
-\item A function, that takes the \code{nmr_dataset} and \code{range_without_peaks} and returns a numeric vector with the thresholds.
 \item \code{NULL}. If that's the case, a default function is used (\code{\link[=nmr_baseline_threshold]{nmr_baseline_threshold()}})
 }}
 

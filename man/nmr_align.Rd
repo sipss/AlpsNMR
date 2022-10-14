@@ -9,7 +9,7 @@ nmr_align(
   peak_data,
   NMRExp_ref = NULL,
   maxShift_ppm = 0.0015,
-  acceptLostPeak = TRUE
+  acceptLostPeak = FALSE
 )
 }
 \arguments{

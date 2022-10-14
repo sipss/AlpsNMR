@@ -57,6 +57,7 @@ Authors:
 
 Other contributors:
 \itemize{
+  \item Laura López Sánchez [contributor]
   \item Nestlé Institute of Health Sciences [copyright holder]
   \item Institute for Bioengineering of Catalonia [copyright holder]
 }
