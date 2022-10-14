@@ -119,11 +119,22 @@ nmr_detect_peaks <- function(nmr_dataset,
     if (is.null(baselineThresh)) {
         baselineThresh <- nmr_baseline_threshold(nmr_dataset, range_without_peaks = range_without_peaks, method = "mean3sd")
         if (isTRUE(verbose)) {
-            rlang::inform(
-                message = c(
-                    "i" = glue::glue("Using baselineThresh={baselineThresh}", baselineThresh = baselineThresh)
+            if (length(baselineThresh) > 1L) {
+                bth_minmax <- range(baselineThresh)
+                rlang::inform(
+                    message = c(
+                        "i" = glue::glue("Using baseline thresholds in the range [{bthmin} - {bthmax}]",
+                                         bthmin = bth_minmax[1], bthmax = bth_minmax[2])
+                    )
                 )
-            )
+                
+            } else {
+                rlang::inform(
+                    message = c(
+                        "i" = glue::glue("Using baselineThresh={baselineThresh}", baselineThresh = baselineThresh)
+                    )
+                )
+            }
             rlang::inform(
                 message = c(
                     "i" = glue::glue(
