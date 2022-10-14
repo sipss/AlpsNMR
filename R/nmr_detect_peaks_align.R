@@ -580,8 +580,9 @@ nmr_align <- function(nmr_dataset,
                       peak_data,
                       NMRExp_ref = NULL,
                       maxShift_ppm = 0.0015,
-                      acceptLostPeak = TRUE) {
+                      acceptLostPeak = FALSE) {
     nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
+    # FIXME: set acceptLostPeak to TRUE in a future version?
     maxShift_pts <- ceiling(maxShift_ppm / nmr_ppm_resolution(nmr_dataset))
     if (is.null(NMRExp_ref)) {
         NMRExp_ref <- nmr_align_find_ref(nmr_dataset, peak_data)
