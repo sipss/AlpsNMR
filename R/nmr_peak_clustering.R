@@ -9,8 +9,10 @@ mahalanobis_distance <- function(x) {
 }
 
 peak2peak_distance <- function(peak_matrix, distance_method = "euclidean") {
-    STATS_METHODS <- c("euclidean", "maximum", "manhattan", "canberra",
-                       "binary", "minkowski")
+    STATS_METHODS <- c(
+        "euclidean", "maximum", "manhattan", "canberra",
+        "binary", "minkowski"
+    )
     if (distance_method %in% STATS_METHODS) {
         peak2peak_dist <- stats::dist(peak_matrix, method = distance_method)
     } else if (distance_method == "sd_scaled_euclidean") {
@@ -64,11 +66,11 @@ set_peak_distances_within_groups <- function(dist_matrix, peak_groups, value = I
 #'
 #' @return A dist object with the peak2peak distances
 #' @export
-#' @examples 
+#' @examples
 #' peak_data <- data.frame(
-#'   NMRExperiment = c("10", "10", "20", "20"),
-#'   peak_id = paste0("Peak", 1:4),
-#'   ppm = c(1, 2, 1.1, 3)
+#'     NMRExperiment = c("10", "10", "20", "20"),
+#'     peak_id = paste0("Peak", 1:4),
+#'     ppm = c(1, 2, 1.1, 3)
 #' )
 #' peak2peak_dist <- nmr_get_peak_distances(peak_data)
 #' stopifnot(abs(as.numeric(peak2peak_dist) - c(6, 0.1, 2, 0.9, 1, 6)) < 1E-8)
@@ -85,7 +87,7 @@ nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
     peak2peak_dist <- set_peak_distances_within_groups(
         dist_matrix = peak2peak_dist,
         peak_groups = peak_groups,
-        value = same_sample_dist_factor*max_dist
+        value = same_sample_dist_factor * max_dist
     )
     peak2peak_dist
 }
@@ -108,10 +110,10 @@ nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
 #'
 #' @examples
 #' peak_data <- data.frame(
-#'   NMRExperiment = c("10", "10", "20", "20"),
-#'   peak_id = paste0("Peak", 1:4),
-#'   ppm = c(1, 2, 1.1, 2.2),
-#'   gamma_ppb = 100
+#'     NMRExperiment = c("10", "10", "20", "20"),
+#'     peak_id = paste0("Peak", 1:4),
+#'     ppm = c(1, 2, 1.1, 2.2),
+#'     gamma_ppb = 100
 #' )
 #' clustering_result <- nmr_peak_clustering(peak_data)
 #' peak_data <- clustering_result$peak_data
@@ -124,7 +126,7 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters =
     cluster <- stats::hclust(d = peak2peak_dist, method = "complete")
     if (is.null(num_clusters)) {
         if (is.null(max_dist_thresh_ppb)) {
-            max_dist_thresh_ppb <- signif(3*stats::median(peak_data$gamma_ppb), digits = 2)
+            max_dist_thresh_ppb <- signif(3 * stats::median(peak_data$gamma_ppb), digits = 2)
             if (verbose) {
                 rlang::inform(c("i" = glue("The maximum distance between two peaks in the same cluster is of {max_dist_thresh_ppb} ppbs")))
             }
@@ -137,7 +139,7 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters =
         num_clusters <- num_cluster_estimation$num_clusters
     }
     peak_data$cluster <- stats::cutree(cluster, k = num_clusters)
-    
+
     # Estimate the ppm_ref
     # The digits are at least four. However if the max_dist_thresh is very small
     # then we need ppm references with more resolution as well.
@@ -150,12 +152,12 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters =
         dplyr::group_by(.data$cluster) %>%
         dplyr::mutate(ppm_ref = round(stats::median(.data$ppm), !!digits_for_ppmref)) %>%
         dplyr::ungroup()
-    
+
     wrong_clusters <- peak_data %>%
         dplyr::group_by(.data$NMRExperiment, .data$ppm_ref) %>%
         dplyr::summarise(num_peaks = dplyr::n(), peak_ids = list(.data$peak_id), .groups = "drop") %>%
         dplyr::filter(.data$num_peaks > 1L)
-    
+
     if (nrow(wrong_clusters) > 0) {
         wrong_peak_ids <- purrr::flatten_chr(wrong_clusters$peak_ids)
         rlang::warn(
@@ -172,8 +174,8 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters =
     } else {
         excluded_peaks <- NULL
     }
-    
-    
+
+
     list(
         peak_data = peak_data,
         cluster = cluster,
@@ -198,13 +200,13 @@ get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster, 
     max_dist_ppbs <- numeric(length(num_clusters))
     break_in <- NULL
     for (i in seq_len(ncol(peak_assignments))) {
-        peak_list$cluster <- peak_assignments[,i]
+        peak_list$cluster <- peak_assignments[, i]
         max_dist_ppm <- peak_list %>%
-            dplyr::group_by(.data$cluster)  %>%
-            dplyr::summarize(max_dist = max(.data$ppm) - min(.data$ppm), .groups = "drop")  %>%
+            dplyr::group_by(.data$cluster) %>%
+            dplyr::summarize(max_dist = max(.data$ppm) - min(.data$ppm), .groups = "drop") %>%
             dplyr::pull("max_dist") %>%
             max()
-        max_dist_ppbs[i] <- 1000*max_dist_ppm
+        max_dist_ppbs[i] <- 1000 * max_dist_ppm
         if (!is.null(max_dist_thresh_ppb) && is.null(break_in) && max_dist_ppbs[i] < max_dist_thresh_ppb) {
             break_in <- i + 10
         }
@@ -223,8 +225,8 @@ get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster, 
 #' @param max_dist_thresh_ppb The maximum distance allowed within two peaks in a cluster
 #' @noRd
 estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
-    peaks_per_sample <- peak_list %>% 
-        dplyr::group_by(.data$NMRExperiment) %>% 
+    peaks_per_sample <- peak_list %>%
+        dplyr::group_by(.data$NMRExperiment) %>%
         dplyr::summarize(n = dplyr::n()) %>%
         dplyr::pull("n")
     min_clusters_to_test <- max(peaks_per_sample)
@@ -251,7 +253,7 @@ estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
         dplyr::pull("num_clusters")
     gplt <- ggplot2::ggplot() +
         ggplot2::geom_point(ggplot2::aes(x = .data$num_clusters, y = .data$max_distance_ppb), data = num_clusters_vs_max_distance, na.rm = TRUE) +
-        ggplot2::geom_hline(yintercept = max_dist_thresh_ppb, color = "gray") + 
+        ggplot2::geom_hline(yintercept = max_dist_thresh_ppb, color = "gray") +
         ggplot2::labs(x = "Number of clusters", y = "Max distance within cluster (ppb)")
     if (length(num_clusters) == 0) {
         rlang::abort(
@@ -295,17 +297,17 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
     if (length(NMRExperiments) != 2) {
         rlang::abort("Please provide 2 and only 2 NMRExperiments")
     }
-    
+
     tidy_data <- tidy_spectra_baseline_and_threshold(
-        dataset = dataset, 
-        thresholds = baselineThresh, 
+        dataset = dataset,
+        thresholds = baselineThresh,
         chemshift_range = chemshift_range,
         NMRExperiment = NMRExperiments
-    ) 
+    )
     spectra <- tidy_data$spectra
     thresholds <- tidy_data$thresholds
 
-    offset_for_plotting <- 0.2*diff(range(spectra$intensity))
+    offset_for_plotting <- 0.2 * diff(range(spectra$intensity))
     spec_rows_2 <- spectra$NMRExperiment == NMRExperiments[2]
     spectra$intensity[spec_rows_2] <- spectra$intensity[spec_rows_2] + offset_for_plotting
 
@@ -313,17 +315,17 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
         thresh_rows_2 <- thresholds$NMRExperiment == NMRExperiments[2]
         thresholds$intensity[thresh_rows_2] <- thresholds$intensity[thresh_rows_2] + offset_for_plotting
     }
-    
+
     peak_list_clustered2 <- dplyr::filter(
         peak_list_clustered,
         .data$NMRExperiment %in% !!NMRExperiments,
         .data$ppm > min(!!chemshift_range),
         .data$ppm < max(!!chemshift_range)
     )
-    
+
     plc_rows_2 <- peak_list_clustered2$NMRExperiment == NMRExperiments[2]
     peak_list_clustered2$intensity_raw[plc_rows_2] <- peak_list_clustered2$intensity_raw[plc_rows_2] + offset_for_plotting
-    
+
     for_segments <- dplyr::full_join(
         peak_list_clustered2 %>%
             dplyr::filter(.data$NMRExperiment == !!NMRExperiments[1]) %>%
@@ -333,11 +335,11 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
             dplyr::select(.data$NMRExperiment, .data$ppm, .data$intensity_raw, .data$cluster, .data$area),
         by = "cluster"
     )
-    
+
     only_on_1 <- for_segments %>% filter(is.na(.data$NMRExperiment.y))
     only_on_2 <- for_segments %>% filter(is.na(.data$NMRExperiment.x))
     for_segments_12 <- for_segments %>% filter(!is.na(.data$NMRExperiment.x), !is.na(.data$NMRExperiment.y))
-    
+
     geom_txt <- get_geom_text()
     gplt <- ggplot2::ggplot() +
         # The spectra:
@@ -348,20 +350,20 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
         gplt <- gplt +
             ggplot2::geom_line(ggplot2::aes(x = .data$chemshift, y = .data$intensity, color = .data$NMRExperiment), data = thresholds, linetype = "dashed")
     }
-    
+
     gplt <- gplt +
         # Peaks not detected on sample 2
-        ggplot2::geom_point(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x), data = only_on_1) + 
-        geom_txt(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x, color = .data$NMRExperiment.x, label = signif(.data$area.x, 4)), data = only_on_1) + 
+        ggplot2::geom_point(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x), data = only_on_1) +
+        geom_txt(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x, color = .data$NMRExperiment.x, label = signif(.data$area.x, 4)), data = only_on_1) +
 
         # Peaks not detected on sample 1
         ggplot2::geom_point(ggplot2::aes(x = .data$ppm.y, y = .data$intensity_raw.y), data = only_on_2) +
-        geom_txt(ggplot2::aes(x = .data$ppm.y, y = .data$intensity_raw.y, color = .data$NMRExperiment.y, label = signif(.data$area.y, 4)), data = only_on_2) + 
+        geom_txt(ggplot2::aes(x = .data$ppm.y, y = .data$intensity_raw.y, color = .data$NMRExperiment.y, label = signif(.data$area.y, 4)), data = only_on_2) +
 
         # Peaks detected in both samples:
         ggplot2::geom_segment(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x, xend = .data$ppm.y, yend = .data$intensity_raw.y), data = for_segments_12) +
-        geom_txt(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x, color = .data$NMRExperiment.x, label = signif(.data$area.x, 4)), data = for_segments_12) + 
-        geom_txt(ggplot2::aes(x = .data$ppm.y, y = .data$intensity_raw.y, color = .data$NMRExperiment.y, label = signif(.data$area.y, 4)), data = for_segments_12) + 
+        geom_txt(ggplot2::aes(x = .data$ppm.x, y = .data$intensity_raw.x, color = .data$NMRExperiment.x, label = signif(.data$area.x, 4)), data = for_segments_12) +
+        geom_txt(ggplot2::aes(x = .data$ppm.y, y = .data$intensity_raw.y, color = .data$NMRExperiment.y, label = signif(.data$area.y, 4)), data = for_segments_12) +
 
         # Plot options:
         ggplot2::scale_x_reverse() +
@@ -380,10 +382,10 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
 #' @export
 #' @examples
 #' peak_data <- data.frame(
-#'   NMRExperiment = c("10", "10", "20", "20"),
-#'   peak_id = paste0("Peak", 1:4),
-#'   ppm = c(1, 2, 1.1, 2.1),
-#'   area = c(10, 20, 12, 22)
+#'     NMRExperiment = c("10", "10", "20", "20"),
+#'     peak_id = paste0("Peak", 1:4),
+#'     ppm = c(1, 2, 1.1, 2.1),
+#'     area = c(10, 20, 12, 22)
 #' )
 #' clustering_result <- nmr_peak_clustering(peak_data, num_clusters = 2)
 #' peak_data <- clustering_result$peak_data
@@ -402,7 +404,7 @@ nmr_build_peak_table <- function(peak_data, dataset = NULL) {
         as.matrix()
 
     ppm_ref_sorted <- stringr::str_sort(colnames(peak_table), numeric = TRUE)
-    
+
     if (!is.null(dataset)) {
         external_meta <- nmr_meta_get(dataset, groups = "external")
         peak_table <- peak_table[external_meta$NMRExperiment, ppm_ref_sorted, drop = FALSE]

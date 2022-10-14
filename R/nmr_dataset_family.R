@@ -20,7 +20,7 @@ NULL
 #'
 #' @family class helper functions
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
@@ -34,9 +34,9 @@ validate_nmr_dataset_family <- function(nmr_dataset_family) {
         is.list(nmr_dataset_family),
         message = "nmr_dataset_family objects are list-like. This object is not"
     )
-    
+
     num_samples <- nmr_dataset_family[["num_samples"]]
-    
+
     abort_if_not(
         "metadata" %in% names(unclass(nmr_dataset_family)),
         message = "Missing metadata"
@@ -78,7 +78,7 @@ validate_nmr_dataset_family <- function(nmr_dataset_family) {
             )
         )
     }
-    
+
     nmr_dataset_family
 }
 
@@ -93,18 +93,18 @@ validate_nmr_dataset_family <- function(nmr_dataset_family) {
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' 
+#'
 #' ## example 1
 #' sample_10 <- filter(dataset_1D, NMRExperiment == "10")
 #'
 #' ## example 2
-#' #test_samples <- dataset_1D %>% filter(nmr_peak_table$metadata$external$Group == "placebo")
+#' # test_samples <- dataset_1D %>% filter(nmr_peak_table$metadata$external$Group == "placebo")
 #' @export
 filter.nmr_dataset_family <- function(.data, ...) {
     dots <- rlang::quos(...)
     meta <- nmr_meta_get(.data)
     meta$tmp_row_idx <- seq_len(nrow(meta))
-    indices_to_keep <- dplyr::filter(meta,!!!dots)$tmp_row_idx
+    indices_to_keep <- dplyr::filter(meta, !!!dots)$tmp_row_idx
     return(.data[indices_to_keep])
 }
 
@@ -114,7 +114,7 @@ names.nmr_dataset_family <- function(x) {
 }
 
 #' @export
-.DollarNames.nmr_dataset_family <- function(x, pattern="") {
+.DollarNames.nmr_dataset_family <- function(x, pattern = "") {
     grep(pattern, names(unclass(x)), value = TRUE)
 }
 
@@ -127,9 +127,11 @@ names.nmr_dataset_family <- function(x) {
             )
         )
     }
-    if (anyDuplicated(value) > 0) (
-        rlang::abort("NMRExperiment names should not be repeated")
-    )
+    if (anyDuplicated(value) > 0) {
+        (
+            rlang::abort("NMRExperiment names should not be repeated")
+        )
+    }
     for (table_name in names(x$metadata)) {
         x$metadata[[table_name]][["NMRExperiment"]] <- value
     }

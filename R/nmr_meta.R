@@ -17,18 +17,19 @@
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' metadata <- nmr_meta_get(dataset)
-#' 
+#'
 nmr_meta_get <- function(samples,
-                         columns = NULL,
-                         groups = NULL) {
+    columns = NULL,
+    groups = NULL) {
     metadata_list <- samples[["metadata"]]
     metadata <- metadata_list[[1]]
     for (i in utils::tail(seq_along(metadata_list), -1)) {
         metadata <- dplyr::left_join(metadata,
-                                     metadata_list[[i]],
-                                     by = "NMRExperiment")
+            metadata_list[[i]],
+            by = "NMRExperiment"
+        )
     }
-    
+
     # Default columns means all columns
     if (!is.null(columns) && !is.null(groups)) {
         stop("groups and columns can't be given simultaneously")
@@ -41,12 +42,12 @@ nmr_meta_get <- function(samples,
     } else if (is.null(columns)) {
         columns <- colnames(metadata)
     }
-    
+
     # NMRExperiment is always present in the output
     if (!"NMRExperiment" %in% columns) {
         columns <- c("NMRExperiment", columns)
     }
-    
+
     # Report if user wants columns that are not present:
     if (!all(columns %in% colnames(metadata))) {
         cols_miss <- columns[!columns %in% colnames(metadata)]
@@ -66,7 +67,7 @@ nmr_meta_get <- function(samples,
         }
         rlang::abort(message = err_msg)
     }
-    
+
     columns <- columns[columns %in% colnames(metadata)]
     # drop = FALSE ensures we never return a vector (always a data frame/tibble)
     metadata <- metadata[, columns, drop = FALSE]
@@ -74,12 +75,12 @@ nmr_meta_get <- function(samples,
 }
 
 #' Get the names of metadata groups
-#' 
+#'
 #' @param samples a [nmr_dataset_family] object
 #' @return A character vector with group names
 #' @family metadata functions
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' metadata_column <- nmr_meta_get_column(dataset)
@@ -97,11 +98,11 @@ nmr_meta_groups <- function(samples) {
 #' @family nmr_dataset_1D functions
 #' @family nmr_dataset_peak_table functions
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' metadata_column <- nmr_meta_get_column(dataset)
-#' 
+#'
 nmr_meta_get_column <- function(samples, column = "NMRExperiment") {
     nmr_meta_get(samples, columns = column)[[column]]
 }
@@ -162,9 +163,10 @@ nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
     ))
     nmr_meta_new <-
         dplyr::left_join(nmr_meta,
-                         metadata,
-                         by = by,
-                         suffix = c("", "__REMOVE__"))
+            metadata,
+            by = by,
+            suffix = c("", "__REMOVE__")
+        )
     are_identical <- purrr::map_lgl(conflict, function(col) {
         col1 <- col
         col2 <- paste0(col, "__REMOVE__")
@@ -206,15 +208,17 @@ nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
 #' # Get a table with NMRExperiment -> SubjectID
 #' dummy_metadata <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 #'
-#' nmr_dataset <-nmr_meta_add_tidy_excel(nmr_dataset, dummy_metadata)
+#' nmr_dataset <- nmr_meta_add_tidy_excel(nmr_dataset, dummy_metadata)
 #' # Updated Metadata:
 #' nmr_meta_get(nmr_dataset, groups = "external")
 nmr_meta_add_tidy_excel <- function(nmr_data, excel_file) {
     excel_sheets <- readxl::excel_sheets(excel_file)
     excel_dfs <-
-        purrr::map(excel_sheets,
-                   ~ readxl::read_excel(path = excel_file, sheet = .))
-    
+        purrr::map(
+            excel_sheets,
+            ~ readxl::read_excel(path = excel_file, sheet = .)
+        )
+
     for (excel_df in excel_dfs) {
         # If the sheet is empty, skip
         if (nrow(excel_df) == 0 || ncol(excel_df) == 0) {
@@ -259,14 +263,14 @@ nmr_meta_add_tidy_excel <- function(nmr_data, excel_file) {
 #' @family nmr_dataset_1D functions
 #' @family nmr_dataset_peak_table functions
 #' @family import/export functions
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' #nmr_meta_export(dataset, "metadata.xlsx")
-#' 
+#' # nmr_meta_export(dataset, "metadata.xlsx")
+#'
 nmr_meta_export <- function(nmr_dataset,
-                            xlsx_file,
-                            groups = c("info", "orig", "title", "external")) {
+    xlsx_file,
+    groups = c("info", "orig", "title", "external")) {
     require_pkgs("writexl")
     groups_present <- groups %in% names(nmr_dataset$metadata)
     if (!all(groups_present)) {

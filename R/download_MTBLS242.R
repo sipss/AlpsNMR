@@ -1,7 +1,7 @@
 #' Download MTBLS242
-#' 
+#'
 #' Downloads part of the MTBLS242 dataset (few hundred megabytes)
-#' 
+#'
 #' NMR dataset from Gralka et al., 2015. DOI: 10.3945/ajcn.115.110536.
 #'
 #' @param dest_dir Directory where the dataset should be saved
@@ -17,13 +17,13 @@
 download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
     require_pkgs(pkg = c("curl", "zip", "archive"))
     url <- "ftp://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242/"
-    
+
     dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
-    
+
     # Download metadata file s_mtbls242.txt
     meta_file <- "s_mtbls242.txt"
     meta_url <- file.path(url, meta_file)
-    
+
     # meta_dst <- file.path(dest_dir, meta_file)
     # utils::download.file(meta_url, method = "auto", destfile = meta_dst, mode = "wb")
     annotations_destfile <- file.path(dest_dir, "sample_annotations.tsv")
@@ -38,7 +38,7 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
             ),
             .name_repair = "minimal"
         )
-        
+
         # Keep sample name and time point:
         sample_annot <- dplyr::select(
             sample_annot,
@@ -46,7 +46,7 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
         )
         sample_annot <- dplyr::filter(sample_annot, .data$TimePoint %in% c("preop", "3 months after surgery"))
         sample_annot$NMRExperiment <- gsub(pattern = "-", replacement = "_", sample_annot$NMRExperiment, fixed = TRUE)
-        
+
         sample_annot <- tidyr::separate(
             sample_annot,
             col = "NMRExperiment",
@@ -56,17 +56,17 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
         )
         sample_annot <- dplyr::select(sample_annot, -"S")
         sample_annot$filename <- paste0("Obs", sample_annot$timepoint, "_", sample_annot$SampleID, "s")
-        
+
         # File Obs1_0256s.zip incorrectly contains Obs1_0010s. Remove that ID (in all timepoints)
         sample_annot <- dplyr::filter(sample_annot, .data$SampleID != "0256")
-        
+
         # Keep samples matched in the two timepoints under study:
         sample_annot <- dplyr::group_by(sample_annot, .data$SampleID)
         sample_annot <- dplyr::filter(sample_annot, dplyr::n() == 2)
         sample_annot <- dplyr::ungroup(sample_annot)
         sample_annot$NMRExperiment <- sample_annot$filename
         sample_annot <- dplyr::select(sample_annot, -"timepoint", -"filename")
-        
+
         utils::write.table(sample_annot, file = annotations_destfile, sep = "\t", row.names = FALSE)
     } else {
         rlang::inform(c("i" = glue("Annotations were previously downloaded. Loading {annotations_destfile}")))
@@ -120,10 +120,10 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
                 unlink(file.path(filename_base, "pdata", "1", "1i"))
                 # pick your poison:
                 # a) utils::zip() is annoyingly verbose and possibly not portable
-                #utils::zip(zipfile = filename, files = filename_base)
-                #setwd(cwd)
+                # utils::zip(zipfile = filename, files = filename_base)
+                # setwd(cwd)
                 # b) zip::zip() segfaults
-                #zip::zip(zipfile = final_dst_file, files = filename_base, root = dst_rootdir)
+                # zip::zip(zipfile = final_dst_file, files = filename_base, root = dst_rootdir)
                 # c) archive (yet another package)
                 # I have to put everything in a folder:
                 tmpname <- paste0(filename_base, "-base")

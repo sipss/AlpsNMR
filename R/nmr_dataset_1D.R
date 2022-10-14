@@ -16,41 +16,45 @@
 #'
 #'
 #' @name nmr_dataset_1D
-#' @examples 
+#' @examples
 #' # Create a random spectra matrix
 #' nsamp <- 12
 #' npoints <- 20
 #' dummy_ppm_axis <- seq(from = 0.2, to = 10, length.out = npoints)
-#' dummy_spectra_matrix <- matrix(runif(nsamp*npoints), nrow = nsamp, ncol = npoints)
-#' metadata <- list(external = data.frame(NMRExperiment = paste0("Sample", 1:12),
-#'                                        DummyClass = c("a", "b")))
-#' dummy_nmr_dataset_1D <- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
-#'                                            data_1r = dummy_spectra_matrix,
-#'                                            metadata = metadata)
+#' dummy_spectra_matrix <- matrix(runif(nsamp * npoints), nrow = nsamp, ncol = npoints)
+#' metadata <- list(external = data.frame(
+#'     NMRExperiment = paste0("Sample", 1:12),
+#'     DummyClass = c("a", "b")
+#' ))
+#' dummy_nmr_dataset_1D <- new_nmr_dataset_1D(
+#'     ppm_axis = dummy_ppm_axis,
+#'     data_1r = dummy_spectra_matrix,
+#'     metadata = metadata
+#' )
 NULL
 
 #' Validate 1D nmr datasets
 #' @name validate_nmr_dataset
 #' @param nmr_dataset_1D An [nmr_dataset_1D] object
 #' @return The [nmr_dataset_1D] unchanged
-#' 
+#'
 #' This function is useful for its side-effects. Stopping in case of error
 #'
 #' @family class helper functions
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' dataset_1D_validated <- validate_nmr_dataset_1D(dataset_1D)
-#' 
+#'
 validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
     validate_nmr_dataset_family(nmr_dataset_1D)
     abort_if_not(
         inherits(nmr_dataset_1D, "nmr_dataset_1D"),
         message = "Not an nmr_dataset_1D"
     )
-    
+
     abort_if_not(
         "axis" %in% names(unclass(nmr_dataset_1D)),
         message = "nmr_dataset_1D must have a ppm axis"
@@ -59,7 +63,7 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
         "data_1r" %in% names(unclass(nmr_dataset_1D)),
         message = "nmr_dataset_1D must have a data_1r matrix"
     )
-    
+
     ppm_axis <- nmr_dataset_1D[["axis"]]
     data_1r <- nmr_dataset_1D[["data_1r"]]
     abort_if_not(
@@ -70,27 +74,27 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
         is.matrix(data_1r) && is.numeric(data_1r),
         message = "data_1r must be a numeric matrix"
     )
-    
+
     abort_if_not(
         length(ppm_axis) == ncol(data_1r),
         message = "ppm axis does not have a length equal to ncol(data_1r)"
     )
     num_samples <- nrow(data_1r)
-    
+
     abort_if_not(
         num_samples == nmr_dataset_1D[["num_samples"]],
         message = "The num_samples value does not match nrow(data_1r)"
     )
-    
+
     if (!"excluded_regions" %in% names(unclass(nmr_dataset_1D))) {
         rlang::warn(
             message = c(
                 'The dataset should have a "excluded_regions" element with the excluded regions.',
                 "i" = paste0(
-                    'If you saved and restored a dataset from a previous AlpsNMR version, and you ',
-                    'know the regions you excluded, you can set it manually: if `x` is your ',
+                    "If you saved and restored a dataset from a previous AlpsNMR version, and you ",
+                    "know the regions you excluded, you can set it manually: if `x` is your ",
                     'dataset, just use:\n  `x[["excluded_regions"]] <- list(water = c(4.7, 5.0))`\n',
-                    '  where the list can be just empty or whatever you passed to nmr_exclude_region().'
+                    "  where the list can be just empty or whatever you passed to nmr_exclude_region()."
                 ),
                 "i" = "Otherwise, AlpsNMR will assume there are no excluded regions on some peak detection stages."
             )
@@ -110,20 +114,23 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
 #' @family class helper functions
 #' @export
 #' @return Creates a new 1D nmr_dataset object from scratch
-#' 
+#'
 #' @examples
 #' # Create a random spectra matrix
 #' nsamp <- 12
 #' npoints <- 20
 #' dummy_ppm_axis <- seq(from = 0.2, to = 10, length.out = npoints)
-#' dummy_spectra_matrix <- matrix(runif(nsamp*npoints), nrow = nsamp, ncol = npoints)
-#' metadata <- list(external = data.frame(NMRExperiment = paste0("Sample", 1:12),
-#'                                        DummyClass = c("a", "b")))
-#' dummy_nmr_dataset_1D <- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
-#'                                            data_1r = dummy_spectra_matrix,
-#'                                            metadata = metadata)
-#'                                                  
-#'                                                  
+#' dummy_spectra_matrix <- matrix(runif(nsamp * npoints), nrow = nsamp, ncol = npoints)
+#' metadata <- list(external = data.frame(
+#'     NMRExperiment = paste0("Sample", 1:12),
+#'     DummyClass = c("a", "b")
+#' ))
+#' dummy_nmr_dataset_1D <- new_nmr_dataset_1D(
+#'     ppm_axis = dummy_ppm_axis,
+#'     data_1r = dummy_spectra_matrix,
+#'     metadata = metadata
+#' )
+#'
 new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
     samples <- list()
     samples[["metadata"]] <- metadata
@@ -141,13 +148,14 @@ new_nmr_dataset_1D <- function(ppm_axis, data_1r, metadata) {
 #' @export
 #' @family class helper functions
 #' @family nmr_dataset_1D functions
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' result <- is(dataset_1D)
-is.nmr_dataset_1D <- function(x)
+is.nmr_dataset_1D <- function(x) {
     inherits(x, "nmr_dataset_1D")
+}
 
 #' print for nmr_dataset_1D
 #' @param x an [nmr_dataset_1D] object
@@ -156,7 +164,7 @@ is.nmr_dataset_1D <- function(x)
 #' @family nmr_dataset_1D functions
 #' @return print for nmr_dataset_1D
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
@@ -173,7 +181,7 @@ print.nmr_dataset_1D <- function(x, ...) {
 #' @family nmr_dataset_1D functions
 #' @return format for nmr_dataset_1D
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
@@ -189,7 +197,7 @@ format.nmr_dataset_1D <- function(x, ...) {
 #' @family subsetting functions
 #' @family nmr_dataset_1D functions
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
@@ -211,14 +219,14 @@ format.nmr_dataset_1D <- function(x, ...) {
 #'
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #' @param filename The csv filename
-#' 
+#'
 #' @return The nmr_dataset object (unmodified)
-#' @export 
-#' @examples 
+#' @export
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' #nmr_export_data_1r(dataset_1D, "exported_nmr_dataset")
+#' # nmr_export_data_1r(dataset_1D, "exported_nmr_dataset")
 nmr_export_data_1r <- function(nmr_dataset, filename) {
     # FIXME: remove me (nmr_data() covers for this)
     abort_if_not(
@@ -236,8 +244,8 @@ nmr_export_data_1r <- function(nmr_dataset, filename) {
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #'
 #' @return SummarizedExperiment An SummarizedExperiment object (unmodified)
-#' @export 
-#' @examples 
+#' @export
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
@@ -245,14 +253,16 @@ nmr_export_data_1r <- function(nmr_dataset, filename) {
 nmr_data_1r_to_SummarizedExperiment <- function(nmr_dataset) {
     require_pkgs("SummarizedExperiment")
     abort_if_not(
-        is.nmr_dataset_1D(nmr_dataset), 
+        is.nmr_dataset_1D(nmr_dataset),
         message = "An nmr_dataset_1D should be given"
     )
     data_1r <- nmr_data(nmr_dataset)
     # SummarizedExperiment work trasposed
-    SummarizedExperiment::SummarizedExperiment(assays=list(data_1r=data_1r),
-                         metadata = nmr_meta_get(nmr_dataset),
-                         colData=t(data_1r))
+    SummarizedExperiment::SummarizedExperiment(
+        assays = list(data_1r = data_1r),
+        metadata = nmr_meta_get(nmr_dataset),
+        colData = t(data_1r)
+    )
 }
 
 #' Import SummarizedExperiment as 1D NMR data
@@ -260,8 +270,8 @@ nmr_data_1r_to_SummarizedExperiment <- function(nmr_dataset) {
 #' @param se An SummarizedExperiment object
 #'
 #' @return nmr_dataset An [nmr_dataset_1D] object (unmodified)
-#' @export 
-#' @examples 
+#' @export
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
@@ -270,53 +280,59 @@ nmr_data_1r_to_SummarizedExperiment <- function(nmr_dataset) {
 SummarizedExperiment_to_nmr_data_1r <- function(se) {
     require_pkgs(c("SummarizedExperiment", "S4Vectors"))
     meta <- S4Vectors::metadata(se)
-    
+
     col_names <- names(meta)
     nmr_meta <- list()
-    
-    #Orig, NMRExperiment
-    NMRE <- which(col_names[]=="NMRExperiment")
+
+    # Orig, NMRExperiment
+    NMRE <- which(col_names[] == "NMRExperiment")
     num_NMRE <- length(unlist(meta[NMRE]))
-    meta_orig <- as.data.frame(matrix(unlist(meta[NMRE]), nrow=num_NMRE))
+    meta_orig <- as.data.frame(matrix(unlist(meta[NMRE]), nrow = num_NMRE))
     colnames(meta_orig) <- names(meta[NMRE])
     nmr_meta[["orig"]] <- meta_orig
     meta <- meta[-NMRE]
     col_names <- col_names[-NMRE]
-    #External
+    # External
     col_names_split <- stringr::str_split(col_names, "_", simplify = TRUE)
-    if(dim(col_names_split)[2]<2){
-        #All is considered external
-        meta_external <- as.data.frame(matrix(unlist(meta), nrow=num_NMRE))
+    if (dim(col_names_split)[2] < 2) {
+        # All is considered external
+        meta_external <- as.data.frame(matrix(unlist(meta), nrow = num_NMRE))
         meta_external <- cbind(meta_orig, meta_external)
         colnames(meta_external) <- c(colnames(meta_orig), names(meta))
         nmr_meta[["external"]] <- meta_external
     } else {
-        external_col <- meta[col_names_split[,2]==""]
-        if(length(external_col)>0){
+        external_col <- meta[col_names_split[, 2] == ""]
+        if (length(external_col) > 0) {
             meta_external <- as.data.frame(
-                matrix(unlist(meta[col_names_split[,2]==""]), nrow=num_NMRE))
+                matrix(unlist(meta[col_names_split[, 2] == ""]), nrow = num_NMRE)
+            )
             meta_external <- cbind(meta_orig, meta_external)
-            colnames(meta_external) <- c(colnames(meta_orig),
-                                         names(meta[col_names_split[,2]==""]))
+            colnames(meta_external) <- c(
+                colnames(meta_orig),
+                names(meta[col_names_split[, 2] == ""])
+            )
             nmr_meta[["external"]] <- meta_external
-            meta <- meta[!col_names_split[,2]==""]
-            col_names <- col_names[!col_names_split[,2]==""]
+            meta <- meta[!col_names_split[, 2] == ""]
+            col_names <- col_names[!col_names_split[, 2] == ""]
         } else {
             meta_external <- meta_orig
             nmr_meta[["external"]] <- meta_external
         }
-        
+
         col_names_split <- stringr::str_split(col_names, "_", simplify = TRUE)
-        df_names <- unique(col_names_split[,1])
-        for(i in seq_len(length(df_names))){
-            num <- which(col_names_split[,1]==df_names[i])
+        df_names <- unique(col_names_split[, 1])
+        for (i in seq_len(length(df_names))) {
+            num <- which(col_names_split[, 1] == df_names[i])
             meta_df <- as.data.frame(matrix(unlist(meta[num[1]:max(num)],
-                                                   recursive = FALSE), nrow=num_NMRE))
+                recursive = FALSE
+            ), nrow = num_NMRE))
             colnames(meta_df) <- names(meta[num[1]:max(num)])
             meta_df <- cbind(meta_orig, meta_df)
             nmr_meta[[df_names[i]]] <- meta_df
         }
     }
-    new_nmr_dataset_1D(as.numeric(colnames(se)), 
-                       as.matrix(t(SummarizedExperiment::colData(se))), nmr_meta)
+    new_nmr_dataset_1D(
+        as.numeric(colnames(se)),
+        as.matrix(t(SummarizedExperiment::colData(se))), nmr_meta
+    )
 }

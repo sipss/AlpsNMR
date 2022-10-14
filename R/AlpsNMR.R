@@ -10,7 +10,7 @@
 #' - [nmr_exclude_region()]
 #' - [nmr_normalize()]
 #' - [plot()][plot.nmr_dataset_1D()]
-#' 
+#'
 #' There are also functions to extract the metadata and submit the samples to
 #' irods, see the example below.
 #'
@@ -23,10 +23,10 @@
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' my_nmr_dataset <- dataset %>%
-#'   nmr_interpolate_1D(axis = c(0.4, 10)) %>%
-#'   nmr_exclude_region(exclude = list(water = c(4.6, 5))) %>%
-#'   nmr_normalize(method = "pqn") %>%
-#'   plot
+#'     nmr_interpolate_1D(axis = c(0.4, 10)) %>%
+#'     nmr_exclude_region(exclude = list(water = c(4.6, 5))) %>%
+#'     nmr_normalize(method = "pqn") %>%
+#'     plot()
 "_PACKAGE"
 
 
@@ -52,4 +52,3 @@ magrittr::`%>%`
 #' @importFrom utils .DollarNames
 #' @export
 utils::.DollarNames
-

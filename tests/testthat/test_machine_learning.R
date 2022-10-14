@@ -1,5 +1,5 @@
 # context("test-MUVR")
-# 
+#
 # test_that("rdCV_PLS_RF & permutation_test_model work", {
 #   # Too expensive test to run on CRAN/Bioconductor
 #   skip_on_cran()
@@ -20,4 +20,3 @@
 #   expect_true(is.matrix(permutations))
 #   expect_true(is.data.frame(VIPs))
 # })
-

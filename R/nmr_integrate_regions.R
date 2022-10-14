@@ -10,17 +10,21 @@
 #' @return An [nmr_dataset_peak_table] object
 #'
 #' @examples
-#' #Creating a dataset
-#' dataset <- new_nmr_dataset_1D(ppm_axis = 1:10,
-#'                               data_1r = matrix(sample(0:99,replace = TRUE), nrow = 10),
-#'                               metadata = list(external = data.frame(NMRExperiment = c("10", 
-#'                               "20", "30", "40", "50", "60", "70", "80", "90", "100"))))
+#' # Creating a dataset
+#' dataset <- new_nmr_dataset_1D(
+#'     ppm_axis = 1:10,
+#'     data_1r = matrix(sample(0:99, replace = TRUE), nrow = 10),
+#'     metadata = list(external = data.frame(NMRExperiment = c(
+#'         "10",
+#'         "20", "30", "40", "50", "60", "70", "80", "90", "100"
+#'     )))
+#' )
 #'
 #' # Integrating selected regions
-#' peak_table_integration = nmr_integrate_regions(
-#'                                    samples = dataset,
-#'                                    regions = list(ppm = c(2,5))
-#'                                    )
+#' peak_table_integration <- nmr_integrate_regions(
+#'     samples = dataset,
+#'     regions = list(ppm = c(2, 5))
+#' )
 #'
 #' @export
 #' @family peak detection functions
@@ -34,9 +38,11 @@ rough_baseline <- function(x, allow_baseline_above_signal = TRUE) {
     if (n == 0) {
         return(numeric(0L))
     }
-    basel <- signal::interp1(x = c(1, n),
-                             y = x[c(1, n)],
-                             xi = seq_len(n))
+    basel <- signal::interp1(
+        x = c(1, n),
+        y = x[c(1, n)],
+        xi = seq_len(n)
+    )
     if (!allow_baseline_above_signal) {
         basel <- ifelse(basel > x, x, basel)
     }
@@ -63,24 +69,29 @@ rough_baseline <- function(x, allow_baseline_above_signal = TRUE) {
 #' @param ... Keep for compatibility
 #' @export
 #' @examples
-#' #Creating a dataset
-#' dataset <- new_nmr_dataset_1D(ppm_axis = 1:10,
-#'                               data_1r = matrix(sample(0:99,replace = TRUE), nrow = 10),
-#'                               metadata = list(external = data.frame(NMRExperiment = c("10",
-#'                                "20", "30", "40", "50", "60", "70", "80", "90", "100"))))
-#' 
+#' # Creating a dataset
+#' dataset <- new_nmr_dataset_1D(
+#'     ppm_axis = 1:10,
+#'     data_1r = matrix(sample(0:99, replace = TRUE), nrow = 10),
+#'     metadata = list(external = data.frame(NMRExperiment = c(
+#'         "10",
+#'         "20", "30", "40", "50", "60", "70", "80", "90", "100"
+#'     )))
+#' )
+#'
 #' # Integrating selected regions
-#' peak_table_integration = nmr_integrate_regions(
-#'                                    samples = dataset,
-#'                                    regions = list(ppm = c(2,5)),
-#'                                    fix_baseline = FALSE)
-#'         
+#' peak_table_integration <- nmr_integrate_regions(
+#'     samples = dataset,
+#'     regions = list(ppm = c(2, 5)),
+#'     fix_baseline = FALSE
+#' )
+#'
 nmr_integrate_regions.nmr_dataset_1D <- function(samples,
-                                                 regions,
-                                                 fix_baseline = FALSE,
-                                                 excluded_regions_as_zero = FALSE,
-                                                 set_negative_areas_to_zero = FALSE,
-                                                 ...) {
+    regions,
+    fix_baseline = FALSE,
+    excluded_regions_as_zero = FALSE,
+    set_negative_areas_to_zero = FALSE,
+    ...) {
     if (is.null(names(regions))) {
         names(regions) <-
             purrr::map_chr(regions, ~ sprintf("ppm_%4.4f", mean(.)))
@@ -116,14 +127,16 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
         }
         area * ppm_res
     })
-    new_nmr_dataset_peak_table(peak_table = as.matrix(areas),
-                               metadata = samples$metadata)
+    new_nmr_dataset_peak_table(
+        peak_table = as.matrix(areas),
+        metadata = samples$metadata
+    )
 }
 
 #' Integrate peak positions
-#' 
+#'
 #' The function allows the integration of a given ppm vector with a specific width.
-#' 
+#'
 #' @return Integrate peak positions
 #' @name nmr_integrate_peak_positions
 #' @param samples A [nmr_dataset] object
@@ -136,26 +149,26 @@ nmr_integrate_regions.nmr_dataset_1D <- function(samples,
 #' @family peak integration functions
 #' @family nmr_dataset_1D functions
 nmr_integrate_peak_positions <- function(samples,
-                                         peak_pos_ppm,
-                                         peak_width_ppm = 0.006,
-                                         ...) {
+    peak_pos_ppm,
+    peak_width_ppm = 0.006,
+    ...) {
     # Computes the alanine peak_width_ppm
     if (is.null(peak_width_ppm)) {
         peak_width_ppm <- computes_peak_width_ppm(samples)
     }
-    
+
     # dataframe as input
     if (is.data.frame(peak_pos_ppm)) {
         message("peak_pos_ppm input introduced as dataframe")
         peak_pos_ppm <- peak_pos_ppm$ppm
     }
-    
+
     regions <- regions_from_peak_table(peak_pos_ppm, peak_width_ppm)
     nmr_integrate_regions(samples, regions, ...)
 }
 
 #' Get integrals with metadata from `integrate peak positions`
-#' 
+#'
 #' @param integration_object A [nmr_dataset] object
 #' @return Get integrals with metadata from `integrate peak positions`
 #' @export
@@ -163,14 +176,14 @@ nmr_integrate_peak_positions <- function(samples,
 #' @family peak integration functions
 #' @family nmr_dataset_1D functions
 #' @return integration dataframe
-#' @examples 
+#' @examples
 #' peak_table <- matrix(1:6, nrow = 2, ncol = 3)
 #' rownames(peak_table) <- c("10", "20")
 #' colnames(peak_table) <- c("ppm_1.2", "ppm1.4", "ppm1.6")
-#' 
+#'
 #' dataset <- new_nmr_dataset_peak_table(
-#'   peak_table = peak_table,
-#'   metadata = list(external = data.frame(NMRExperiment = c("10", "20"), Condition = c("A", "B")))
+#'     peak_table = peak_table,
+#'     metadata = list(external = data.frame(NMRExperiment = c("10", "20"), Condition = c("A", "B")))
 #' )
 #' get_integration_with_metadata(dataset)
 get_integration_with_metadata <- function(integration_object) {

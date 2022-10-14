@@ -16,7 +16,7 @@
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' lists_of_samples <- file_lister(dir_to_demo_dataset, "*0")
-#' 
+#'
 file_lister <- function(dataset_path_nmr, glob) {
     as.character(fs::dir_ls(dataset_path_nmr, glob = glob))
 }

@@ -11,10 +11,10 @@ NULL
 #' @title nmr_dataset_load
 #' @export
 #' @return load nmr dataset
-#' @examples 
+#' @examples
 #' # dataset <- nmr_dataset_load("test")
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
-#' 
+#'
 nmr_dataset_load <- function(file_name) {
     return(readRDS(file_name))
 }
@@ -23,11 +23,11 @@ nmr_dataset_load <- function(file_name) {
 #' @title nmr_dataset_save
 #' @export
 #' @return save nmr dataset
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' # nmr_dataset_save(dataset, "test")
-#' 
+#'
 nmr_dataset_save <- function(nmr_dataset, file_name, ...) {
     attr(nmr_dataset, "normalize_extra_info") <- NULL
     saveRDS(nmr_dataset, file_name)

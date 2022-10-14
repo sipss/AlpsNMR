@@ -1,8 +1,8 @@
 test_that("test renaming of samples works", {
     # Create a dataset with two samples
     ds <- new_nmr_dataset_1D(
-        ppm_axis = 1, 
-        data_1r = matrix(1, nrow = 2), 
+        ppm_axis = 1,
+        data_1r = matrix(1, nrow = 2),
         metadata = list(external = data.frame(NMRExperiment = c("10", "20")))
     )
     # Rename sample 20 to newname:

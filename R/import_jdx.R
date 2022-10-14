@@ -53,12 +53,12 @@ DATA_RELATED_FIELDS <-
 #'
 process_block <- function(lines, metadata_only = FALSE) {
     # Only one DATA_FIELD per block.
-    
+
     data_type <- "none" # we haven't found any data field yet here
     data_field <-
         NULL # we don't know the name of the data_field yet
-    block <- list()    # The block that we will return:
-    
+    block <- list() # The block that we will return:
+
     # All blocks must start with a TITLE:
     if (!grepl("^\\s*##TITLE\\s*=.*", lines[1])) {
         stop("Block should start with ##TITLE")
@@ -109,12 +109,14 @@ process_block <- function(lines, metadata_only = FALSE) {
             }
             # Now we know the name of the data_field
             data_field <- field_name
-            
+
             # We need to handle multiple data formats. We just implement the ones we need
             #################### (XY..XY) format ####################
             type_of_table <-
-                stringr::str_match(string = field_value,
-                                   pattern = "^\\s*\\(XY\\.\\.XY\\)\\s*(.*)\\s*")
+                stringr::str_match(
+                    string = field_value,
+                    pattern = "^\\s*\\(XY\\.\\.XY\\)\\s*(.*)\\s*"
+                )
             if (!is.na(type_of_table[1, 1])) {
                 # "(XY..XY)"
                 data_type <- "(XY..XY)"
@@ -138,17 +140,19 @@ process_block <- function(lines, metadata_only = FALSE) {
                     data <- unlist(data)
                     data <- matrix(as.numeric(data), nrow = 2)
                     block[[field_name]] <- data.frame(
-                        x = data[1,],
-                        y = data[2,]
+                        x = data[1, ],
+                        y = data[2, ]
                     )
                 }
                 next
             }
-            
+
             ######################### (X++(Y..Y)) format ##########################
             type_of_table <-
-                stringr::str_match(string = field_value,
-                                   pattern = "^\\s*\\(X\\+\\+\\(Y\\.\\.Y\\)\\)\\s*(.*)\\s*")
+                stringr::str_match(
+                    string = field_value,
+                    pattern = "^\\s*\\(X\\+\\+\\(Y\\.\\.Y\\)\\)\\s*(.*)\\s*"
+                )
             if (!is.na(type_of_table[1, 1])) {
                 # "(X++(Y..Y))"
                 data_type <- "(X++(Y..Y))"
@@ -171,14 +175,19 @@ process_block <- function(lines, metadata_only = FALSE) {
                         stringr::str_trim(lines[i_data_start:i])
                     # Then make sure there is a space between numbers (it's apparently optional):
                     cleaned_spaces <-
-                        gsub("([0-9.])([+-])",
-                             "\\1 \\2",
-                             cleaned_spaces)
+                        gsub(
+                            "([0-9.])([+-])",
+                            "\\1 \\2",
+                            cleaned_spaces
+                        )
                     # Ignore x (first column). Will be filled later
                     y <-
-                        unlist(lapply(strsplit(cleaned_spaces, split = "[[:blank:]]+"),
-                                      function(x)
-                                          as.numeric(x[2:length(x)])))
+                        unlist(lapply(
+                            strsplit(cleaned_spaces, split = "[[:blank:]]+"),
+                            function(x) {
+                                as.numeric(x[2:length(x)])
+                            }
+                        ))
                     block[[field_name]] <- data.frame(
                         x = NA,
                         y = y
@@ -204,12 +213,14 @@ process_block <- function(lines, metadata_only = FALSE) {
     # for the (X++(Y..Y)) data format
     if (data_type == "(X++(Y..Y))") {
         x <-
-            seq(from = block[["FIRSTX"]],
+            seq(
+                from = block[["FIRSTX"]],
                 to = block[["LASTX"]],
-                length.out = block[["NPOINTS"]])
+                length.out = block[["NPOINTS"]]
+            )
         block[[data_field]][["x"]] <- x
     }
-    
+
     # Apply X and Y Factors to the data:
     if (data_type != "none") {
         if ("x" %in% names(block[[data_field]]) &&
@@ -255,11 +266,13 @@ read_jdx <- function(file_names, metadata_only = FALSE) {
 }
 
 create_df_from_jdx_sample <- function(sampl,
-                                      exclude = c("blocks", DATA_FIELDS,
-                                                  DATA_RELATED_FIELDS)) {
+    exclude = c(
+        "blocks", DATA_FIELDS,
+        DATA_RELATED_FIELDS
+    )) {
     global_names <- setdiff(names(sampl), exclude)
     global_df <- do.call(tibble::tibble, sampl[global_names])
-    
+
     # block:
     all_df <- global_df
     for (block_idx in seq_along(sampl[["blocks"]])) {

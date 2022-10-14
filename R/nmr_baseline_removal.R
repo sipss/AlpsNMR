@@ -9,16 +9,16 @@
 #' @return The same [nmr_dataset_1D] object after baseline removal.
 #' @export
 #'
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' dataset_no_base_line <- nmr_baseline_removal(dataset_1D, lambda = 6, p = 0.01)
-#' 
+#'
 nmr_baseline_removal <- function(nmr_dataset,
-                                 lambda = 6,
-                                 p = 0.05,
-                                 maxit = 20) {
+    lambda = 6,
+    p = 0.05,
+    maxit = 20) {
     results <- baseline::baseline(
         nmr_dataset$data_1r,
         method = "als",
@@ -40,16 +40,16 @@ nmr_baseline_removal <- function(nmr_dataset,
 #' @return The same [nmr_dataset_1D] object with the `data_1r_baseline` element.
 #' @export
 #'
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' dataset_1D <- nmr_baseline_estimation(dataset_1D, lambda = 9, p = 0.01)
-#' 
+#'
 nmr_baseline_estimation <- function(nmr_dataset,
-                                    lambda = 9,
-                                    p = 0.05,
-                                    maxit = 20) {
+    lambda = 9,
+    p = 0.05,
+    maxit = 20) {
     results <- baseline::baseline(
         nmr_dataset$data_1r,
         method = "als",
@@ -60,4 +60,3 @@ nmr_baseline_estimation <- function(nmr_dataset,
     nmr_dataset$data_1r_baseline <- baseline::getBaseline(results)
     nmr_dataset
 }
-

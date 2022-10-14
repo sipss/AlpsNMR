@@ -24,26 +24,26 @@ read_bruker_param <- function(file_name) {
     # extract the relevant field name / field value.
     type_of_row <- NA * numeric(length(lines))
     all_matches <- vector("list", length(lines))
-    
+
     # Definition of the regular expressions and the type name.
     # The order is important. If for a given line there is a match on the first
     # row, the rest of the regular expressions for that row are ignored.
     R <- as.data.frame(matrix(
         c(
-            '^##\\$*(.+)=\\s?\\(\\d\\.\\.\\d+\\)(.+)$',
-            'ParVecVal',
-            '^##\\$*(.+)=\\s?\\(\\d\\.\\.\\d+\\)$',
-            'ParVec',
-            '^##\\$*(.+)=\\s?(.+)$',
-            'ParVal',
-            '^([^\\$#].*)$',
-            'Val',
-            '^\\$\\$(.+)$',
-            'Stamp',
-            '^##\\$*(.+)=$',
-            'ParEmpty',
-            '^\\s*$',
-            'Empty'
+            "^##\\$*(.+)=\\s?\\(\\d\\.\\.\\d+\\)(.+)$",
+            "ParVecVal",
+            "^##\\$*(.+)=\\s?\\(\\d\\.\\.\\d+\\)$",
+            "ParVec",
+            "^##\\$*(.+)=\\s?(.+)$",
+            "ParVal",
+            "^([^\\$#].*)$",
+            "Val",
+            "^\\$\\$(.+)$",
+            "Stamp",
+            "^##\\$*(.+)=$",
+            "ParEmpty",
+            "^\\s*$",
+            "Empty"
         ),
         ncol = 2,
         byrow = TRUE
@@ -101,7 +101,7 @@ read_bruker_param <- function(file_name) {
             stop("This should not have happened!")
         }
     }
-    
+
     for (field in names(output)) {
         output[[field]] <- convert_field(output[[field]])
     }
@@ -111,31 +111,37 @@ read_bruker_param <- function(file_name) {
 convert_field <- function(element) {
     # Convert values to numeric if possible
     converted_val <- element
-    tryCatch({
-        # First remove spaces
-        cleaned_spaces <- stringr::str_trim(element)
-        if (nchar(cleaned_spaces[1]) == 0) {
-            return(cleaned_spaces)
+    tryCatch(
+        {
+            # First remove spaces
+            cleaned_spaces <- stringr::str_trim(element)
+            if (nchar(cleaned_spaces[1]) == 0) {
+                return(cleaned_spaces)
+            }
+            # Then make sure there is a space between numbers (it's apparently optional):
+            cleaned_spaces <-
+                gsub("([0-9.])([+-])", "\\1 \\2", cleaned_spaces)
+            # Then split by one or more spaces
+            converted_val2 <-
+                strsplit(cleaned_spaces, split = "[[:blank:]]+")[[1]]
+            converted_val <- as.numeric(converted_val2)
+        },
+        warning = function(warn) {
+            # Do nothing
+        },
+        error = function(err) {
+            # Do nothing
         }
-        # Then make sure there is a space between numbers (it's apparently optional):
-        cleaned_spaces <-
-            gsub("([0-9.])([+-])", "\\1 \\2", cleaned_spaces)
-        # Then split by one or more spaces
-        converted_val2 <-
-            strsplit(cleaned_spaces, split = "[[:blank:]]+")[[1]]
-        converted_val <- as.numeric(converted_val2)
-    }, warning = function(warn) {
-        # Do nothing
-    }, error = function(err) {
-        # Do nothing
-    })
+    )
     # If it is still a string, remove leading < and trailing >
     if (is.character(converted_val) && length(converted_val) == 1) {
         if (grepl(pattern = "^\\s*<.*>\\s*$", x = converted_val)) {
             converted_val <-
-                gsub(pattern = "^\\s*<(.*)>\\s*$",
-                         replacement = "\\1",
-                         x = converted_val)
+                gsub(
+                    pattern = "^\\s*<(.*)>\\s*$",
+                    replacement = "\\1",
+                    x = converted_val
+                )
         }
     }
     return(converted_val)
@@ -189,8 +195,8 @@ read_acqus_file <- function(sample_path, acqus_files = NULL) {
 
 read_levels <-
     function(full_pdata_path,
-                     endian = NULL,
-                     NC_proc = NULL) {
+    endian = NULL,
+    NC_proc = NULL) {
         levels_vec <- NULL
         # Read the level file if it exists
         # The old version (level) is a binary
@@ -204,11 +210,11 @@ read_levels <-
             # The first two figures is the number of pos. and neg. levels
             levels_vec <- lev[3:length(lev)]
             # Adjust for NC-parameter
-            levels_vec <- levels_vec / (2 ^ -NC_proc)
+            levels_vec <- levels_vec / (2^-NC_proc)
         } else {
             levels_vec <- NULL
         }
-        
+
         # Read the clevel file if it exists
         # The new version clevel is a text file
         file_clevel <- file.path(full_pdata_path, "clevels")
@@ -240,38 +246,41 @@ read_levels <-
 #' @keywords internal
 #' @noRd
 read_bin_data <- function(file_name, endian) {
-    tryCatch({
-        con <- file(file_name, "rb")
-        # if file size is 512kb, or 131072 integers
-        # By using a read size of 131073 integers in one read I know if I have
-        # reached the end.
-        chunksize <- 131073
-        num_reads <- 1
-        data <- readBin(
-            con,
-            what = "integer",
-            n = chunksize,
-            size = 4,
-            signed = TRUE,
-            endian = endian
-        )
-        while (length(data) == num_reads * chunksize) {
-            data <- c(
-                data,
-                readBin(
-                    con,
-                    what = "integer",
-                    n = chunksize,
-                    size = 4,
-                    signed = TRUE,
-                    endian = endian
-                )
+    tryCatch(
+        {
+            con <- file(file_name, "rb")
+            # if file size is 512kb, or 131072 integers
+            # By using a read size of 131073 integers in one read I know if I have
+            # reached the end.
+            chunksize <- 131073
+            num_reads <- 1
+            data <- readBin(
+                con,
+                what = "integer",
+                n = chunksize,
+                size = 4,
+                signed = TRUE,
+                endian = endian
             )
-            num_reads <- num_reads + 1
+            while (length(data) == num_reads * chunksize) {
+                data <- c(
+                    data,
+                    readBin(
+                        con,
+                        what = "integer",
+                        n = chunksize,
+                        size = 4,
+                        signed = TRUE,
+                        endian = endian
+                    )
+                )
+                num_reads <- num_reads + 1
+            }
+        },
+        finally = {
+            close(con)
         }
-    }, finally = {
-        close(con)
-    })
+    )
     return(data)
 }
 
@@ -279,9 +288,11 @@ read_bin_data <- function(file_name, endian) {
 
 guess_shape_and_submatrix_shape <- function(sample) {
     output <-
-        list(dimension = NULL,
-                 shape = NULL,
-                 submatrix_shape = NULL)
+        list(
+            dimension = NULL,
+            shape = NULL,
+            submatrix_shape = NULL
+        )
     if (!"procs" %in% names(sample)) {
         return(output)
     }
@@ -290,8 +301,8 @@ guess_shape_and_submatrix_shape <- function(sample) {
         return(output)
     }
     si_0 <- procs[["SI"]]
-    xdim_0 <- procs[['XDIM']]
-    
+    xdim_0 <- procs[["XDIM"]]
+
     if (!"proc2s" %in% names(sample)) {
         # 1D data
         output[["dimension"]] <- 1
@@ -299,16 +310,16 @@ guess_shape_and_submatrix_shape <- function(sample) {
         output[["submatrix_shape"]] <- xdim_0
         return(output)
     }
-    
+
     proc2s <- sample[["proc2s"]]
     if (!all(c("SI", "XDIM") %in% names(proc2s))) {
         return(output)
     }
-    
+
     si_1 <- proc2s[["SI"]]
-    xdim_1 <- proc2s[['XDIM']]
-    
-    
+    xdim_1 <- proc2s[["XDIM"]]
+
+
     if (!"proc3s" %in% names(sample)) {
         # 2D data
         output[["dimension"]] <- 2
@@ -316,16 +327,16 @@ guess_shape_and_submatrix_shape <- function(sample) {
         output[["submatrix_shape"]] <- c(xdim_0, xdim_1)
         return(output)
     }
-    
-    
+
+
     proc3s <- sample[["proc3s"]]
     if (!all(c("SI", "XDIM") %in% names(proc3s))) {
         return(output)
     }
-    
+
     si_2 <- proc3s[["SI"]]
-    xdim_2 <- proc3s[['XDIM']]
-    
+    xdim_2 <- proc3s[["XDIM"]]
+
     if (!"proc4s" %in% names(sample)) {
         # 3D data
         output[["dimension"]] <- 3
@@ -333,15 +344,15 @@ guess_shape_and_submatrix_shape <- function(sample) {
         output[["submatrix_shape"]] <- c(xdim_0, xdim_1, xdim_2)
         return(output)
     }
-    
-    
+
+
     proc4s <- sample[["proc4s"]]
     if (!all(c("SI", "XDIM") %in% names(proc4s))) {
         return(output)
     }
-    
+
     si_3 <- proc4s[["SI"]]
-    xdim_3 <- proc4s[['XDIM']]
+    xdim_3 <- proc4s[["XDIM"]]
     # Assume 4D
     output[["dimension"]] <- 4
     output[["shape"]] <- c(si_0, si_1, si_2, si_3)
@@ -384,9 +395,11 @@ parse_title_file <- function(title_lines) {
         all_vals <- purrr::map_chr(lines_split, function(line) {
             value <- paste0(line[2:length(line)], collapse = " ")
             # Remove spaces and ";" at the end of the value, if they are present:
-            gsub(pattern = "[\\s;]+$",
-                 replacement = "",
-                 x = value)
+            gsub(
+                pattern = "[\\s;]+$",
+                replacement = "",
+                x = value
+            )
         })
         output <- list()
         output[all_names] <- all_vals
@@ -428,10 +441,10 @@ read_pdata_title_file <-
 #' @keywords internal
 #' @noRd
 read_bruker_pdata <- function(sample_path,
-                              pdata_file = NULL,
-                              pdata_path        = "pdata/1",
-                              all_components = FALSE,
-                              read_pdata_title = TRUE) {
+    pdata_file = NULL,
+    pdata_path = "pdata/1",
+    all_components = FALSE,
+    read_pdata_title = TRUE) {
     full_pdata_path <- file.path(sample_path, pdata_path)
     if (is.null(pdata_file)) {
         # determine the dimension
@@ -449,14 +462,16 @@ read_bruker_pdata <- function(sample_path,
             }
         } else if (file.exists(file.path(full_pdata_path, "3rrr"))) {
             if (all_components) {
-                pdata_file <- c('3rrr',
-                                                '3rri',
-                                                '3rir',
-                                                '3rii',
-                                                '3irr',
-                                                '3iri',
-                                                '3iir',
-                                                '3iii')
+                pdata_file <- c(
+                    "3rrr",
+                    "3rri",
+                    "3rir",
+                    "3rii",
+                    "3irr",
+                    "3iri",
+                    "3iir",
+                    "3iii"
+                )
             } else {
                 pdata_file <- "3rrr"
             }
@@ -464,62 +479,65 @@ read_bruker_pdata <- function(sample_path,
         pdata_file <-
             pdata_file[file.exists(file.path(full_pdata_path, pdata_file))]
     }
-    
+
     full_pdata_file <- file.path(full_pdata_path, pdata_file)
     if (length(full_pdata_file) == 0) {
         stop("No pdata files found to be loaded for sample ", sample_path)
     }
     if (!all(file.exists(full_pdata_file))) {
-        stop("File does not exist: ",
-                 paste(full_pdata_file[!file.exists(full_pdata_file)], collapse = ", "))
+        stop(
+            "File does not exist: ",
+            paste(full_pdata_file[!file.exists(full_pdata_file)], collapse = ", ")
+        )
     }
-    
+
     # Read parameters
     procs_list <- read_procs_file(full_pdata_path)
-    
+
     output <- list()
     output <- c(output, procs_list)
-    
+
     if (!("procs" %in% names(output))) {
         stop("Missing procs file")
     }
-    
+
     # Open and read file
     if (output$procs$BYTORDP == 0) {
-        endian <- 'little'
+        endian <- "little"
     } else {
-        endian <- 'big'
+        endian <- "big"
     }
-    
+
     if (isTRUE(read_pdata_title)) {
         title <-
             read_pdata_title_file(sample_path = sample_path, pdata_path = pdata_path)
         output$title <- title
     }
-    
+
     for (filename in pdata_file) {
         field_name <- paste0("data_", filename)
         full_filename <- file.path(full_pdata_path, filename)
         output[[field_name]] <-
             read_bin_data(full_filename, endian = endian)
         output[[field_name]] <-
-            output[[field_name]] / (2 ^ -output$procs$NC_proc)
+            output[[field_name]] / (2^-output$procs$NC_proc)
     }
-    
+
     output$levels <- read_levels(full_pdata_path,
-                                 endian = endian,
-                                 NC_proc = output$procs$NC_proc)
-    
+        endian = endian,
+        NC_proc = output$procs$NC_proc
+    )
+
     data_shapes <- guess_shape_and_submatrix_shape(output)
-    
+
     dimension <- data_shapes$dimension
     if (is.null(dimension)) {
         warning("Can't determine dimension. Are procs files loaded? Assuming dimension = 1")
         dimension <- 1
     }
-    
+
     output$axis <- vector("list", length = dimension)
-    
+
     if (dimension >= 1) {
         # Calculate x-axis
         output$axis[[1]] <- seq(
@@ -554,12 +572,12 @@ read_bruker_pdata <- function(sample_path,
             length.out = output$proc4s$SI
         )
     }
-    
+
     # Reorder submatrices (se XWinNMR-manual, chapter 17.5 (95.3))
     if (data_shapes$dimension == 2) {
         SI1 <- data_shapes$shape[1]
-        #SI2 <- data_shapes$shape[2]
-        #XDIM1 <- data_shapes$submatrix_shape[1]
+        # SI2 <- data_shapes$shape[2]
+        # XDIM1 <- data_shapes$submatrix_shape[1]
         XDIM2 <- data_shapes$submatrix_shape[2]
         NoSM_along_dimensions <-
             data_shapes$shape / data_shapes$submatrix_shape
@@ -582,7 +600,7 @@ read_bruker_pdata <- function(sample_path,
     if (data_shapes$dimension > 2) {
         stop("Can't deal with dimensions larger than two")
     }
-    
+
     return(output)
 }
 
@@ -620,80 +638,97 @@ read_bruker_pdata <- function(sample_path,
 #' @noRd
 #'
 infer_dim_pulse_nuclei <- function(acqus_list) {
-    output <- list(dimension = NA_integer_,
-                   pulse_sequence = NA_character_,
-                   nuclei = NA_character_)
+    output <- list(
+        dimension = NA_integer_,
+        pulse_sequence = NA_character_,
+        nuclei = NA_character_
+    )
     # The dimension is easy
     output$dimension <- length(acqus_list)
-    
+
     # The pulse sequence is not that obvious
     experiment_name <- acqus_list$acqus$EXP
     # NUC1... NUC8 help to tell us the nuclei present
     NUCLEI <- paste0("NUC", seq_len(8))
-    
-    if (grepl(pattern = "NOESY",
-                        x = experiment_name,
-                        ignore.case = TRUE) ||
-            grepl(pattern = "NOEZY",
-                        x = experiment_name,
-                        ignore.case = TRUE)) {
+
+    if (grepl(
+        pattern = "NOESY",
+        x = experiment_name,
+        ignore.case = TRUE
+    ) ||
+        grepl(
+            pattern = "NOEZY",
+            x = experiment_name,
+            ignore.case = TRUE
+        )) {
         output$pulse_sequence <- "NOESY"
         output$nuclei <- acqus_list$acqus[["NUC1"]]
-        
-    } else if (grepl(pattern = "CPMG",
-                                     x = experiment_name,
-                                     ignore.case = TRUE)) {
+    } else if (grepl(
+        pattern = "CPMG",
+        x = experiment_name,
+        ignore.case = TRUE
+    )) {
         output$pulse_sequence <- "CPMG"
         output$nuclei <- acqus_list$acqus[["NUC1"]]
-        
-    } else if (grepl(pattern = "DIFF",
-                                     x = experiment_name,
-                                     ignore.case = TRUE)) {
+    } else if (grepl(
+        pattern = "DIFF",
+        x = experiment_name,
+        ignore.case = TRUE
+    )) {
         output$pulse_sequence <- "DIFFUSION"
         output$nuclei <- acqus_list$acqus[["NUC1"]]
-        
-    } else if (grepl(pattern = "JRES",
-                                     x = experiment_name,
-                                     ignore.case = TRUE)) {
+    } else if (grepl(
+        pattern = "JRES",
+        x = experiment_name,
+        ignore.case = TRUE
+    )) {
         output$pulse_sequence <- "JRES"
         output$nuclei <- acqus_list$acqus[["NUC1"]]
     } else if (grepl(pattern = "PROTON", x = experiment_name, ignore.case = TRUE)) {
         output$pulse_sequence <- "PROTON"
         output$nuclei <- acqus_list$acqus[["NUC1"]]
-    } else if (grepl(pattern = "COSY",
-                                     x = experiment_name,
-                                     ignore.case = TRUE)) {
+    } else if (grepl(
+        pattern = "COSY",
+        x = experiment_name,
+        ignore.case = TRUE
+    )) {
         output$pulse_sequence <- "COSY"
         output$nuclei <-
             paste0(acqus_list$acqus[["NUC1"]], "-", acqus_list$acqu2s[["NUC1"]])
-        
-    } else if (grepl(pattern = "TOCSY",
-                                     x = experiment_name,
-                                     ignore.case = TRUE) ||
-                         grepl(pattern = "MLEV",
-                                     x = experiment_name,
-                                     ignore.case = TRUE) ||
-                         grepl(pattern = "DIPSI",
-                                     x = experiment_name,
-                                     ignore.case = TRUE)) {
+    } else if (grepl(
+        pattern = "TOCSY",
+        x = experiment_name,
+        ignore.case = TRUE
+    ) ||
+        grepl(
+            pattern = "MLEV",
+            x = experiment_name,
+            ignore.case = TRUE
+        ) ||
+        grepl(
+            pattern = "DIPSI",
+            x = experiment_name,
+            ignore.case = TRUE
+        )) {
         output$pulse_sequence <- "TOCSY"
         output$nuclei <-
             paste0(acqus_list$acqus[["NUC1"]], "-", acqus_list$acqu2s[["NUC1"]])
-        
-    } else if (grepl(pattern = "HSQC",
-                                     x = experiment_name,
-                                     ignore.case = TRUE)) {
+    } else if (grepl(
+        pattern = "HSQC",
+        x = experiment_name,
+        ignore.case = TRUE
+    )) {
         output$pulse_sequence <- "HSQC"
         output$nuclei <-
             paste(acqus_list$acqus[NUCLEI][acqus_list$acqus[NUCLEI] != "off"], collapse = "-")
-        
-    } else if (grepl(pattern = "HMBC",
-                                     x = experiment_name,
-                                     ignore.case = TRUE)) {
+    } else if (grepl(
+        pattern = "HMBC",
+        x = experiment_name,
+        ignore.case = TRUE
+    )) {
         output$pulse_sequence <- "HMBC"
         output$nuclei <-
             paste(acqus_list$acqus[NUCLEI][acqus_list$acqus[NUCLEI] != "off"], collapse = "-")
-        
     } # else {
     #    warning(
     #        "infer_dim_pulse_nuclei: Unknown Pulse Sequence in acqus$EXP field.\n",
@@ -701,8 +736,8 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
     #        experiment_name,
     #        "' to infer_dim_pulse_nuclei in R/bruker.R\n"
     #    )
-    #}
-    
+    # }
+
     return(output)
 }
 
@@ -716,11 +751,11 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
 #' @noRd
 read_bruker_metadata <-
     function(sample_path,
-                     pdata_path = "pdata/1",
-                     read_pdata_title = TRUE) {
+    pdata_path = "pdata/1",
+    read_pdata_title = TRUE) {
         # Read parameters
         acqus_list <- read_acqus_file(sample_path)
-        
+
         if (length(acqus_list) == 0) {
             stop("No acqus file found in ", sample_path)
         }
@@ -729,28 +764,30 @@ read_bruker_metadata <-
         info$file_format <- "Bruker NMR directory"
         info$sample_path <- sample_path
         info <- c(info, infer_dim_pulse_nuclei(acqus_list))
-        
+
         orig <- read_orig_file(sample_path = sample_path)
         # Store acquisition time information
         info$acq_datetime <- as.POSIXct(acqus_list$acqus$Stamp[1])
-        
-        
-        
+
+
+
         output <- list(info = info, orig = orig)
-        
+
         if (isTRUE(read_pdata_title)) {
-            pdata_1_title <- read_pdata_title_file(sample_path = sample_path,
-                                                   pdata_path = pdata_path)
+            pdata_1_title <- read_pdata_title_file(
+                sample_path = sample_path,
+                pdata_path = pdata_path
+            )
             output$title <- pdata_1_title
         }
-        
+
         output <- c(output, acqus_list)
-        
+
         if (!("acqus" %in% names(output))) {
             stop("Missing acqus file")
         }
-        
-        
+
+
         # if (!any(c("fid", "ser") %in% list.files(sample_path))) {
         #     stop("No raw data available in ", sample_path)
         # }
@@ -767,12 +804,13 @@ read_bruker_metadata <-
 #' @return a list with all the bruker sample information
 #' @noRd
 read_bruker_sample <- function(sample_path,
-                               pdata_file = NULL,
-                               pdata_path = "pdata/1",
-                               all_components = FALSE) {
+    pdata_file = NULL,
+    pdata_path = "pdata/1",
+    all_components = FALSE) {
     meta <- read_bruker_metadata(sample_path,
-                                 pdata_path,
-                                 read_pdata_title = TRUE)
+        pdata_path,
+        read_pdata_title = TRUE
+    )
     pdata <- read_bruker_pdata(
         sample_path = sample_path,
         pdata_file = pdata_file,
@@ -780,7 +818,7 @@ read_bruker_sample <- function(sample_path,
         all_components = all_components,
         read_pdata_title = FALSE
     ) # pdata title already read
-    
+
     output <- bruker_merge_meta_pdata(meta, pdata)
     return(output)
 }
@@ -803,7 +841,7 @@ bruker_merge_meta_pdata <- function(meta, pdata) {
 #' @return A character vector of the same length as path, with the zip file names
 #' @family import/export functions
 #' @export
-#' @examples 
+#' @examples
 #' outpaths <- nmr_zip_bruker_samples(".", getwd())
 nmr_zip_bruker_samples <-
     function(path, workdir, overwrite = FALSE, ...) {
@@ -814,43 +852,46 @@ nmr_zip_bruker_samples <-
         # tryCatch to make sure the working directory is restored
         # The zip utility in R is very basic. On Windows it relies on the zip.exe
         # program being installed and in the path. zip.exe is found on RTools.
-        tryCatch({
-            for (i in seq_len(length(path))) {
-                path_i <- path[i]
-                # The directory where the NMR sample is: (e.g. "/nihs/Instrument/.../DUND-plasma/10")
-                dir_to_compress <- normalizePath(path_i)
-                # dir_name: (e.g. "10")
-                dir_name <- basename(dir_to_compress)
-                # parent_dir: "/nihs/Instrument/.../DUND-plasma"
-                parent_dir <-
-                    normalizePath(dirname(dir_to_compress))
-                # destination_file: /tmp/my_temp_dir/10.zip
-                destination_file <-
-                    file.path(workdir, paste0(dir_name, ".zip"))
-                outpaths[i] <- destination_file
-                if (file.exists(destination_file)) {
-                    if (overwrite) {
-                        # deletes destination zip file if overwrite is true
-                        unlink(destination_file)
-                    } else {
-                        # Skips otherwise
-                        warning("File ", destination_file, " already exists. Skipping")
-                        next
+        tryCatch(
+            {
+                for (i in seq_len(length(path))) {
+                    path_i <- path[i]
+                    # The directory where the NMR sample is: (e.g. "/nihs/Instrument/.../DUND-plasma/10")
+                    dir_to_compress <- normalizePath(path_i)
+                    # dir_name: (e.g. "10")
+                    dir_name <- basename(dir_to_compress)
+                    # parent_dir: "/nihs/Instrument/.../DUND-plasma"
+                    parent_dir <-
+                        normalizePath(dirname(dir_to_compress))
+                    # destination_file: /tmp/my_temp_dir/10.zip
+                    destination_file <-
+                        file.path(workdir, paste0(dir_name, ".zip"))
+                    outpaths[i] <- destination_file
+                    if (file.exists(destination_file)) {
+                        if (overwrite) {
+                            # deletes destination zip file if overwrite is true
+                            unlink(destination_file)
+                        } else {
+                            # Skips otherwise
+                            warning("File ", destination_file, " already exists. Skipping")
+                            next
+                        }
                     }
+                    # Change to the parent_dir so the zip file does not include the whole
+                    # directory tree folders
+                    setwd(parent_dir)
+                    # Zip it!
+                    utils::zip(zipfile = destination_file, files = dir_name, ...)
+                    # Go back to the initial directory, so the next file can be
+                    # found if relative paths are used
+                    setwd(current_wd)
                 }
-                # Change to the parent_dir so the zip file does not include the whole
-                # directory tree folders
-                setwd(parent_dir)
-                # Zip it!
-                utils::zip(zipfile = destination_file, files = dir_name, ...)
-                # Go back to the initial directory, so the next file can be
-                # found if relative paths are used
+            },
+            finally = {
+                # Always restore the working directory, even if there are errors somewhere
                 setwd(current_wd)
             }
-        }, finally = {
-            # Always restore the working directory, even if there are errors somewhere
-            setwd(current_wd)
-        })
+        )
         return(outpaths)
     }
 
@@ -863,12 +904,12 @@ nmr_zip_bruker_samples <-
 #' @return A numeric vector with the free induction decay values
 #' @export
 #' @family import/export functions
-#' @examples 
+#' @examples
 #' fid <- nmr_read_bruker_fid("sample.fid")
 nmr_read_bruker_fid <- function(sample_name, endian = "little") {
     if (file.exists(file.path(sample_name, "fid"))) {
         fid_file <- file.path(sample_name, "fid")
-        
+
         num_numbers <- file.size(fid_file) / 8
         fid <-
             readBin(

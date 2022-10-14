@@ -20,7 +20,7 @@ NULL
 #' @docType data
 #' @references \url{https://hmdb.ca/}
 #' @keywords data
-#' @examples 
+#' @examples
 #' # Get all the 1-Methylhistidine peaks:
 #' data("hmdb")
 #' hmdb[hmdb$Metabolite == "1-Methylhistidine", ]
@@ -62,15 +62,16 @@ NULL
 #' @export
 #' @examples
 #' bopts <- nmr_batman_options()
-nmr_batman_options <- function(
-    ppmRange = matrix(
-        c(3.0, 3.1,
-          3.6, 3.7,
-          3.9, 4.0,
-          4.0, 4.1,
-          6.95, 7.05,
-          7.6, 7.7,
-          7.8, 7.9),
+nmr_batman_options <- function(ppmRange = matrix(
+        c(
+            3.0, 3.1,
+            3.6, 3.7,
+            3.9, 4.0,
+            4.0, 4.1,
+            6.95, 7.05,
+            7.6, 7.7,
+            7.8, 7.9
+        ),
         ncol = 2,
         byrow = TRUE
     ),
@@ -99,13 +100,12 @@ nmr_batman_options <- function(
     tauMean = -0.05,
     tauPrec = 2,
     rdelta = 0.02,
-    csFlag = 0
-) {
+    csFlag = 0) {
     # ppmRange:
     ppmRange <- as.matrix(ppmRange)
     stopifnot(ncol(ppmRange) == 2)
     stopifnot(!anyNA(ppmRange))
-    
+
     out <- list(
         ppmRange = ppmRange,
         specNo = specNo,
@@ -144,12 +144,10 @@ nmr_batman_options <- function(
 #' @examples
 #' bopts <- nmr_batman_options()
 #' # nmr_batman_write_options(bopts)
-#' 
-nmr_batman_write_options <- function(
-    bopts,
+#'
+nmr_batman_write_options <- function(bopts,
     batman_dir = "BatmanInput",
-    filename = "batmanOptions.txt"
-) {
+    filename = "batmanOptions.txt") {
     # ppmRange:
     full_filename <-
         batman_get_full_filename(batman_dir, filename)
@@ -158,14 +156,15 @@ nmr_batman_write_options <- function(
     stopifnot(ncol(ppmRange) == 2)
     stopifnot(!anyNA(ppmRange))
     ppmRange <-
-        paste0("(", apply(ppmRange, 1, function(x)
-            paste(x, collapse = ",")), ")", collapse = " ")
+        paste0("(", apply(ppmRange, 1, function(x) {
+            paste(x, collapse = ",")
+        }), ")", collapse = " ")
     bopts2$ppmRange <- ppmRange
     # specNo
     specNo <- as.numeric(bopts2$specNo)
     specNo <- paste0(specNo, collapse = ",")
     bopts2$specNo <- specNo
-    
+
     bopts_txt <- glue::glue_data(
         bopts2,
         "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Options file for BATMAN %%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -237,9 +236,11 @@ batman_get_full_filename <- function(batman_dir, filename) {
     }
     full_filename <- file.path(batman_dir, filename)
     if (file.exists(full_filename)) {
-        stop("File ",
-             full_filename,
-             " already exists. Remove it and try again.")
+        stop(
+            "File ",
+            full_filename,
+            " already exists. Remove it and try again."
+        )
     }
     full_filename
 }
@@ -250,11 +251,11 @@ batman_get_full_filename <- function(batman_dir, filename) {
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' #nmr_batman_export_dataset(dataset_1D)
+#' # nmr_batman_export_dataset(dataset_1D)
 #'
 nmr_batman_export_dataset <- function(nmr_dataset,
-                                      batman_dir = "BatmanInput",
-                                      filename = "NMRdata.txt") {
+    batman_dir = "BatmanInput",
+    filename = "NMRdata.txt") {
     full_filename <- batman_get_full_filename(batman_dir, filename)
     nmrdata <- t(nmr_data(nmr_dataset))
     colnames(nmrdata) <-
@@ -262,23 +263,26 @@ nmr_batman_export_dataset <- function(nmr_dataset,
     nmrdata <-
         cbind(ppm = as.numeric(rownames(nmrdata)), nmrdata)
     utils::write.table(nmrdata,
-                       full_filename,
-                       row.names = FALSE,
-                       sep = "\t")
+        full_filename,
+        row.names = FALSE,
+        sep = "\t"
+    )
 }
 
 #' @rdname nmr_batman
 #' @export
 #' @examples
 #' message("Use of multi_data_user_hmdb")
-#' #multi_data_user_hmdb <- nmr_batman_multi_data_user_hmdb()
+#' # multi_data_user_hmdb <- nmr_batman_multi_data_user_hmdb()
 nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput",
-                                            filename = "multi_data_user.csv") {
+    filename = "multi_data_user.csv") {
     hmdb <- NULL
     utils::data("hmdb", package = "AlpsNMR", envir = environment())
-    hmdb <- nmr_batman_multi_data_user(multiplet_table = hmdb,
-                                       batman_dir = batman_dir,
-                                       filename = filename)
+    hmdb <- nmr_batman_multi_data_user(
+        multiplet_table = hmdb,
+        batman_dir = batman_dir,
+        filename = filename
+    )
     hmdb
 }
 
@@ -286,14 +290,14 @@ nmr_batman_multi_data_user_hmdb <- function(batman_dir = "BatmanInput",
 #' @export
 #' @examples
 #' hmdb <- NULL
-#' #utils::data("hmdb", package = "AlpsNMR", envir = environment())
-#' #hmdb <- nmr_batman_multi_data_user(hmbd)
+#' # utils::data("hmdb", package = "AlpsNMR", envir = environment())
+#' # hmdb <- nmr_batman_multi_data_user(hmbd)
 #'
 nmr_batman_multi_data_user <- function(multiplet_table,
-                                       batman_dir = "BatmanInput",
-                                       filename = "multi_data_user.csv") {
+    batman_dir = "BatmanInput",
+    filename = "multi_data_user.csv") {
     full_filename <- batman_get_full_filename(batman_dir, filename)
-    
+
     # column default values: Create them if they don't exist
     col_def <-
         data.frame(
@@ -304,7 +308,7 @@ nmr_batman_multi_data_user <- function(multiplet_table,
             ),
             value = c(-50, -50, 1)
         )
-    
+
     for (i in seq_len(nrow(col_def))) {
         col_name <- col_def[["name"]][i]
         col_val <- col_def[["value"]][i]
@@ -312,7 +316,7 @@ nmr_batman_multi_data_user <- function(multiplet_table,
             multiplet_table[[col_name]] <- col_val
         }
     }
-    
+
     # Columns to be written, as needed by Batman
     cols <- c(
         "Metabolite",
@@ -324,13 +328,15 @@ nmr_batman_multi_data_user <- function(multiplet_table,
         "overwrite_truncation",
         "Include_multiplet"
     )
-    
+
     multiplet_table[["J_constant"]][is.na(multiplet_table[["J_constant"]])] <-
         0 # batman does not accept NA...
     multiplet_table[["Metabolite"]] <-
-        gsub(pattern = ",",
-             replacement = "_",
-             multiplet_table[["Metabolite"]])
+        gsub(
+            pattern = ",",
+            replacement = "_",
+            multiplet_table[["Metabolite"]]
+        )
     utils::write.csv(multiplet_table[, cols], full_filename, row.names = FALSE)
     multiplet_table
 }
@@ -339,11 +345,11 @@ nmr_batman_multi_data_user <- function(multiplet_table,
 #' @export
 #' @examples
 #' metabolite_names <- c("alanine", "glucose")
-#' #metabolite_names <- nmr_batman_metabolites_list(metabolite_names)
+#' # metabolite_names <- nmr_batman_metabolites_list(metabolite_names)
 #'
 nmr_batman_metabolites_list <- function(metabolite_names,
-                                        batman_dir = "BatmanInput",
-                                        filename = "metabolitesList.csv") {
+    batman_dir = "BatmanInput",
+    filename = "metabolitesList.csv") {
     full_filename <- batman_get_full_filename(batman_dir, filename)
     write(unique(metabolite_names), file = full_filename)
     metabolite_names

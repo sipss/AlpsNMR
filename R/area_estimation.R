@@ -7,37 +7,39 @@
 #'
 #' @return a named numeric vector with the indices for the left inflection point, the apex and the right inflection point.
 #' @noRd
-get_peak_bounds <- function(peak_limit_left, peak_limit_right, pos, x, sgf){
+get_peak_bounds <- function(peak_limit_left, peak_limit_right, pos, x, sgf) {
     peak_limit_left <- peak_limit_left[pos - peak_limit_left > 0]
     peak_limit_right <- peak_limit_right[peak_limit_right - pos > 0]
-    if(length(peak_limit_right) == 0 || length(peak_limit_left) == 0) {
+    if (length(peak_limit_right) == 0 || length(peak_limit_left) == 0) {
         return(c("left" = 0, "apex" = pos, "right" = 0, "xleft" = 0, "xright" = 0))
     }
     right <- peak_limit_right[1]
     left <- peak_limit_left[length(peak_limit_left)]
     # y = y0 + m*(x-x0)
     # y = 0 ==> x = x0 -1/m * y0
-    mfun <- function(x0, y0, x1, y1) {(y1-y0)/(x1-x0)}
-    
+    mfun <- function(x0, y0, x1, y1) {
+        (y1 - y0) / (x1 - x0)
+    }
+
     if (left == length(sgf)) {
         xleft <- x[left]
     } else {
-        mleft <- mfun(x[left], sgf[left], x[left+1L], sgf[left+1L])
-        xleft <- x[left] - 1/mleft * sgf[left]
+        mleft <- mfun(x[left], sgf[left], x[left + 1L], sgf[left + 1L])
+        xleft <- x[left] - 1 / mleft * sgf[left]
     }
-    
+
     if (right == length(sgf)) {
         xright <- x[right]
     } else {
-        mright <- mfun(x[right], sgf[right], x[right+1L], sgf[right+1L])
-        xright <- x[right] - 1.0/mright * sgf[right]
+        mright <- mfun(x[right], sgf[right], x[right + 1L], sgf[right + 1L])
+        xright <- x[right] - 1.0 / mright * sgf[right]
     }
     return(c("left" = left, "apex" = pos, "right" = right, "xleft" = xleft, "xright" = xright))
 }
 
 
 #' A lorentzian function estimation
-#' 
+#'
 #' \eqn{f(x, x_0, \gamma, A) = A \frac{1}{\pi \gamma} \frac{\gamma^2}{(x-x_0)^2 + \gamma^2}}
 #'
 #' @param x Numbers where the function will be evaluated.
@@ -48,15 +50,15 @@ get_peak_bounds <- function(peak_limit_left, peak_limit_right, pos, x, sgf){
 #' @return A numeric vector of the same length than `x`, with the values of the lorentzian
 #' @noRd
 lorentzian <- function(x, x0, gamma, A) {
-    A * (1/(pi*gamma)) * ((gamma^2) / ((x-x0)^2 + gamma^2))
+    A * (1 / (pi * gamma)) * ((gamma^2) / ((x - x0)^2 + gamma^2))
 }
 
 
-get_norm_rmse <- function(y_fitted, y, y_fitted_apex, y_apex){
+get_norm_rmse <- function(y_fitted, y, y_fitted_apex, y_apex) {
     y_fitted_adj <- y_fitted - y_fitted_apex + y_apex
-    mse <- sum((y - y_fitted_adj)**2)/length(y)
+    mse <- sum((y - y_fitted_adj)**2) / length(y)
     rmse <- sqrt(mse)
-    norm_rmse <- rmse/y_fitted_apex
+    norm_rmse <- rmse / y_fitted_apex
     return(norm_rmse)
 }
 
@@ -66,36 +68,38 @@ refine_lorentzian_fit_with_nls <- function(data_to_fit, start, method) {
     gamma <- start[["gamma"]]
     peak_pos_ppm <- start[["x0"]]
     error_msgs <- c()
-    
+
     if (method == "peak") {
-        formula <- y ~ A * (1/(pi*gamma)) * ((gamma^2) / ((x-x0)^2 + gamma^2))
+        formula <- y ~ A * (1 / (pi * gamma)) * ((gamma^2) / ((x - x0)^2 + gamma^2))
     } else if (method == "2nd_derivative") {
-        formula <- y ~ -2*A*gamma/pi * (gamma^2 - 3*(x-x0)^2) / ( gamma^2 + (x-x0)^2)^3
+        formula <- y ~ -2 * A * gamma / pi * (gamma^2 - 3 * (x - x0)^2) / (gamma^2 + (x - x0)^2)^3
     } else {
         rlang::abort("Unknown method")
     }
-    
-    tryCatch({
-        mm.model.nls <- stats::nls(
-            formula = formula,
-            data = data_to_fit,
-            start = start
-        )
-        gamma <- mm.model.nls$m$getAllPars()["gamma"]
-        estimated_A <- mm.model.nls$m$getAllPars()["A"]
-        if (gamma < 0 && estimated_A < 0) {
-            gamma <- -gamma
-            estimated_A <- -estimated_A
+
+    tryCatch(
+        {
+            mm.model.nls <- stats::nls(
+                formula = formula,
+                data = data_to_fit,
+                start = start
+            )
+            gamma <- mm.model.nls$m$getAllPars()["gamma"]
+            estimated_A <- mm.model.nls$m$getAllPars()["A"]
+            if (gamma < 0 && estimated_A < 0) {
+                gamma <- -gamma
+                estimated_A <- -estimated_A
+            }
+            if (abs(start[["x0"]] - mm.model.nls$m$getAllPars()["x0"]) > gamma) {
+                error_msgs <- c(error_msgs, "peak position moved more than gamma!")
+            }
+            peak_pos_ppm <- mm.model.nls$m$getAllPars()["x0"]
+        },
+        error = function(e) {
+            msg <- conditionMessage(e)
+            error_msgs <- c(error_msgs, msg)
         }
-        if (abs(start[["x0"]] - mm.model.nls$m$getAllPars()["x0"]) > gamma) {
-            error_msgs <- c(error_msgs, "peak position moved more than gamma!")
-        }
-        peak_pos_ppm <- mm.model.nls$m$getAllPars()["x0"]
-        
-    }, error = function(e) {
-        msg <- conditionMessage(e)
-        error_msgs <- c(error_msgs, msg)
-    })
+    )
     list(
         estimated_A = estimated_A,
         gamma = gamma,
@@ -107,19 +111,19 @@ refine_lorentzian_fit_with_nls <- function(data_to_fit, start, method) {
 
 
 #' Fit lorentzians to each peak to estimate areas
-#' 
+#'
 #' The different methods are available for benchmarking while developing, we should pick one.
-#' 
+#'
 #' - gamma is estimated using the inflection points of the signal and fitting them to the lorentzian inflection points
 #' - $A$ is estimated using the `amplitude_method` below
 #' - The peak position ($x_0$) is given in `peak_data`
-#' 
+#'
 #' Those estimations may be refined with non-linear least squares using `refine_peak_model`. If the nls does not converge,
 #' the initial estimations are kept. Convergence -and other nls errors- are saved for further reference and diagnostic.
 #' Use `attr(peak_data_fitted, "errors")` to retreive the error messages, where `peak_data_fitted` is assumed to be the
 #' output of this function. The refining improves gamma, $A$ and $x_0$.
-#' 
-#' The baseline estimation (when calculated, see the arguments) is set to Asymmetric Least Squares with 
+#'
+#' The baseline estimation (when calculated, see the arguments) is set to Asymmetric Least Squares with
 #' lambda = 6, p=0.05, maxit=20 and it is probably not optimal... yet.
 #'
 #'
@@ -140,23 +144,22 @@ refine_lorentzian_fit_with_nls <- function(data_to_fit, start, method) {
 #'  - `"2nd_derivative"`:
 #'
 #'
-#' 
+#'
 #' @export
 #' @return The given data frame `peak_data`, with added columns:
-#'  - inflection points, 
+#'  - inflection points,
 #'  - gamma
-#'  - area 
+#'  - area
 #'  - a norm_rmse fitting error
-#'  
+#'
 #'  As well as some attributes
 #'  - "errors": A data frame with any error in the peak fitting
 #'  - "fit_baseline": Whether the method used has any consideration for the baseline of the signal (maybe not very useful attribute)
 #'  - "method_description": A textual description of what we did, to include it in plots
-peaklist_fit_lorentzians <- function(
-        peak_data, 
-        nmr_dataset, 
-        amplitude_method = c("intensity", "2nd_derivative", "intensity_without_baseline"),
-        refine_peak_model = c("none", "peak", "2nd_derivative")) {
+peaklist_fit_lorentzians <- function(peak_data,
+    nmr_dataset,
+    amplitude_method = c("intensity", "2nd_derivative", "intensity_without_baseline"),
+    refine_peak_model = c("none", "peak", "2nd_derivative")) {
     peak_data$ppm_infl_min <- NA_real_
     peak_data$ppm_infl_max <- NA_real_
     peak_data$gamma_ppb <- NA_real_
@@ -165,7 +168,7 @@ peaklist_fit_lorentzians <- function(
     amplitude_method <- match.arg(amplitude_method)
     refine_peak_model <- match.arg(refine_peak_model)
     method_description <- c()
-    
+
     x <- nmr_dataset$axis
     sindex_prev <- -1
     all_errors <- list(peak_id = character(0L), error_msg = character(0L))
@@ -186,10 +189,10 @@ peaklist_fit_lorentzians <- function(
         # We want to estimate a lorentzian in a computationally fast way.
         # peak_data is sorted by sample, so we avoid recalculating.
         if (sindex != sindex_prev) {
-            y <- nmr_dataset$data_1r[sindex,]
+            y <- nmr_dataset$data_1r[sindex, ]
             if (amplitude_method == "intensity_without_baseline" || refine_peak_model == "peak") {
                 if ("data_1r_baseline" %in% names(unclass(nmr_dataset))) {
-                    y_basel <- as.numeric(nmr_dataset$data_1r_baseline[sindex,])
+                    y_basel <- as.numeric(nmr_dataset$data_1r_baseline[sindex, ])
                 } else {
                     if (!has_warned_baseline) {
                         rlang::warn(
@@ -201,7 +204,7 @@ peaklist_fit_lorentzians <- function(
                         has_warned_baseline <- TRUE
                     }
                     y_basel <- baseline::baseline.als(
-                        spectra = nmr_dataset$data_1r[sindex,, drop = FALSE],
+                        spectra = nmr_dataset$data_1r[sindex, , drop = FALSE],
                         lambda = 9,
                         p = 0.05,
                         maxit = 20
@@ -223,20 +226,20 @@ peaklist_fit_lorentzians <- function(
         #    x_{left}=x_0-\frac{\sqrt{3}\gamma}{3}
         # Therefore gamma is:
         # \gamma = \frac{\sqrt{3}}{2} (x_{right} - x_{left} )
-        gamma <- sqrt(3)/2 * (peak_bounds["xright"] - peak_bounds["xleft"])
+        gamma <- sqrt(3) / 2 * (peak_bounds["xright"] - peak_bounds["xleft"])
         if (amplitude_method == "intensity") {
-            # Estimate the amplitude of the lorentzian with the amplitude of the peak 
-            estimated_A <- pi*gamma*peak_data$intensity[i]
-        }  else if (amplitude_method == "2nd_derivative") {
-            # Estimate the amplitude of the lorentzian with the amplitude of the second derivative. 
+            # Estimate the amplitude of the lorentzian with the amplitude of the peak
+            estimated_A <- pi * gamma * peak_data$intensity[i]
+        } else if (amplitude_method == "2nd_derivative") {
+            # Estimate the amplitude of the lorentzian with the amplitude of the second derivative.
             # This has the effect of removing the baseline up to linear effects.
             # At $x = x_0$, the second derivative is:
             # f''(x = x_0, x_0, A, \gamma) = -\frac{2A}{\pi \gamma^3}
             # So we can estimate A as follows:
-            estimated_A <- -(pi * gamma^3 * sgf[posi])/2
+            estimated_A <- -(pi * gamma^3 * sgf[posi]) / 2
         } else if (amplitude_method == "intensity_without_baseline") {
             # Estimate A based on the amplitude of the signal without baseline
-            estimated_A <- y_nobasel[posi]*pi*gamma
+            estimated_A <- y_nobasel[posi] * pi * gamma
         } else {
             rlang::abort(sprintf("amplitude_method '%s'unknown", amplitude_method))
         }
@@ -303,12 +306,12 @@ peaklist_fit_lorentzians <- function(
         # And save the result in the peak_data table:
         peak_data$ppm_infl_min[i] <- peak_bounds["xleft"]
         peak_data$ppm_infl_max[i] <- peak_bounds["xright"]
-        peak_data$gamma_ppb[i] <- 1000*gamma
+        peak_data$gamma_ppb[i] <- 1000 * gamma
         peak_data$area[i] <- estimated_A
         peak_data$norm_rmse[i] <- norm_rmse
         sindex_prev <- sindex
     }
-    
+
     # Corner case: If the peak detection detects two peaks really really close to each
     # other, possibly due to a false detection, the savgol filtering used to detect
     # the inflection points may smooth the boundaries for each of the peaks, removing
@@ -325,8 +328,8 @@ peaklist_fit_lorentzians <- function(
         dplyr::filter(.data$group_size == 1 | (.data$group_size > 1 & .data$intensity == .data$group_max_intensity)) %>%
         dplyr::select(-.data$group_size, -.data$group_max_intensity)
     # Corner case solved.
-    
-    
+
+
     # Method description (useful for plotting)
     method_description <- c(method_description, "Estimate \u03b3 with inflection points")
     if (amplitude_method == "intensity") {
@@ -336,7 +339,7 @@ peaklist_fit_lorentzians <- function(
             "Estimate A with raw peak intensity",
             "May have baseline issues"
         )
-    }  else if (amplitude_method == "2nd_derivative") {
+    } else if (amplitude_method == "2nd_derivative") {
         fits_on_baseline <- TRUE
         method_description <- c(
             method_description,
@@ -350,9 +353,8 @@ peaklist_fit_lorentzians <- function(
             "Remove baseline using ALS",
             "Estimate A with the amplitude of the baseline-corrected signal"
         )
-        
     }
-    
+
     if (identical(refine_peak_model, "peak")) {
         method_description <- c(
             method_description,
@@ -369,9 +371,9 @@ peaklist_fit_lorentzians <- function(
             "nls refining disabled"
         )
     }
-    
-    
-    
+
+
+
     attr(peak_data, "errors") <- as.data.frame(all_errors)
     attr(peak_data, "fits_on_baseline") <- fits_on_baseline
     attr(peak_data, "method_description") <- paste(
@@ -402,21 +404,21 @@ peaklist_fit_lorentzians <- function(
 #' @examples
 #' # Fake data:
 #' nmr_dataset <- new_nmr_dataset_1D(
-#'   1:10,
-#'   matrix(c(1:5, 4:2, 3, 0), nrow=1),
-#'   list(external = data.frame(NMRExperiment = "10"))
+#'     1:10,
+#'     matrix(c(1:5, 4:2, 3, 0), nrow = 1),
+#'     list(external = data.frame(NMRExperiment = "10"))
 #' )
 #' peak_data <- data.frame(
-#'   peak_id = c("Peak1", "Peak2"),
-#'   NMRExperiment = c("10", "10"),
-#'   ppm = c(5, 9),
-#'   pos = c(5, 9),
-#'   intensity = c(5, 3),
-#'   ppm_infl_min = c(3, 8),
-#'   ppm_infl_max = c(7, 10),
-#'   gamma_ppb = c(1, 1),
-#'   area = c(25, 3),
-#'   norm_rmse = c(0.01, 0.8)
+#'     peak_id = c("Peak1", "Peak2"),
+#'     NMRExperiment = c("10", "10"),
+#'     ppm = c(5, 9),
+#'     pos = c(5, 9),
+#'     intensity = c(5, 3),
+#'     ppm_infl_min = c(3, 8),
+#'     ppm_infl_max = c(7, 10),
+#'     gamma_ppb = c(1, 1),
+#'     area = c(25, 3),
+#'     norm_rmse = c(0.01, 0.8)
 #' )
 #' # Create the accepted column:
 #' peak_data <- peaklist_accept_peaks(peak_data, nmr_dataset, area_min = 10, keep_rejected = FALSE)
@@ -444,4 +446,3 @@ peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_
     }
     peak_data
 }
-

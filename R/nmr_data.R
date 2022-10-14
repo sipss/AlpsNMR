@@ -18,7 +18,7 @@ nmr_data <- function(nmr_dataset, ...) {
 #' @rdname nmr_data
 #' @param what What data do we want to get (default: `data_1r`)
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
@@ -32,7 +32,7 @@ nmr_data.nmr_dataset_1D <- function(nmr_dataset, what = "data_1r", ...) {
 
 #' @noRd
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))

@@ -13,8 +13,10 @@ norm_pqn <- function(spectra, basel = NULL) {
                     "The Probabalistic Quotient Normalization requires several samples ",
                     "to compute the median spectra. Your number of samples is low"
                 ),
-                "i" = paste0("Review your peaks before and after normalization to ",
-                             "ensure there are no big distortions")
+                "i" = paste0(
+                    "Review your peaks before and after normalization to ",
+                    "ensure there are no big distortions"
+                )
             )
         )
     }
@@ -25,7 +27,7 @@ norm_pqn <- function(spectra, basel = NULL) {
     }
     # Normalize to the area
     areas <- rowSums(spectra_minus_basel)
-    areas <- areas/stats::median(areas)
+    areas <- areas / stats::median(areas)
     if (num_samples == 1) {
         # We have warned, and here there is nothing to do anymore
         rlang::warn("PQN is meaningless with a single sample. We have normalized it to the area.")
@@ -46,36 +48,36 @@ norm_pqn <- function(spectra, basel = NULL) {
     # Median of each ppm: (We need multiple spectra in order to get a reliable median!)
     m <- matrixStats::colMedians(spectra2)
     # Divide at each ppm by its median:
-    f <- spectra2/m[col(spectra2)]
+    f <- spectra2 / m[col(spectra2)]
     f <- matrixStats::rowMedians(f)
     # Divide each spectra by its f value
     out <- list(
-        spectra = spectra / (f*areas),
-        norm_factor = f*areas
+        spectra = spectra / (f * areas),
+        norm_factor = f * areas
     )
     if (!is.null(basel)) {
-        out$basel <- basel / (f*areas)
+        out$basel <- basel / (f * areas)
     }
     out
 }
 
 
 #' Normalize nmr_dataset_1D samples
-#' 
+#'
 #' The `nmr_normalize` function is used to normalize all the samples according
 #' to a given criteria.
-#' 
+#'
 #' The aim is to correct from changes between samples, so no matter the criteria
 #' used to normalize, once we get the factors (e.g. the areas), we divide them by
 #' the median normalization factor to avoid introducing global scaling factors.
-#' 
+#'
 #' The `nmr_normalize_extra_info` function is used to extract additional information
 #' after the normalization. Typically, we want to know what was the actual normalization
 #' factor applied to each sample. The extra information includes a plot, representing
 #' the dispersion of the normalization factor for each sample.
 #'
 #' @param samples A [nmr_dataset_1D] object
-#'                             
+#'
 #' @param method The criteria to be used for normalization
 #'     - area: Normalize to the total area
 #'     - max: Normalize to the maximum intensity
@@ -99,9 +101,9 @@ norm_pqn <- function(spectra, basel = NULL) {
 #' nmr_dataset <- nmr_normalize(nmr_dataset, method = "area")
 #' norm_dataset <- nmr_normalize(nmr_dataset)
 #' norm_dataset$plot
-nmr_normalize <- function(samples, 
-                          method = c("area", "max", "value", "region", "pqn", "none"),
-                          ...) {
+nmr_normalize <- function(samples,
+    method = c("area", "max", "value", "region", "pqn", "none"),
+    ...) {
     samples <- validate_nmr_dataset_1D(samples)
 
     method <- tolower(method[1])
@@ -157,7 +159,6 @@ nmr_normalize <- function(samples,
             STATS = norm_factor_to_apply,
             FUN = "/"
         )
-        
     }
     samples <- nmr_normalize_add_extra_info(samples, norm_factor)
     return(samples)

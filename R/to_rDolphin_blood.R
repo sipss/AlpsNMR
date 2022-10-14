@@ -8,7 +8,7 @@
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
-#' @examples 
+#' @examples
 #' data("Parameters_blood")
 #' Parameters_blood
 NULL
@@ -50,41 +50,43 @@ NULL
 #' fs::dir_create(output_dir_10_rDolphin)
 #'
 #' # Generate the files (for plasma/serum)
-#' files_rDolphin = files_to_rDolphin(nmr_dataset_0_10_ppm, blood)
+#' files_rDolphin <- files_to_rDolphin(nmr_dataset_0_10_ppm, blood)
 #'
 #' # Save the files
 #' save_files_to_rDolphin(files_rDolphin, output_dir_10_rDolphin)
 #'
 #' # Build the rDolphin object. Do not forget to set the directory
 #' setwd(output_dir_10_rDolphin)
-#' rDolphin_object = to_rDolphin("Parameters.csv")
+#' rDolphin_object <- to_rDolphin("Parameters.csv")
 #'
 #' # Visualize your spectra
 #' rDolphin_plot(rDolphin_object)
 #'
 #' # Run the main profiling function (it takes a while)
-#' targeted_profiling = Automatic_targeted_profiling(rDolphin_object)
+#' targeted_profiling <- Automatic_targeted_profiling(rDolphin_object)
 #'
 #' # Save results
 #' save_profiling_output(targeted_profiling, output_dir_10_rDolphin)
 #'
-#' save_profiling_plots(output_dir_10_rDolphin, targeted_profiling$final_output,
-#' targeted_profiling$reproducibility_data)
+#' save_profiling_plots(
+#'     output_dir_10_rDolphin, targeted_profiling$final_output,
+#'     targeted_profiling$reproducibility_data
+#' )
 #'
-#' #Additionally, you can run some stats
-#' intensities = targeted_profiling$final_output$intensity
-#' group = as.factor(rDolphin_object$Metadata$type)
+#' # Additionally, you can run some stats
+#' intensities <- targeted_profiling$final_output$intensity
+#' group <- as.factor(rDolphin_object$Metadata$type)
 #' model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 #' }
 #' @export
-files_to_rDolphin <- function (nmr_dataset, biological_origin) {
+files_to_rDolphin <- function(nmr_dataset, biological_origin) {
     message("you can edit obtained files for better performance in rDolphin")
     meta_D_3col <- c("NMRExperiment", "SubjectID", "Group")
     meta_rDolphin <- AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
     newcolnames <- c("sample", "individual", "type")
     colnames(meta_rDolphin) <- newcolnames
     meta_rDolphin$type <- as.numeric(as.factor(meta_rDolphin$type))
-    
+
     NMR_spectra <- nmr_data(nmr_dataset)
     ROI <- NULL
     Parameters <- NULL
@@ -94,25 +96,28 @@ files_to_rDolphin <- function (nmr_dataset, biological_origin) {
     ROI_cell <- NULL
     Parameters_urine <- NULL
     ROI_urine <- NULL
-    if(biological_origin == "blood"){
+    if (biological_origin == "blood") {
         utils::data("Parameters_blood",
-                    package = "AlpsNMR",
-                    envir = environment())
+            package = "AlpsNMR",
+            envir = environment()
+        )
         utils::data("ROI_blood", package = "AlpsNMR", envir = environment())
         Parameters <- Parameters_blood
         ROI <- ROI_blood
-    } else if (biological_origin == "cell"){
+    } else if (biological_origin == "cell") {
         utils::data("Parameters_cell",
-                    package = "AlpsNMR",
-                    envir = environment())
+            package = "AlpsNMR",
+            envir = environment()
+        )
         utils::data("ROI_cell", package = "AlpsNMR", envir = environment())
         Parameters <- Parameters_cell
         ROI <- ROI_cell
-    } else if (biological_origin == "urine"){
+    } else if (biological_origin == "urine") {
         NMR_spectra <- nmr_data(nmr_dataset)
         utils::data("Parameters_urine",
-                    package = "AlpsNMR",
-                    envir = environment())
+            package = "AlpsNMR",
+            envir = environment()
+        )
         utils::data("ROI_urine", package = "AlpsNMR", envir = environment())
         Parameters <- Parameters_urine
         ROI <- ROI_urine
@@ -120,7 +125,7 @@ files_to_rDolphin <- function (nmr_dataset, biological_origin) {
         message("Unknown biological origin")
         return(NULL)
     }
-    
+
     files_rDolphin <- list(Parameters, meta_rDolphin, NMR_spectra, ROI)
     names(files_rDolphin) <- c("Parameters", "meta_rDolphin", "NMR_spectra", "ROI")
     return(files_rDolphin)
@@ -137,7 +142,7 @@ files_to_rDolphin <- function (nmr_dataset, biological_origin) {
 #' @examples
 #' data("ROI_cell")
 #' ROI_cell[ROI_cell$Metabolite == "Valine", ]
-
+#'
 NULL
 
 #' Parameters for cell samples profiling
@@ -148,7 +153,7 @@ NULL
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
-#' @examples 
+#' @examples
 #' data("Parameters_cell")
 #' Parameters_cell
 NULL
@@ -174,7 +179,7 @@ NULL
 #' @docType data
 #' @references \url{github.com/danielcanueto/rDolphin}
 #' @keywords data
-#' @examples 
+#' @examples
 #' data("Parameters_urine")
 #' Parameters_urine
 NULL
@@ -199,10 +204,10 @@ NULL
 #' save_files_to_rDolphin(files_rDolphin, output_directory = ".")
 #' }
 #' @export
-save_files_to_rDolphin <- function (files_rDolphin, output_directory) {
+save_files_to_rDolphin <- function(files_rDolphin, output_directory) {
     output_dir_10_rDolphin <- file.path(output_directory)
     fs::dir_create(output_dir_10_rDolphin)
-    
+
     Parameters <-
         file.path(output_dir_10_rDolphin, "Parameters.csv")
     meta_rDolphin <-
@@ -210,7 +215,7 @@ save_files_to_rDolphin <- function (files_rDolphin, output_directory) {
     NMR_spectra <-
         file.path(output_dir_10_rDolphin, "NMR_spectra.csv")
     ROI <- file.path(output_dir_10_rDolphin, "ROI.csv")
-    
+
     utils::write.csv(files_rDolphin$Parameters, Parameters, row.names = FALSE)
     utils::write.csv(files_rDolphin$meta_rDolphin, meta_rDolphin, row.names = FALSE)
     utils::write.csv(files_rDolphin$NMR_spectra, NMR_spectra, row.names = FALSE)
@@ -243,12 +248,14 @@ save_profiling_output <- function(targeted_profiling, output_directory) {
     output_dir_10_rDolphin <-
         file.path(output_directory, "rDolphin_output")
     fs::dir_create(output_dir_10_rDolphin)
-    
+
     intensity_fn <-
         file.path(output_dir_10_rDolphin, "metabolites_intensity.csv")
     quantification_fn <-
-        file.path(output_dir_10_rDolphin,
-                  "metabolites_quantification.csv")
+        file.path(
+            output_dir_10_rDolphin,
+            "metabolites_quantification.csv"
+        )
     ROI_profiles_used_fn <-
         file.path(output_dir_10_rDolphin, "ROI_profiles_used.csv")
     chemical_shift_fn <-
@@ -259,7 +266,7 @@ save_profiling_output <- function(targeted_profiling, output_directory) {
         file.path(output_dir_10_rDolphin, "half_bandwidth.csv")
     signal_area_ratio_fn <-
         file.path(output_dir_10_rDolphin, "signal_area_ratio.csv")
-    
+
     intensity <-
         tibble::as_tibble(targeted_profiling[["final_output"]][["intensity"]], rownames = "NMRExperiment")
     quantification <-
@@ -274,7 +281,7 @@ save_profiling_output <- function(targeted_profiling, output_directory) {
         tibble::as_tibble(targeted_profiling[["final_output"]][["half_bandwidth"]], rownames = "NMRExperiment")
     signal_area_ratio <-
         tibble::as_tibble(targeted_profiling[["final_output"]][["signal_area_ratio"]], rownames = "NMRExperiment")
-    
+
     utils::write.csv(intensity, intensity_fn, row.names = FALSE)
     utils::write.csv(quantification, quantification_fn, row.names = FALSE)
     utils::write.csv(ROI_profiles_used, ROI_profiles_used_fn, row.names = FALSE)

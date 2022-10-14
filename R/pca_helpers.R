@@ -22,10 +22,10 @@
 #' model <- nmr_pca_build_model(dataset_1D)
 #'
 nmr_pca_build_model <- function(nmr_dataset,
-                                ncomp = NULL,
-                                center = TRUE,
-                                scale = FALSE,
-                                ...) {
+    ncomp = NULL,
+    center = TRUE,
+    scale = FALSE,
+    ...) {
     UseMethod("nmr_pca_build_model")
 }
 
@@ -39,10 +39,10 @@ nmr_pca_build_model <- function(nmr_dataset,
 #' model <- nmr_pca_build_model(dataset_1D)
 #'
 nmr_pca_build_model.nmr_dataset_1D <- function(nmr_dataset,
-                                               ncomp = NULL,
-                                               center = TRUE,
-                                               scale = FALSE,
-                                               ...) {
+    ncomp = NULL,
+    center = TRUE,
+    scale = FALSE,
+    ...) {
     data_1r <- nmr_dataset$data_1r
     rownames(data_1r) <- names(nmr_dataset)
     pca_model <-
@@ -85,10 +85,12 @@ NULL
 #' @export
 nmr_pca_plot_variance <- function(pca_model) {
     cum_var_percent <-
-        100 * cumsum(pca_model$sdev ^ 2 / pca_model$var.tot)
-    ggplot2::qplot(x = seq_along(cum_var_percent),
-                   y = cum_var_percent,
-                   geom = "line") +
+        100 * cumsum(pca_model$sdev^2 / pca_model$var.tot)
+    ggplot2::qplot(
+        x = seq_along(cum_var_percent),
+        y = cum_var_percent,
+        geom = "line"
+    ) +
         ggplot2::xlab("Number of Principal Components") +
         ggplot2::ylab("Cummulated Explained Variance (%)")
 }
@@ -96,8 +98,8 @@ nmr_pca_plot_variance <- function(pca_model) {
 #' @rdname nmr_pca_plots
 #' @export
 nmr_pca_scoreplot <- function(nmr_dataset,
-                              pca_model,
-                              comp = seq_len(2), ...) {
+    pca_model,
+    comp = seq_len(2), ...) {
     nmr_metadata <- nmr_meta_get(nmr_dataset)
     scores_df <- as.data.frame(pca_model$X)
     colnames(scores_df) <- paste0("PC", seq_len(ncol(scores_df)))
@@ -106,13 +108,15 @@ nmr_pca_scoreplot <- function(nmr_dataset,
         nmr_metadata,
         by = "NMRExperiment"
     )
-    var_percent <- 100 * pca_model$sdev ^ 2 / pca_model$var.tot
+    var_percent <- 100 * pca_model$sdev^2 / pca_model$var.tot
     axis_labels <-
-        paste0("PC",
-               seq_along(var_percent),
-               " (",
-               round(var_percent, 2),
-               "%)")
+        paste0(
+            "PC",
+            seq_along(var_percent),
+            " (",
+            round(var_percent, 2),
+            "%)"
+        )
     names(axis_labels) <- paste0("PC", seq_along(var_percent))
     if (length(comp) == 2) {
         xy <- paste0("PC", comp)
@@ -147,7 +151,7 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
     ppm_axis <- attr(pca_model, "nmr_data_axis")
     loadings <-
         matrix(0, nrow = length(ppm_axis), ncol = length(comp))
-    loadings[attr(pca_model, "nmr_included"),] <-
+    loadings[attr(pca_model, "nmr_included"), ] <-
         pca_model$loadings$X[, comp, drop = FALSE]
     # loadings[,1] # first loading
     loadings <- as.data.frame(loadings)
@@ -159,8 +163,10 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
             variable.name = "component",
             value.name = "loading"
         )
-    ggplot2::ggplot(loadings_long,
-                    ggplot2::aes_string(x = "ppm", y = "loading", group = "component")) +
+    ggplot2::ggplot(
+        loadings_long,
+        ggplot2::aes_string(x = "ppm", y = "loading", group = "component")
+    ) +
         ggplot2::geom_line() +
         ggplot2::scale_x_reverse()
 }
@@ -191,45 +197,48 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
 #' outliers_info <- nmr_pca_outliers(dataset_1D, model)
 #'
 nmr_pca_outliers <- function(nmr_dataset,
-                             pca_model,
-                             ncomp = NULL,
-                             quantile_critical = 0.975) {
+    pca_model,
+    ncomp = NULL,
+    quantile_critical = 0.975) {
     nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
-    
+
     if (is.null(ncomp)) {
         cum_var_percent <-
-            100 * cumsum(pca_model$sdev ^ 2 / pca_model$var.tot)
+            100 * cumsum(pca_model$sdev^2 / pca_model$var.tot)
         ncomp <- which(cum_var_percent > 90)[1]
     }
-    
+
     # T scores:
     scores <-
         pca_model$variates$X[, seq_len(ncomp), drop = FALSE]
-    variances <- utils::head(pca_model$sdev ^ 2, ncomp)
+    variances <- utils::head(pca_model$sdev^2, ncomp)
     loadings <-
         pca_model$loadings$X[, seq_len(ncomp), drop = FALSE]
     Tscore <-
-        sqrt(apply(scores ^ 2 / rep(variances, each = nrow(scores)), 1, sum))
-    
+        sqrt(apply(scores^2 / rep(variances, each = nrow(scores)), 1, sum))
+
     # Q residuals
     Xs <-
         scale(nmr_dataset$data_1r,
-              center = pca_model$center,
-              scale = pca_model$scale)
+            center = pca_model$center,
+            scale = pca_model$scale
+        )
     residuals <- Xs - scores %*% t(loadings)
-    Qres <- sqrt(apply(residuals ^ 2, 1, sum))
-    
+    Qres <- sqrt(apply(residuals^2, 1, sum))
+
     # compute critical values
     Tscore_critical <-
         sqrt(stats::qchisq(quantile_critical, ncomp))
     QResidual_critical <-
-        (stats::median(Qres ^ (2 / 3)) + stats::mad(Qres ^ (2 / 3)) * stats::qnorm(quantile_critical)) ^
-        (3 / 2)
-    
+        (stats::median(Qres^(2 / 3)) + stats::mad(Qres^(2 / 3)) * stats::qnorm(quantile_critical))^
+            (3 / 2)
+
     outlier_info <- nmr_dataset %>%
         nmr_meta_get(columns = "NMRExperiment") %>%
-        dplyr::mutate(Tscores = Tscore,
-                      QResiduals = Qres)
+        dplyr::mutate(
+            Tscores = Tscore,
+            QResiduals = Qres
+        )
     list(
         outlier_info = outlier_info,
         ncomp = ncomp,
@@ -277,33 +286,35 @@ nmr_pca_outliers <- function(nmr_dataset,
 #'
 nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
     nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
-    
+
     Xprep_rob <- scale(
         nmr_dataset$data_1r,
-        center = apply(nmr_dataset$data_1r, 2, function(x_col)
-            stats::median(x_col, na.rm = TRUE)),
-        scale = apply(nmr_dataset$data_1r, 2, function(x_col)
-            stats::mad(x_col, na.rm = TRUE))
+        center = apply(nmr_dataset$data_1r, 2, function(x_col) {
+            stats::median(x_col, na.rm = TRUE)
+        }),
+        scale = apply(nmr_dataset$data_1r, 2, function(x_col) {
+            stats::mad(x_col, na.rm = TRUE)
+        })
     )
-    
+
     if (missing(ncomp) && nmr_dataset$num_samples <= ncomp) {
         ncomp <- nmr_dataset$num_samples - 1
     }
-    
+
     pca_model <- pcaPP::PCAgrid(Xprep_rob, k = ncomp, scale = NULL)
-    
-    
+
+
     # T scores:
     scores <- pca_model$scores[, seq_len(ncomp), drop = FALSE]
-    variances <- utils::head(pca_model$sdev ^ 2, ncomp)
+    variances <- utils::head(pca_model$sdev^2, ncomp)
     loadings <- pca_model$loadings[, seq_len(ncomp), drop = FALSE]
     Tscore <-
-        sqrt(apply(scores ^ 2 / rep(variances, each = nrow(scores)), 1, sum))
-    
+        sqrt(apply(scores^2 / rep(variances, each = nrow(scores)), 1, sum))
+
     # Q residuals
     residuals <- Xprep_rob - scores %*% t(loadings)
-    Qres <- sqrt(apply(residuals ^ 2, 1, sum))
-    
+    Qres <- sqrt(apply(residuals^2, 1, sum))
+
     # compute critical values
     find_crit_thres <- function(x) {
         if (length(x) == 0) {
@@ -320,15 +331,17 @@ nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
             return(proposed_thresh)
         }
     }
-    
-    Tscore_critical <-    find_crit_thres(Tscore)
+
+    Tscore_critical <- find_crit_thres(Tscore)
     QResidual_critical <- find_crit_thres(Qres)
-    
+
     outlier_info <- nmr_dataset %>%
         nmr_meta_get(columns = "NMRExperiment") %>%
-        dplyr::mutate(Tscores = Tscore,
-                      QResiduals = Qres)
-    
+        dplyr::mutate(
+            Tscores = Tscore,
+            QResiduals = Qres
+        )
+
     list(
         outlier_info = outlier_info,
         ncomp = ncomp,
@@ -351,29 +364,30 @@ nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
 #' @family outlier detection functions
 #' @importFrom rlang .data
 #' @examples
-#' #dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' #dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' #dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' #model <- nmr_pca_build_model(dataset_1D)
-#' #outliers_info <- nmr_pca_outliers(dataset_1D, model)
-#' #nmr_pca_outliers_plot(dataset_1D, outliers_info)
-#' 
+#' # dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+#' # dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' # dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' # model <- nmr_pca_build_model(dataset_1D)
+#' # outliers_info <- nmr_pca_outliers(dataset_1D, model)
+#' # nmr_pca_outliers_plot(dataset_1D, outliers_info)
+#'
 nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
     outlier_info <- pca_outliers[["outlier_info"]]
     tscore_crit <- pca_outliers[["Tscore_critical"]]
     qres_crit <- pca_outliers[["QResidual_critical"]]
     ncomp <- pca_outliers[["ncomp"]]
-    
+
     pca_outliers_with_meta <-
         dplyr::left_join(nmr_meta_get(nmr_dataset, groups = "external"),
-                         outlier_info,
-                         by = "NMRExperiment")
-    
+            outlier_info,
+            by = "NMRExperiment"
+        )
+
     pca_outliers_with_meta_only_out <- dplyr::filter(
         pca_outliers_with_meta,
         .data$Tscores > tscore_crit | .data$QResiduals > qres_crit
     )
-    
+
     geom_txt <- get_geom_text()
     gplt <- ggplot2::ggplot(
         pca_outliers_with_meta,
@@ -381,12 +395,16 @@ nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
     ) +
         ggplot2::geom_point(ggplot2::aes_string(...)) +
         geom_txt(data = pca_outliers_with_meta_only_out) +
-        ggplot2::geom_vline(xintercept = tscore_crit,
-                            colour = "red",
-                            linetype = "dashed") +
-        ggplot2::geom_hline(yintercept = qres_crit,
-                            colour = "red",
-                            linetype = "dashed") +
+        ggplot2::geom_vline(
+            xintercept = tscore_crit,
+            colour = "red",
+            linetype = "dashed"
+        ) +
+        ggplot2::geom_hline(
+            yintercept = qres_crit,
+            colour = "red",
+            linetype = "dashed"
+        ) +
         ggplot2::ggtitle(glue::glue_data(
             list(ncomp = ncomp),
             "PCA Residuals and Score distance ({ncomp} components)"
@@ -410,16 +428,16 @@ nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
 #' model <- nmr_pca_build_model(dataset_1D)
 #' outliers_info <- nmr_pca_outliers(dataset_1D, model)
 #' dataset_whitout_outliers <- nmr_pca_outliers_filter(dataset_1D, outliers_info)
-#' 
+#'
 nmr_pca_outliers_filter <- function(nmr_dataset, pca_outliers) {
     outlier_info <- pca_outliers[["outlier_info"]]
     tscore_crit <- pca_outliers[["Tscore_critical"]]
     qres_crit <- pca_outliers[["QResidual_critical"]]
-    
+
     nmrexp_to_keep <- outlier_info %>%
         dplyr::filter(.data$Tscores < tscore_crit &
-                          .data$QResiduals < qres_crit) %>%
+            .data$QResiduals < qres_crit) %>%
         dplyr::pull("NMRExperiment")
-    
+
     dplyr::filter(nmr_dataset, .data$NMRExperiment %in% nmrexp_to_keep)
 }

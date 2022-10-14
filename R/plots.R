@@ -12,19 +12,19 @@
 #' @return The plot
 #' @importFrom graphics plot
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' #dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' #dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' #plot(dataset_1D)
-#' 
+#' # dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' # dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' # plot(dataset_1D)
+#'
 plot.nmr_dataset_1D <- function(x,
-                                NMRExperiment = NULL,
-                                chemshift_range = NULL,
-                                interactive = FALSE,
-                                quantile_plot = NULL,
-                                quantile_colors = NULL,
-                                ...) {
+    NMRExperiment = NULL,
+    chemshift_range = NULL,
+    interactive = FALSE,
+    quantile_plot = NULL,
+    quantile_colors = NULL,
+    ...) {
     if (interactive) {
         require_pkgs("plotly", msgs = c("i" = "Otherwise, you can set interactive=FALSE."))
     }
@@ -38,7 +38,7 @@ plot.nmr_dataset_1D <- function(x,
     } else {
         stop("chemshift_range should be a numeric vector of length 2 or 3.")
     }
-    
+
     if (is.null(NMRExperiment)) {
         if (x$num_samples > 20) {
             NMRExperiment <- sample(names(x), size = 10)
@@ -67,7 +67,7 @@ plot.nmr_dataset_1D <- function(x,
     if (!"color" %in% names(all_aes) && !"colour" %in% names(all_aes)) {
         all_aes <- c(all_aes, list(color = "NMRExperiment"))
     }
-    
+
     linera <- NULL
     if (is.null(quantile_plot) || identical(quantile_plot, FALSE)) {
         quantile_plot <- NULL
@@ -80,23 +80,28 @@ plot.nmr_dataset_1D <- function(x,
                 # even number of quantiles.
                 tmp <-
                     grDevices::gray.colors(length(quantile_plot) / 2,
-                                           start = 0.5,
-                                           end = 0.8)
+                        start = 0.5,
+                        end = 0.8
+                    )
                 quantile_colors <- c(rev(tmp), tmp)
             } else {
                 tmp <-
                     grDevices::gray.colors(ceiling(length(quantile_plot) / 2),
-                                           start = 0.5,
-                                           end = 0.8)
+                        start = 0.5,
+                        end = 0.8
+                    )
                 quantile_colors <- c(rev(tmp[2:length(tmp)]), tmp)
             }
         }
         stopifnot(length(quantile_plot) == length(quantile_colors))
-        decimate_qspectra <- decimate_axis(xaxis = x$axis,
-                                           xrange = chemshift_range)
+        decimate_qspectra <- decimate_axis(
+            xaxis = x$axis,
+            xrange = chemshift_range
+        )
         q_spectra <-
-            apply(x$data_1r[, decimate_qspectra], 2, function(x)
-                stats::quantile(x, quantile_plot))
+            apply(x$data_1r[, decimate_qspectra], 2, function(x) {
+                stats::quantile(x, quantile_plot)
+            })
         linera <-
             tibble::tibble(
                 NMRExperiment = rep(
@@ -105,13 +110,14 @@ plot.nmr_dataset_1D <- function(x,
                 ),
                 color = rep(quantile_colors, each = sum(decimate_qspectra)),
                 chemshift = rep(x$axis[decimate_qspectra],
-                                times = length(quantile_plot)),
+                    times = length(quantile_plot)
+                ),
                 intensity = as.numeric(t(q_spectra))
             )
     }
-    
+
     gplt <- ggplot2::ggplot(longdf)
-    
+
     if (!is.null(quantile_plot)) {
         gplt <- gplt +
             ggplot2::geom_line(
@@ -127,14 +133,14 @@ plot.nmr_dataset_1D <- function(x,
                 linetype = "dashed"
             )
     }
-    
+
     gplt <- gplt +
         ggplot2::geom_line(do.call(ggplot2::aes_string, all_aes)) +
         ggplot2::labs(x = "Chemical Shift (ppm)", y = "Intensity (a.u.)") +
         ggplot2::scale_x_reverse(limits = rev(chemshift_range[seq_len(2)])) +
         ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si("")))
 
-    
+
     if (interactive) {
         output <- plotly::ggplotly(gplt)
     } else {
@@ -159,7 +165,7 @@ plot.nmr_dataset_1D <- function(x,
 #' @return A data frame with `NMRExperiment`, `chemshift`, `intensity` and any additional column requested
 #' @importFrom generics tidy
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -1.0, max = 1.6, by = 2.3E-4))
@@ -170,21 +176,22 @@ plot.nmr_dataset_1D <- function(x,
 #' head(df_for_ggplot)
 tidy.nmr_dataset_1D <-
     function(x,
-             NMRExperiment = NULL,
-             chemshift_range = NULL,
-             columns = character(0L),
-             matrix_name = "data_1r",
-             axis_name = "axis",
-             ...
-             ) {
+    NMRExperiment = NULL,
+    chemshift_range = NULL,
+    columns = character(0L),
+    matrix_name = "data_1r",
+    axis_name = "axis",
+    ...) {
         if (is.null(NMRExperiment)) {
             NMRExperiment <- names(x)
             sample_idx <- seq_along(NMRExperiment)
         } else {
             sample_idx <- match(NMRExperiment, names(x))
         }
-        chemshift_in_range <- decimate_axis(xaxis = x[[axis_name]],
-                                            xrange = chemshift_range)
+        chemshift_in_range <- decimate_axis(
+            xaxis = x[[axis_name]],
+            xrange = chemshift_range
+        )
         meta_df <- nmr_meta_get(x, columns = columns)
         chemshifts <- x[[axis_name]][chemshift_in_range]
         mat <- x[[matrix_name]][sample_idx, chemshift_in_range, drop = FALSE]
@@ -239,7 +246,8 @@ decimate_axis <- function(xaxis, xrange = NULL) {
         decimate_factor <- 1
     }
     decimate_vector <- rep(c(TRUE, rep(FALSE, decimate_factor - 1)),
-                           length.out = length(xaxis))
+        length.out = length(xaxis)
+    )
     decimated_axis_bool <- x_in_range & decimate_vector
     return(decimated_axis_bool)
 }
@@ -256,12 +264,12 @@ decimate_axis <- function(xaxis, xrange = NULL) {
 #'
 #' @return the html filename created
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' #dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' #dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' #html_plot <- plot_webgl(dataset_1D, "html_plot.html")
-#' 
+#' # dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+#' # dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' # html_plot <- plot_webgl(dataset_1D, "html_plot.html")
+#'
 plot_webgl <- function(nmr_dataset, html_filename, overwrite = NULL, ...) {
     plt <- plot(nmr_dataset, ...)
     plot_interactive(plt = plt, html_filename = html_filename, overwrite = overwrite)
@@ -277,15 +285,15 @@ plot_webgl <- function(nmr_dataset, html_filename, overwrite = NULL, ...) {
 #'
 #' @return The html_filename
 #' @export
-#' @examples 
+#' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 #' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 #' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
 #' # plot <- plot(dataset_1D)
 #' # html_plot_interactive <- plot_interactive(plot, "html_plot_interactive.html")
-#' 
+#'
 plot_interactive <- function(plt, html_filename, overwrite = NULL) {
-    #Check if lib folder exists
+    # Check if lib folder exists
     basedir <- dirname(html_filename)
     libdir <- file.path(basedir, "lib")
     libdir_exists <- dir.exists(libdir)
@@ -293,7 +301,7 @@ plot_interactive <- function(plt, html_filename, overwrite = NULL) {
         if (interactive()) {
             # warning user before some contents of lib folder could be destroyed
             rlang::inform("{libdir} folder already exists, plot_interactive will replace it. Continue? [y/n]:")
-            response <- scan("stdin", character(), n=1)
+            response <- scan("stdin", character(), n = 1)
             overwrite <- response %in% c("y", "Y")
         } else {
             overwrite <- FALSE
@@ -304,8 +312,10 @@ plot_interactive <- function(plt, html_filename, overwrite = NULL) {
     }
     suppressMessages(utils::capture.output({
         htmltools::save_html(
-            html = htmltools::as.tags(x = plotly::toWebGL(plt),
-                                      standalone = TRUE),
+            html = htmltools::as.tags(
+                x = plotly::toWebGL(plt),
+                standalone = TRUE
+            ),
             file = html_filename
         )
     }))
