@@ -49,7 +49,7 @@ that can control the parallellization registering backends. Please check
 
 ```{r}
 #register(SerialParam(), default = TRUE)  # disable parallellization
-register(SnowParam(workers = 3), default = TRUE)  # enable parallellization with 3 workers
+register(SnowParam(workers = 3, exportglobals = FALSE), default = TRUE)  # enable parallellization with 3 workers
 ```
 
 
@@ -206,7 +206,7 @@ Samples with greater QResiduals and Tscores than the threshold defined by the re
 are candidates for further exploration and exclusion. With this small dataset,
 there is not much to see.
 
-# Baseline removal
+# Baseline estimation
 
 Spectra may display an unstable baseline, specially when processing
 blood/fecal samples. 
@@ -278,7 +278,7 @@ from noise.
 See `?nmr_detect_peaks` for more information.
 
 ```{r}
-baselineThresh <- nmr_baseline_threshold(dataset, range_without_peaks = c(9.5, 10))
+baselineThresh <- nmr_baseline_threshold(dataset, range_without_peaks = c(9.5, 10), method = "median3mad")
 nmr_baseline_threshold_plot(dataset, baselineThresh)
 ```
 
@@ -289,7 +289,8 @@ peak_list_initial <- nmr_detect_peaks(
     nDivRange_ppm = 0.1,
     scales = seq(1, 16, 2),
     baselineThresh = baselineThresh,
-    SNR.Th = 3
+    SNR.Th = 3,
+    fit_lorentzians = TRUE
 )
 ```
 
@@ -458,7 +459,7 @@ positions and estimations are well calculated:
 
 
 ```{r}
-baselineThresh <- nmr_baseline_threshold(dataset_norm, range_without_peaks = c(9.5, 10))
+baselineThresh <- nmr_baseline_threshold(dataset_norm, range_without_peaks = c(9.5, 10), method = "median3mad")
 nmr_baseline_threshold_plot(dataset_norm, baselineThresh)
 ```
 
@@ -469,8 +470,10 @@ peak_list_for_clustering_unfiltered <- nmr_detect_peaks(
     scales = seq(1, 16, 2),
     baselineThresh = baselineThresh,
     SNR.Th = 3,
+    fit_lorentzians = TRUE,
     verbose = TRUE
 )
+
 peak_list_for_clustering <- peaklist_accept_peaks(
     peak_list_for_clustering_unfiltered,
     dataset_norm,
@@ -490,6 +493,8 @@ a table, merging peaks from different samples together.
 ```{r}
 clustering <- nmr_peak_clustering(peak_list_for_clustering, verbose = TRUE)
 ```
+
+
 ```{r}
 cowplot::plot_grid(
     clustering$num_cluster_estimation$plot + labs(title = "Full"),
@@ -559,6 +564,11 @@ Or you can get a data frame with the corresponding annotations:
 ```{r}
 get_integration_with_metadata(peak_table)
 ```
+
+```{r}
+saveRDS(peak_table, "demo_peak_table.rds")
+```
+
 
 From this peak table you can proceed to use statistical testing, machine learning,
 and any downstream analysis you may be interested in.
