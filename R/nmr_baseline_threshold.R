@@ -89,6 +89,10 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
     } else if (identical(NMRExperiment, "all")) {
         NMRExperiment <- names(nmr_dataset)
     }
+    if (length(thresholds) == 1L) {
+        thresholds <- rep(thresholds, length = length(NMRExperiment))
+        names(thresholds) <- NMRExperiment
+    }
     if (!identical(NMRExperiment, "all")) {
         thresholds <- thresholds[NMRExperiment]
     }
