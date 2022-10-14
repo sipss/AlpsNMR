@@ -167,8 +167,11 @@ to include only some regions of the spectra or plot only some samples.
 plot(dataset, NMRExperiment = c("10", "30"), chemshift_range = c(2.2, 2.8))
 ```
 
+<!--
 See `vignette("Vig03-plotting-samples", package="AlpsNMR")` for more advanced plot options, or
 having interactive plots.
+-->
+
 
 # Exclude regions
 
@@ -574,8 +577,11 @@ saveRDS(peak_table, "demo_peak_table.rds")
 From this peak table you can proceed to use statistical testing, machine learning,
 and any downstream analysis you may be interested in.
 
+<!--
+
 See `vignette("Vig04-from-peak-table-to-differential-analysis", package = "AlpsNMR")`
 for more.
+-->
 
 
 # Session Info:
