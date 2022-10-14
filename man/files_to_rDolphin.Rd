@@ -36,30 +36,32 @@ output_dir_10_rDolphin <- file.path(your_path, "10-rDolphin")
 fs::dir_create(output_dir_10_rDolphin)
 
 # Generate the files (for plasma/serum)
-files_rDolphin = files_to_rDolphin(nmr_dataset_0_10_ppm, blood)
+files_rDolphin <- files_to_rDolphin(nmr_dataset_0_10_ppm, blood)
 
 # Save the files
 save_files_to_rDolphin(files_rDolphin, output_dir_10_rDolphin)
 
 # Build the rDolphin object. Do not forget to set the directory
 setwd(output_dir_10_rDolphin)
-rDolphin_object = to_rDolphin("Parameters.csv")
+rDolphin_object <- to_rDolphin("Parameters.csv")
 
 # Visualize your spectra
 rDolphin_plot(rDolphin_object)
 
 # Run the main profiling function (it takes a while)
-targeted_profiling = Automatic_targeted_profiling(rDolphin_object)
+targeted_profiling <- Automatic_targeted_profiling(rDolphin_object)
 
 # Save results
 save_profiling_output(targeted_profiling, output_dir_10_rDolphin)
 
-save_profiling_plots(output_dir_10_rDolphin, targeted_profiling$final_output,
-targeted_profiling$reproducibility_data)
+save_profiling_plots(
+    output_dir_10_rDolphin, targeted_profiling$final_output,
+    targeted_profiling$reproducibility_data
+)
 
-#Additionally, you can run some stats
-intensities = targeted_profiling$final_output$intensity
-group = as.factor(rDolphin_object$Metadata$type)
+# Additionally, you can run some stats
+intensities <- targeted_profiling$final_output$intensity
+group <- as.factor(rDolphin_object$Metadata$type)
 model_PLS <- rdCV_PLS_RF(X = intensities, Y = group)
 }
 }

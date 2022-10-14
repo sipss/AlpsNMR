@@ -26,7 +26,7 @@ dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.
 sample_10 <- filter(dataset_1D, NMRExperiment == "10")
 
 ## example 2
-#test_samples <- dataset_1D \%>\% filter(nmr_peak_table$metadata$external$Group == "placebo")
+# test_samples <- dataset_1D \%>\% filter(nmr_peak_table$metadata$external$Group == "placebo")
 }
 \seealso{
 Other subsetting functions: 

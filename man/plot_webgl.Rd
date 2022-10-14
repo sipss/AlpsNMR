@@ -34,9 +34,9 @@ Uses WebGL for performance
 }
 \examples{
 dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#html_plot <- plot_webgl(dataset_1D, "html_plot.html")
+# dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+# dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+# html_plot <- plot_webgl(dataset_1D, "html_plot.html")
 
 }
 \concept{plotting nmr datasets}

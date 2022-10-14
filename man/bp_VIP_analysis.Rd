@@ -57,23 +57,24 @@ num_samples <- 32 # use an even number in this example
 num_peaks <- 20
 metadata <- data.frame(
     NMRExperiment = as.character(1:num_samples),
-    Condition = rep(c("A", "B"), times = num_samples/2)
+    Condition = rep(c("A", "B"), times = num_samples / 2)
 )
 
 ### The matrix with peaks
 peak_means <- runif(n = num_peaks, min = 300, max = 600)
 peak_sd <- runif(n = num_peaks, min = 30, max = 60)
 peak_matrix <- mapply(function(mu, sd) rnorm(num_samples, mu, sd),
-                                            mu = peak_means, sd = peak_sd)
+    mu = peak_means, sd = peak_sd
+)
 colnames(peak_matrix) <- paste0("Peak", 1:num_peaks)
 
 ## Artificial differences depending on the condition:
-peak_matrix[metadata$Condition == "A", "Peak2"] <- 
+peak_matrix[metadata$Condition == "A", "Peak2"] <-
     peak_matrix[metadata$Condition == "A", "Peak2"] + 70
 
-peak_matrix[metadata$Condition == "A", "Peak6"] <- 
+peak_matrix[metadata$Condition == "A", "Peak6"] <-
     peak_matrix[metadata$Condition == "A", "Peak6"] - 60
-    
+
 ### The nmr_dataset_peak_table
 peak_table <- new_nmr_dataset_peak_table(
     peak_table = peak_matrix,
@@ -97,15 +98,16 @@ model <- nmr_data_analysis(
 ## Area under ROC for each outer cross-validation iteration:
 model$outer_cv_results_digested$auroc
 
-## The number of components for the bootstrap models is selected 
+## The number of components for the bootstrap models is selected
 ncomps <- model$outer_cv_results$`1`$model$ncomp
 train_index <- model$train_test_partitions$outer$`1`$outer_train
 
 # Bootstrap and permutation for VIP selection
 bp_VIPS <- bp_VIP_analysis(peak_table, # Data to be analized
-                           train_index,
-                           y_column = "Condition",
-                           ncomp = ncomps,
-                           nbootstrap = 10)
+    train_index,
+    y_column = "Condition",
+    ncomp = ncomps,
+    nbootstrap = 10
+)
 
 }

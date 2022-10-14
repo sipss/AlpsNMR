@@ -22,10 +22,14 @@ shifts in the columns.
 nsamp <- 12
 npoints <- 20
 dummy_ppm_axis <- seq(from = 0.2, to = 10, length.out = npoints)
-dummy_spectra_matrix <- matrix(runif(nsamp*npoints), nrow = nsamp, ncol = npoints)
-metadata <- list(external = data.frame(NMRExperiment = paste0("Sample", 1:12),
-                                       DummyClass = c("a", "b")))
-dummy_nmr_dataset_1D <- new_nmr_dataset_1D(ppm_axis = dummy_ppm_axis,
-                                           data_1r = dummy_spectra_matrix,
-                                           metadata = metadata)
+dummy_spectra_matrix <- matrix(runif(nsamp * npoints), nrow = nsamp, ncol = npoints)
+metadata <- list(external = data.frame(
+    NMRExperiment = paste0("Sample", 1:12),
+    DummyClass = c("a", "b")
+))
+dummy_nmr_dataset_1D <- new_nmr_dataset_1D(
+    ppm_axis = dummy_ppm_axis,
+    data_1r = dummy_spectra_matrix,
+    metadata = metadata
+)
 }

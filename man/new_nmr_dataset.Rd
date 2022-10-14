@@ -32,8 +32,10 @@ my_1D_data <- new_nmr_dataset(metadata_1D, data_fields_1D, axis_1D)
 
 # Example for 2D samples
 metadata_2D <- list(external = data.frame(NMRExperiment = c("11", "21")))
-data_fields_2D <- list(data_2rr = list(matrix(runif(16*3), nrow=16, ncol=3),
-                        runif(32*3), nrow=32, ncol=3))
+data_fields_2D <- list(data_2rr = list(matrix(runif(16 * 3), nrow = 16, ncol = 3),
+    runif(32 * 3),
+    nrow = 32, ncol = 3
+))
 # Each sample has its own axis list, with one element (because this example is 1D)
 axis_2D <- list(list(1:16, 1:3), list(1:32, 1:3))
 my_2D_data <- new_nmr_dataset(metadata_2D, data_fields_2D, axis_2D)

@@ -153,56 +153,56 @@ If there is no internal calibrant, only the PQN normalization is done.
 ## Example of pipeline usage
 ## There are differet ways of load the dataset
 dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#excel_file <- system.file("dataset-demo", 
-#                          "dummy_metadata.xlsx", 
+# excel_file <- system.file("dataset-demo",
+#                          "dummy_metadata.xlsx",
 #                          package = "AlpsNMR")
-#output_dir <- tempdir()
+# output_dir <- tempdir()
 
 ## Load samples with pipes
-#pipe_load_samples(dir_to_demo_dataset,
+# pipe_load_samples(dir_to_demo_dataset,
 #                  glob = "*.zip",
 #                  output_dir = "../pipe_output")
 
 ## Another way to load it
-#nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
+# nmr_dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 
 ## Saving the dataset in a .rds file
-#nmr_dataset_rds <- tempfile(fileext = ".rds")
-#nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
+# nmr_dataset_rds <- tempfile(fileext = ".rds")
+# nmr_dataset_save(nmr_dataset, nmr_dataset_rds)
 
 ## Interpolation
-#pipe_interpolate_1D(nmr_dataset_rds, 
-#                    axis = c(min = -0.5, max = 10, by = 2.3E-4), 
+# pipe_interpolate_1D(nmr_dataset_rds,
+#                    axis = c(min = -0.5, max = 10, by = 2.3E-4),
 #                    output_dir)
-                    
+
 ## Get the new path, based in output_dir
-#nmr_dataset_rds <- paste(output_dir, "\\", "nmr_dataset.rds", sep = "", collapse = NULL)
+# nmr_dataset_rds <- paste(output_dir, "\", "nmr_dataset.rds", sep = "", collapse = NULL)
 
 ## Adding metadata to samples
-#pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
+# pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,
 #                  excel_file = excel_file)
 
 ## Filtering samples
-#conditions <- 'SubjectID == "Ana"'
-#pipe_filter_samples(nmr_dataset_rds, conditions, output_dir)
+# conditions <- 'SubjectID == "Ana"'
+# pipe_filter_samples(nmr_dataset_rds, conditions, output_dir)
 
 ## Outlier detection
-#pipe_outlier_detection(nmr_dataset_rds, output_dir)
+# pipe_outlier_detection(nmr_dataset_rds, output_dir)
 
 ## Exclude regions
-#exclude_regions <- list(water = c(5.1, 4.5))
-#pipe_exclude_regions(nmr_dataset_rds, exclude_regions, output_dir)
+# exclude_regions <- list(water = c(5.1, 4.5))
+# pipe_exclude_regions(nmr_dataset_rds, exclude_regions, output_dir)
 
 ## peak aling
-#pipe_peakdet_align(nmr_dataset_rds, output_dir = output_dir)
+# pipe_peakdet_align(nmr_dataset_rds, output_dir = output_dir)
 
 ## peak integration
-#pipe_peak_integration(nmr_dataset_rds, 
+# pipe_peak_integration(nmr_dataset_rds,
 #                      peak_det_align_dir = output_dir,
 #                      peak_width_ppm = 0.006, output_dir)
 
-## Normalization   
-#pipe_normalization(nmr_dataset_rds, output_dir = output_dir)
+## Normalization
+# pipe_normalization(nmr_dataset_rds, output_dir = output_dir)
 
 }
 \seealso{

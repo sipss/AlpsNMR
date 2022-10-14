@@ -27,7 +27,7 @@ Export Metadata to an Excel file
 \examples{
 dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#nmr_meta_export(dataset, "metadata.xlsx")
+# nmr_meta_export(dataset, "metadata.xlsx")
 
 }
 \seealso{

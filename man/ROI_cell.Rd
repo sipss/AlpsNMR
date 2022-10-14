@@ -10,6 +10,7 @@ The template ROI_cell contains the targeted list of metabolites to be quantified
 \examples{
 data("ROI_cell")
 ROI_cell[ROI_cell$Metabolite == "Valine", ]
+
 }
 \references{
 \url{github.com/danielcanueto/rDolphin}

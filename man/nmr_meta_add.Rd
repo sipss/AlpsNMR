@@ -70,7 +70,7 @@ nmr_meta_get(nmr_dataset, groups = "external")
 # Get a table with NMRExperiment -> SubjectID
 dummy_metadata <- system.file("dataset-demo", "dummy_metadata.xlsx", package = "AlpsNMR")
 
-nmr_dataset <-nmr_meta_add_tidy_excel(nmr_dataset, dummy_metadata)
+nmr_dataset <- nmr_meta_add_tidy_excel(nmr_dataset, dummy_metadata)
 # Updated Metadata:
 nmr_meta_get(nmr_dataset, groups = "external")
 }
