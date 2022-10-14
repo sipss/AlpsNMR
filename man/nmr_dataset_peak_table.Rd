@@ -8,7 +8,9 @@
 \method{as.data.frame}{nmr_dataset_peak_table}(x, ...)
 }
 \arguments{
-\item{x}{An nmr_dataset_peak_table object}
+\item{x}{An nmr_dataset_peak_table object,}
+
+\item{...}{ignored}
 }
 \value{
 A data frame with the sample metadata and the peak table
