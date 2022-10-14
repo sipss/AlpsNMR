@@ -289,3 +289,16 @@ SummarizedExperiment_to_nmr_dataset_peak_table <- function(se) {
     }
     new_nmr_dataset_peak_table(as.matrix(t(SummarizedExperiment::colData(se))), nmr_meta)
 }
+
+
+#' @describeIn nmr_dataset_peak_table Convert to a data frame
+#' @param x An nmr_dataset_peak_table object
+#' @return A data frame with the sample metadata and the peak table
+#' @export
+as.data.frame.nmr_dataset_peak_table <- function(x, ...) {
+    peak_df <- as.data.frame(nmr_data(x))
+    metadata <- nmr_meta_get(x, groups = "external")
+    df <- as.data.frame(cbind(metadata, peak_df))
+    rownames(df) <- names(x)
+    df
+}
