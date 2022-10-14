@@ -19,7 +19,7 @@ that region and finally perform PQN normalization."><!-- mathjax --><script src=
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.2</span>
       </span>
     </div>
 
@@ -37,13 +37,10 @@ that region and finally perform PQN normalization."><!-- mathjax --><script src=
       <a href="../articles/Vig01-introduction-to-alpsnmr.html">Introduction to AlpsNMR</a>
     </li>
     <li>
+      <a href="../articles/Vig01b-introduction-to-alpsnmr-old-api.html">Introduction to AlpsNMR (older API)</a>
+    </li>
+    <li>
       <a href="../articles/Vig02-handling-metadata-and-annotations.html">Handling metadata and annotations</a>
-    </li>
-    <li>
-      <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
-    </li>
-    <li>
-      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -179,7 +176,6 @@ for peaks.</p></dd>
 <dt>baselineThresh</dt>
 <dd><p>All peaks with intensities below the thresholds are excluded. Either:</p><ul><li><p>A numeric vector of length the number of samples. Each number is a threshold for that sample</p></li>
 <li><p>A single number. All samples use this number as baseline threshold.</p></li>
-<li><p>A function, that takes the <code>nmr_dataset</code> and <code>range_without_peaks</code> and returns a numeric vector with the thresholds.</p></li>
 <li><p><code>NULL</code>. If that's the case, a default function is used (<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>)</p></li>
 </ul></dd>
 
@@ -293,56 +289,56 @@ for peaks.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Example of pipeline usage</span></span></span>
 <span class="r-in"><span><span class="co">## There are differet ways of load the dataset</span></span></span>
 <span class="r-in"><span><span class="va">dir_to_demo_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co">#excel_file &lt;- system.file("dataset-demo", </span></span></span>
-<span class="r-in"><span><span class="co">#                          "dummy_metadata.xlsx", </span></span></span>
+<span class="r-in"><span><span class="co"># excel_file &lt;- system.file("dataset-demo",</span></span></span>
+<span class="r-in"><span><span class="co">#                          "dummy_metadata.xlsx",</span></span></span>
 <span class="r-in"><span><span class="co">#                          package = "AlpsNMR")</span></span></span>
-<span class="r-in"><span><span class="co">#output_dir &lt;- tempdir()</span></span></span>
+<span class="r-in"><span><span class="co"># output_dir &lt;- tempdir()</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Load samples with pipes</span></span></span>
-<span class="r-in"><span><span class="co">#pipe_load_samples(dir_to_demo_dataset,</span></span></span>
+<span class="r-in"><span><span class="co"># pipe_load_samples(dir_to_demo_dataset,</span></span></span>
 <span class="r-in"><span><span class="co">#                  glob = "*.zip",</span></span></span>
 <span class="r-in"><span><span class="co">#                  output_dir = "../pipe_output")</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Another way to load it</span></span></span>
-<span class="r-in"><span><span class="co">#nmr_dataset &lt;- nmr_read_samples_dir(dir_to_demo_dataset)</span></span></span>
+<span class="r-in"><span><span class="co"># nmr_dataset &lt;- nmr_read_samples_dir(dir_to_demo_dataset)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Saving the dataset in a .rds file</span></span></span>
-<span class="r-in"><span><span class="co">#nmr_dataset_rds &lt;- tempfile(fileext = ".rds")</span></span></span>
-<span class="r-in"><span><span class="co">#nmr_dataset_save(nmr_dataset, nmr_dataset_rds)</span></span></span>
+<span class="r-in"><span><span class="co"># nmr_dataset_rds &lt;- tempfile(fileext = ".rds")</span></span></span>
+<span class="r-in"><span><span class="co"># nmr_dataset_save(nmr_dataset, nmr_dataset_rds)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Interpolation</span></span></span>
-<span class="r-in"><span><span class="co">#pipe_interpolate_1D(nmr_dataset_rds, </span></span></span>
-<span class="r-in"><span><span class="co">#                    axis = c(min = -0.5, max = 10, by = 2.3E-4), </span></span></span>
+<span class="r-in"><span><span class="co"># pipe_interpolate_1D(nmr_dataset_rds,</span></span></span>
+<span class="r-in"><span><span class="co">#                    axis = c(min = -0.5, max = 10, by = 2.3E-4),</span></span></span>
 <span class="r-in"><span><span class="co">#                    output_dir)</span></span></span>
-<span class="r-in"><span>                    </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Get the new path, based in output_dir</span></span></span>
-<span class="r-in"><span><span class="co">#nmr_dataset_rds &lt;- paste(output_dir, "\", "nmr_dataset.rds", sep = "", collapse = NULL)</span></span></span>
+<span class="r-in"><span><span class="co"># nmr_dataset_rds &lt;- paste(output_dir, "\", "nmr_dataset.rds", sep = "", collapse = NULL)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Adding metadata to samples</span></span></span>
-<span class="r-in"><span><span class="co">#pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,</span></span></span>
+<span class="r-in"><span><span class="co"># pipe_add_metadata(nmr_dataset_rds = nmr_dataset_rds, output_dir = output_dir,</span></span></span>
 <span class="r-in"><span><span class="co">#                  excel_file = excel_file)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Filtering samples</span></span></span>
-<span class="r-in"><span><span class="co">#conditions &lt;- 'SubjectID == "Ana"'</span></span></span>
-<span class="r-in"><span><span class="co">#pipe_filter_samples(nmr_dataset_rds, conditions, output_dir)</span></span></span>
+<span class="r-in"><span><span class="co"># conditions &lt;- 'SubjectID == "Ana"'</span></span></span>
+<span class="r-in"><span><span class="co"># pipe_filter_samples(nmr_dataset_rds, conditions, output_dir)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Outlier detection</span></span></span>
-<span class="r-in"><span><span class="co">#pipe_outlier_detection(nmr_dataset_rds, output_dir)</span></span></span>
+<span class="r-in"><span><span class="co"># pipe_outlier_detection(nmr_dataset_rds, output_dir)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Exclude regions</span></span></span>
-<span class="r-in"><span><span class="co">#exclude_regions &lt;- list(water = c(5.1, 4.5))</span></span></span>
-<span class="r-in"><span><span class="co">#pipe_exclude_regions(nmr_dataset_rds, exclude_regions, output_dir)</span></span></span>
+<span class="r-in"><span><span class="co"># exclude_regions &lt;- list(water = c(5.1, 4.5))</span></span></span>
+<span class="r-in"><span><span class="co"># pipe_exclude_regions(nmr_dataset_rds, exclude_regions, output_dir)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## peak aling</span></span></span>
-<span class="r-in"><span><span class="co">#pipe_peakdet_align(nmr_dataset_rds, output_dir = output_dir)</span></span></span>
+<span class="r-in"><span><span class="co"># pipe_peakdet_align(nmr_dataset_rds, output_dir = output_dir)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## peak integration</span></span></span>
-<span class="r-in"><span><span class="co">#pipe_peak_integration(nmr_dataset_rds, </span></span></span>
+<span class="r-in"><span><span class="co"># pipe_peak_integration(nmr_dataset_rds,</span></span></span>
 <span class="r-in"><span><span class="co">#                      peak_det_align_dir = output_dir,</span></span></span>
 <span class="r-in"><span><span class="co">#                      peak_width_ppm = 0.006, output_dir)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## Normalization   </span></span></span>
-<span class="r-in"><span><span class="co">#pipe_normalization(nmr_dataset_rds, output_dir = output_dir)</span></span></span>
+<span class="r-in"><span><span class="co">## Normalization</span></span></span>
+<span class="r-in"><span><span class="co"># pipe_normalization(nmr_dataset_rds, output_dir = output_dir)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

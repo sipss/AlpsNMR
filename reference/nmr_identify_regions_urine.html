@@ -19,7 +19,7 @@ the proposed metabolite was reported in this publication as regular urinary meta
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.2</span>
       </span>
     </div>
 
@@ -37,13 +37,10 @@ the proposed metabolite was reported in this publication as regular urinary meta
       <a href="../articles/Vig01-introduction-to-alpsnmr.html">Introduction to AlpsNMR</a>
     </li>
     <li>
+      <a href="../articles/Vig01b-introduction-to-alpsnmr-old-api.html">Introduction to AlpsNMR (older API)</a>
+    </li>
+    <li>
       <a href="../articles/Vig02-handling-metadata-and-annotations.html">Handling metadata and annotations</a>
-    </li>
-    <li>
-      <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
-    </li>
-    <li>
-      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -127,9 +124,11 @@ the proposed metabolite was reported in this publication as regular urinary meta
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># We identify regions from from the corresponding ppm storaged in a vector.</span></span></span>
-<span class="r-in"><span><span class="va">ppm_to_assign</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.060960203</span>, <span class="fl">3.048970634</span>,<span class="fl">2.405935596</span>,</span></span>
-<span class="r-in"><span><span class="fl">3.24146865</span>,<span class="fl">0.990616851</span>,<span class="fl">1.002075066</span>,<span class="fl">0.955325548</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">identification</span> <span class="op">&lt;-</span> <span class="fu">nmr_identify_regions_urine</span> <span class="op">(</span><span class="va">ppm_to_assign</span>, num_proposed_compounds <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ppm_to_assign</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fl">4.060960203</span>, <span class="fl">3.048970634</span>, <span class="fl">2.405935596</span>,</span></span>
+<span class="r-in"><span>    <span class="fl">3.24146865</span>, <span class="fl">0.990616851</span>, <span class="fl">1.002075066</span>, <span class="fl">0.955325548</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">identification</span> <span class="op">&lt;-</span> <span class="fu">nmr_identify_regions_urine</span><span class="op">(</span><span class="va">ppm_to_assign</span>, num_proposed_compounds <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>

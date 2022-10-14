@@ -18,7 +18,7 @@ It is defined as an S3 class, and it can be treated as a regular list."><!-- mat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.2</span>
       </span>
     </div>
 
@@ -36,13 +36,10 @@ It is defined as an S3 class, and it can be treated as a regular list."><!-- mat
       <a href="../articles/Vig01-introduction-to-alpsnmr.html">Introduction to AlpsNMR</a>
     </li>
     <li>
+      <a href="../articles/Vig01b-introduction-to-alpsnmr-old-api.html">Introduction to AlpsNMR (older API)</a>
+    </li>
+    <li>
       <a href="../articles/Vig02-handling-metadata-and-annotations.html">Handling metadata and annotations</a>
-    </li>
-    <li>
-      <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
-    </li>
-    <li>
-      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -73,7 +70,27 @@ It is defined as an S3 class, and it can be treated as a regular list."><!-- mat
 It is defined as an S3 class, and it can be treated as a regular list.</p>
     </div>
 
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for nmr_dataset_peak_table</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    </div>
 
+    <div id="arguments">
+    <h2>Arguments</h2>
+    <dl><dt>x</dt>
+<dd><p>An nmr_dataset_peak_table object,</p></dd>
+
+
+<dt>...</dt>
+<dd><p>ignored</p></dd>
+
+</dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    
+
+<p>A data frame with the sample metadata and the peak table</p>
+    </div>
     <div id="details">
     <h2>Details</h2>
     
@@ -81,6 +98,11 @@ It is defined as an S3 class, and it can be treated as a regular list.</p>
 the list only has one data frame named "external".</p></li>
 <li><p><code>peak_table</code>: A matrix with one sample on each row and the peaks in the
 columns</p></li>
+</ul></div>
+    <div id="methods-by-generic-">
+    <h2>Methods (by generic)</h2>
+    
+<ul><li><p><code>as.data.frame(nmr_dataset_peak_table)</code>: Convert to a data frame</p></li>
 </ul></div>
 
   </div>

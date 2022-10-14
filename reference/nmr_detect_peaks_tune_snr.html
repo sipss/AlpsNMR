@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.2</span>
       </span>
     </div>
 
@@ -35,13 +35,10 @@
       <a href="../articles/Vig01-introduction-to-alpsnmr.html">Introduction to AlpsNMR</a>
     </li>
     <li>
+      <a href="../articles/Vig01b-introduction-to-alpsnmr-old-api.html">Introduction to AlpsNMR (older API)</a>
+    </li>
+    <li>
       <a href="../articles/Vig02-handling-metadata-and-annotations.html">Handling metadata and annotations</a>
-    </li>
-    <li>
-      <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
-    </li>
-    <li>
-      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -105,12 +102,14 @@ for peaks.</p></dd>
     <dt><code>baselineThresh</code></dt>
 <dd><p>All peaks with intensities below the thresholds are excluded. Either:</p><ul><li><p>A numeric vector of length the number of samples. Each number is a threshold for that sample</p></li>
 <li><p>A single number. All samples use this number as baseline threshold.</p></li>
-<li><p>A function, that takes the <code>nmr_dataset</code> and <code>range_without_peaks</code> and returns a numeric vector with the thresholds.</p></li>
 <li><p><code>NULL</code>. If that's the case, a default function is used (<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>)</p></li>
 </ul></dd>
 
     <dt><code>range_without_peaks</code></dt>
 <dd><p>A numeric vector of length two with a region without peaks, only used when <code>baselineThresh = NULL</code></p></dd>
+
+    <dt><code>fit_lorentzians</code></dt>
+<dd><p>If <code>TRUE</code>, fit a lorentzian to each detected peak, to infer its inflection points. For now disabled for backwards compatibility.</p></dd>
 
     <dt><code>verbose</code></dt>
 <dd><p>Logical (<code>TRUE</code> or <code>FALSE</code>). Show informational messages, such as the estimated baseline</p></dd>

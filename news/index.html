@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.2</span>
       </span>
     </div>
 
@@ -35,13 +35,10 @@
       <a href="../articles/Vig01-introduction-to-alpsnmr.html">Introduction to AlpsNMR</a>
     </li>
     <li>
+      <a href="../articles/Vig01b-introduction-to-alpsnmr-old-api.html">Introduction to AlpsNMR (older API)</a>
+    </li>
+    <li>
       <a href="../articles/Vig02-handling-metadata-and-annotations.html">Handling metadata and annotations</a>
-    </li>
-    <li>
-      <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
-    </li>
-    <li>
-      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -67,18 +64,24 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="3.99.1" id="alpsnmr-3991-under-development">AlpsNMR 3.99.1 (under development)<a class="anchor" aria-label="anchor" href="#alpsnmr-3991-under-development"></a></h2>
+<h2 class="page-header" data-toc-text="3.99.2" id="alpsnmr-3992-2022-10-14">AlpsNMR 3.99.2 (2022-10-14)<a class="anchor" aria-label="anchor" href="#alpsnmr-3992-2022-10-14"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-3-99-1">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-3-99-1"></a></h3>
-<p>Many functions, including baseline estimation, spectra alignment, peak integration have undergone a review with some breaking changes. Besides, parallellization has changed from relying on the great <code>future</code> package to the also great <code>BiocParallel</code> package, for better integration with the Bioconductor ecosystem.</p>
-<p>The vignette has also been updated to reflect those changes, and to offer more detailed and streamlined workflow. Additional vignettes support it for more in-depth analyses.</p>
-<p>Please update your scripts following the new vignette to ensure improved and more reliable results.</p>
-<ul><li>You can now set experiment names (NMRExperiment) with <code>names(dataset) &lt;- c("Sample1", "Sample2")</code>
-</li>
-<li>You can now pass a named vector with the sample names to the read_samples function. The names will be used as the sample names.</li>
-<li>Set <code>fix_baseline = FALSE</code> in <code><a href="../reference/nmr_integrate_regions.html">nmr_integrate_regions()</a></code> as default</li>
+<h3 id="breaking-changes-3-99-2">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-3-99-2"></a></h3>
+<ul><li>Set <code>fix_baseline = FALSE</code> in <code><a href="../reference/nmr_integrate_regions.html">nmr_integrate_regions()</a></code> as default. The former <code>TRUE</code> approach here did not make much sense if peak boundaries were not perfectly established.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="major-changes-3-99-2">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-3-99-2"></a></h3>
+<ul><li><p>Baseline estimation: We now offer <code><a href="../reference/nmr_baseline_estimation.html">nmr_baseline_estimation()</a></code> besides <code><a href="../reference/nmr_baseline_removal.html">nmr_baseline_removal()</a></code>. The estimation function computes the baseline and saves it instead of subtracting it from the signal. This is a better approach because it lets each step of the pipeline decide whether it makes sense to subtract the baseline or not. The <code><a href="../reference/nmr_baseline_removal.html">nmr_baseline_removal()</a></code> is for now still available, but it will be deprecated in a future version.</p></li>
+<li><p>For the <code>baselineThresh</code> argument in <code><a href="../reference/nmr_detect_peaks.html">nmr_detect_peaks()</a></code> we now suggest using <code>nmr_baseline_threshold(dataset, method = "median3mad")</code>. This is more robust than the former (but still the default) method.</p></li>
+<li><p>Peak detection and integration: We want to approach the peak detection, clustering an integration in a different way. While the old pipeline still works as expected, we have introduced new arguments to peak detection, with backwards compatible defaults and a peak clustering function. We still provide the vignette with the former workflow, because it is still relevant but we may deprecate it in a future version, once we are confident the changes we are making are robust across several datasets.</p></li>
+<li><p>Parallellization: We are switching from the <code>future</code> package to <code>BiocParallel</code>, to better integrate in the Bioconductor ecosystem. In this version, if you use a different future plan you may get a warning to switch to BiocParallel. In a future version we will remove our dependency with the (awesome) <code>future</code> package.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-changes-3-99-2">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-3-99-2"></a></h3>
+<ul><li>You can now set experiment names (NMRExperiment) with <code>names(dataset) &lt;- c("Sample1", "Sample2")</code>.</li>
+<li>You can now pass a named vector with the sample names to the nmr_read_samples function. The names will be used as the sample names.</li>
 <li>Peak detection has a more robust baseline threshold estimation</li>
-<li>Peak detection estimates the baseline threshold on each sample individually. The threshold is calculated using only the sample where we are currently detecting the peaks</li>
+<li>Peak detection estimates the baseline threshold on each sample individually. The threshold is calculated using only the sample where we are currently detecting the peaks.</li>
 <li>Peak detection includes a simple but effective lorentzian fitting (for area and width estimation)</li>
 <li>Add functions to evaluate the quality of the peak detection using plots</li>
 <li>More fine grained interpolation axis if <code>axis = NULL</code> is given in <code><a href="../reference/nmr_interpolate_1D.html">nmr_interpolate_1D()</a></code>

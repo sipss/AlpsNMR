@@ -20,7 +20,7 @@ detection."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.2</span>
       </span>
     </div>
 
@@ -38,13 +38,10 @@ detection."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/
       <a href="../articles/Vig01-introduction-to-alpsnmr.html">Introduction to AlpsNMR</a>
     </li>
     <li>
+      <a href="../articles/Vig01b-introduction-to-alpsnmr-old-api.html">Introduction to AlpsNMR (older API)</a>
+    </li>
+    <li>
       <a href="../articles/Vig02-handling-metadata-and-annotations.html">Handling metadata and annotations</a>
-    </li>
-    <li>
-      <a href="../articles/Vig03-plotting-samples.html">Plotting NMR samples</a>
-    </li>
-    <li>
-      <a href="../articles/Vig04-from-peak-table-to-differential-analysis.html">From the peak table to the differential analysis</a>
     </li>
   </ul></li>
 <li>
@@ -85,6 +82,7 @@ detection.</p>
 <span>  baselineThresh <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  SNR.Th <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  range_without_peaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9.5</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>  fit_lorentzians <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -107,7 +105,6 @@ for peaks.</p></dd>
 <dt>baselineThresh</dt>
 <dd><p>All peaks with intensities below the thresholds are excluded. Either:</p><ul><li><p>A numeric vector of length the number of samples. Each number is a threshold for that sample</p></li>
 <li><p>A single number. All samples use this number as baseline threshold.</p></li>
-<li><p>A function, that takes the <code>nmr_dataset</code> and <code>range_without_peaks</code> and returns a numeric vector with the thresholds.</p></li>
 <li><p><code>NULL</code>. If that's the case, a default function is used (<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>)</p></li>
 </ul></dd>
 
@@ -118,6 +115,10 @@ for peaks.</p></dd>
 
 <dt>range_without_peaks</dt>
 <dd><p>A numeric vector of length two with a region without peaks, only used when <code>baselineThresh = NULL</code></p></dd>
+
+
+<dt>fit_lorentzians</dt>
+<dd><p>If <code>TRUE</code>, fit a lorentzian to each detected peak, to infer its inflection points. For now disabled for backwards compatibility.</p></dd>
 
 
 <dt>verbose</dt>
@@ -133,7 +134,7 @@ in ppm and index and the peak intensity</p>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>Afterwards, the peak apex and the peak inflection points are used to efficiently
+    <p>Optionally afterwards, the peak apex and the peak inflection points are used to efficiently
 adjust a lorentzian to each peak, and compute the peak area and width, as well as
 the error of the fit. These peak features can be used afterwards to reject false
 detections.</p>
