@@ -1,27 +1,42 @@
-# AlpsNMR 3.99.1 (under development)
+# AlpsNMR 3.99.2 (2022-10-14)
 
 ## Breaking changes
 
-Many functions, including baseline estimation, spectra alignment, peak integration
-have undergone a review with some breaking changes. Besides, parallellization
-has changed from relying on the great `future` package to the also great
-`BiocParallel` package, for better integration with the Bioconductor ecosystem.
+- Set `fix_baseline = FALSE` in `nmr_integrate_regions()` as default. The former `TRUE`
+  approach here did not make much sense if peak boundaries were not perfectly
+  established.
 
-The vignette has also been updated to reflect those changes, and to offer more
-detailed and streamlined workflow. Additional vignettes support it for more
-in-depth analyses.
+## Major changes
 
-Please update your scripts following the new vignette to ensure improved and
-more reliable results.
+- Baseline estimation: We now offer `nmr_baseline_estimation()` besides
+  `nmr_baseline_removal()`. The estimation function computes the baseline and saves it
+  instead of subtracting it from the signal. This is a better approach because it
+  lets each step of the pipeline decide whether it makes sense to subtract the baseline
+  or not. The `nmr_baseline_removal()` is for now still available, but it will be
+  deprecated in a future version.
+- For the `baselineThresh` argument in `nmr_detect_peaks()` we now suggest using
+  `nmr_baseline_threshold(dataset, method = "median3mad")`. This is more robust than
+  the former (but still the default) method.
+- Peak detection and integration: We want to approach the peak detection, clustering an integration
+  in a different way. While the old pipeline still works as expected, we have
+  introduced new arguments to peak detection, with backwards compatible defaults and
+  a peak clustering function. We still provide the vignette with the former workflow,
+  because it is still relevant but we may deprecate it in a future version, once
+  we are confident the changes we are making are robust across several datasets.
 
+- Parallellization: We are switching from the `future` package to `BiocParallel`,
+  to better integrate in the Bioconductor ecosystem. In this version, if you use
+  a different future plan you may get a warning to switch to BiocParallel. In a
+  future version we will remove our dependency with the (awesome) `future` package.
 
-- You can now set experiment names (NMRExperiment) with `names(dataset) <- c("Sample1", "Sample2")`
-- You can now pass a named vector with the sample names to the read_samples function. The names
+## Minor changes
+
+- You can now set experiment names (NMRExperiment) with `names(dataset) <- c("Sample1", "Sample2")`.
+- You can now pass a named vector with the sample names to the nmr_read_samples function. The names
   will be used as the sample names.
-- Set `fix_baseline = FALSE` in `nmr_integrate_regions()` as default
 - Peak detection has a more robust baseline threshold estimation
 - Peak detection estimates the baseline threshold on each sample individually.
-  The threshold is calculated using only the sample where we are currently detecting the peaks
+  The threshold is calculated using only the sample where we are currently detecting the peaks.
 - Peak detection includes a simple but effective lorentzian fitting (for area and width estimation)
 - Add functions to evaluate the quality of the peak detection using plots
 - More fine grained interpolation axis if `axis = NULL` is given in `nmr_interpolate_1D()`
