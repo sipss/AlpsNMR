@@ -1,7 +1,8 @@
 Package: AlpsNMR
 Type: Package
 Title: Automated spectraL Processing System for NMR
-Version: 3.99.2
+Version: 3.99.3
+Date: 2022-10-17
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -102,6 +103,8 @@ Suggests:
     testthat (>= 2.0.0),
     writexl (>= 1.0),
     zip (>= 2.0.4)
+SystemRequirements: libarchive: libarchive-dev (deb),
+    libarchive-devel (rpm), libarchive (homebrew), libarchive_dev (csw)
 biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
 RoxygenNote: 7.2.1

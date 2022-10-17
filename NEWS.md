@@ -1,3 +1,11 @@
+# AlpsNMR 3.99.3 (2022-10-17)
+
+- Add libarchive as a SystemRequirement to
+  workaround a limitation of the Bioconductor
+  build system (BBS), that can't pick system requirements
+  recursively. Thanks to Jennifer Wokaty for 
+  checking the BBS and providing this suggestion.
+
 # AlpsNMR 3.99.2 (2022-10-14)
 
 ## Breaking changes
