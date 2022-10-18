@@ -32,14 +32,16 @@ the samples that match that pulse sequence.}
 
 \item{metadata_only}{A logical, to load only metadata (default: \code{FALSE})}
 
-\item{...}{The following arguments:
-\itemize{
-\item \code{pdata_file} File name of the binary NMR data to load. Usually "1r".
-If it is null it is autodetected and all files are loaded.
-\item \code{sample_path} A character path of the sample directory
-\item \code{pdata_path} Path from \code{sample_path} to the preprocessed data
-\item \code{all_components} If \code{FALSE} load only the real component. Otherwise load all of them
-}}
+\item{...}{
+  Arguments passed on to \code{\link[=read_bruker_pdata]{read_bruker_pdata}}
+  \describe{
+    \item{\code{pdata_file}}{File name of the binary NMR data to load. Usually "1r".
+If \code{NULL}, it is autodetected based on the dimension}
+    \item{\code{sample_path}}{A character path of the sample directory}
+    \item{\code{pdata_path}}{Path from \code{sample_path} to the preprocessed data}
+    \item{\code{all_components}}{If \code{FALSE} load only the real component. Otherwise load the real and imaginary components}
+    \item{\code{read_pdata_title}}{If \code{TRUE} also reads metadata from pdata title file.}
+  }}
 
 \item{sample_names}{A character vector with file or directory names.}
 }
@@ -59,6 +61,8 @@ dataset <- nmr_read_samples(sample_names = zip_files)
 
 }
 \seealso{
+\code{\link[=read_bruker_pdata]{read_bruker_pdata()}}
+
 Other import/export functions: 
 \code{\link{Pipelines}},
 \code{\link{files_to_rDolphin}()},

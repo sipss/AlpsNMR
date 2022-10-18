@@ -4,21 +4,34 @@
 \alias{download_MTBLS242}
 \title{Download MTBLS242}
 \usage{
-download_MTBLS242(dest_dir = "MTBLS242", force = FALSE)
+download_MTBLS242(
+  dest_dir = "MTBLS242",
+  force = FALSE,
+  keep_only_CPMG_1r = TRUE,
+  keep_only_preop_and_3months = TRUE,
+  keep_only_complete_time_points = TRUE
+)
 }
 \arguments{
 \item{dest_dir}{Directory where the dataset should be saved}
 
-\item{force}{Logical. If \code{TRUE} we do not re-download files if they exist}
+\item{force}{Logical. If \code{TRUE} we do not re-download files if they exist. The function does not check whether cached versions were
+downloaded with different \verb{keep_only_*} arguments, so please use \code{force = TRUE} if you change the \verb{keep_only_*} settings.}
+
+\item{keep_only_CPMG_1r}{If \code{TRUE}, remove all other data beyond the CPMG real spectrum, which is enough for the tutorial}
+
+\item{keep_only_preop_and_3months}{If \code{TRUE}, keep only the preoperatory and the "three months after surgery" time points, enough for the tutorial}
+
+\item{keep_only_complete_time_points}{If \code{TRUE}, remove samples that do not appear on all timepoints. Useful for the tutorial.}
 }
 \value{
 A data frame with the downloaded samples
 }
 \description{
-Downloads part of the MTBLS242 dataset (few hundred megabytes)
+Downloads part of the MTBLS242 dataset (few hundred megabytes).
 }
 \details{
-NMR dataset from Gralka et al., 2015. DOI: 10.3945/ajcn.115.110536.
+NMR dataset from Gralka et al., 2015. DOI: \doi{10.3945/ajcn.115.110536}.
 }
 \examples{
 \dontrun{
