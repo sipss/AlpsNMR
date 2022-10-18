@@ -103,8 +103,6 @@ Suggests:
     testthat (>= 2.0.0),
     writexl (>= 1.0),
     zip (>= 2.0.4)
-SystemRequirements: libarchive: libarchive-dev (deb),
-    libarchive-devel (rpm), libarchive (homebrew), libarchive_dev (csw)
 biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
 RoxygenNote: 7.2.1
