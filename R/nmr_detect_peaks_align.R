@@ -124,10 +124,10 @@ nmr_detect_peaks <- function(nmr_dataset,
                 rlang::inform(
                     message = c(
                         "i" = glue::glue("Using baseline thresholds in the range [{bthmin} - {bthmax}]",
-                                         bthmin = bth_minmax[1], bthmax = bth_minmax[2])
+                            bthmin = bth_minmax[1], bthmax = bth_minmax[2]
+                        )
                     )
                 )
-                
             } else {
                 rlang::inform(
                     message = c(
