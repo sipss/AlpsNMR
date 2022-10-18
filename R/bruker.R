@@ -437,9 +437,8 @@ read_pdata_title_file <-
 #' @param pdata_path Path from `sample_path` to the preprocessed data
 #' @param all_components If `FALSE` load only the real component. Otherwise load the real and imaginary components
 #' @param read_pdata_title If `TRUE` also reads metadata from pdata title file.
-#' @return an NMR sample
+#' @return A list with Bruker NMR processed data
 #' @keywords internal
-#' @noRd
 read_bruker_pdata <- function(sample_path,
     pdata_file = NULL,
     pdata_path = "pdata/1",
