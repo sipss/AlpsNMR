@@ -1,11 +1,17 @@
 #' Download MTBLS242
 #'
-#' Downloads part of the MTBLS242 dataset (few hundred megabytes)
+#' Downloads part of the MTBLS242 dataset (few hundred megabytes).
+#' 
+#' 
 #'
-#' NMR dataset from Gralka et al., 2015. DOI: 10.3945/ajcn.115.110536.
+#' NMR dataset from Gralka et al., 2015. DOI: \doi{10.3945/ajcn.115.110536}.
 #'
 #' @param dest_dir Directory where the dataset should be saved
-#' @param force Logical. If `TRUE` we do not re-download files if they exist
+#' @param force Logical. If `TRUE` we do not re-download files if they exist. The function does not check whether cached versions were
+#' downloaded with different `keep_only_*` arguments, so please use `force = TRUE` if you change the `keep_only_*` settings.
+#' @param keep_only_CPMG_1r If `TRUE`, remove all other data beyond the CPMG real spectrum, which is enough for the tutorial
+#' @param keep_only_preop_and_3months If `TRUE`, keep only the preoperatory and the "three months after surgery" time points, enough for the tutorial
+#' @param keep_only_complete_time_points If `TRUE`, remove samples that do not appear on all timepoints. Useful for the tutorial.
 #'
 #' @return A data frame with the downloaded samples
 #' @export
@@ -14,7 +20,7 @@
 #' \dontrun{
 #' download_MTBLS242("./MTBLS242")
 #' }
-download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
+download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE, keep_only_CPMG_1r = TRUE, keep_only_preop_and_3months = TRUE, keep_only_complete_time_points = TRUE) {
     require_pkgs(pkg = c("curl", "zip", "archive"))
     url <- "ftp://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242/"
 
@@ -28,7 +34,7 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
     # utils::download.file(meta_url, method = "auto", destfile = meta_dst, mode = "wb")
     annotations_destfile <- file.path(dest_dir, "sample_annotations.tsv")
     if (!file.exists(annotations_destfile) || force) {
-        rlang::inform(c("i" = "Downloading sample annotations, keeping only preop and 3 months after surgery timepoints..."))
+        rlang::inform(c("i" = "Downloading sample annotations..."))
         sample_annot <- tibble::as_tibble(
             utils::read.table(
                 meta_url,
@@ -44,7 +50,9 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
             sample_annot,
             c("NMRExperiment" = "Sample Name", "TimePoint" = "Factor Value[time point]")
         )
-        sample_annot <- dplyr::filter(sample_annot, .data$TimePoint %in% c("preop", "3 months after surgery"))
+        if (keep_only_preop_and_3months) {
+            sample_annot <- dplyr::filter(sample_annot, .data$TimePoint %in% c("preop", "3 months after surgery"))
+        }
         sample_annot$NMRExperiment <- gsub(pattern = "-", replacement = "_", sample_annot$NMRExperiment, fixed = TRUE)
 
         sample_annot <- tidyr::separate(
@@ -57,22 +65,31 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
         sample_annot <- dplyr::select(sample_annot, -"S")
         sample_annot$filename <- paste0("Obs", sample_annot$timepoint, "_", sample_annot$SampleID, "s")
 
-        # File Obs1_0256s.zip incorrectly contains Obs1_0010s. Remove that ID (in all timepoints)
-        sample_annot <- dplyr::filter(sample_annot, .data$SampleID != "0256")
-
-        # Keep samples matched in the two timepoints under study:
-        sample_annot <- dplyr::group_by(sample_annot, .data$SampleID)
-        sample_annot <- dplyr::filter(sample_annot, dplyr::n() == 2)
-        sample_annot <- dplyr::ungroup(sample_annot)
         sample_annot$NMRExperiment <- sample_annot$filename
         sample_annot <- dplyr::select(sample_annot, -"timepoint", -"filename")
+        
+        # File Obs0_0110s.zip incorrectly contains Obs0_0010s. Remove that ID
+        sample_annot <- dplyr::filter(sample_annot, .data$NMRExperiment != "Obs0_0110s")
+        # File Obs1_0256s.zip incorrectly contains Obs1_0010s. Remove that ID
+        sample_annot <- dplyr::filter(sample_annot, .data$NMRExperiment != "Obs1_0256s")
+        # File Obs4_0346s.zip does not exist in the FTP server, remove that entry:
+        sample_annot <- dplyr::filter(sample_annot, .data$NMRExperiment != "Obs4_0346s")
+
+        
+        # Keep samples matched in the two timepoints under study:
+        num_timepoints <- length(unique(sample_annot$TimePoint))
+        if (keep_only_complete_time_points) {
+            sample_annot <- dplyr::group_by(sample_annot, .data$SampleID)
+            sample_annot <- dplyr::filter(sample_annot, dplyr::n() == !!num_timepoints)
+            sample_annot <- dplyr::ungroup(sample_annot)
+        }
 
         utils::write.table(sample_annot, file = annotations_destfile, sep = "\t", row.names = FALSE)
     } else {
         rlang::inform(c("i" = glue("Annotations were previously downloaded. Loading {annotations_destfile}")))
         sample_annot <- utils::read.csv(annotations_destfile, header = TRUE, sep = "\t")
     }
-    rlang::inform(c("i" = "Downloading samples and keeping CPMG spectra, please wait..."))
+    rlang::inform(c("i" = "Downloading samples, please wait..."))
     pb <- progress_bar_new(
         name = "Preparing samples",
         total = length(sample_annot$NMRExperiment)
@@ -95,8 +112,26 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
                 }
                 return()
             }
-            curl::curl_download(url = src_url, destfile = intermediate_dst_file)
-            if (keep_only_CPMG_1r) {
+            tryCatch(
+                {
+                    curl::curl_download(url = src_url, destfile = intermediate_dst_file)
+                },
+                error = function(e) {
+                    msg <- conditionMessage(e)
+                    rlang::abort(
+                        message = c(
+                            "Sample failed to download",
+                            "i" = glue("Sample: {filename_base}"),
+                            "i" = glue("URL: {src_url}"),
+                            "i" = glue("Original error message: {msg}")
+                        ),
+                        parent = e
+                    )
+                }
+            )
+            if (!keep_only_CPMG_1r) {
+                file.rename(intermediate_dst_file, final_dst_file)
+            } else {
                 # zip file management in R is as of mid 2022 a pain:
                 # Base R provides tools that are not portable (system dependent)
                 # The `zip` package segfaults (to me and to many github issues)
@@ -138,7 +173,7 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE) {
         },
         url = url,
         dst_rootdir = dst_rootdir,
-        keep_only_CPMG_1r = TRUE
+        keep_only_CPMG_1r = keep_only_CPMG_1r
     )
     progress_bar_end(pb)
     sample_annot
