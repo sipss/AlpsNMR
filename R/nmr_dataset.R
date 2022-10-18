@@ -166,6 +166,59 @@ create_sample_names <- function(x) {
     vctrs::vec_as_names(xnames, repair = "unique")
 }
 
+nmr_read_sample_bruker <- function(sample_path, pulse_sequence = NULL, metadata_only = FALSE, ...) {
+    is_zip <- grepl("\\.zip$", sample_path) || grepl("\\.zip!.*$", sample_path)
+    if (!is_zip) {
+        sampl_dir <- normalizePath(sample_path)
+    } else {
+        zip_fn <- gsub(
+            pattern = "(.*\\.zip)!(.*)$",
+            replacement = "\\1",
+            sample_path
+        )
+        zip_fn <- normalizePath(zip_fn)
+        zip_basename <- basename(tools::file_path_sans_ext(zip_fn))
+        if (grepl("(.*\\.zip)!(.*)$", sample_path)) {
+            zip_subdir <- gsub(
+                pattern = "(.*\\.zip)!(.*)$",
+                replacement = "\\2",
+                sample_path
+            )
+        } else {
+            # FIXME:
+            # By default, we assume the zip file has one folder with the same
+            # name. This may not always be true, we could do some smart detection
+            # here
+            zip_subdir <- zip_basename
+        }
+
+        sampl_temp_dir <- tempfile(pattern = paste0("nmr_sample_", zip_basename, "_"))
+        utils::unzip(zip_fn, exdir = sampl_temp_dir)
+        on.exit({unlink(sampl_temp_dir, recursive = TRUE)})
+        sampl_dir <- file.path(sampl_temp_dir, zip_subdir)
+    }
+    # Ignore internal TopSpin directory used for sample processing
+    if (basename(sampl_dir) == "98888") {
+        return(NULL)
+    }
+    meta <- read_bruker_metadata(sampl_dir)
+    if (is_zip) {
+        meta$info$file_format <- "Zipped Bruker NMR directory"
+    }
+    meta$info$sample_path <- sample_path
+    if (!is.null(pulse_sequence) &&
+        toupper(meta$info$pulse_sequence) != toupper(pulse_sequence)) {
+        return(NULL)
+    }
+    if (metadata_only) {
+        pdata <- NULL
+    } else {
+        pdata <- read_bruker_pdata(sample_path = sampl_dir, ...)
+    }
+    output <- bruker_merge_meta_pdata(meta, pdata)
+    output
+}
+
 nmr_read_samples_bruker <-
     function(sample_names,
     pulse_sequence = NULL,
@@ -176,50 +229,12 @@ nmr_read_samples_bruker <-
         }
         warn_future_to_biocparallel()
         list_of_samples <- BiocParallel::bplapply(
-            X = seq_along(sample_names),
-            FUN = function(sampl_idx, ...) {
-                sampl <- sample_names[sampl_idx]
-                is_zip <- NULL
-                loaded_sample <-
+            X = sample_names,
+            FUN = function(sampl, pulse_sequence, metadata_only, ...) {
+                loaded_sample <- 
                     tryCatch(
                         {
-                            sampl <- normalizePath(sampl)
-                            if (grepl("\\.zip$", sampl)) {
-                                is_zip <- TRUE
-                                NMRExperiment <- gsub(
-                                    pattern = "\\.zip$",
-                                    replacement = "",
-                                    basename(sampl)
-                                )
-                                sampl_temp_dir <-
-                                    tempfile(pattern = paste0("nmr_sample_", NMRExperiment, "_"))
-                                utils::unzip(sampl, exdir = sampl_temp_dir)
-                                sampl_dir <-
-                                    normalizePath(file.path(sampl_temp_dir, NMRExperiment))
-                            } else {
-                                is_zip <- FALSE
-                                sampl_dir <- sampl
-                            }
-                            # Ignore internal TopSpin directory used for sample processing
-                            if (basename(sampl_dir) == "98888") {
-                                return(NULL)
-                            }
-                            meta <- read_bruker_metadata(sampl_dir)
-                            if (is_zip) {
-                                meta$info$file_format <- "Zipped Bruker NMR directory"
-                            }
-                            meta$info$sample_path <- sampl
-                            if (!is.null(pulse_sequence) &&
-                                toupper(meta$info$pulse_sequence) != toupper(pulse_sequence)) {
-                                return(NULL)
-                            }
-                            if (metadata_only) {
-                                pdata <- NULL
-                            } else {
-                                pdata <- read_bruker_pdata(sample_path = sampl_dir, ...)
-                            }
-                            output <- bruker_merge_meta_pdata(meta, pdata)
-                            return(output)
+                            nmr_read_sample_bruker(sampl, pulse_sequence = pulse_sequence, metadata_only = metadata_only, ...)
                         },
                         error = function(err) {
                             msg <- conditionMessage(err)
@@ -229,27 +244,33 @@ nmr_read_samples_bruker <-
                                     "i" = glue::glue("The sample '{sampl}' failed to load"),
                                     "i" = glue::glue("The underlying error message is: {msg}")
                                 ),
+                                underlying_error = err
                             )
-                            return(NULL)
-                        },
-                        finally = {
-                            if (is_zip) {
-                                unlink(sampl_temp_dir, recursive = TRUE)
-                            }
+                            return(err)
                         }
                     )
                 return(loaded_sample)
-            }
+            },
+            pulse_sequence = pulse_sequence,
+            metadata_only = metadata_only,
+            ...
         )
-
+        
         # Remove samples that could not be loaded:
-        any_error <- purrr::map_lgl(list_of_samples, is.null)
+        any_error <- purrr::map_lgl(list_of_samples, function(s) inherits(s, "error"))
+        list_of_errors <- list_of_samples[any_error]
         list_of_samples <- list_of_samples[!any_error]
         sample_names <- sample_names[!any_error]
 
 
         if (length(list_of_samples) == 0) {
-            stop("No samples loaded")
+            rlang::abort(
+                message = c(
+                    "No samples could be loaded",
+                    "i" = "You can check the underlying error messages with rlang::last_error()$error_list"
+                ),
+                error_list = list_of_errors
+            )
         }
 
         # merge the sample information:
