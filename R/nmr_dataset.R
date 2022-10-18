@@ -44,12 +44,8 @@ NULL
 #' @param pulse_sequence If it is set to a pulse sequence
 #'                                             ("NOESY", "JRES", "CPMG"...) it will only load
 #'                                             the samples that match that pulse sequence.
-#' @param ... The following arguments:
-#'   -  `pdata_file` File name of the binary NMR data to load. Usually "1r".
-#'                   If it is null it is autodetected and all files are loaded.
-#'   -  `sample_path` A character path of the sample directory
-#'   -  `pdata_path` Path from `sample_path` to the preprocessed data
-#'   -  `all_components` If `FALSE` load only the real component. Otherwise load all of them
+#' @inheritDotParams read_bruker_pdata
+#' @seealso [read_bruker_pdata()]
 #' @return a [nmr_dataset] object
 NULL
 
