@@ -62,14 +62,14 @@ jobs:
               cont: "bioconductor/bioconductor_docker:RELEASE_3_15",
               rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
             }
-          - {
-              os: ubuntu-latest,
-              conf_name: 'ubuntu-r4.1',
-              r: '4.1',
-              bioc: '3.14',
-              cont: "bioconductor/bioconductor_docker:RELEASE_3_14",
-              rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/2022-04-21"
-            }
+          #- {
+          #    os: ubuntu-latest,
+          #    conf_name: 'ubuntu-r4.1',
+          #    r: '4.1',
+          #    bioc: '3.14',
+          #    cont: "bioconductor/bioconductor_docker:RELEASE_3_14",
+          #    rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/2022-04-21"
+          #  }
           #- { os: macOS-latest, r: '4.2', bioc: '3.15'}
           #- { os: windows-latest, r: '4.2', bioc: '3.15'}
           ## Check https://github.com/r-lib/actions/tree/master/examples
