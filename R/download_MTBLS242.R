@@ -26,7 +26,9 @@
 #' - Obs4_0346s.zip is not present in the FTP server
 #' - Obs0_0110s.zip and Obs1_0256s.zip incorrectly contain sample Obs1_0010s
 #' 
-#' All three samples are removed from both the samples annotations and the data itself.
+#' This function removes all three samples from the samples annotations and
+#' doesn't download their data.
+#' 
 #' 
 #' @param dest_dir Directory where the dataset should be saved
 #' @param force Logical. If `TRUE` we do not re-download files if they exist. The function does not check whether cached versions were
