@@ -86,11 +86,13 @@ NULL
 nmr_pca_plot_variance <- function(pca_model) {
     cum_var_percent <-
         100 * cumsum(pca_model$sdev^2 / pca_model$var.tot)
-    ggplot2::qplot(
-        x = seq_along(cum_var_percent),
-        y = cum_var_percent,
-        geom = "line"
+    ggplot2::ggplot(
+        data.frame(
+            x = seq_along(cum_var_percent),
+            y = cum_var_percent
+        )
     ) +
+        ggplot2::geom_line(ggplot2::aes(x = .data$x, y = .data$y)) +
         ggplot2::xlab("Number of Principal Components") +
         ggplot2::ylab("Cummulated Explained Variance (%)")
 }
