@@ -146,20 +146,28 @@ nmr_read_samples <- function(sample_names,
 }
 
 create_sample_names <- function(x) {
-    # 1. Use the basename without the extension
-    # 2. If there are repeated names, prepend the dirname
-    # 3. If there are repeated names, use vctrs::name_repair
-    remove_extensions <- tools::file_path_sans_ext(x)
+    # 1. Separate the zip path: "/a/b/c.zip!/d/e" -> "/a/b/c.zip"
+    # 1. Use the basename without the extension: "c"
+    # 2. If there are repeated names, prepend the dirname: "b/c"
+    # 3. If there are repeated names, use vctrs::name_repair()
+    has_zip_path <- grepl("\\.zip!.*$", x)
+    x_without_zip_path <- x
+    x_without_zip_path[has_zip_path] <- gsub(
+        pattern = "\\.zip!.*$",
+        replacement = ".zip",
+        x_without_zip_path[has_zip_path]
+    )
+    remove_extensions <- tools::file_path_sans_ext(x_without_zip_path)
     xnames <- basename(remove_extensions)
     if (anyDuplicated(xnames) == 0) {
         return(xnames)
     }
     prepended_dirnames <- basename(dirname(remove_extensions))
-    xnames <- paste(prepended_dirnames, xnames, sep = "/")
-    if (anyDuplicated(xnames) == 0) {
-        return(xnames)
+    xnames2 <- paste(prepended_dirnames, xnames, sep = "/")
+    if (anyDuplicated(xnames2) == 0) {
+        return(xnames2)
     }
-    vctrs::vec_as_names(xnames, repair = "unique")
+    vctrs::vec_as_names(xnames2, repair = "unique")
 }
 
 nmr_read_sample_bruker <- function(sample_path, pulse_sequence = NULL, metadata_only = FALSE, ...) {
