@@ -60,7 +60,8 @@ Note as well, that we observed several files to have incorrect data:
 \item Obs0_0110s.zip and Obs1_0256s.zip incorrectly contain sample Obs1_0010s
 }
 
-All three samples are removed from both the samples annotations and the data itself.
+This function removes all three samples from the samples annotations and
+doesn't download their data.
 }
 \examples{
 \dontrun{
