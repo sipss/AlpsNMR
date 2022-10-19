@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.4</span>
       </span>
     </div>
 
@@ -79,6 +79,8 @@
 <li><p>For the <code>baselineThresh</code> argument in <code><a href="../reference/nmr_detect_peaks.html">nmr_detect_peaks()</a></code> we now suggest using <code>nmr_baseline_threshold(dataset, method = "median3mad")</code>. This is more robust than the former (but still the default) method.</p></li>
 <li><p>Peak detection and integration: We want to approach the peak detection, clustering an integration in a different way. While the old pipeline still works as expected, we have introduced new arguments to peak detection, with backwards compatible defaults and a peak clustering function. We still provide the vignette with the former workflow, because it is still relevant but we may deprecate it in a future version, once we are confident the changes we are making are robust across several datasets.</p></li>
 <li><p>Parallellization: We are switching from the <code>future</code> package to <code>BiocParallel</code>, to better integrate in the Bioconductor ecosystem. In this version, if you use a different future plan you may get a warning to switch to BiocParallel. In a future version we will remove our dependency with the (awesome) <code>future</code> package.</p></li>
+<li><p>Improved the <code><a href="../reference/download_MTBLS242.html">download_MTBLS242()</a></code> function, allowing to either download the parts of MTBLS242 needed for the tutorial or the whole dataset, which may be nice to have if you want to play beyond the tutorial.</p></li>
+<li><p>When reading a Bruker sample from a zip file, you now can specify in the file name the zip subdirectory. For instance, “/path/to/sample.zip!/sample/3”, when <code>sample.zip</code> contains a folder named <code>sample</code> with a subfolder named <code>3</code> that includes the sample data you want to actually read.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="minor-changes-3-99-2">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-3-99-2"></a></h3>
@@ -95,6 +97,7 @@
 <li>Documentation: Start providing verbose messages with tips in functions</li>
 <li>Remove unused deprecated imports from the <code>future</code> package (<a href="https://github.com/sipss/AlpsNMR/issues/65" class="external-link">#65</a>, thanks to <a href="https://github.com/HenrikBengtsson" class="external-link">@HenrikBengtsson</a>)</li>
 <li>Add URL and BugReports to the DESCRIPTION (<a href="https://github.com/sipss/AlpsNMR/issues/64" class="external-link">#64</a>, thanks to <a href="https://github.com/HenrikBengtsson" class="external-link">@HenrikBengtsson</a>)</li>
+<li>Reading bruker samples is now a bit more robust and gives detailed tracebacks in case of error.</li>
 </ul></div>
 </div>
     <div class="section level2">

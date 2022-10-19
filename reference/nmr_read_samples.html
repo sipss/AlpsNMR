@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.4</span>
       </span>
     </div>
 
@@ -107,12 +107,24 @@ the samples that match that pulse sequence.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>The following arguments:</p><ul><li><p><code>pdata_file</code> File name of the binary NMR data to load. Usually "1r".
-If it is null it is autodetected and all files are loaded.</p></li>
-<li><p><code>sample_path</code> A character path of the sample directory</p></li>
-<li><p><code>pdata_path</code> Path from <code>sample_path</code> to the preprocessed data</p></li>
-<li><p><code>all_components</code> If <code>FALSE</code> load only the real component. Otherwise load all of them</p></li>
-</ul></dd>
+<dd><p>Arguments passed on to <code><a href="read_bruker_pdata.html">read_bruker_pdata</a></code></p><dl><dt><code>pdata_file</code></dt>
+<dd><p>File name of the binary NMR data to load. Usually "1r".
+If <code>NULL</code>, it is autodetected based on the dimension</p></dd>
+
+    <dt><code>sample_path</code></dt>
+<dd><p>A character path of the sample directory</p></dd>
+
+    <dt><code>pdata_path</code></dt>
+<dd><p>Path from <code>sample_path</code> to the preprocessed data</p></dd>
+
+    <dt><code>all_components</code></dt>
+<dd><p>If <code>FALSE</code> load only the real component. Otherwise load the real and imaginary components</p></dd>
+
+    <dt><code>read_pdata_title</code></dt>
+<dd><p>If <code>TRUE</code> also reads metadata from pdata title file.</p></dd>
+
+  
+</dl></dd>
 
 
 <dt>sample_names</dt>
@@ -127,7 +139,8 @@ If it is null it is autodetected and all files are loaded.</p></li>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p>Other import/export functions: 
+    <div class="dont-index"><p><code><a href="read_bruker_pdata.html">read_bruker_pdata()</a></code></p>
+<p>Other import/export functions: 
 <code><a href="Pipelines.html">Pipelines</a></code>,
 <code><a href="files_to_rDolphin.html">files_to_rDolphin</a>()</code>,
 <code><a href="load_and_save_functions.html">load_and_save_functions</a></code>,
