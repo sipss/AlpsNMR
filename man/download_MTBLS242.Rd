@@ -25,16 +25,50 @@ downloaded with different \verb{keep_only_*} arguments, so please use \code{forc
 \item{keep_only_complete_time_points}{If \code{TRUE}, remove samples that do not appear on all timepoints. Useful for the tutorial.}
 }
 \value{
-A data frame with the downloaded samples
+Invisibly, the annotations. See the example for how to download the
+annotations and create a dataset from the downloaded files.
 }
 \description{
-Downloads part of the MTBLS242 dataset (few hundred megabytes).
+Downloads the \href{https://www.ebi.ac.uk/metabolights/MTBLS242/protocols}{MTBLS242}
+dataset from Gralka et al., 2015. DOI: \doi{10.3945/ajcn.115.110536}.
 }
 \details{
-NMR dataset from Gralka et al., 2015. DOI: \doi{10.3945/ajcn.115.110536}.
+Besides the destination directory, this function
+includes three logical parameters to limit the amount of downloaded/saved data.
+To run the tutorial workflow:
+\itemize{
+\item only the "preop" and "three months" timepoints are used,
+\item only subjects measured in \emph{both} preop and three months time points are used
+\item only the CPMG samples are used.
+}
+
+If you want to run the tutorial, you can set those filters to \code{TRUE}. Then, roughly
+800MB will be downloaded, and 77MB of disk space will be used, since for each
+downloaded sample we remove all the data but the CPMG.
+
+If you set those filters to \code{FALSE}, roughly 1.8GB of data will be
+downloaded (since we have more timepoints to download) and 1.8GB
+of disk space will be used.
+
+Note that we have experienced some sporadic timeouts from Metabolights,
+when downloading the dataset. If you get those timeouts simply re-run the
+download function and it will restart from where it stopped.
+
+Note as well, that we observed several files to have incorrect data:
+\itemize{
+\item Obs4_0346s.zip is not present in the FTP server
+\item Obs0_0110s.zip and Obs1_0256s.zip incorrectly contain sample Obs1_0010s
+}
+
+All three samples are removed from both the samples annotations and the data itself.
 }
 \examples{
 \dontrun{
-download_MTBLS242("./MTBLS242")
+  download_MTBLS242("./MTBLS242")
+  annot <- readr::read_tsv(annotations_destfile)
+  
+  dataset <- nmr_read_samples(annot$filename)
+  dataset <- nmr_meta_add(dataset, annot)
+  dataset
 }
 }
