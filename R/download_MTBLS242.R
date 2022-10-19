@@ -1,11 +1,33 @@
 #' Download MTBLS242
 #'
-#' Downloads part of the MTBLS242 dataset (few hundred megabytes).
+#' Downloads the [MTBLS242](https://www.ebi.ac.uk/metabolights/MTBLS242/protocols)
+#' dataset from Gralka et al., 2015. DOI: \doi{10.3945/ajcn.115.110536}.
 #' 
+#' Besides the destination directory, this function
+#' includes three logical parameters to limit the amount of downloaded/saved data.
+#' To run the tutorial workflow:
+#' - only the "preop" and "three months" timepoints are used,
+#' - only subjects measured in *both* preop and three months time points are used
+#' - only the CPMG samples are used.
 #' 
-#'
-#' NMR dataset from Gralka et al., 2015. DOI: \doi{10.3945/ajcn.115.110536}.
-#'
+#' If you want to run the tutorial, you can set those filters to `TRUE`. Then, roughly
+#' 800MB will be downloaded, and 77MB of disk space will be used, since for each
+#' downloaded sample we remove all the data but the CPMG.
+#' 
+#' If you set those filters to `FALSE`, roughly 1.8GB of data will be
+#' downloaded (since we have more timepoints to download) and 1.8GB
+#' of disk space will be used.
+#' 
+#' Note that we have experienced some sporadic timeouts from Metabolights, 
+#' when downloading the dataset. If you get those timeouts simply re-run the
+#' download function and it will restart from where it stopped.
+#' 
+#' Note as well, that we observed several files to have incorrect data:
+#' - Obs4_0346s.zip is not present in the FTP server
+#' - Obs0_0110s.zip and Obs1_0256s.zip incorrectly contain sample Obs1_0010s
+#' 
+#' All three samples are removed from both the samples annotations and the data itself.
+#' 
 #' @param dest_dir Directory where the dataset should be saved
 #' @param force Logical. If `TRUE` we do not re-download files if they exist. The function does not check whether cached versions were
 #' downloaded with different `keep_only_*` arguments, so please use `force = TRUE` if you change the `keep_only_*` settings.
@@ -13,14 +35,25 @@
 #' @param keep_only_preop_and_3months If `TRUE`, keep only the preoperatory and the "three months after surgery" time points, enough for the tutorial
 #' @param keep_only_complete_time_points If `TRUE`, remove samples that do not appear on all timepoints. Useful for the tutorial.
 #'
-#' @return A data frame with the downloaded samples
+#' @return Invisibly, the annotations. See the example for how to download the
+#'  annotations and create a dataset from the downloaded files.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' download_MTBLS242("./MTBLS242")
+#'   download_MTBLS242("./MTBLS242")
+#'   annot <- readr::read_tsv(annotations_destfile)
+#'   
+#'   dataset <- nmr_read_samples(annot$filename)
+#'   dataset <- nmr_meta_add(dataset, annot)
+#'   dataset
 #' }
-download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE, keep_only_CPMG_1r = TRUE, keep_only_preop_and_3months = TRUE, keep_only_complete_time_points = TRUE) {
+download_MTBLS242 <- function(
+        dest_dir = "MTBLS242", force = FALSE,
+        keep_only_CPMG_1r = TRUE,
+        keep_only_preop_and_3months = TRUE,
+        keep_only_complete_time_points = TRUE
+    ) {
     require_pkgs(pkg = c("curl", "zip", "archive"))
     url <- "ftp://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242/"
 
@@ -33,11 +66,16 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE, keep_only_CP
     # meta_dst <- file.path(dest_dir, meta_file)
     # utils::download.file(meta_url, method = "auto", destfile = meta_dst, mode = "wb")
     annotations_destfile <- file.path(dest_dir, "sample_annotations.tsv")
-    if (!file.exists(annotations_destfile) || force) {
+    annotations_orig_destfile <- file.path(dest_dir, "s_mtbls242.txt")
+    dst_rootdir <- file.path(dest_dir, "samples")
+    if (!file.exists(annotations_orig_destfile) || force) {
         rlang::inform(c("i" = "Downloading sample annotations..."))
+        curl::curl_download(url = meta_url, destfile = annotations_orig_destfile)
+    }
+    if (!file.exists(annotations_destfile) || force) {
         sample_annot <- tibble::as_tibble(
             utils::read.table(
-                meta_url,
+                annotations_orig_destfile,
                 sep = "\t",
                 header = TRUE,
                 check.names = FALSE
@@ -83,10 +121,25 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE, keep_only_CP
             sample_annot <- dplyr::filter(sample_annot, dplyr::n() == !!num_timepoints)
             sample_annot <- dplyr::ungroup(sample_annot)
         }
-
+        
+        # filename.zip!/path/to/sample/in/zip
+        if (keep_only_CPMG_1r) {
+            sample_annot$filename <- paste0(
+                dst_rootdir, "/", sample_annot$NMRExperiment, ".zip",
+                "!",
+                "/", sample_annot$NMRExperiment
+            )
+        } else {
+            sample_annot$filename <- paste0(
+                dst_rootdir, "/", sample_annot$NMRExperiment, ".zip",
+                "!",
+                "/", sample_annot$NMRExperiment, "/3"
+            )
+            
+        }
         utils::write.table(sample_annot, file = annotations_destfile, sep = "\t", row.names = FALSE)
     } else {
-        rlang::inform(c("i" = glue("Annotations were previously downloaded. Loading {annotations_destfile}")))
+        rlang::inform(c("i" = glue("Annotations were previously saved. Loading {annotations_destfile}")))
         sample_annot <- utils::read.csv(annotations_destfile, header = TRUE, sep = "\t")
     }
     rlang::inform(c("i" = "Downloading samples, please wait..."))
@@ -94,7 +147,6 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE, keep_only_CP
         name = "Preparing samples",
         total = length(sample_annot$NMRExperiment)
     )
-    dst_rootdir <- file.path(dest_dir, "samples")
     dir.create(dst_rootdir, recursive = TRUE, showWarnings = FALSE)
     report_skipped_downloads <- FALSE
     purrr::walk(
@@ -176,5 +228,5 @@ download_MTBLS242 <- function(dest_dir = "MTBLS242", force = FALSE, keep_only_CP
         keep_only_CPMG_1r = keep_only_CPMG_1r
     )
     progress_bar_end(pb)
-    sample_annot
+    invisible(sample_annot)
 }
