@@ -61,7 +61,7 @@ jobs:
               bioc: '3.15',
               cont: "bioconductor/bioconductor_docker:RELEASE_3_15",
               rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
-            }
+            },
           #- {
           #    os: ubuntu-latest,
           #    conf_name: 'ubuntu-r4.1',
@@ -71,7 +71,7 @@ jobs:
           #    rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/2022-04-21"
           #  }
           #- { os: macOS-latest, r: '4.2', bioc: '3.15'}
-          #- { os: windows-latest, r: '4.2', bioc: '3.15'}
+          - { os: windows-latest, r: '4.2', bioc: '3.15'}
           ## Check https://github.com/r-lib/actions/tree/master/examples
           ## for examples using the http-user-agent
     env:
@@ -183,13 +183,13 @@ jobs:
 
 
       - name: Install tinytex
-        if:  env.uses_latex == 'true'
+        if:  env.uses_latex == 'true' and runner.os == "Windows"
         run: |
           ## Install tinytex
-          print("Skipping, using texlive?")
-          #install.packages('tinytex')
-          #tinytex::install_tinytex()
-          #tinytex::tlmgr_install("pdfcrop")
+          #print("Skipping, using texlive?")
+          install.packages('tinytex')
+          tinytex::install_tinytex()
+          tinytex::tlmgr_install("pdfcrop")
         shell: Rscript {0}
 
       - name: Install dependencies pass 1
