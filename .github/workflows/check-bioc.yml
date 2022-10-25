@@ -183,7 +183,7 @@ jobs:
 
 
       - name: Install tinytex
-        if:  env.uses_latex == 'true' && runner.os == "Windows"
+        if:  env.uses_latex == 'true' && runner.os == 'Windows'
         run: |
           ## Install tinytex
           #print("Skipping, using texlive?")
