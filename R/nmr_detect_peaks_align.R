@@ -426,7 +426,7 @@ peakList_to_dataframe <- function(nmr_dataset, peakList) {
                 basel <- 0 * spec
             }
             data.frame(
-                peak_id = "",
+                peak_id = rep("", num_of_peaks_in_sample),
                 NMRExperiment = rep(NMRExperiments[sample_idx], num_of_peaks_in_sample),
                 ppm = nmr_dataset$axis[peak_idx],
                 pos = peak_idx,
