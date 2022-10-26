@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.5</span>
       </span>
     </div>
 
@@ -64,6 +64,26 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="3.99.5" id="alpsnmr-3995-2022-10-26">AlpsNMR 3.99.5 (2022-10-26)<a class="anchor" aria-label="anchor" href="#alpsnmr-3995-2022-10-26"></a></h2>
+<div class="section level3">
+<h3 id="minor-changes-3-99-5">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-3-99-5"></a></h3>
+<ul><li>Remove call to deprecated <code><a href="https://ggplot2.tidyverse.org/reference/qplot.html" class="external-link">ggplot2::qplot()</a></code>
+</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="3.99.4" id="alpsnmr-3994-2022-10-19">AlpsNMR 3.99.4 (2022-10-19)<a class="anchor" aria-label="anchor" href="#alpsnmr-3994-2022-10-19"></a></h2>
+<div class="section level3">
+<h3 id="major-changes-3-99-4">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-3-99-4"></a></h3>
+<ul><li><p>Improved the <code><a href="../reference/download_MTBLS242.html">download_MTBLS242()</a></code> function, allowing to either download the parts of MTBLS242 needed for the tutorial or the whole dataset, which may be nice to have if you want to play beyond the tutorial.</p></li>
+<li><p>When reading a Bruker sample from a zip file, you now can specify in the file name the zip subdirectory. For instance, “/path/to/sample.zip!/sample/3”, when <code>sample.zip</code> contains a folder named <code>sample</code> with a subfolder named <code>3</code> that includes the sample data you want to actually read.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-changes-3-99-4">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-3-99-4"></a></h3>
+<ul><li>Remove Bioconductor Build System workaround, since <a href="https://github.com/Bioconductor/BBS/issues/220" class="external-link uri">https://github.com/Bioconductor/BBS/issues/220</a> was fixed.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="3.99.3" id="alpsnmr-3993-2022-10-17">AlpsNMR 3.99.3 (2022-10-17)<a class="anchor" aria-label="anchor" href="#alpsnmr-3993-2022-10-17"></a></h2>
 <ul><li>Add libarchive as a SystemRequirement to workaround a limitation of the Bioconductor build system (BBS), that can’t pick system requirements recursively. Thanks to Jennifer Wokaty for checking the BBS and providing this suggestion.</li>
 </ul></div>
@@ -79,8 +99,6 @@
 <li><p>For the <code>baselineThresh</code> argument in <code><a href="../reference/nmr_detect_peaks.html">nmr_detect_peaks()</a></code> we now suggest using <code>nmr_baseline_threshold(dataset, method = "median3mad")</code>. This is more robust than the former (but still the default) method.</p></li>
 <li><p>Peak detection and integration: We want to approach the peak detection, clustering an integration in a different way. While the old pipeline still works as expected, we have introduced new arguments to peak detection, with backwards compatible defaults and a peak clustering function. We still provide the vignette with the former workflow, because it is still relevant but we may deprecate it in a future version, once we are confident the changes we are making are robust across several datasets.</p></li>
 <li><p>Parallellization: We are switching from the <code>future</code> package to <code>BiocParallel</code>, to better integrate in the Bioconductor ecosystem. In this version, if you use a different future plan you may get a warning to switch to BiocParallel. In a future version we will remove our dependency with the (awesome) <code>future</code> package.</p></li>
-<li><p>Improved the <code><a href="../reference/download_MTBLS242.html">download_MTBLS242()</a></code> function, allowing to either download the parts of MTBLS242 needed for the tutorial or the whole dataset, which may be nice to have if you want to play beyond the tutorial.</p></li>
-<li><p>When reading a Bruker sample from a zip file, you now can specify in the file name the zip subdirectory. For instance, “/path/to/sample.zip!/sample/3”, when <code>sample.zip</code> contains a folder named <code>sample</code> with a subfolder named <code>3</code> that includes the sample data you want to actually read.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="minor-changes-3-99-2">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-3-99-2"></a></h3>
