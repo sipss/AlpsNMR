@@ -1,3 +1,27 @@
+# AlpsNMR 3.99.5 (2022-10-26)
+
+## Minor changes
+
+- Remove call to deprecated `ggplot2::qplot()`
+
+# AlpsNMR 3.99.4 (2022-10-19)
+
+## Major changes
+
+- Improved the `download_MTBLS242()` function, allowing to either download the parts
+  of MTBLS242 needed for the tutorial or the whole dataset, which may be nice to
+  have if you want to play beyond the tutorial.
+
+- When reading a Bruker sample from a zip file, you now can specify in the file
+  name the zip subdirectory. For instance, "/path/to/sample.zip!/sample/3", when
+  `sample.zip` contains a folder named `sample` with a subfolder named `3` that
+  includes the sample data you want to actually read.
+
+## Minor changes
+
+- Remove Bioconductor Build System workaround, since 
+  https://github.com/Bioconductor/BBS/issues/220 was fixed.
+
 # AlpsNMR 3.99.3 (2022-10-17)
 
 - Add libarchive as a SystemRequirement to
@@ -36,15 +60,6 @@
   to better integrate in the Bioconductor ecosystem. In this version, if you use
   a different future plan you may get a warning to switch to BiocParallel. In a
   future version we will remove our dependency with the (awesome) `future` package.
-
-- Improved the `download_MTBLS242()` function, allowing to either download the parts
-  of MTBLS242 needed for the tutorial or the whole dataset, which may be nice to
-  have if you want to play beyond the tutorial.
-
-- When reading a Bruker sample from a zip file, you now can specify in the file
-  name the zip subdirectory. For instance, "/path/to/sample.zip!/sample/3", when
-  `sample.zip` contains a folder named `sample` with a subfolder named `3` that
-  includes the sample data you want to actually read.
 
 ## Minor changes
 
