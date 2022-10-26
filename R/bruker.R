@@ -841,11 +841,22 @@ bruker_merge_meta_pdata <- function(meta, pdata) {
 #' @family import/export functions
 #' @export
 #' @examples
-#' outpaths <- nmr_zip_bruker_samples(".", getwd())
+#' save_zip_files_to <- tempfile(pattern = "zip_file_storage_")
+#' where_your_samples_are <- tempfile(pattern = "where_your_samples_are")
+#' # prepare sample:
+#' zip::unzip(
+#'   system.file("dataset-demo", "10.zip", package = "AlpsNMR"),
+#'   exdir = where_your_samples_are
+#' )
+#' 
+#' outpaths <- nmr_zip_bruker_samples(
+#'     list.files(where_your_samples_are, full.names = TRUE),
+#'     workdir = save_zip_files_to
+#' )
 nmr_zip_bruker_samples <-
     function(path, workdir, overwrite = FALSE, ...) {
         current_wd <- getwd()
-        dir.create(workdir, recursive = TRUE)
+        dir.create(workdir, recursive = TRUE, showWarnings = FALSE)
         workdir <- normalizePath(workdir)
         outpaths <- rep(NA_character_, length(path))
         # tryCatch to make sure the working directory is restored

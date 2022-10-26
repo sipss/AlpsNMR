@@ -547,7 +547,7 @@ nmr_data_analysis <- function(dataset,
 #' train_index <- model$train_test_partitions$outer$`1`$outer_train
 #'
 #' # Bootstrap and permutation for VIP selection
-#' bp_VIPS <- bp_VIP_analysis(peak_table, # Data to be analized
+#' bp_VIPS <- bp_VIP_analysis(peak_table, # Data to be analyzed
 #'     train_index,
 #'     y_column = "Condition",
 #'     ncomp = ncomps,
@@ -836,14 +836,14 @@ bp_VIP_analysis <- function(dataset,
 #' @export
 #' @examples
 #' # Data analysis for a table of integrated peaks
-#'
+#' set.seed(42)
 #' ## Generate an artificial nmr_dataset_peak_table:
 #' ### Generate artificial metadata:
 #' num_samples <- 64 # use an even number in this example
-#' num_peaks <- 20
+#' num_peaks <- 10
 #' metadata <- data.frame(
 #'     NMRExperiment = as.character(1:num_samples),
-#'     Condition = rep(c("A", "B"), times = num_samples / 2)
+#'     Condition = sample(rep(c("A", "B"), times = num_samples / 2), num_samples)
 #' )
 #'
 #' ### The matrix with peaks
@@ -872,11 +872,11 @@ bp_VIP_analysis <- function(dataset,
 #' ## in a a k-fold cross validation
 #' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
 #'     y_column = "Condition", # Label
-#'     k = 3,
-#'     nbootstrap = 10
+#'     k = 2,
+#'     nbootstrap = 5
 #' )
 #'
-#' message("Selected VIPs are: ", bp_results$importarn_vips)
+#' message("Selected VIPs are: ", bp_results$important_vips)
 #'
 bp_kfold_VIP_analysis <- function(dataset,
     y_column,

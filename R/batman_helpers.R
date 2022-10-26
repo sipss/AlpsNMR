@@ -232,7 +232,7 @@ nmr_batman_write_options <- function(bopts,
 
 batman_get_full_filename <- function(batman_dir, filename) {
     if (!dir.exists(batman_dir)) {
-        dir.create(batman_dir, recursive = TRUE)
+        dir.create(batman_dir, recursive = TRUE, showWarnings = FALSE)
     }
     full_filename <- file.path(batman_dir, filename)
     if (file.exists(full_filename)) {
