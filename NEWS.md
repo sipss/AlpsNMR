@@ -1,3 +1,12 @@
+# AlpsNMR 3.99.6 (2022-10-26)
+
+## Minor changes
+
+- When saving, normalize extra information is saved as well.
+- Updated downsampled demo data for examples.
+- More robust nmr_baseline_threshold()
+- Faster examples
+
 # AlpsNMR 3.99.5 (2022-10-26)
 
 ## Minor changes
