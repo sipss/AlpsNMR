@@ -7,9 +7,8 @@
 #' @export
 #' @family import/export functions
 #' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' dataset_rds <- system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR")
+#' dataset_1D <- nmr_dataset_load(dataset_rds)
 #' dataset_data <- nmr_data(dataset_1D)
 nmr_data <- function(nmr_dataset, ...) {
     UseMethod("nmr_data")
@@ -19,9 +18,8 @@ nmr_data <- function(nmr_dataset, ...) {
 #' @param what What data do we want to get (default: `data_1r`)
 #' @export
 #' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' dataset_rds <- system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR")
+#' dataset_1D <- nmr_dataset_load(dataset_rds)
 #' dataset_1D_data <- nmr_data(dataset_1D)
 nmr_data.nmr_dataset_1D <- function(nmr_dataset, what = "data_1r", ...) {
     mat <- nmr_dataset[[what]]
@@ -33,10 +31,10 @@ nmr_data.nmr_dataset_1D <- function(nmr_dataset, what = "data_1r", ...) {
 #' @noRd
 #' @export
 #' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' peak_table <- nmr_data(dataset_1D)
+#' peak_table_exp <- matrix(1:6, nrow = 2)
+#' metadata <- list(external = data.frame(NMRExperiment = letters[1:2]))
+#' dataset_peak_table <- new_nmr_dataset_peak_table(peak_table, metadata)
+#' peak_table <- nmr_data(dataset_peak_table)
 nmr_data.nmr_dataset_peak_table <- function(nmr_dataset, ...) {
     peak_table <- nmr_dataset$peak_table
     rownames(peak_table) <- names(nmr_dataset)
