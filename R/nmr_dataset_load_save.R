@@ -29,7 +29,6 @@ nmr_dataset_load <- function(file_name) {
 #' # nmr_dataset_save(dataset, "test")
 #'
 nmr_dataset_save <- function(nmr_dataset, file_name, ...) {
-    attr(nmr_dataset, "normalize_extra_info") <- NULL
     saveRDS(nmr_dataset, file_name)
     return(nmr_dataset)
 }
