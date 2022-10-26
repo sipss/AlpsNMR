@@ -24,10 +24,14 @@
 #' @return Numerical. A threshold value in intensity below that no peak is detected.
 #' @export
 #' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-#' bl_threshold <- nmr_baseline_threshold(dataset_1D)
+#' ppm_axis <- seq(from = 0, to = 10, length.out = 1000)
+#' data_1r <- matrix(runif(1000, 0, 10), nrow = 1) + 100
+#' dataset_1D <- new_nmr_dataset_1D(
+#'     ppm_axis = ppm_axis,
+#'     data_1r = data_1r,
+#'     metadata = list(external=data.frame(NMRExperiment = "10"))
+#' )
+#' bl_threshold <- nmr_baseline_threshold(dataset_1D, range_without_peaks = c(9.5,10))
 #'
 nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = c(9.5, 10), method = c("mean3sd", "median3mad")) {
     # FIXME: Maybe a whole baseline would be better, so we can cope with slowly changing baselines better
@@ -38,17 +42,31 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = c(9.5, 10)
     r_start <- min(range_without_peaks)
     r_end <- max(range_without_peaks)
     threshold_ind <- nmr_dataset$axis >= r_start & nmr_dataset$axis < r_end
+    if (sum(threshold_ind) < 10) {
+        rlang::abort(
+            message = c(
+                "Can't estimate a baseline threshold reliably",
+                "i" = glue("The selected range_without_peaks [{r_start},{r_end}] ppm contains {sum(threshold_ind)} points."),
+                "i" = glue("Either change the interpolation axis limits or choose a different range here")
+            )
+        )
+    }
     if (method == "mean3sd") {
-        cent <- mean(apply(nmr_dataset$data_1r[, threshold_ind], 2, mean))
-        disp <- mean(apply(nmr_dataset$data_1r[, threshold_ind], 2, stats::sd))
+        if (nmr_dataset$num_samples > 1) {
+            cent <- mean(apply(nmr_dataset$data_1r[, threshold_ind, drop = FALSE], 2, mean))
+            disp <- mean(apply(nmr_dataset$data_1r[, threshold_ind, drop = FALSE], 2, stats::sd))
+        } else {
+            cent <- mean(as.numeric(nmr_dataset$data_1r[, threshold_ind]))
+            disp <- stats::sd(as.numeric(nmr_dataset$data_1r[, threshold_ind]))
+        }
         return(cent + 3 * disp)
     } else if (method == "median3mad") {
         out <- rep(NA_real_, nmr_dataset$num_samples)
         for (i in seq_len(nmr_dataset$num_samples)) {
             if ("data_1r_baseline" %in% names(unclass(nmr_dataset))) {
-                spec_region <- nmr_dataset$data_1r[i, threshold_ind] - nmr_dataset$data_1r_baseline[i, threshold_ind]
+                spec_region <- nmr_dataset$data_1r[i, threshold_ind, drop = FALSE] - nmr_dataset$data_1r_baseline[i, threshold_ind]
             } else {
-                spec_region <- nmr_dataset$data_1r[i, threshold_ind]
+                spec_region <- nmr_dataset$data_1r[i, threshold_ind, drop = FALSE]
             }
             out[i] <- stats::median(spec_region) + 3 * stats::mad(spec_region)
         }
@@ -74,11 +92,17 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = c(9.5, 10)
 #' @return A plot.
 #' @export
 #' @examples
-#' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-#' dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-#' dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+#' 
+#' ppm_axis <- seq(from = 0, to = 10, length.out = 1000)
+#' data_1r <- matrix(runif(1000, 0, 10), nrow = 1) + 100
+#' dataset_1D <- new_nmr_dataset_1D(
+#'     ppm_axis = ppm_axis,
+#'     data_1r = data_1r,
+#'     metadata = list(external=data.frame(NMRExperiment = "10"))
+#' )
+#' bl_threshold <- nmr_baseline_threshold(dataset_1D, range_without_peaks = c(9.5,10))
 #' baselineThresh <- nmr_baseline_threshold(dataset_1D)
-#' nmr_baseline_threshold_plot(dataset_1D, baselineThresh)
+#' nmr_baseline_threshold_plot(dataset_1D, bl_threshold)
 nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment = "all", chemshift_range = c(9.5, 10), ...) {
     if (is.null(NMRExperiment)) {
         if (nmr_dataset$num_samples > 20) {
