@@ -22,7 +22,18 @@ A character vector of the same length as path, with the zip file names
 Create one zip file for each brucker sample path
 }
 \examples{
-outpaths <- nmr_zip_bruker_samples(".", getwd())
+save_zip_files_to <- tempfile(pattern = "zip_file_storage_")
+where_your_samples_are <- tempfile(pattern = "where_your_samples_are")
+# prepare sample:
+zip::unzip(
+  system.file("dataset-demo", "10.zip", package = "AlpsNMR"),
+  exdir = where_your_samples_are
+)
+
+outpaths <- nmr_zip_bruker_samples(
+    list.files(where_your_samples_are, full.names = TRUE),
+    workdir = save_zip_files_to
+)
 }
 \seealso{
 Other import/export functions: 

@@ -39,10 +39,14 @@ with the \verb{median+3mad} for each sample. This is a new more robust method.
 }
 }
 \examples{
-dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
-bl_threshold <- nmr_baseline_threshold(dataset_1D)
+ppm_axis <- seq(from = 0, to = 10, length.out = 1000)
+data_1r <- matrix(runif(1000, 0, 10), nrow = 1) + 100
+dataset_1D <- new_nmr_dataset_1D(
+    ppm_axis = ppm_axis,
+    data_1r = data_1r,
+    metadata = list(external=data.frame(NMRExperiment = "10"))
+)
+bl_threshold <- nmr_baseline_threshold(dataset_1D, range_without_peaks = c(9.5,10))
 
 }
 \seealso{

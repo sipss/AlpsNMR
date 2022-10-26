@@ -33,13 +33,11 @@ The given nmr_dataset
 Set/Return the full spectra matrix
 }
 \examples{
-dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+dataset_rds <- system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR")
+dataset_1D <- nmr_dataset_load(dataset_rds)
 dataset_data <- nmr_data(dataset_1D)
-dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+dataset_rds <- system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR")
+dataset_1D <- nmr_dataset_load(dataset_rds)
 dataset_1D_data <- nmr_data(dataset_1D)
 }
 \seealso{

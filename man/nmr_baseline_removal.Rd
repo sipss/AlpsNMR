@@ -22,9 +22,7 @@ The same \link{nmr_dataset_1D} object after baseline removal.
 Removes the baseline on an \link{nmr_dataset_1D} object, using \link[baseline:baseline.als]{baseline::baseline.als}.
 }
 \examples{
-dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
-dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
-dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.3E-4))
+dataset_1D <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 dataset_no_base_line <- nmr_baseline_removal(dataset_1D, lambda = 6, p = 0.01)
 
 }

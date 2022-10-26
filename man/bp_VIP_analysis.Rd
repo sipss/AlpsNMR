@@ -103,7 +103,7 @@ ncomps <- model$outer_cv_results$`1`$model$ncomp
 train_index <- model$train_test_partitions$outer$`1`$outer_train
 
 # Bootstrap and permutation for VIP selection
-bp_VIPS <- bp_VIP_analysis(peak_table, # Data to be analized
+bp_VIPS <- bp_VIP_analysis(peak_table, # Data to be analyzed
     train_index,
     y_column = "Condition",
     ncomp = ncomps,
