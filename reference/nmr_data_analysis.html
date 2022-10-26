@@ -18,7 +18,7 @@ as well as nmr_dataset_peak_table peak tables."><!-- mathjax --><script src="htt
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">AlpsNMR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.99.6</span>
       </span>
     </div>
 
@@ -179,18 +179,18 @@ the examples here and <a href="plsda_auroc_vip_method.html">plsda_auroc_vip_meth
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cv_outer_iteration ncomp   auc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     2   1  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>                  2     2   1  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>                  3     2   0.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>                  1     1 0.917</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>                  2     2 1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>                  3     2 1    </span>
 <span class="r-in"><span><span class="co">## Rank Product of the Variable Importance in the Projection</span></span></span>
 <span class="r-in"><span><span class="co">## (Lower means more important)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">model</span><span class="op">$</span><span class="va">outer_cv_results_digested</span><span class="op">$</span><span class="va">vip_rankproducts</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak2     Peak6     Peak9    Peak14    Peak10    Peak13     Peak8    Peak11 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.000000  2.000000  3.000000  5.428835  6.073178  7.047299  7.113787  8.434327 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak16     Peak1     Peak4     Peak5    Peak19     Peak7     Peak3    Peak17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  8.937843 10.259856 12.073621 12.682651 12.974308 13.276144 13.782348 14.286609 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak15    Peak20    Peak18    Peak12 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14.302922 15.473768 16.286506 16.943294 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak6     Peak2    Peak18    Peak20    Peak16    Peak17    Peak14     Peak5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.259921  1.587401  4.308869  6.738664  6.868285  7.113787  7.133492  8.320335 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Peak4     Peak1     Peak7     Peak9    Peak13     Peak8    Peak11    Peak19 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8.410833  9.356095 10.555264 12.164404 12.548611 12.599210 12.707471 13.377492 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Peak10    Peak12     Peak3    Peak15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14.227573 14.549573 15.979139 16.082903 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
