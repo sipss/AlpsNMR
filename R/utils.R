@@ -303,18 +303,11 @@ require_pkgs <- function(pkg, msgs = NULL, ...) {
     names(have_pkgs) <- pkg
     if (!all(have_pkgs)) {
         missing_pkgs <- names(have_pkgs)[!have_pkgs]
-        aval_pkgs <- rownames(utils::available.packages())
-        if (!"BiocManager" %in% rownames(utils::installed.packages())) {
-            missing_cran_pkgs <- c(missing_pkgs, "BiocManager")
-        }
-        missing_cran_pkgs <- intersect(missing_pkgs, aval_pkgs)
-        missing_bioc_pkgs <- setdiff(missing_pkgs, missing_cran_pkgs)
         parent_call <- format(rlang::caller_call())
         rlang::abort(
             message = c(
                 glue::glue("{parent_call} requires additional packages. Please install them. You may want to use:", parent_call = parent_call),
-                glue::glue("    install.packages({deparse(missing_cran_pkgs)}) and", missing_cran_pkgs = missing_cran_pkgs),
-                glue::glue("    BiocManager::install({deparse(missing_bioc_pkgs)})", missing_bioc_pkgs = missing_bioc_pkgs),
+                glue::glue("    BiocManager::install({deparse(missing_pkgs)})", missing_pkgs = missing_pkgs),
                 msgs
             ),
             ...
