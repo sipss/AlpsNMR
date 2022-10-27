@@ -1,3 +1,9 @@
+# AlpsNMR 3.99.7 (2022-10-27)
+
+## Minor changes
+
+- Fix build issue on palomino4, simplifying helper function
+
 # AlpsNMR 3.99.6 (2022-10-26)
 
 ## Minor changes
