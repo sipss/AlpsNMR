@@ -86,7 +86,6 @@ Imports:
  vctrs (>= 0.3.0),
  BiocParallel
 Suggests:
-    archive,
     BiocStyle,
     ChemoSpec,
     cowplot,
