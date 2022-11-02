@@ -1,3 +1,8 @@
+# AlpsNMR 4.0.1 (2022-11-02)
+
+- Attempt fix build issue on palomino4 by adding
+  one last example that waits two seconds
+
 # AlpsNMR 3.99.7 (2022-10-27)
 
 ## Minor changes
