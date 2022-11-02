@@ -1,3 +1,8 @@
+# AlpsNMR 4.1.1 (2022-11-02)
+
+- Remove archive dependency
+- Try fixing build on palomino4, due to race condition in R CMD check
+
 # AlpsNMR 3.99.7 (2022-10-27)
 
 ## Minor changes
