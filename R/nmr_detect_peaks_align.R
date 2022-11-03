@@ -176,7 +176,7 @@ nmr_detect_peaks <- function(nmr_dataset,
     }
 
     warn_future_to_biocparallel()
-    peakList <- BiocParallel::bpmapply(
+    peakList <- mymapply(
         FUN = function(spec, thresh, ...) {
             speaq::detectSpecPeaks(
                 spec,

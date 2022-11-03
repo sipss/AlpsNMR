@@ -271,7 +271,7 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
     train_test_subsets, train_evaluate_model_args_iter = NULL, ...) {
     warn_future_to_biocparallel()
     output <- do.call(
-        what = BiocParallel::bpmapply,
+        what = mymapply,
         args = c(
             list(
                 FUN = split_build_perform,
