@@ -1,3 +1,10 @@
+# AlpsNMR 4.1.2 (2022-11-04)
+
+- Try a more robust fix on palomino4 (bpstop() instead sleep)
+- Use register() in an example to avoid further breakage on palomino
+- Workaround performance issues on BiocParallel::bpmapply()
+  (https://github.com/Bioconductor/BiocParallel/pull/228)
+
 # AlpsNMR 4.1.1 (2022-11-02)
 
 - Remove archive dependency
