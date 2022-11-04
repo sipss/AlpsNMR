@@ -8,6 +8,7 @@ zzz
 }
 \examples{
 # Workaround a bug in R CMD check
-Sys.sleep(2)
+# Sys.sleep(2) # This worked, but this should be even more reliable:
+BiocParallel::bpstop()
 }
 \keyword{internal}
