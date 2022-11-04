@@ -37,6 +37,11 @@ A permutation matrix with permuted values
 Make permutations with data and default settings from an nmr_data_analysis_method
 }
 \examples{
+# Set up 3 workers for the permutations, and serial for underlying model
+# partitions:
+library(BiocParallel)
+register(SerialParam(), default = TRUE)
+register(SnowParam(workers = 3, exportglobals = FALSE), default = TRUE)
 # Data analysis for a table of integrated peaks
 
 ## Generate an artificial nmr_dataset_peak_table:
