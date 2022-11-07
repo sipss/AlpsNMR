@@ -1,3 +1,7 @@
+# AlpsNMR 4.1.3 (2022-11-07)
+
+- Closer to the fix
+
 # AlpsNMR 4.1.2 (2022-11-04)
 
 - Try a more robust fix on palomino4 (bpstop() instead sleep)
