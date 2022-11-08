@@ -320,6 +320,7 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
 #' @param external_val,internal_val A list with two elements: `iterations` and `test_size`.
 #'    See [random_subsampling] for further details
 #' @param data_analysis_method An [nmr_data_analysis_method] object
+#' @param .enable_parallel Set to `FALSE` to disable parallellization.
 #' @return A list with the following elements:
 #'
 #' - `train_test_partitions`: A list with the indices used in train and test on each of the cross-validation iterations
@@ -386,7 +387,8 @@ nmr_data_analysis <- function(dataset,
     identity_column,
     external_val,
     internal_val,
-    data_analysis_method) {
+    data_analysis_method,
+    .enable_parallel = TRUE) {
     train_evaluate_model <- data_analysis_method[["train_evaluate_model"]]
     train_evaluate_model_params_inner <- data_analysis_method[["train_evaluate_model_params_inner"]]
     choose_best_inner <- data_analysis_method[["choose_best_inner"]]
@@ -405,7 +407,6 @@ nmr_data_analysis <- function(dataset,
         train_test_blind_subsets$inner,
         ~ .[c("inner_train_idx", "inner_test_idx")]
     )
-
     # We run the train_evaluate_model function for each of the inner CV.
     inner_cv_results <- do.call(
         what = do_cv,
@@ -415,7 +416,8 @@ nmr_data_analysis <- function(dataset,
                 y_column = y_column,
                 identity_column = identity_column,
                 train_evaluate_model = train_evaluate_model,
-                train_test_subsets = train_test_subsets_inner
+                train_test_subsets = train_test_subsets_inner,
+                .enable_parallel = .enable_parallel
             ),
             train_evaluate_model_params_inner
         )
@@ -441,6 +443,7 @@ nmr_data_analysis <- function(dataset,
                 train_evaluate_model = train_evaluate_model,
                 train_test_subsets = train_test_subsets_outer,
                 train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args
+                .enable_parallel = .enable_parallel
             ),
             train_evaluate_model_params_outer
         )
@@ -1151,11 +1154,6 @@ new_nmr_data_analysis_method <- function(train_evaluate_model,
 #' @name permutation_test_model
 #' @export
 #' @examples
-#' # Set up 3 workers for the permutations, and serial for underlying model
-#' # partitions:
-#' library(BiocParallel)
-#' register(SerialParam(), default = TRUE)
-#' register(SnowParam(workers = 2, exportglobals = FALSE), default = TRUE)
 #' # Data analysis for a table of integrated peaks
 #'
 #' ## Generate an artificial nmr_dataset_peak_table:
@@ -1223,7 +1221,8 @@ permutation_test_model <- function(dataset, y_column, identity_column, external_
                 identity_column = identity_column,
                 external_val = external_val,
                 internal_val = internal_val,
-                data_analysis_method = data_analysis_method
+                data_analysis_method = data_analysis_method,
+                .enable_parallel = FALSE
             )
 
             # I will use the mean of the auc of all the outer_cv for the test static

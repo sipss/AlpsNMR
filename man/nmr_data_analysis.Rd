@@ -10,7 +10,8 @@ nmr_data_analysis(
   identity_column,
   external_val,
   internal_val,
-  data_analysis_method
+  data_analysis_method,
+  .enable_parallel = TRUE
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ metadata of the dataset).}
 See \link{random_subsampling} for further details}
 
 \item{data_analysis_method}{An \link{nmr_data_analysis_method} object}
+
+\item{.enable_parallel}{Set to \code{FALSE} to disable parallellization.}
 }
 \value{
 A list with the following elements:
