@@ -1,19 +1,17 @@
 # This whole file is a workaround for:
 # - https://github.com/Bioconductor/BiocParallel/pull/227
+#   (merged released on Bioconductor 3.16, BiocParallel 1.31.14)
 # And a workaround for:
 # - https://github.com/Bioconductor/BiocParallel/pull/228
-#
-# Here, for #228, if bpparam() is multicore or serial, memory is shared and
-# we use the old approach. If memory is not shared we use the proposed approach.
-# So we get the best of both worlds. I wonder what will be decided on #228
-# and whether there will be a trade-off or not
+#   (as of 2022-11-04 it is under review)
 #
 # Please once that's merged and released, ensure you have
 # BiocParallel (>= 1.xx.xx?)
 # in the DESCRIPTION file, replace all usages of mymapply() with
 # BiocParallel::bpmapply() and delete this file.
 #
-# Some of these functions are copies from the BiocParallel package
+# Most of these functions are copies from the BiocParallel package
+
 .getDotsForMapply <- function (...)
 {
   ddd <- list(...)
@@ -79,8 +77,8 @@
   .mapply(.FUN, dots, .MoreArgs)[[1L]]
 }
 
-mybpmapply_not_share <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE,
-                       BPREDO = list(), BPPARAM = BiocParallel::bpparam(), BPOPTIONS = BiocParallel::bpoptions()) {
+mymapply <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE,
+                     BPREDO = list(), BPPARAM = BiocParallel::bpparam(), BPOPTIONS = BiocParallel::bpoptions()) {
   ## re-package for lapply
   ddd <- .getDotsForMapply(...)
   if (!length(ddd))
@@ -98,65 +96,4 @@ mybpmapply_not_share <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE
   .simplify(res, SIMPLIFY)
 }
 
-## re-apply the names on, e.g., mapply(FUN, X) to the return value;
-## see test_mrename for many edge cases
-.mrename <- function(results, dots, USE.NAMES=TRUE) {
-    ## dots: a list() containing one element for each ... argument
-    ## passed to mapply
-    if (USE.NAMES) {
-      ## extract the first argument; if there are no arguments, then
-      ## dots is (unnamed) list(0)
-      if (length(dots))
-        dots <- dots[[1L]]
-      if (is.character(dots) && is.null(names(dots))) {
-        names(results) <- dots
-      } else {
-        names(results) <- names(dots)
-      }
-    } else {
-      results <- unname(results)
-    }
-    results
-}
-
-.wrap <- function(.i, .FUN, .ddd, .MoreArgs) {
-  dots <- lapply(.ddd, `[`, .i)
-  .mapply(.FUN, dots, .MoreArgs)[[1L]]
-}
-
-mybpmapply_share <- function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE,
-                             BPREDO = list(), BPPARAM = BiocParallel::bpparam(), BPOPTIONS = BiocParallel::bpoptions()) {
-  ## re-package for lapply
-  ddd <- .getDotsForMapply(...)
-  if (!length(ddd) || !length(ddd[[1L]]))
-    return(.mrename(list(), ddd, USE.NAMES))
-
-  FUN <- match.fun(FUN)
-
-  res <- BiocParallel::bplapply(X=seq_along(ddd[[1L]]), .wrap, .FUN=FUN, .ddd=ddd,
-                  .MoreArgs=MoreArgs, BPREDO=BPREDO,
-                  BPPARAM=BPPARAM, BPOPTIONS = BPOPTIONS)
-  .simplify(.mrename(res, ddd, USE.NAMES), SIMPLIFY)
-}
-
-workers_share_memory <- function() {
-  tryCatch({
-    bp_param <- BiocParallel::bpparam()
-    methods::is(bp_param, "SerialParam") || methods::is(bp_param, "MulticoreParam")
-  },
-  error = function(e) TRUE
-  )
-}
-
-mymapply <- function(...) {
-  # If workers can share memory, it should be better to pass a copy of all arguments
-  # to all workers.
-  # Otherwise, work on transposing the arguments so each worker gets its own
-  # slice to work.
-  if (workers_share_memory()) {
-    mybpmapply_share(...)
-  } else {
-    mybpmapply_not_share(...)
-  }
-}
 
