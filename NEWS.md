@@ -1,3 +1,9 @@
+# AlpsNMR 4.1.4 (2022-11-08)
+
+- Disable nested parallelization
+- Update workaround Biocparallel bpmapply
+- Revert bpstop to sleep
+
 # AlpsNMR 4.1.3 (2022-11-07)
 
 - Closer to the fix
