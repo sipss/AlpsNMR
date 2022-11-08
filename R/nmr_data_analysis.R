@@ -268,10 +268,15 @@ split_build_perform <- function(train_test_subset,
 #' @return A list of length equal to `train_test_subsets` with outputs from their corresponding `train_evaluate_model` outputs
 #' @noRd
 do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
-    train_test_subsets, train_evaluate_model_args_iter = NULL, ...) {
-    warn_future_to_biocparallel()
+    train_test_subsets, train_evaluate_model_args_iter = NULL, ..., .enable_parallel = TRUE) {
+    if (.enable_parallel) {
+        warn_future_to_biocparallel()
+        fun <- mymapply
+    } else {
+        fun <- mapply
+    }
     output <- do.call(
-        what = mymapply,
+        what = fun,
         args = c(
             list(
                 FUN = split_build_perform,
