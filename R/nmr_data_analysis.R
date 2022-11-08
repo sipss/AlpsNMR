@@ -442,7 +442,7 @@ nmr_data_analysis <- function(dataset,
                 identity_column = identity_column,
                 train_evaluate_model = train_evaluate_model,
                 train_test_subsets = train_test_subsets_outer,
-                train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args
+                train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args,
                 .enable_parallel = .enable_parallel
             ),
             train_evaluate_model_params_outer
