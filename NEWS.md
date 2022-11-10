@@ -1,3 +1,11 @@
+# AlpsNMR 4.0.2 (2022-11-10)
+
+- Backport fixes from AlpsNMR 4.1.4
+  * Disable nested parallelization to increase stability
+  * Add workaround to BiocParallel bug in bpmapply memory usage
+  * Add workaround to R CMD check race condition when checking examples
+  * Fix download_MTBLS242() (simplify code and avoid setwd() issues)
+
 # AlpsNMR 4.0.1 (2022-11-02)
 
 - Attempt fix build issue on palomino4 by adding

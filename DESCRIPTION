@@ -1,8 +1,8 @@
 Package: AlpsNMR
 Type: Package
 Title: Automated spectraL Processing System for NMR
-Version: 4.0.1
-Date: 2022-11-02
+Version: 4.0.2
+Date: 2022-11-10
 Encoding: UTF-8
 Authors@R: c(
     person(given = "Ivan",
@@ -86,7 +86,6 @@ Imports:
  vctrs (>= 0.3.0),
  BiocParallel
 Suggests:
-    archive,
     BiocStyle,
     ChemoSpec,
     cowplot,

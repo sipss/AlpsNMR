@@ -176,16 +176,10 @@ nmr_detect_peaks <- function(nmr_dataset,
     }
 
     warn_future_to_biocparallel()
-    peakList <- BiocParallel::bpmapply(
-        FUN = function(spec, thresh, ...) {
-            speaq::detectSpecPeaks(
-                spec,
-                baselineThresh = thresh,
-                ...
-            )[[1]]
-        },
-        data_matrix_to_list,
-        baselineThresh,
+    peakList <- mymapply(
+        FUN = callDetectSpecPeaks,
+        X = data_matrix_to_list,
+        baselineThresh = baselineThresh,
         MoreArgs = list(
             nDivRange = nDivRange,
             scales = scales,
@@ -213,6 +207,10 @@ nmr_detect_peaks <- function(nmr_dataset,
         peak_data <- peak_data[!peaks_at_excl_regions, , drop = FALSE]
     }
     peak_data
+}
+
+callDetectSpecPeaks <- function(...) {
+    speaq::detectSpecPeaks(...)[[1]]
 }
 
 #' Overview of the peak detection results

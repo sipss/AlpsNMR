@@ -58,8 +58,8 @@ jobs:
               os: ubuntu-latest,
               conf_name: 'ubuntu-latest',
               r: '4.2',
-              bioc: '3.15',
-              cont: "bioconductor/bioconductor_docker:RELEASE_3_15",
+              bioc: '3.16',
+              cont: "bioconductor/bioconductor_docker:RELEASE_3_16",
               rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
             }
           #- {
@@ -70,8 +70,8 @@ jobs:
           #    cont: "bioconductor/bioconductor_docker:RELEASE_3_14",
           #    rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/2022-04-21"
           #  }
-          #- { os: macOS-latest, r: '4.2', bioc: '3.15'}
-          - { os: windows-latest, r: '4.2', bioc: '3.15'}
+          #- { os: macOS-latest, r: '4.2', bioc: '3.16'}
+          #- { os: windows-latest, r: '4.2', bioc: '3.16'}
           ## Check https://github.com/r-lib/actions/tree/master/examples
           ## for examples using the http-user-agent
     env:
@@ -333,7 +333,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@master
         with:
-          name: ${{ runner.os }}-biocversion-RELEASE_3_15-r-4.2-results
+          name: ${{ runner.os }}-biocversion-RELEASE_3_16-r-4.2-results
           path: check
 
         ## Note that DOCKER_PASSWORD is really a token for your dockerhub

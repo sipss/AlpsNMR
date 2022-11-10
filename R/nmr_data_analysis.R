@@ -268,10 +268,15 @@ split_build_perform <- function(train_test_subset,
 #' @return A list of length equal to `train_test_subsets` with outputs from their corresponding `train_evaluate_model` outputs
 #' @noRd
 do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
-    train_test_subsets, train_evaluate_model_args_iter = NULL, ...) {
+    train_test_subsets, train_evaluate_model_args_iter = NULL, ..., .enable_parallel = TRUE) {
+    if (.enable_parallel) {
     warn_future_to_biocparallel()
+        fun <- mymapply
+    } else {
+        fun <- mapply
+    }
     output <- do.call(
-        what = BiocParallel::bpmapply,
+        what = fun,
         args = c(
             list(
                 FUN = split_build_perform,
@@ -315,6 +320,7 @@ do_cv <- function(dataset, y_column, identity_column, train_evaluate_model,
 #' @param external_val,internal_val A list with two elements: `iterations` and `test_size`.
 #'    See [random_subsampling] for further details
 #' @param data_analysis_method An [nmr_data_analysis_method] object
+#' @param .enable_parallel Set to `FALSE` to disable parallellization.
 #' @return A list with the following elements:
 #'
 #' - `train_test_partitions`: A list with the indices used in train and test on each of the cross-validation iterations
@@ -381,7 +387,8 @@ nmr_data_analysis <- function(dataset,
     identity_column,
     external_val,
     internal_val,
-    data_analysis_method) {
+    data_analysis_method,
+    .enable_parallel = TRUE) {
     train_evaluate_model <- data_analysis_method[["train_evaluate_model"]]
     train_evaluate_model_params_inner <- data_analysis_method[["train_evaluate_model_params_inner"]]
     choose_best_inner <- data_analysis_method[["choose_best_inner"]]
@@ -410,7 +417,8 @@ nmr_data_analysis <- function(dataset,
                 y_column = y_column,
                 identity_column = identity_column,
                 train_evaluate_model = train_evaluate_model,
-                train_test_subsets = train_test_subsets_inner
+                train_test_subsets = train_test_subsets_inner,
+                .enable_parallel = .enable_parallel
             ),
             train_evaluate_model_params_inner
         )
@@ -435,7 +443,8 @@ nmr_data_analysis <- function(dataset,
                 identity_column = identity_column,
                 train_evaluate_model = train_evaluate_model,
                 train_test_subsets = train_test_subsets_outer,
-                train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args
+                train_evaluate_model_args_iter = inner_cv_results_digested$train_evaluate_model_args,
+                .enable_parallel = .enable_parallel
             ),
             train_evaluate_model_params_outer
         )
@@ -1213,7 +1222,8 @@ permutation_test_model <- function(dataset, y_column, identity_column, external_
                 identity_column = identity_column,
                 external_val = external_val,
                 internal_val = internal_val,
-                data_analysis_method = data_analysis_method
+                data_analysis_method = data_analysis_method,
+                .enable_parallel = FALSE
             )
 
             # I will use the mean of the auc of all the outer_cv for the test static

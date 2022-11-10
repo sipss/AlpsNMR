@@ -56,7 +56,7 @@ download_MTBLS242 <- function(
         keep_only_preop_and_3months = TRUE,
         keep_only_complete_time_points = TRUE
     ) {
-    require_pkgs(pkg = c("curl", "zip", "archive"))
+    require_pkgs(pkg = c("curl", "zip"))
     url <- "ftp://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242/"
 
     dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
@@ -186,41 +186,25 @@ download_MTBLS242 <- function(
             if (!keep_only_CPMG_1r) {
                 file.rename(intermediate_dst_file, final_dst_file)
             } else {
-                # zip file management in R is as of mid 2022 a pain:
-                # Base R provides tools that are not portable (system dependent)
-                # The `zip` package segfaults (to me and to many github issues)
-                # The `archive` package does not provide an API to extract selectively folders from a zip file.
-                # We'll see if the situation improves in some years, so we can clean this mess:
-                # For now, we unzip with zip::unzip() because it is portable, does not segfault and allows
-                # us to extract a subdir.
-                # We will zip with archive because it is portable and does not segfault
                 filenames_in_zip <- zip::zip_list(intermediate_dst_file)[["filename"]]
-                prefix_to_keep <- file.path(filename_base, "3", "") # subdirectory 3/ contains the CPMG measurement
+                prefix_to_keep <- file.path(filename_base, "3", "") # subdirectory 3/ contains the CPMG sample
                 filenames_in_zip <- filenames_in_zip[startsWith(filenames_in_zip, prefix_to_keep)]
+                # extract 3/ to dst_rootdir:
                 zip::unzip(zipfile = intermediate_dst_file, exdir = dst_rootdir, files = filenames_in_zip)
                 unlink(intermediate_dst_file)
-                cwd <- getwd()
-                setwd(dst_rootdir)
-                tempname <- paste0(filename_base, "-rm")
-                file.rename(filename_base, tempname)
-                file.rename(file.path(tempname, "3"), filename_base)
-                unlink(tempname, recursive = TRUE)
-                unlink(file.path(filename_base, "fid"))
-                unlink(file.path(filename_base, "pdata", "1", "1i"))
-                # pick your poison:
-                # a) utils::zip() is annoyingly verbose and possibly not portable
-                # utils::zip(zipfile = filename, files = filename_base)
-                # setwd(cwd)
-                # b) zip::zip() segfaults
-                # zip::zip(zipfile = final_dst_file, files = filename_base, root = dst_rootdir)
-                # c) archive (yet another package)
-                # I have to put everything in a folder:
-                tmpname <- paste0(filename_base, "-base")
-                dir.create(tmpname)
-                file.rename(filename_base, file.path(tmpname, filename_base))
-                file.rename(tmpname, filename_base)
-                archive::archive_write_dir(archive = filename, dir = filename_base)
-                setwd(cwd)
+                file.rename(
+                    file.path(dst_rootdir, filename_base, "3"),
+                    file.path(dst_rootdir, filename_base, filename_base)
+                )
+                # Remove files not needed:
+                unlink(file.path(dst_rootdir, filename_base, filename_base, "fid"))
+                unlink(file.path(dst_rootdir, filename_base, filename_base, "pdata", "1", "1i"))
+                zipfile <- file.path(normalizePath(dst_rootdir, mustWork = TRUE), filename)
+                zip::zip(
+                    zipfile = zipfile,
+                    files = filename_base,
+                    root = file.path(dst_rootdir, filename_base)
+                )
                 # And once you have the zip file, remove the directory:
                 unlink(file.path(dst_rootdir, filename_base), recursive = TRUE)
             }
