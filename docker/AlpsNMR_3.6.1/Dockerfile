@@ -5,5 +5,5 @@ LABEL org.opencontainers.image.description="AlpsNMR preinstalled"
 LABEL org.opencontainers.image.licenses=MIT
 
 
-RUN Rscript -e 'BiocManager::install("AlpsNMR")
+RUN Rscript -e 'BiocManager::install("AlpsNMR")'
 
