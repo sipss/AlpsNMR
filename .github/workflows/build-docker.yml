@@ -16,7 +16,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  Alps3.6.1-build-and-push:
+  AlpsNMR_3_6_1-build-and-push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -48,7 +48,7 @@ jobs:
           dockerfile: docker/AlpsNMR_3.6.1/Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-  Alps4.0.x-build-and-push:
+  AlpsNMR_4_0_x-build-and-push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
