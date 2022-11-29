@@ -43,7 +43,7 @@ jobs:
             prefix=3.6.1
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: mr-smithers-excellent/docker-build-push@v5
         with:
           dockerfile: docker/AlpsNMR_3.6.1/Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
