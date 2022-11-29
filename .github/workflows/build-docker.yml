@@ -28,7 +28,7 @@ jobs:
       - name: Build and push
         uses: mr-smithers-excellent/docker-build-push@v5
         with:
-          image: sipss/AlpsNMR
+          image: sipss/alpsnmr
           tags: v3.6.1
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -48,7 +48,7 @@ jobs:
       - name: Build and push
         uses: mr-smithers-excellent/docker-build-push@v5
         with:
-          image: sipss/AlpsNMR
+          image: sipss/alpsnmr
           tags: v4.0.x
           registry: ghcr.io
           username: ${{ github.actor }}
