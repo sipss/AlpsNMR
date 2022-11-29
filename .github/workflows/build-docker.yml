@@ -7,11 +7,9 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Create and publish a Docker image
+name: Create and publish a Docker image for AlpsNMR 3.6.1 on Bioconductor 3.15
 
-on:
-  push:
-    branches: ['RELEASE_3_15']
+on: workflow_dispatch
 
 env:
   REGISTRY: ghcr.io
