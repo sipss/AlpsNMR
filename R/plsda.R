@@ -287,7 +287,7 @@ fun_choose_best_ncomp_auc_threshold <-
                 purrr::map("auroc") %>%
                 purrr::map2(class_compare, function(auroc, group_name) {
                     auroc %>%
-                        dplyr::select(.data$auc) %>%
+                        dplyr::select("auc") %>%
                         dplyr::mutate(Group = !!group_name)
                 })
 
@@ -464,7 +464,7 @@ plsda_auroc_vip_compare <- function(...) {
         purrr::map("auroc") %>%
         purrr::map2(class_compare, function(auroc, group_name) {
             auroc %>%
-                dplyr::select(.data$auc) %>%
+                dplyr::select("auc") %>%
                 dplyr::mutate(Group = !!group_name)
         })
 

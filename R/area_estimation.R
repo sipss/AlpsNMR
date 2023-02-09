@@ -326,7 +326,7 @@ peaklist_fit_lorentzians <- function(peak_data,
         ) %>%
         dplyr::ungroup() %>%
         dplyr::filter(.data$group_size == 1 | (.data$group_size > 1 & .data$intensity == .data$group_max_intensity)) %>%
-        dplyr::select(-.data$group_size, -.data$group_max_intensity)
+        dplyr::select(-"group_size", -"group_max_intensity")
     # Corner case solved.
 
 

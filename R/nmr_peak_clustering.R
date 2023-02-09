@@ -79,7 +79,7 @@ nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
     rownames(peak_matrix) <- peak_data$peak_id
     peak2peak_dist <- peak2peak_distance(peak_matrix, distance_method = "euclidean")
     peak_groups <- peak_data %>%
-        dplyr::select(.data$NMRExperiment, .data$peak_id) %>%
+        dplyr::select("NMRExperiment", "peak_id") %>%
         dplyr::group_by(.data$NMRExperiment) %>%
         dplyr::summarise(peak_groups = list(.data$peak_id)) %>%
         tibble::deframe()
@@ -329,10 +329,10 @@ nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiment
     for_segments <- dplyr::full_join(
         peak_list_clustered2 %>%
             dplyr::filter(.data$NMRExperiment == !!NMRExperiments[1]) %>%
-            dplyr::select(.data$NMRExperiment, .data$ppm, .data$intensity_raw, .data$cluster, .data$area),
+            dplyr::select("NMRExperiment", "ppm", "intensity_raw", "cluster", "area"),
         peak_list_clustered2 %>%
             dplyr::filter(.data$NMRExperiment == !!NMRExperiments[2]) %>%
-            dplyr::select(.data$NMRExperiment, .data$ppm, .data$intensity_raw, .data$cluster, .data$area),
+            dplyr::select("NMRExperiment", "ppm", "intensity_raw", "cluster", "area"),
         by = "cluster"
     )
 
@@ -397,7 +397,7 @@ nmr_build_peak_table <- function(peak_data, dataset = NULL) {
     }
 
     peak_table <- peak_data %>%
-        dplyr::select(.data$NMRExperiment, .data$ppm_ref, .data$area) %>%
+        dplyr::select("NMRExperiment", "ppm_ref", "area") %>%
         dplyr::mutate(ppm_ref = format(.data$ppm_ref)) %>%
         tidyr::pivot_wider(names_from = "ppm_ref", values_from = "area") %>%
         tibble::column_to_rownames("NMRExperiment") %>%
