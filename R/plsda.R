@@ -183,6 +183,163 @@ callback_plsda_auroc_vip <-
         out
     }
 
+#' Choose best number of latent variables
+#' @param ncomp_auc a data frame with two columns: ncomp and auc
+#' @param auc_threshold The minimum increment to the auc that makes it worth increasing model complexity
+#' @noRd
+choose_best_nlv_impl <- function(ncomp_auc, auc_threshold) {
+    if (nrow(ncomp_auc) == 0L) {
+        # This should not happen.
+        return(integer(0L))
+    }
+    
+    # If we only have one possible number of latent variables, that's what we choose:
+    if (nrow(ncomp_auc) == 1) {
+        return(ncomp_auc$ncomp[1])
+    }
+
+    # Ensure ncomp_auc is sorted by increasing number of ncomp (increasing model complexity)
+    ncomp_auc <- ncomp_auc[order(ncomp_auc$ncomp), , drop = FALSE]
+
+    if (all(is.na(ncomp_auc$auc))) {
+        # In absence of AUCs (because all models failed to train) then we
+        # can just ask for a simple model and wish for the best.
+        return(ncomp_auc$ncomp[1])
+    }
+    
+    # Compute the auc increment. The leading 0 assumes that with 0 latent variables
+    # we have an AUC of 0.
+    for (i in seq_len(nrow(ncomp_auc) - 1L)) {
+        # The next increment in complexity yields an increment of auc of:
+        auc_dif <- ncomp_auc$auc[i + 1L] - ncomp_auc$auc[i]
+        # If incrementing model complexity does not improve performance,
+        # then return current complexity:
+        if (auc_dif < auc_threshold) {
+            return(ncomp_auc$ncomp[i])
+        }
+    }
+    # Either the threshold is low or the max explored nlv is low, return
+    # the highest number of components:
+    return(ncomp_auc$ncomp[nrow(ncomp_auc)])
+}
+
+#' Choose best number of latent variables based on a threshold on the auc increment.
+#' @param inner_cv_results A list of elements returned by [callback_plsda_auroc_vip]
+#' @param auc_threshold Threshold on the increment of AUC. Increasing the number of
+#' latent variables must increase the AUC at least by this threshold.
+#' @return A list with:
+#'    - `train_evaluate_model_args`: A list with one element named `ncomp` with the number of latent variables selected
+#'             for each outer cross-validation
+#'    - `num_latent_var`: A data frame with the number of latent variables chosen for each outer cross-validation
+#'    - `diagnostic_plot`: A plot showing the evolution of the AUC vs the number of latent variables for each iteration
+#'    - `diagnostic_box_plot`: Same as the `diagnostic_plot` but using box plots
+#'    - `model_performances`: A data frame with the AUC model performances
+#' @noRd
+choose_best_nlv <- function(inner_cv_results, auc_threshold) {
+    # Split performances so we get a list of data frames with (ncomp, auc)
+    best_nlv <- inner_cv_results %>%
+        purrr::map("auroc") %>%
+        purrr::map_int(choose_best_nlv_impl, auc_threshold = auc_threshold) %>%
+        tibble::enframe(name = "outer_inner", value = "ncomp") %>%
+        tidyr::separate(
+            "outer_inner",
+            into = c("cv_outer_iteration", "cv_inner_iteration"),
+            convert = TRUE
+        )
+    # best_nlv is a data frame with three columns:
+    # - cv_outer_iteration: The index of the outer iteration in cv
+    # - cv_inner_iteration: The index of the inner iteration in cv
+    # - ncomp: The optimal number of latent variables according to the described criteria
+    #          for that particular data split
+    
+    # Choose a single ncomp for each outer iteration, by getting the median of all the best ncomp
+    # in its internal validation:
+    nlv <-  dplyr::summarise(
+        best_nlv,
+        ncomp = round(stats::median(.data$ncomp)),
+        .by = "cv_outer_iteration"
+    )
+    
+    # nlv is a tibble with two columns: cv_outer_iteration and ncomp
+    # It represents for each outer iteration which is the final selection of number of latent variables
+
+    diag_info <- choose_best_nlv_diagnostic_info(inner_cv_results, nlv)
+
+    list(
+        train_evaluate_model_args = list(ncomp = nlv$ncomp),
+        num_latent_var = nlv,
+        diagnostic_plot = diag_info$plot_to_choose_nlv,
+        diagnostic_box_plot = diag_info$box_plot,
+        model_performances = diag_info$model_performances
+    )
+}
+
+choose_best_nlv_diagnostic_info <- function(inner_cv_results, nlv) {
+    model_performances <- inner_cv_results %>%
+        purrr::map("auroc") %>% # inner_cv_results$auroc[1] is a data frame with columns: ncomp auc
+        purrr::list_rbind(names_to = "outer_inner") %>%
+        tidyr::separate(
+            "outer_inner",
+            into = c("cv_outer_iteration", "cv_inner_iteration"),
+            convert = TRUE
+        )
+    
+    # model_performances is a data frame with the following columns:
+    # - cv_outer_iteration: The index of the outer iteration in cv
+    # - cv_inner_iteration: The index of the inner iteration in cv
+    # - ncomp: The number of latent variables used to train the model
+    # - auc: The performance (AUC) obtained for that number of latent variables
+    
+    plot_to_choose_nlv <- ggplot2::ggplot(model_performances) +
+        ggplot2::geom_line(
+            ggplot2::aes(
+                x = .data$ncomp,
+                y = .data$auc,
+                color = as.character(.data$cv_inner_iteration)
+            )
+        ) +
+        ggplot2::geom_vline(
+            data = nlv,
+            mapping = ggplot2::aes(xintercept = .data$ncomp),
+            color = "red"
+        ) +
+        ggplot2::scale_x_continuous(
+            name = "Number of latent variables",
+            breaks = function(limits) {
+                seq(from = 1, to = max(limits))
+            }
+        ) +
+        ggplot2::scale_y_continuous(name = "Area Under ROC") +
+        ggplot2::facet_wrap(~cv_outer_iteration) +
+        ggplot2::guides(colour = "none")
+    
+    class_compare <- names(inner_cv_results)
+    auroc_tables <- inner_cv_results %>%
+        purrr::map("auroc") %>%
+        purrr::map2(class_compare, function(auroc, group_name) {
+            auroc %>%
+                dplyr::select("auc") %>%
+                dplyr::mutate(Group = !!group_name)
+        })
+    
+    toplot <- do.call(rbind, auroc_tables)
+    box_plot <- ggplot2::ggplot(toplot) +
+        ggplot2::geom_boxplot(ggplot2::aes(
+            x = .data$Group,
+            y = .data$auc,
+            fill = .data$Group
+        ),
+        show.legend = FALSE
+        ) +
+        ggplot2::scale_x_discrete(name = "Model") +
+        ggplot2::scale_y_continuous(name = "Area under ROC")
+    
+    list(
+        diagnostic_plot = plot_to_choose_nlv,
+        diagnostic_box_plot = box_plot
+    )
+}
+
 
 #' Callback to choose the best number of latent variables based on the AUC threshold
 #'
@@ -191,127 +348,12 @@ callback_plsda_auroc_vip <-
 #'
 #' @return The actual function to compute the best number of latent variables according to a threshold on the increment of AUC
 #' @noRd
-fun_choose_best_ncomp_auc_threshold <-
-    function(auc_threshold = 0.05) {
-        force(auc_threshold)
-
-        # Choose best number of latent variables based on a threshold on the auc increment.
-        #' @param inner_cv_results A list of elements returned by [callback_plsda_auroc_vip]
-        #' @return A list with:
-        #'    - `train_evaluate_model_args`: A list with one element named `ncomp` with the number of latent variables selected
-        #'             for each outer cross-validation
-        #'    - `num_latent_var`: A data frame with the number of latent variables chosen for each outer cross-validation
-        #'    - `diagnostic_plot`: A plot showing the evolution of the AUC vs the number of latent variables for each iteration
-        #'    - `diagnostic_box_plot`: Same as the `diagnostic_plot` but using box plots
-        #'    - `model_performances`: A data frame with the AUC model performances
-        function(inner_cv_results) {
-            model_performances <- inner_cv_results %>%
-                purrr::map("auroc") %>%
-                purrr::map_dfr(~., .id = "outer_inner") %>%
-                tidyr::separate(
-                    "outer_inner",
-                    into = c("cv_outer_iteration", "cv_inner_iteration"),
-                    convert = TRUE
-                )
-
-            # There is a more elegant way to do this.
-            nlv <- model_performances %>%
-                dplyr::group_by(.data$cv_outer_iteration, .data$cv_inner_iteration) %>%
-                dplyr::arrange(
-                    .data$cv_outer_iteration,
-                    .data$cv_inner_iteration,
-                    .data$ncomp
-                ) %>%
-                # For each internal validation iteration,
-                #  auc_dif: compute the diff of the auc as we increase the number of components:
-                #  auc_diff_above_thres: whether the auc_diff is above our threshold
-                #  still_improving: TRUE if all the previous improvements and this one are above our threshold, FALSE otherwise
-                #  good_ncomp: TRUE if the model is still_improving in this ncomp, but does not further improve in larger ncomps
-                dplyr::mutate(
-                    auc_diff = .data$auc - dplyr::lag(.data$auc, default = 0),
-                    auc_diff_above_thres = .data$auc_diff > !!auc_threshold,
-                    still_improving = dplyr::cumall(.data$auc_diff_above_thres),
-                    good_ncomp = (
-                        .data$still_improving == TRUE &
-                            dplyr::lead(.data$still_improving,
-                                default =
-                                    FALSE
-                            ) == FALSE
-                    )
-                ) %>%
-                # We only keep the good number of latent variables for each trained model:
-                dplyr::filter(.data$good_ncomp == TRUE) %>%
-                dplyr::ungroup()
-
-            # Choose a single ncomp for each outer iteration, by getting the median of all the best ncomp
-            # in its internal validation:
-            nlv <- nlv %>%
-                dplyr::select(c("cv_outer_iteration", "ncomp")) %>%
-                dplyr::group_by(.data$cv_outer_iteration) %>%
-                # The median of all the good_ncomp of the inner iterations for each outer iteration:
-                dplyr::summarise(ncomp = round(stats::median(.data$ncomp))) %>%
-                dplyr::ungroup()
-
-            # If a given outer iteration has such bad performance that no number of latent
-            # variables passes the threshold, keep the simplest model (ncomp = 1)
-            nlv <- tidyr::complete(
-                nlv,
-                cv_outer_iteration = sort(unique(model_performances$cv_outer_iteration)),
-                fill = list(ncomp = 1)
-            )
-
-            plot_to_choose_nlv <-
-                ggplot2::ggplot(model_performances) +
-                ggplot2::geom_line(ggplot2::aes(
-                    x = .data$ncomp,
-                    y = .data$auc,
-                    color = as.character(.data$cv_inner_iteration)
-                )) +
-                ggplot2::geom_vline(
-                    data = nlv,
-                    mapping = ggplot2::aes(xintercept = .data$ncomp),
-                    color = "red"
-                ) +
-                ggplot2::scale_x_continuous(
-                    name = "Number of latent variables",
-                    breaks = function(limits) {
-                        seq(from = 1, to = max(limits))
-                    }
-                ) +
-                ggplot2::scale_y_continuous(name = "Area Under ROC") +
-                ggplot2::facet_wrap(~cv_outer_iteration) +
-                ggplot2::guides(colour = "none")
-
-            class_compare <- names(inner_cv_results)
-            auroc_tables <- inner_cv_results %>%
-                purrr::map("auroc") %>%
-                purrr::map2(class_compare, function(auroc, group_name) {
-                    auroc %>%
-                        dplyr::select("auc") %>%
-                        dplyr::mutate(Group = !!group_name)
-                })
-
-            toplot <- do.call(rbind, auroc_tables)
-            box_plot <- ggplot2::ggplot(toplot) +
-                ggplot2::geom_boxplot(ggplot2::aes(
-                    x = .data$Group,
-                    y = .data$auc,
-                    fill = .data$Group
-                ),
-                show.legend = FALSE
-                ) +
-                ggplot2::scale_x_discrete(name = "Model") +
-                ggplot2::scale_y_continuous(name = "Area under ROC")
-
-            list(
-                train_evaluate_model_args = list(ncomp = nlv$ncomp),
-                num_latent_var = nlv,
-                diagnostic_plot = plot_to_choose_nlv,
-                diagnostic_box_plot = box_plot,
-                model_performances = model_performances
-            )
-        }
+fun_choose_best_ncomp_auc_threshold <- function(auc_threshold = 0.05) {
+    force(auc_threshold)
+    function(inner_cv_results) {
+        choose_best_nlv(inner_cv_results, auc_threshold)
     }
+}
 
 #################### Validation #######
 
