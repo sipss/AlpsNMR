@@ -1,3 +1,11 @@
+# AlpsNMR 4.0.3 (2023-02-10)
+
+- Backport fixes from AlpsNMR 4.1.5
+  * Replace deprecated dplyr::select() calls.
+  * Fix and simplify implementation for determining number of latent variables
+    in plsda (same results).
+  * Bump dplyr dependency requirement
+
 # AlpsNMR 4.0.2 (2022-11-10)
 
 - Backport fixes from AlpsNMR 4.1.4
