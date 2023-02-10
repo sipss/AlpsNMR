@@ -1,3 +1,11 @@
+# AlpsNMR 4.1.5 (2023-02-10)
+
+- Replace deprecated dplyr::select() calls.
+- Remove workaround for mixOmics bug, bump mixOmics dependency
+- Simplify implementation (same algorithm) for determining the optimal number
+  of latent variables in the plsda models.
+- Bump dplyr dependency version.
+
 # AlpsNMR 4.1.4 (2022-11-08)
 
 - Disable nested parallelization
