@@ -74,7 +74,7 @@ Imports:
  purrr (>= 0.2.5),
  glue (>= 1.2.0),
  reshape2 (>= 1.4.3),
- mixOmics (>= 6.3.2),
+ mixOmics (>= 6.22.0),
  matrixStats (>= 0.54.0),
  fs (>= 1.2.6),
  rmarkdown (>= 1.10),
