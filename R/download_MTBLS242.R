@@ -72,7 +72,7 @@ download_MTBLS242 <- function(
     dst_rootdir <- file.path(dest_dir, "samples")
     if (!file.exists(annotations_orig_destfile) || force) {
         rlang::inform(c("i" = "Downloading sample annotations..."))
-        curl::curl_download(url = meta_url, destfile = annotations_orig_destfile)
+        curl_download_retry(url = meta_url, destfile = annotations_orig_destfile)
     }
     if (!file.exists(annotations_destfile) || force) {
         sample_annot <- tibble::as_tibble(
@@ -168,7 +168,7 @@ download_MTBLS242 <- function(
             }
             tryCatch(
                 {
-                    curl::curl_download(url = src_url, destfile = intermediate_dst_file)
+                    curl_download_retry(url = src_url, destfile = intermediate_dst_file)
                 },
                 error = function(e) {
                     msg <- conditionMessage(e)
@@ -215,4 +215,28 @@ download_MTBLS242 <- function(
     )
     progress_bar_end(pb)
     invisible(sample_annot)
+}
+
+curl_download_retry <- function(url, destfile, ..., timeout_retries = 3) {
+    attempts <- 1
+    while (attempts <= timeout_retries) {
+        tryCatch({
+            return(curl::curl_download(url = url, destfile = destfile, ...))
+        }, error = function(e) {
+            msg <- conditionMessage(e)
+            if (grepl("curltmp", msg) || grepl(destfile, msg)) {
+                stop(e)
+            }
+            cli::cli_warn(
+                c(
+                    "Download failed",
+                    "!" = sprintf("Download of %s failed on attempt %d/%d.", url, attempts, timeout_retries),
+                    "i" = sprintf("Reason for failure: %s", msg)
+                )
+            )
+            print(msg)
+        })
+        attempts <- attempts + 1
+    }
+    stop("Download failed too many times. Retry later or fix the URL")
 }
