@@ -6,6 +6,10 @@
 #' @noRd
 plsda_build <- function(x, y, identity, ncomp) {
     plsda_model <- NULL
+    if (ncomp > ncol(x)) {
+        cli::cli_abort("The number of components in a plsda model ({ncomp}) can't
+                       be larger than the number of features ({ncol(x)})")
+    }
     tryCatch(
         {
             suppressMessages(utils::capture.output({
