@@ -355,7 +355,7 @@ nmr_pca_outliers_robust <- function(nmr_dataset, ncomp = 5) {
 #'
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #' @param pca_outliers The output from [nmr_pca_outliers()]
-#' @param ... Additional parameters passed on to [ggplot2::aes_string()]
+#' @param ... Additional parameters passed on to [ggplot2::aes()] (or now deprecated to [ggplot2::aes_string()])
 #'
 #' @return A plot for the outlier detection
 #' @export
@@ -388,12 +388,26 @@ nmr_pca_outliers_plot <- function(nmr_dataset, pca_outliers, ...) {
         .data$Tscores > tscore_crit | .data$QResiduals > qres_crit
     )
 
+    is_using_aes_str <- is_using_aes_string(...)
+    if (is_using_aes_str) {
+        cli::cli_warn(
+            c(
+                "!" = "Passing aes_string arguments to nmr_pca_outliers_plot(nmr_dataset, ...) is deprecated.",
+                "i" = "Please pass aes() arguments instead"
+            ),
+            .frequency = "regularly",
+            .frequency_id = "plotting_with_aes_string",
+        )
+        point_mapping <- ggplot2::aes_string(...)
+    } else {
+        point_mapping <- ggplot2::aes(...)
+    }
     geom_txt <- get_geom_text()
     gplt <- ggplot2::ggplot(
         pca_outliers_with_meta,
-        ggplot2::aes_string(x = "Tscores", y = "QResiduals", label = "NMRExperiment")
+        ggplot2::aes(x = .data$Tscores, y = .data$QResiduals, label = .data$NMRExperiment)
     ) +
-        ggplot2::geom_point(ggplot2::aes_string(...)) +
+        ggplot2::geom_point(mapping = point_mapping) +
         geom_txt(data = pca_outliers_with_meta_only_out) +
         ggplot2::geom_vline(
             xintercept = tscore_crit,
