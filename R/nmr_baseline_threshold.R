@@ -121,8 +121,22 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
         thresholds <- thresholds[NMRExperiment]
     }
 
-    aes_str <- as.character(list(...))
-    columns_to_request <- c("NMRExperiment", get_vars_from_aes_string(aes_str))
+    is_aes_string <- is_using_aes_string(...)
+    
+    if (is_aes_string) {
+        cli::cli_warn(
+            c(
+                "!" = "Passing aes_string arguments to nmr_baseline_threshold_plot(nmr_dataset, ...) is deprecated.",
+                "i" = "Please pass aes arguments instead"
+            ),
+            .frequency = "regularly",
+            .frequency_id = "nmr_baseline_threshold_plot_plotting_with_aes_string",
+        )
+        aes_str <- as.character(list(...))
+        columns_to_request <- c("NMRExperiment", get_vars_from_aes_string(aes_str))
+    } else {
+        columns_to_request <- c("NMRExperiment", get_vars_from_aes(...))
+    }
     tidy_data <- tidy_spectra_baseline_and_threshold(
         dataset = nmr_dataset,
         thresholds = thresholds,
@@ -134,7 +148,56 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
     to_plot_baseline <- tidy_data$baselines
     to_plot_threshold <- tidy_data$thresholds
 
+    ymax <- 1.5 * max(to_plot_threshold$intensity)
 
+    if (is_aes_string) {
+        return(
+            nmr_baseline_threshold_plot_aes_string(
+                to_plot,
+                to_plot_baseline, 
+                to_plot_threshold, 
+                chemshift_range,
+                ymax, 
+                NMRExperiment,
+                ...
+            )
+        )
+    }
+    dots_aes_args <- prepare_aes(...)
+    
+    gplt <- ggplot2::ggplot() +
+        # The spectra:
+        ggplot2::geom_line(mapping = ggplot2::aes(!!!dots_aes_args), data = to_plot)
+    
+    if (!is.null(to_plot_baseline)) {
+        # The baseline:
+        gplt <- gplt +
+            ggplot2::geom_line(
+                mapping = ggplot2::aes(!!!dots_aes_args),
+                data = to_plot_baseline,
+                linetype = "dashed"
+            )
+    }
+
+    gplt <- gplt +
+        # The threshold
+        ggplot2::geom_line(
+            mapping = ggplot2::aes(!!!dots_aes_args),
+            data = to_plot_threshold,
+            linetype = "dashed", 
+            color = "black"
+        ) +
+        # Other plotting options
+        ggplot2::labs(x = "Chemical Shift (ppm)", y = "Intensity (a.u.)") +
+        ggplot2::scale_x_reverse(limits = rev(chemshift_range[seq_len(2)])) +
+        ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si("")), limits = c(0, ymax)) +
+        ggplot2::facet_wrap(~ factor(NMRExperiment, levels = unique(NMRExperiment))) +
+        ggplot2::theme(legend.position = "none")
+    gplt
+}
+
+# deprecated
+nmr_baseline_threshold_plot_aes_string <- function(to_plot, to_plot_baseline, to_plot_threshold, chemshift_range, ymax, NMRExperiment, ...) {
     dotdotdot_aes <- list(...)
     fixed_aes <- list(
         x = "chemshift",
@@ -145,12 +208,11 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
     if (!"color" %in% names(all_aes) && !"colour" %in% names(all_aes)) {
         all_aes <- c(all_aes, list(color = "NMRExperiment"))
     }
-    ymax <- 1.5 * max(to_plot_threshold$intensity)
 
     gplt <- ggplot2::ggplot() +
         # The spectra:
         ggplot2::geom_line(mapping = do.call(ggplot2::aes_string, all_aes), data = to_plot)
-
+    
     if (!is.null(to_plot_baseline)) {
         # The baseline:
         gplt <- gplt + ggplot2::geom_line(mapping = do.call(ggplot2::aes_string, all_aes), data = to_plot_baseline, linetype = "dashed")
