@@ -88,7 +88,7 @@
                         <h4 data-toc-skip class="author">AlpsNMR
 authors</h4>
             
-            <h4 data-toc-skip class="date">2023-02-10</h4>
+            <h4 data-toc-skip class="date">2023-02-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/vignettes/Vig01b-introduction-to-alpsnmr-old-api.Rmd" class="external-link"><code>vignettes/Vig01b-introduction-to-alpsnmr-old-api.Rmd</code></a></small>
       <div class="hidden name"><code>Vig01b-introduction-to-alpsnmr-old-api.Rmd</code></div>
@@ -313,7 +313,6 @@ ggplot.</li>
 </ul>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"30"</span><span class="op">)</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.2</span>, <span class="fl">2.8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01b-introduction-to-alpsnmr-old-api_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
 <div class="section level3">
 <h3 id="creating-interactive-plots">Creating interactive plots<a class="anchor" aria-label="anchor" href="#creating-interactive-plots"></a>
 </h3>
@@ -343,7 +342,6 @@ little advantages.</p>
 <code class="sourceCode R"><span><span class="va">regions_to_exclude</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>water <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.6</span>, <span class="fl">5</span><span class="op">)</span>, methanol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.33</span>, <span class="fl">3.39</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_exclude_region.html">nmr_exclude_region</a></span><span class="op">(</span><span class="va">dataset</span>, exclude <span class="op">=</span> <span class="va">regions_to_exclude</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.2</span>, <span class="fl">5.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01b-introduction-to-alpsnmr-old-api_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="filter-samples">Filter samples<a class="anchor" aria-label="anchor" href="#filter-samples"></a>
@@ -382,12 +380,10 @@ Asymmetric Least Squares method.</p>
 <p>See before:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">3.8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01b-introduction-to-alpsnmr-old-api_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
 <p>And after:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">=</span> <span class="fu"><a href="../reference/nmr_baseline_removal.html">nmr_baseline_removal</a></span><span class="op">(</span><span class="va">dataset</span>, lambda <span class="op">=</span> <span class="fl">6</span>, p <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>,<span class="fl">3.8</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01b-introduction-to-alpsnmr-old-api_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="peak-detection">Peak detection<a class="anchor" aria-label="anchor" href="#peak-detection"></a>
@@ -427,11 +423,8 @@ the spectra.</p>
 <code class="sourceCode R"><span><span class="va">nmr_exp_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_align_find_ref.html">nmr_align_find_ref</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span><span class="op">)</span></span>
 <span><span class="va">dataset_align</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_align.html">nmr_align</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_table</span>, <span class="va">nmr_exp_ref</span>, maxShift_ppm <span class="op">=</span> <span class="fl">0.0015</span>, acceptLostPeak <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.025</span>, <span class="fl">3.063</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01b-introduction-to-alpsnmr-old-api_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset_align</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.025</span>, <span class="fl">3.063</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01b-introduction-to-alpsnmr-old-api_files/figure-html/unnamed-chunk-20-2.png" width="672"></p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.025</span>, <span class="fl">3.063</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset_align</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.025</span>, <span class="fl">3.063</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="normalization">Normalization<a class="anchor" aria-label="anchor" href="#normalization"></a>
@@ -441,7 +434,7 @@ strongly recommended is the <code>pqn</code> normalization, but it may
 not be fully reliable when the number of samples is small, as it needs a
 computation of the median spectra. Nevertheless, it is possible to
 compute it:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_normalize.html">nmr_normalize</a></span><span class="op">(</span><span class="va">dataset_align</span>, method <span class="op">=</span> <span class="st">"pqn"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: There are not enough samples for reliably estimating the median spectra</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> The Probabalistic Quotient Normalization requires several samples to compute the median spectra. Your number of samples is low</span></span>
@@ -453,7 +446,7 @@ normalization factors applied to each sample:</p>
 <p>The plot shows the dispersion with respect to the median of the
 normalization factors, and can highlight samples with abnormaly large or
 small normalization factors.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diagnostic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_normalize.html">nmr_normalize_extra_info</a></span><span class="op">(</span><span class="va">dataset_norm</span><span class="op">)</span></span>
 <span><span class="va">diagnostic</span><span class="op">$</span><span class="va">norm_factor</span></span>
 <span><span class="co">#&gt;   NMRExperiment norm_factor norm_factor_norm</span></span>
@@ -475,7 +468,7 @@ function <code>nmr_integrate_peak_positions</code> generates a new
 <code>nmr_dataset_1D</code> object containing the integrals from the
 <code>peak_table</code> (ppm values corresponding to detected
 peaks).</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/nmr_integrate_peak_positions.html">nmr_integrate_peak_positions</a></span><span class="op">(</span></span>
 <span>  samples <span class="op">=</span> <span class="va">dataset_norm</span>,</span>
 <span>  peak_pos_ppm <span class="op">=</span> <span class="va">peak_table</span><span class="op">$</span><span class="va">ppm</span>,</span>
@@ -832,7 +825,7 @@ peaks).</p>
 <span><span class="va">peak_table_integration</span> <span class="op">=</span> <span class="fu"><a href="../reference/get_integration_with_metadata.html">get_integration_with_metadata</a></span><span class="op">(</span><span class="va">peak_table_integration</span><span class="op">)</span></span></code></pre></div>
 <p>We can also integrate with a specific peak position and some
 arbitrary width:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_data.html">nmr_data</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="../reference/nmr_integrate_peak_positions.html">nmr_integrate_peak_positions</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="va">dataset_norm</span>,</span>
 <span>                            peak_pos_ppm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.1925</span>, <span class="fl">4.183</span>, <span class="fl">4.1775</span>, <span class="fl">4.17</span><span class="op">)</span>,</span>
@@ -848,7 +841,7 @@ arbitrary width:</p>
 </h3>
 <p>Imagine we only want to integrate the four peaks corresponding to the
 pyroglutamic acid:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pyroglutamic_acid_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.15</span>, <span class="fl">4.20</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset_norm</span>, chemshift_range <span class="op">=</span> <span class="va">pyroglutamic_acid_region</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Pyroglutamic acid region"</span><span class="op">)</span></span></code></pre></div>
@@ -857,7 +850,7 @@ pyroglutamic acid:</p>
 correct the baseline or not. If we correct the baseline, the limits of
 the integration will be connected with a straight line and that line
 will be used as the baseline, that will be subtracted.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pyroglutamic_acid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pyroglutamic_acid1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.19</span>, <span class="fl">4.195</span><span class="op">)</span>,</span>
 <span>                          pyroglutamic_acid2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.18</span>, <span class="fl">4.186</span><span class="op">)</span>,</span>
 <span>                          pyroglutamic_acid3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.175</span>, <span class="fl">4.18</span><span class="op">)</span>,</span>
@@ -880,7 +873,7 @@ will be used as the baseline, that will be subtracted.</p>
 <span><span class="co">#&gt; 30           38.10972           47.99196           39.99623           46.40013</span></span></code></pre></div>
 <p>We may plot the integral values to explore variation based on the
 baseline subtraction.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
 <span>  <span class="va">regions_basel_corr_matrix</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -905,7 +898,7 @@ the identification of features of interest through
 <code>nmr_identify_regions_blood</code>. The function gives 3
 posibilities sorted by the most probable metabolite (see
 <code>nmr_identify_regions_blood</code> for details).</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ppm_to_assign</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.060960203</span>, <span class="fl">3.048970634</span>,<span class="fl">2.405935596</span>,<span class="fl">0.990616851</span>,<span class="fl">0.986520147</span>, <span class="fl">1.044258467</span><span class="op">)</span></span>
 <span><span class="va">identification</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_identify_regions_blood.html">nmr_identify_regions_blood</a></span> <span class="op">(</span><span class="va">ppm_to_assign</span><span class="op">)</span></span>
 <span><span class="va">identification</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">identification</span><span class="op">$</span><span class="va">Metabolite</span><span class="op">)</span>, <span class="op">]</span></span>
@@ -945,7 +938,7 @@ posibilities sorted by the most probable metabolite (see
 features have room for improvement, others are not fully described, and
 the reader will need to browse the documentation. Hopefully it is a good
 starting point for using the package.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.2.2 (2022-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
@@ -985,7 +978,7 @@ starting point for using the package.</p>
 <span><span class="co">#&gt;  [34] digest_0.6.31          rmarkdown_2.20         pkgconfig_2.0.3       </span></span>
 <span><span class="co">#&gt;  [37] htmltools_0.5.4        parallelly_1.34.0      itertools_0.1-3       </span></span>
 <span><span class="co">#&gt;  [40] fastmap_1.1.0          highr_0.10             rlang_1.0.6           </span></span>
-<span><span class="co">#&gt;  [43] readxl_1.4.1           impute_1.72.3          jquerylib_0.1.4       </span></span>
+<span><span class="co">#&gt;  [43] readxl_1.4.2           impute_1.72.3          jquerylib_0.1.4       </span></span>
 <span><span class="co">#&gt;  [46] generics_0.1.3         farver_2.1.1           jsonlite_1.8.4        </span></span>
 <span><span class="co">#&gt;  [49] speaq_2.7.0            dplyr_1.1.0            magrittr_2.0.3        </span></span>
 <span><span class="co">#&gt;  [52] Matrix_1.5-3           Rcpp_1.0.10            munsell_0.5.0         </span></span>

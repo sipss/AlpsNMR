@@ -88,7 +88,7 @@
                         <h4 data-toc-skip class="author">AlpsNMR
 authors</h4>
             
-            <h4 data-toc-skip class="date">2023-02-10</h4>
+            <h4 data-toc-skip class="date">2023-02-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/vignettes/Vig02-handling-metadata-and-annotations.Rmd" class="external-link"><code>vignettes/Vig02-handling-metadata-and-annotations.Rmd</code></a></small>
       <div class="hidden name"><code>Vig02-handling-metadata-and-annotations.Rmd</code></div>
@@ -123,7 +123,6 @@ further details:</p>
 <pre><code><span><span class="co">## An nmr_dataset_1D (3 samples)</span></span></code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.4</span>, <span class="fl">3.6</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig02-handling-metadata-and-annotations_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="exploring-the-sample-metadata">Exploring the sample metadata<a class="anchor" aria-label="anchor" href="#exploring-the-sample-metadata"></a>
@@ -309,6 +308,9 @@ the table with our samples.</p>
 plots:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, color <span class="op">=</span> <span class="st">"TimePoint"</span>, linetype <span class="op">=</span> <span class="st">"SubjectID"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.4</span>, <span class="fl">3.6</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: <span style="color: #BBBB00;">!</span> Passing aes_string arguments to plot(nmr_dataset, ...) is deprecated.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please pass aes arguments instead</span></span>
+<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span></code></pre>
 <p><img src="Vig02-handling-metadata-and-annotations_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -317,7 +319,7 @@ plots:</p>
 <p>Sometimes due to the study design we have more than one table that we
 want to match with our data.</p>
 <p>For instance, a collaborator just sent us this table:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">additional_annotations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"20"</span>, <span class="st">"30"</span><span class="op">)</span>,</span>
 <span>    SampleCollectionDay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">91</span>, <span class="fl">3</span><span class="op">)</span></span>
@@ -329,10 +331,10 @@ want to match with our data.</p>
 <span><span class="co">## 3            30                   3</span></span></code></pre>
 <p>Since we have the <code>NMRExperiment</code> column it is very easy
 to include it:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">additional_annotations</span><span class="op">)</span></span></code></pre></div>
 <p>And the column has been added:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 4</span></span></span>
 <span><span class="co">##   NMRExperiment SubjectID TimePoint SampleCollectionDay</span></span>
@@ -342,7 +344,7 @@ to include it:</p>
 <span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline                    3</span></span></code></pre>
 <p>We received further information, but this time it is related to the
 <code>SubjectID</code> that we added before:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">subject_related_information</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    SubjectID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ana"</span>, <span class="st">"Elia"</span><span class="op">)</span>,</span>
 <span>    Age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">33</span>, <span class="fl">3</span><span class="op">)</span>,</span>
@@ -356,10 +358,10 @@ to include it:</p>
 <code>NMRExperiment</code> column anymore.</p>
 <p>We can specify the <code>by</code> argument in
 <code><a href="../reference/nmr_meta_add.html">nmr_meta_add()</a></code> to use another column for merging:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">subject_related_information</span>, by <span class="op">=</span> <span class="st">"SubjectID"</span><span class="op">)</span></span></code></pre></div>
 <p>And the Sex and Age columns will have been added:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">##   NMRExperiment SubjectID TimePoint SampleCollectionDay   Age Sex   </span></span>
@@ -368,7 +370,7 @@ to include it:</p>
 <span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months                   91    33 female</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline                    3     3 female</span></span></code></pre>
 <p>We can also use it in a plot:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, color <span class="op">=</span> <span class="st">"SubjectID"</span>, linetype <span class="op">=</span> <span class="st">"as.factor(Age)"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7.7</span>, <span class="fl">7.8</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"Age"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vig02-handling-metadata-and-annotations_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 </div>
@@ -411,7 +413,7 @@ functions:</p>
 <div class="section level2">
 <h2 id="session-information">Session Information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.2.2 (2022-10-31)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
@@ -433,7 +435,7 @@ functions:</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] AlpsNMR_4.1.5    future_1.31.0    readxl_1.4.1     dplyr_1.1.0     </span></span>
+<span><span class="co">## [1] AlpsNMR_4.1.5    future_1.31.0    readxl_1.4.2     dplyr_1.1.0     </span></span>
 <span><span class="co">## [5] BiocStyle_2.26.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
