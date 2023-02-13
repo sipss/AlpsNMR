@@ -5,9 +5,9 @@
 #'                to include the resolution in the third element (e.g. `c(0.2, 0.8, 0.005)`)
 #' @param NMRExperiment A character vector with the NMRExperiments to include. Use "all" to include all experiments.
 #' @param quantile_plot If `TRUE` plot the 10\%, 50\%, 90\% percentiles of the spectra as reference.
-#'                                            If two numbers between 0 and 1 are given then a custom percentile can be plotted
+#'       If two numbers between 0 and 1 are given then a custom percentile can be plotted
 #' @param quantile_colors A vector with the colors for each of the quantiles
-#' @param ... arguments passed to [ggplot2::aes_string].
+#' @param ... arguments passed to [ggplot2::aes] (or to [ggplot2::aes_string], being deprecated).
 #' @param interactive if `TRUE` return an interactive plotly plot, otherwise return a ggplot one.
 #' @return The plot
 #' @importFrom graphics plot
@@ -25,6 +25,75 @@ plot.nmr_dataset_1D <- function(x,
     quantile_plot = NULL,
     quantile_colors = NULL,
     ...) {
+    
+
+    is_aes_string <- is_using_aes_string(...)
+    
+    if (is_aes_string) {
+        cli::cli_warn(
+            c(
+                "!" = "Passing aes_string arguments to plot(nmr_dataset, ...) is deprecated.",
+                "i" = "Please pass aes arguments instead"
+            ),
+            .frequency = "regularly",
+            .frequency_id = "plotting_with_aes_string",
+        )
+        return(
+            plot_with_aes_string(
+                x,
+                NMRExperiment = NMRExperiment,
+                chemshift_range = chemshift_range,
+                interactive = interactive,
+                quantile_plot = quantile_plot,
+                quantile_colors = quantile_colors,
+                ...
+            )
+        )
+    } else {
+        if (!(is.null(quantile_plot) || identical(quantile_plot, FALSE))) {
+            cli::cli_warn(
+                c(
+                    "!" = "Plotting quantiles is not available in plot() anymore",
+                    "i" = "Please open an issue at https://github.com/sipss/AlpsNMR/issues if you need this feature back"
+                ),
+                .frequency = "regularly",
+                .frequency_id = "plotting_with_aes_string",
+            )
+        }
+        return(
+            plot_with_aes(
+                x,
+                NMRExperiment = NMRExperiment,
+                chemshift_range = chemshift_range,
+                interactive = interactive,
+                ...
+            )
+        )
+    }
+}
+
+is_using_aes_string <- function(...) {
+    tryCatch({ # Detect if using deprecated aes_string.
+        dotdotdot_aes <- list(...)
+        all_chr <- purrr::map_lgl(dotdotdot_aes, is.character)
+        if (length(all_chr) == 0) {
+            FALSE
+        } else {
+            any(all_chr)
+        }
+    }, 
+    error = function(e) {
+        FALSE
+    })
+}
+
+plot_with_aes <- function(
+        x,
+        NMRExperiment = NULL,
+        chemshift_range = NULL,
+        interactive = FALSE,
+        ...) {
+
     if (interactive) {
         require_pkgs("plotly", msgs = c("i" = "Otherwise, you can set interactive=FALSE."))
     }
@@ -38,7 +107,7 @@ plot.nmr_dataset_1D <- function(x,
     } else {
         stop("chemshift_range should be a numeric vector of length 2 or 3.")
     }
-
+    
     if (is.null(NMRExperiment)) {
         if (x$num_samples > 20) {
             NMRExperiment <- sample(names(x), size = 10)
@@ -48,9 +117,87 @@ plot.nmr_dataset_1D <- function(x,
     } else if (identical(NMRExperiment, "all")) {
         NMRExperiment <- names(x)
     }
+
+    columns_to_request <- c("NMRExperiment", get_vars_from_aes(...))
+    longdf <- tidy(
+        x,
+        NMRExperiment = NMRExperiment,
+        chemshift_range = chemshift_range,
+        columns = columns_to_request
+    )
+    
+    dots_aes_args <- prepare_aes(...)
+    gplt <- ggplot2::ggplot(longdf) +
+        ggplot2::geom_line(ggplot2::aes(!!!dots_aes_args)) +
+        ggplot2::labs(x = "Chemical Shift (ppm)", y = "Intensity (a.u.)") +
+        ggplot2::scale_x_reverse(limits = rev(chemshift_range[seq_len(2)])) +
+        ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si("")))
+    
+    
+    if (interactive) {
+        output <- plotly::ggplotly(gplt)
+    } else {
+        output <- gplt
+    }
+
+}
+
+prepare_aes <- function(...) {
+    dots_aes_args <- rlang::enquos(...)
+    if (!"color" %in% names(dots_aes_args) && !"colour" %in% names(dots_aes_args)) {
+        dots_aes_args[["colour"]] <- rlang::new_quosure(
+            expr = rlang::expr(.data$NMRExperiment),
+            env = rlang::base_env()
+        )
+    }
+    dots_aes_args[["x"]] <- rlang::new_quosure(
+        expr = rlang::expr(.data$chemshift)
+    )
+    dots_aes_args[["y"]] <- rlang::new_quosure(
+        expr = rlang::expr(.data$intensity)
+    )
+    dots_aes_args[["group"]] <- rlang::new_quosure(
+        expr = rlang::expr(.data$NMRExperiment)
+    )
+    dots_aes_args
+}
+
+# deprecated
+plot_with_aes_string <- function(
+        x,
+        NMRExperiment = NULL,
+        chemshift_range = NULL,
+        interactive = FALSE,
+        quantile_plot = NULL,
+        quantile_colors = NULL,
+        ...) {
+    if (interactive) {
+        require_pkgs("plotly", msgs = c("i" = "Otherwise, you can set interactive=FALSE."))
+    }
+    if (is.null(chemshift_range)) {
+        chemshift_range <- range(x$axis)
+    } else if (length(chemshift_range) == 2) {
+        chemshift_range <- range(chemshift_range)
+    } else if (length(chemshift_range) == 3) {
+        chemshift_range <-
+            c(range(chemshift_range[seq_len(2)]), chemshift_range[3])
+    } else {
+        stop("chemshift_range should be a numeric vector of length 2 or 3.")
+    }
+    
+    if (is.null(NMRExperiment)) {
+        if (x$num_samples > 20) {
+            NMRExperiment <- sample(names(x), size = 10)
+        } else {
+            NMRExperiment <- names(x)
+        }
+    } else if (identical(NMRExperiment, "all")) {
+        NMRExperiment <- names(x)
+    }
+    
     aes_str <- as.character(list(...))
     columns_to_request <- c("NMRExperiment", get_vars_from_aes_string(aes_str))
-
+    
     longdf <- tidy(
         x,
         NMRExperiment = NMRExperiment,
@@ -219,6 +366,20 @@ get_vars_from_aes_string <- function(aes_str) {
     )
 }
 
+get_vars_from_aes <- function(...) {
+    quos <- rlang::enquos(...)
+    if (length(quos) == 0) {
+        return(character(0L))
+    }
+    unique(
+        purrr::flatten_chr(
+            purrr::map(
+                quos,
+                all.vars
+            )
+        )
+    )
+}
 
 decimate_axis <- function(xaxis, xrange = NULL) {
     if (is.null(xrange)) {
