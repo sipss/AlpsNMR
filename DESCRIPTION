@@ -61,6 +61,7 @@ Imports:
  graphics,
  stats,
  grDevices,
+ cli,
  magrittr (>= 1.5),
  dplyr (>= 1.1.0),
  signal (>= 0.7-6),
@@ -104,6 +105,6 @@ Suggests:
     zip (>= 2.0.4)
 biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
