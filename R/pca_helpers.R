@@ -165,7 +165,7 @@ nmr_pca_loadingplot <- function(pca_model, comp) {
         )
     ggplot2::ggplot(
         loadings_long,
-        ggplot2::aes_string(x = "ppm", y = "loading", group = "component")
+        ggplot2::aes(x = .data$ppm, y = .data$loading, group = .data$component)
     ) +
         ggplot2::geom_line() +
         ggplot2::scale_x_reverse()

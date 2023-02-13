@@ -338,7 +338,7 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
     plt <- plt +
         ggplot2::geom_vline(
             data = peak_data_to_show,
-            ggplot2::aes_string(xintercept = "ppm"),
+            mapping = ggplot2::aes(xintercept = .data$ppm),
             color = "black",
             linetype = "dashed"
         )
