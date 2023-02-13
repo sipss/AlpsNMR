@@ -21,7 +21,7 @@ nmr_baseline_threshold_plot(
 
 \item{chemshift_range}{The range to plot, as a first check use the \code{range_without_peaks} from \link{nmr_baseline_threshold}}
 
-\item{...}{arguments passed to \link[ggplot2:aes_]{ggplot2::aes_string}.}
+\item{...}{arguments passed to \link[ggplot2:aes]{ggplot2::aes} (or to \link[ggplot2:aes_]{ggplot2::aes_string}, being deprecated).}
 }
 \value{
 A plot.

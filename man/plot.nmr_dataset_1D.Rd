@@ -29,7 +29,7 @@ If two numbers between 0 and 1 are given then a custom percentile can be plotted
 
 \item{quantile_colors}{A vector with the colors for each of the quantiles}
 
-\item{...}{arguments passed to \link[ggplot2:aes_]{ggplot2::aes_string}.}
+\item{...}{arguments passed to \link[ggplot2:aes]{ggplot2::aes} (or to \link[ggplot2:aes_]{ggplot2::aes_string}, being deprecated).}
 }
 \value{
 The plot

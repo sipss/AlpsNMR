@@ -59,6 +59,7 @@ peak_table <- new_nmr_dataset_peak_table(
 # bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
 #                           y_column = "Condition", # Label
 #                           k = 3,
+#                           ncomp = 1,
 #                           nbootstrap = 10)
 
 # message("Selected VIPs are: ", bp_results$importarn_vips)

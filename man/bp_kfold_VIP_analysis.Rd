@@ -75,9 +75,10 @@ peak_table <- new_nmr_dataset_peak_table(
 
 ## We will use bootstrap and permutation method for VIPs selection
 ## in a a k-fold cross validation
-bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
+bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analyzed
     y_column = "Condition", # Label
     k = 2,
+    ncomp = 1,
     nbootstrap = 5
 )
 

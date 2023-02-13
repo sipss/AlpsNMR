@@ -11,7 +11,7 @@ nmr_pca_outliers_plot(nmr_dataset, pca_outliers, ...)
 
 \item{pca_outliers}{The output from \code{\link[=nmr_pca_outliers]{nmr_pca_outliers()}}}
 
-\item{...}{Additional parameters passed on to \code{\link[ggplot2:aes_]{ggplot2::aes_string()}}}
+\item{...}{Additional parameters passed on to \code{\link[ggplot2:aes]{ggplot2::aes()}} (or now deprecated to \code{\link[ggplot2:aes_]{ggplot2::aes_string()}})}
 }
 \value{
 A plot for the outlier detection
