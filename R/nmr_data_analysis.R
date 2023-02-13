@@ -463,6 +463,74 @@ nmr_data_analysis <- function(dataset,
 }
 
 
+get_test_accuracy <- function(model, x_test, y_test) {
+    pred <- stats::predict(model, newdata = x_test, dist = "max.dist")
+    y_test_pred <- pred$class$max.dist[,model$ncomp]
+    conf_mat <- table(REAL = y_test, PRED = y_test_pred)
+    accuracy <- diag(conf_mat)/sum(conf_mat)
+    accuracy
+}
+
+
+train_models_with_only_vip_features <- function(x_train, y_train, x_test, y_test, ncomp, important_vips, relevant_vips) {
+    # important_vips is a more stringent subset of relevant_vips
+    if (length(important_vips) == 0) {
+        cli::cli_warn(
+            c(
+                "No VIPs are ranked as important",
+                "i" = "Try increasing the number of bootstrap iterations"
+            )
+        )
+        if (length(relevant_vips) == 0) {
+            cli::cli_warn(
+                c(
+                    "bp_VIP_analysis: no relevant_vips found",
+                    "i" = "You may try increasing the number of bootstraps"
+                )
+            )
+        }
+        return(list(vips_model = NULL, vips_CR = 0))
+    }
+    
+    if (length(important_vips) < ncomp) {
+        cli::cli_warn(
+            c(
+                "Number of important vips ({length(important_vips)}) smaller than requested ncomp ({ncomp})",
+                "i" = "Attempting to use relevant vips (less stringent criteria)",
+                "i" = "You may want to consider reducing ncomp"
+            )
+        )
+        if (length(relevant_vips) < ncomp) {
+            cli::cli_warn(
+                c(
+                    "Number of relevant vips ({length(relevant_vips)}) smaller than requested ncomp ({ncomp})",
+                    "i" = "Can't compute sub-model using only VIPs",
+                    "i" = "You may want to consider reducing ncomp"
+                )
+            )
+            return(list(vips_model = NULL, vips_CR = 0))
+        }
+        x_train_reduced <- as.matrix(x_train[, relevant_vips, drop = FALSE])
+        x_test_reduced <- as.matrix(x_test[, relevant_vips, drop = FALSE])
+    } else {
+        x_train_reduced <- as.matrix(x_train[, important_vips, drop = FALSE])
+        x_test_reduced <- as.matrix(x_test[, important_vips, drop = FALSE])
+    }
+    
+    # Fit PLS model
+    vips_model <- plsda_build(
+        x = x_train_reduced,
+        y = y_train,
+        identity = NULL,
+        ncomp = ncomp
+    )
+    
+    # Measure the classification rate (CR) of the fold
+    vips_CR <- get_test_accuracy(vips_model, x_test_reduced, y_test)
+    list(vips_model = vips_model, vips_CR = vips_CR)
+}
+
+
 #' Bootstrap and permutation over PLS-VIP
 #'
 #' Bootstrap and permutation over PLS-VIP on AlpsNMR can be performed on both
@@ -569,7 +637,6 @@ bp_VIP_analysis <- function(dataset,
     ncomp,
     nbootstrap = 300) {
 
-
     # Extract data and split for train and test
     x_all <- dataset$peak_table
     y_all <- nmr_meta_get_column(dataset, column = y_column)
@@ -587,6 +654,10 @@ bp_VIP_analysis <- function(dataset,
     }
 
     num_features <- n <- ncol(x_all)
+    
+    if (ncomp > num_features) {
+        cli::cli_abort("ncomp ({ncomp}) can't be larger than num_features ({num_features})")
+    }
     names <- colnames(x_all)
     # some checks
     if (length(names) == 0) {
@@ -637,8 +708,7 @@ bp_VIP_analysis <- function(dataset,
             # Sum contributions of VIPs to each component
             pls_vip <- sqrt(rowSums(pls_vip_comps^2) / ncomp)
             # Measure the classification rate (CR) of the bootstrap model
-            perf <- mixOmics::perf(model, newdata = x_test)
-            CR <- 1 - perf$error.rate$overall[1]
+            CR <- get_test_accuracy(model, x_test, y_test)
             pls_vip_perm <- matrix(nrow = n, ncol = n, dimnames = list(names, NULL))
 
             # Permutation of variables
@@ -719,78 +789,15 @@ bp_VIP_analysis <- function(dataset,
             ncomp = ncomp
         )
     # Measure the classification rate (CR) of the fold
-    perf <- mixOmics::perf(general_model, newdata = x_test)
-    general_CR <- 1 - perf$error.rate$overall[1]
-
-
-    if (length(important_vips) == 0) {
-        if (length(relevant_vips) == 0) {
-            rlang::warn(
-                message = c(
-                    "bp_VIP_analysis: no relevant variable found",
-                    "i" = "You may try increasing the number of bootstraps"
-                )
-            )
-        }
-        rlang::warn(
-            message = c(
-                "No VIPs are ranked as important",
-                "i" = "Use relevant_vips or try increasing the number of bootstrap iterations"
-            )
-        )
-        vips_model <- NULL
-        vips_CR <- 0
-    } else {
-        # Checking performance of selected vips
-        if (length(important_vips) == 1) {
-            if (length(relevant_vips) == 1) {
-                warning(
-                    "Only one VIP ranked as important and relevant, you can try again with more bootstraps"
-                )
-                vips_model <- NULL
-                vips_CR <- 0
-            } else {
-                # if the are only one importan vip, we use relevants instead
-                x_train_reduced <-
-                    as.matrix(x_all[train_index, relevant_vips, drop = FALSE])
-                x_test_reduced <-
-                    as.matrix(x_all[-train_index, relevant_vips, drop = FALSE])
-
-                # Fit PLS model
-                vips_model <-
-                    plsda_build(
-                        x = x_train_reduced,
-                        y = y_train,
-                        identity = NULL,
-                        ncomp = ncomp
-                    )
-
-                # Measure the classification rate (CR) of the fold
-                perf <-
-                    mixOmics::perf(vips_model, newdata = x_test_reduced)
-                vips_CR <- 1 - perf$error.rate$overall[1]
-            }
-        } else {
-            x_train_reduced <-
-                as.matrix(x_all[train_index, important_vips, drop = FALSE])
-            x_test_reduced <-
-                as.matrix(x_all[-train_index, important_vips, drop = FALSE])
-
-            # Fit PLS model
-            vips_model <-
-                plsda_build(
-                    x = x_train_reduced,
-                    y = y_train,
-                    identity = NULL,
-                    ncomp = ncomp
-                )
-
-            # Measure the classification rate (CR) of the fold
-            perf <- mixOmics::perf(vips_model, newdata = x_test_reduced)
-            vips_CR <- 1 - perf$error.rate$overall[1]
-        }
-    }
-
+    general_CR <- get_test_accuracy(general_model, x_test, y_test)
+    
+    vips_results <- train_models_with_only_vip_features(
+        x_train, y_train, x_test, y_test,
+        ncomp, important_vips, relevant_vips
+    )
+    vips_model <- vips_results$vips_model
+    vips_CR <- vips_results$vips_CR
+    
     # To return it ordered by mean of the normalized vectors
     orden <- order(boots_vip, decreasing = TRUE)
     # Return important vips and auc performance
@@ -878,9 +885,10 @@ bp_VIP_analysis <- function(dataset,
 #'
 #' ## We will use bootstrap and permutation method for VIPs selection
 #' ## in a a k-fold cross validation
-#' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
+#' bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analyzed
 #'     y_column = "Condition", # Label
 #'     k = 2,
+#'     ncomp = 1,
 #'     nbootstrap = 5
 #' )
 #'
@@ -1044,6 +1052,7 @@ bp_kfold_VIP_analysis <- function(dataset,
 #' # bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analized
 #' #                           y_column = "Condition", # Label
 #' #                           k = 3,
+#' #                           ncomp = 1,
 #' #                           nbootstrap = 10)
 #'
 #' # message("Selected VIPs are: ", bp_results$importarn_vips)
