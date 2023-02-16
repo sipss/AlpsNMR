@@ -1,3 +1,10 @@
+# AlpsNMR 4.1.6 (2023-02-16)
+
+- Download improvements:
+  * Progress bar
+  * Detect user interruptions
+  * Sleep 3 seconds between retrying failed downloads
+
 # AlpsNMR 4.1.5 (2023-02-10)
 
 - Replace deprecated dplyr::select() calls.
