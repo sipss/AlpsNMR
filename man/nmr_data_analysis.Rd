@@ -27,6 +27,7 @@ metadata of the dataset).}
 See \link{random_subsampling} for further details}
 
 \item{data_analysis_method}{An \link{nmr_data_analysis_method} object}
+
 \item{.enable_parallel}{Set to \code{FALSE} to disable parallellization.}
 }
 \value{
