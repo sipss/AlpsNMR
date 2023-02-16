@@ -144,17 +144,11 @@ download_MTBLS242 <- function(
         rlang::inform(c("i" = glue("Annotations were previously saved. Loading {annotations_destfile}")))
         sample_annot <- utils::read.csv(annotations_destfile, header = TRUE, sep = "\t")
     }
-    rlang::inform(c("i" = "Downloading samples, please wait..."))
-    pb <- progress_bar_new(
-        name = "Preparing samples",
-        total = length(sample_annot$NMRExperiment)
-    )
     dir.create(dst_rootdir, recursive = TRUE, showWarnings = FALSE)
     report_skipped_downloads <- FALSE
     purrr::walk(
         sample_annot$NMRExperiment,
         function(filename_base, url, dst_rootdir, keep_only_CPMG_1r) {
-            progress_bar_update(pb)
             filename <- paste0(filename_base, ".zip")
             src_url <- file.path(url, filename)
             final_dst_file <- file.path(dst_rootdir, filename)
@@ -166,23 +160,7 @@ download_MTBLS242 <- function(
                 }
                 return()
             }
-            tryCatch(
-                {
-                    curl_download_retry(url = src_url, destfile = intermediate_dst_file)
-                },
-                error = function(e) {
-                    msg <- conditionMessage(e)
-                    rlang::abort(
-                        message = c(
-                            "Sample failed to download",
-                            "i" = glue("Sample: {filename_base}"),
-                            "i" = glue("URL: {src_url}"),
-                            "i" = glue("Original error message: {msg}")
-                        ),
-                        parent = e
-                    )
-                }
-            )
+            curl_download_retry(url = src_url, destfile = intermediate_dst_file)
             if (!keep_only_CPMG_1r) {
                 file.rename(intermediate_dst_file, final_dst_file)
             } else {
@@ -211,14 +189,15 @@ download_MTBLS242 <- function(
         },
         url = url,
         dst_rootdir = dst_rootdir,
-        keep_only_CPMG_1r = keep_only_CPMG_1r
+        keep_only_CPMG_1r = keep_only_CPMG_1r,
+        .progress = "Downloading and preparing samples..."
     )
-    progress_bar_end(pb)
     invisible(sample_annot)
 }
 
 curl_download_retry <- function(url, destfile, ..., timeout_retries = 3) {
     attempts <- 1
+    seconds_between_attempts <- 3
     while (attempts <= timeout_retries) {
         tryCatch({
             return(curl::curl_download(url = url, destfile = destfile, ...))
@@ -227,14 +206,24 @@ curl_download_retry <- function(url, destfile, ..., timeout_retries = 3) {
             if (grepl("curltmp", msg) || grepl(destfile, msg)) {
                 stop(e)
             }
-            cli::cli_warn(
-                c(
-                    "Download failed",
-                    "!" = sprintf("Download of %s failed on attempt %d/%d.", url, attempts, timeout_retries),
-                    "i" = sprintf("Reason for failure: %s", msg)
-                )
+            ctrl_c_error <- "Operation was aborted by an application callback"
+            if (msg == ctrl_c_error) {
+                cli::cli_abort("Aborting download of {url} (interruption requested by user)", parent=e)
+            }
+            warn_msg <- c(
+                "!" = "Failed to download {url}.",
+                "i" = "Attempt {attempts} out of {timeout_retries}."
             )
-            print(msg)
+            if (attempts < timeout_retries) {
+              warn_msg <- c(
+                  warn_msg,
+                  "i" = "Underlying error message: {msg}",
+                  "i" = "Next attempt in {seconds_between_attempts} seconds"
+              )
+              cli::cli_warn(warn_msg)
+            } else {
+              cli::cli_abort(warn_msg, parent=e)
+            }
         })
         attempts <- attempts + 1
     }
