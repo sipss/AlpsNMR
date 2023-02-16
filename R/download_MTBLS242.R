@@ -234,6 +234,7 @@ curl_download_retry <- function(url, destfile, ..., timeout_retries = 3) {
                     "i" = sprintf("Reason for failure: %s", msg)
                 )
             )
+            Sys.sleep(3)
         })
         attempts <- attempts + 1
     }
