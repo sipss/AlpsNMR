@@ -1,3 +1,9 @@
+# AlpsNMR 4.0.4 (2023-02-16)
+
+- Backport fixes from AlpsNMR 4.1.6
+  * Retry failed downloads automatically up to three times
+  * Sleep 3 seconds between download attempt retries.
+
 # AlpsNMR 4.0.3 (2023-02-10)
 
 - Backport fixes from AlpsNMR 4.1.5
