@@ -35,7 +35,27 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           dockerfile: docker/AlpsNMR_3.6.1/Dockerfile
 
-  AlpsNMR_4_0_x-build-and-push:
+  AlpsNMR_4_0_4-build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build and push
+        uses: mr-smithers-excellent/docker-build-push@v5
+        with:
+          image: alpsnmr
+          tags: v4.0.4
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          dockerfile: docker/AlpsNMR_4.0.4/Dockerfile
+
+
+  AlpsNMR_4_2_x-build-and-push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -49,9 +69,9 @@ jobs:
         uses: mr-smithers-excellent/docker-build-push@v5
         with:
           image: alpsnmr
-          tags: v4.0.x
+          tags: v4.2.x
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          dockerfile: docker/AlpsNMR_4.0.x/Dockerfile
+          dockerfile: docker/AlpsNMR_4.2.x/Dockerfile
 

@@ -57,10 +57,10 @@ jobs:
           - {
               os: ubuntu-latest,
               conf_name: 'ubuntu-latest',
-              r: '4.2',
-              bioc: '3.16',
-              cont: "bioconductor/bioconductor_docker:RELEASE_3_16",
-              rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
+              r: '4.3',
+              bioc: '3.17',
+              cont: "bioconductor/bioconductor_docker:RELEASE_3_17",
+              rspm: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"
             }
           #- {
           #    os: ubuntu-latest,
@@ -333,7 +333,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@master
         with:
-          name: ${{ runner.os }}-biocversion-RELEASE_3_16-r-4.2-results
+          name: ${{ runner.os }}-biocversion-RELEASE_3_17-r-4.3-results
           path: check
 
         ## Note that DOCKER_PASSWORD is really a token for your dockerhub
