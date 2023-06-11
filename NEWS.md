@@ -1,3 +1,6 @@
+# AlpsNMR 4.1.6a (2024-01-19)
+- Added two helper functions for autophasing via NMRphasing and export to ASICS
+
 # AlpsNMR 4.1.6 (2023-02-16)
 
 - Download improvements:
