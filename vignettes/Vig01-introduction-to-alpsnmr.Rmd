@@ -143,6 +143,18 @@ If you want to learn more about sample metadata (including acquisition and FID
 processing parameters), as well as more complex ways of adding annotations,
 check out the `vignette("Vig02-handling-metadata-and-annotations", package = "AlpsNMR")`.
 
+# Phasing 
+
+It might be the case that automatically reconstructed metabolite NMR spectra have 
+a first-order phase error. A convenient wrapper function is provided to link to 
+the package `NMRphasing` that provides a variety of algorithms to try to estimate 
+and correct for phase errors, which arise on physical grounds. `NMRphasing`
+performs an optional baseline correction, which here is disabled. 
+
+```{r}
+#dataset <- nmr_dataset_autophase(dataset, method="MPC_DANM", withBC=F)
+```
+
 
 # Interpolation
 

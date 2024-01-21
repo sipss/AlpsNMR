@@ -39,7 +39,12 @@ Authors@R: c(
     person(given = "Nestlé Institute of Health Sciences",
            role = "cph"),
     person(given = "Institute for Bioengineering of Catalonia",
-           role = "cph")
+           role = "cph"),
+    person(given = "Miller", 
+           family = "Jack", 
+           email = "jack.miller@physics.org", 
+           role=c("ctb"),
+           comment = c(ORCID = "0000-0002-6258-1299"))
     )
 Description: Reads Bruker NMR data directories both zipped and unzipped.
  It provides automated and efficient signal processing for untargeted 
@@ -87,6 +92,7 @@ Imports:
  vctrs (>= 0.3.0),
  BiocParallel
 Suggests:
+    ASICS,
     BiocStyle,
     ChemoSpec,
     cowplot,
@@ -96,6 +102,7 @@ Suggests:
     ggrepel (>= 0.8.0),
     gridExtra,
     knitr,
+    NMRphasing,
     plotly (>= 4.7.1),
     progressr,
     SummarizedExperiment,

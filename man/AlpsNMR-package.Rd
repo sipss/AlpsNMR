@@ -60,6 +60,7 @@ Other contributors:
   \item Laura López Sánchez [contributor]
   \item Nestlé Institute of Health Sciences [copyright holder]
   \item Institute for Bioengineering of Catalonia [copyright holder]
+  \item Miller Jack \email{jack.miller@physics.org} (\href{https://orcid.org/0000-0002-6258-1299}{ORCID}) [contributor]
 }
 
 }

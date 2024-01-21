@@ -93,7 +93,8 @@ NULL
 #' @param baselineThresh All peaks with intensities below the thresholds are excluded. Either:
 #'   - A numeric vector of length the number of samples. Each number is a threshold for that sample
 #'   - A single number. All samples use this number as baseline threshold.
-#'   - `NULL`. If that's the case, a default function is used ([nmr_baseline_threshold()])
+#'   - `NULL`. If that's the case, a default function is used ([nmr_baseline_threshold()]), which assumes 
+#'     that there is no signal in the region 9.5-10 ppm. 
 #' @inheritParams speaq::detectSpecPeaks
 #' @param range_without_peaks A numeric vector of length two with a region without peaks, only used when `baselineThresh = NULL`
 #' @param fit_lorentzians If `TRUE`, fit a lorentzian to each detected peak, to infer its inflection points. For now disabled for backwards compatibility.
