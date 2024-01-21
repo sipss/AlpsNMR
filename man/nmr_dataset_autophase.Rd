@@ -6,13 +6,16 @@
 \usage{
 nmr_dataset_autophase(
   samples,
-  method = c("NLS", "MPC_DANM", "MPC_EMP", "SPC_DANM", "SPC_EMP", "SPC_AAM", "SPC_DSM")
+  method = c("NLS", "MPC_DANM", "MPC_EMP", "SPC_DANM", "SPC_EMP", "SPC_AAM", "SPC_DSM"),
+  withBC = F
 )
 }
 \arguments{
 \item{samples}{An \code{nmr_dataset_family} 1D object}
 
 \item{method}{The autophasing method -- see \code{NMRphasing::NMRphasing} for details.}
+
+\item{withBC}{\code{NMRphasing::NMRphasing} performs an integrated baseline correction -- this parameter enables or disables it.}
 }
 \value{
 A (hopefully better phased) \code{nmr_dataset_family} 1D object, with updated real and imaginary parts.

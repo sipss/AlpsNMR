@@ -12,6 +12,7 @@
 #' 
 #' @param samples An `nmr_dataset_family` 1D object 
 #' @param method The autophasing method -- see `NMRphasing::NMRphasing` for details. 
+#' @param withBC `NMRphasing::NMRphasing` performs an integrated baseline correction -- this parameter enables or disables it. 
 #' @return A (hopefully better phased) `nmr_dataset_family` 1D object, with updated real and imaginary parts. 
 #' @examples
 #' dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
@@ -21,7 +22,7 @@
 #' plot(dataset)
 #' 
 #' @export 
-nmr_dataset_autophase <- function(samples, method= c("NLS", "MPC_DANM", "MPC_EMP", "SPC_DANM", "SPC_EMP", "SPC_AAM", "SPC_DSM")) {
+nmr_dataset_autophase <- function(samples, method= c("NLS", "MPC_DANM", "MPC_EMP", "SPC_DANM", "SPC_EMP", "SPC_AAM", "SPC_DSM"), withBC=F) {
     
     method <- match.arg(method)
     BiocParallel::bplapply(seq_len(length(samples[["data_1r"]])), function(i) {
@@ -36,7 +37,8 @@ nmr_dataset_autophase <- function(samples, method= c("NLS", "MPC_DANM", "MPC_EMP
         }
         
         phased_data <- NMRphasing::NMRphasing(data_to_phase, method = method, 
-                                              absorptionOnly = !"data_1i" %in% objects(samples))
+                                              absorptionOnly = !"data_1i" %in% objects(samples), 
+                                              withBC = F)
         
         if("data_1i" %in% objects(samples)) {
             samples[["data_1r"]][[i]] <- Re(phased_data)
