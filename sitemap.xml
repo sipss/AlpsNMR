@@ -1,378 +1,128 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Vig01-introduction-to-alpsnmr.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Vig01b-introduction-to-alpsnmr-old-api.html</loc>
-  </url>
-  <url>
-    <loc>/articles/Vig02-handling-metadata-and-annotations.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/AlpsNMR-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/HMDB_blood.html</loc>
-  </url>
-  <url>
-    <loc>/reference/HMDB_cell.html</loc>
-  </url>
-  <url>
-    <loc>/reference/HMDB_urine.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Parameters_blood.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Parameters_cell.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Parameters_urine.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Peak_detection.html</loc>
-  </url>
-  <url>
-    <loc>/reference/Pipelines.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ROI_blood.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ROI_cell.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ROI_urine.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SummarizedExperiment_to_nmr_data_1r.html</loc>
-  </url>
-  <url>
-    <loc>/reference/SummarizedExperiment_to_nmr_dataset_peak_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/bp_VIP_analysis.html</loc>
-  </url>
-  <url>
-    <loc>/reference/bp_kfold_VIP_analysis.html</loc>
-  </url>
-  <url>
-    <loc>/reference/download_MTBLS242.html</loc>
-  </url>
-  <url>
-    <loc>/reference/file_lister.html</loc>
-  </url>
-  <url>
-    <loc>/reference/files_to_rDolphin.html</loc>
-  </url>
-  <url>
-    <loc>/reference/filter.nmr_dataset_family.html</loc>
-  </url>
-  <url>
-    <loc>/reference/format.nmr_dataset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/format.nmr_dataset_1D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/format.nmr_dataset_peak_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_integration_with_metadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hmdb.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.nmr_dataset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.nmr_dataset_1D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is.nmr_dataset_peak_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/load_and_save_functions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/models_stability_plot_bootstrap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/models_stability_plot_plsda.html</loc>
-  </url>
-  <url>
-    <loc>/reference/new_nmr_dataset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/new_nmr_dataset_1D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/new_nmr_dataset_peak_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_align.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_align_find_ref.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_baseline_estimation.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_baseline_removal.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_baseline_threshold.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_baseline_threshold_plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_batman.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_batman_options.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_build_peak_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_data_1r_to_SummarizedExperiment.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_data_analysis.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_data_analysis_method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_dataset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_dataset_1D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_dataset_family.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_dataset_peak_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_dataset_peak_table_to_SummarizedExperiment.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_detect_peaks.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_detect_peaks_plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_detect_peaks_plot_overview.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_detect_peaks_plot_peaks.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_detect_peaks_tune_snr.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_exclude_region.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_export_data_1r.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_get_peak_distances.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_identify_regions_blood.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_identify_regions_cell.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_identify_regions_urine.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_integrate_peak_positions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_integrate_regions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_interpolate_1D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_meta_add.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_meta_export.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_meta_get.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_meta_get_column.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_meta_groups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_normalize.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_pca_build_model.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_pca_outliers.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_pca_outliers_filter.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_pca_outliers_plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_pca_outliers_robust.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_pca_plots.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_peak_clustering.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_peak_clustering_plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_ppm_resolution.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_read_bruker_fid.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_read_samples.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nmr_zip_bruker_samples.html</loc>
-  </url>
-  <url>
-    <loc>/reference/peaklist_accept_peaks.html</loc>
-  </url>
-  <url>
-    <loc>/reference/peaklist_fit_lorentzians.html</loc>
-  </url>
-  <url>
-    <loc>/reference/permutation_test_model.html</loc>
-  </url>
-  <url>
-    <loc>/reference/permutation_test_plot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot.nmr_dataset_1D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_bootstrap_multimodel.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_interactive.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_plsda_multimodel.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_plsda_samples.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_vip_scores.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_webgl.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plsda_auroc_vip_compare.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plsda_auroc_vip_method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ppm_resolution.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.nmr_dataset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.nmr_dataset_1D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.nmr_dataset_peak_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/random_subsampling.html</loc>
-  </url>
-  <url>
-    <loc>/reference/read_bruker_pdata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/reexports.html</loc>
-  </url>
-  <url>
-    <loc>/reference/save_files_to_rDolphin.html</loc>
-  </url>
-  <url>
-    <loc>/reference/save_profiling_output.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-.nmr_dataset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-.nmr_dataset_1D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sub-.nmr_dataset_peak_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tidy.nmr_dataset_1D.html</loc>
-  </url>
-  <url>
-    <loc>/reference/to_ChemoSpec.html</loc>
-  </url>
-  <url>
-    <loc>/reference/validate_nmr_dataset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/validate_nmr_dataset_family.html</loc>
-  </url>
-  <url>
-    <loc>/reference/validate_nmr_dataset_peak_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/zzz.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://sipss.github.io/AlpsNMR/404.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/LICENSE-text.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/articles/Vig01-introduction-to-alpsnmr.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/articles/Vig01b-introduction-to-alpsnmr-old-api.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/articles/Vig02-handling-metadata-and-annotations.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/articles/index.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/authors.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/index.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/news/index.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/AlpsNMR-package.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/HMDB_blood.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/HMDB_cell.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/HMDB_urine.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/Parameters_blood.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/Parameters_cell.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/Parameters_urine.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/Peak_detection.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/Pipelines.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/ROI_blood.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/ROI_cell.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/ROI_urine.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/SummarizedExperiment_to_nmr_data_1r.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/SummarizedExperiment_to_nmr_dataset_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/bp_VIP_analysis.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/bp_kfold_VIP_analysis.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/download_MTBLS242.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/file_lister.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/files_to_rDolphin.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/filter.nmr_dataset_family.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/format.nmr_dataset.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/format.nmr_dataset_1D.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/format.nmr_dataset_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/get_integration_with_metadata.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/hmdb.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/index.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/is.nmr_dataset.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/is.nmr_dataset_1D.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/is.nmr_dataset_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/load_and_save_functions.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/models_stability_plot_bootstrap.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/models_stability_plot_plsda.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/new_nmr_dataset.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/new_nmr_dataset_1D.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/new_nmr_dataset_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_align.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_align_find_ref.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_baseline_estimation.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_baseline_removal.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_baseline_threshold.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_baseline_threshold_plot.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_batman.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_batman_options.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_build_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_data.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_data_1r_to_SummarizedExperiment.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_data_analysis.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_data_analysis_method.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_dataset.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_dataset_1D.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_dataset_family.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_dataset_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_dataset_peak_table_to_SummarizedExperiment.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_detect_peaks.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_detect_peaks_plot.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_detect_peaks_plot_overview.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_detect_peaks_plot_peaks.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_detect_peaks_tune_snr.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_exclude_region.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_export_data_1r.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_get_peak_distances.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_identify_regions_blood.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_identify_regions_cell.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_identify_regions_urine.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_integrate_peak_positions.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_integrate_regions.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_interpolate_1D.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_meta_add.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_meta_export.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_meta_get.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_meta_get_column.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_meta_groups.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_normalize.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_pca_build_model.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_pca_outliers.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_pca_outliers_filter.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_pca_outliers_plot.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_pca_outliers_robust.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_pca_plots.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_peak_clustering.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_peak_clustering_plot.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_ppm_resolution.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_read_bruker_fid.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_read_samples.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_zip_bruker_samples.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/peaklist_accept_peaks.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/peaklist_fit_lorentzians.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/permutation_test_model.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/permutation_test_plot.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/plot.nmr_dataset_1D.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/plot_bootstrap_multimodel.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/plot_interactive.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/plot_plsda_multimodel.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/plot_plsda_samples.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/plot_vip_scores.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/plot_webgl.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/plsda_auroc_vip_compare.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/plsda_auroc_vip_method.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/ppm_resolution.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/print.nmr_dataset.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/print.nmr_dataset_1D.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/print.nmr_dataset_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/random_subsampling.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/read_bruker_pdata.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/reexports.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/save_files_to_rDolphin.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/save_profiling_output.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/sub-.nmr_dataset.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/sub-.nmr_dataset_1D.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/sub-.nmr_dataset_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/tidy.nmr_dataset_1D.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/to_ChemoSpec.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/validate_nmr_dataset.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/validate_nmr_dataset_family.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/validate_nmr_dataset_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/zzz.html</loc></url>
 </urlset>
+
