@@ -5,7 +5,7 @@ as well as nmr_dataset_peak_table peak tables."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -27,7 +27,7 @@ as well as nmr_dataset_peak_table peak tables."></head><body>
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <h1>Data analysis</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/nmr_data_analysis.R" class="external-link"><code>R/nmr_data_analysis.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/nmr_data_analysis.R" class="external-link"><code>R/nmr_data_analysis.R</code></a></small>
       <div class="d-none name"><code>nmr_data_analysis.Rd</code></div>
     </div>
     <div class="ref-description section level2">
@@ -48,7 +48,7 @@ as well as <a href="nmr_dataset_peak_table.html">nmr_dataset_peak_table</a> peak
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-dataset">dataset<a class="anchor" aria-label="anchor" href="#arg-dataset"></a></dt>
+<dl><dt id="arg-dataset">dataset<a class="anchor" aria-label="anchor" href="#arg-dataset"></a></dt>
 <dd><p>An <a href="nmr_dataset_family.html">nmr_dataset_family</a> object</p></dd>
 <dt id="arg-y-column">y_column<a class="anchor" aria-label="anchor" href="#arg-y-column"></a></dt>
 <dd><p>A string with the name of the y column (present in the
@@ -66,7 +66,7 @@ See <a href="random_subsampling.html">random_subsampling</a> for further details
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p>A list with the following elements:</p><ul><li><p><code>train_test_partitions</code>: A list with the indices used in train and test on each of the cross-validation iterations</p></li>
+    <p>A list with the following elements:</p><ul><li><p><code>train_test_partitions</code>: A list with the indices used in train and test on each of the cross-validation iterations</p></li>
 <li><p><code>inner_cv_results</code>: The output returned by <code>train_evaluate_model</code> on each inner cross-validation</p></li>
 <li><p><code>inner_cv_results_digested</code>: The output returned by <code>choose_best_inner</code>.</p></li>
 <li><p><code>outer_cv_results</code>: The output returned by <code>train_evaluate_model</code> on each outer cross-validation</p></li>

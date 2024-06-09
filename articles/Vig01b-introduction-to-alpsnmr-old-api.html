@@ -11,21 +11,19 @@
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to AlpsNMR (older API)">
-<meta name="description" content="AlpsNMR">
-<meta property="og:description" content="AlpsNMR">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="active nav-item dropdown">
+<li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/Vig01-introduction-to-alpsnmr.html">Introduction to AlpsNMR</a></li>
@@ -52,8 +50,8 @@
       <h1>Introduction to AlpsNMR (older API)</h1>
                         <h4 data-toc-skip class="author">AlpsNMR
 authors</h4>
-                        <h4 data-toc-skip class="date">2024-06-02</h4>
-            <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/vignettes/Vig01b-introduction-to-alpsnmr-old-api.Rmd" class="external-link"><code>vignettes/Vig01b-introduction-to-alpsnmr-old-api.Rmd</code></a></small>
+                        <h4 data-toc-skip class="date">2024-06-09</h4>
+            <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/vignettes/Vig01b-introduction-to-alpsnmr-old-api.Rmd" class="external-link"><code>vignettes/Vig01b-introduction-to-alpsnmr-old-api.Rmd</code></a></small>
       <div class="d-none name"><code>Vig01b-introduction-to-alpsnmr-old-api.Rmd</code></div>
     </div>
             <div class="abstract">
@@ -90,7 +88,6 @@ on your computer):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Bioconductor/BiocParallel" class="external-link">BiocParallel</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sipss.github.io/AlpsNMR/">AlpsNMR</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: future</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'AlpsNMR'</span></span>
 <span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
@@ -109,7 +106,7 @@ introduction for further details</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Bioconductor/BiocParallel" class="external-link">BiocParallel</a></span><span class="op">)</span></span>
 <span><span class="co">#register(SerialParam(), default = TRUE)  # disable parallellization</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SnowParam-class.html" class="external-link">SnowParam</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">3</span>, exportglobals <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, default <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># enable parallellization with 4 workers</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SnowParam-class.html" class="external-link">SnowParam</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">2</span>, exportglobals <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, default <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># enable parallellization with 2 workers</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="data-the-meoh_plasma_extraction-dataset">Data: The <code>MeOH_plasma_extraction</code> dataset<a class="anchor" aria-label="anchor" href="#data-the-meoh_plasma_extraction-dataset"></a>
@@ -863,7 +860,7 @@ baseline subtraction.</p>
 <p>After applying any feature selection or machine learning, Alps allows
 the identification of features of interest through
 <code>nmr_identify_regions_blood</code>. The function gives 3
-posibilities sorted by the most probable metabolite (see
+possibilities sorted by the most probable metabolite (see
 <code>nmr_identify_regions_blood</code> for details).</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ppm_to_assign</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.060960203</span>, <span class="fl">3.048970634</span>,<span class="fl">2.405935596</span>,<span class="fl">0.990616851</span>,<span class="fl">0.986520147</span>, <span class="fl">1.044258467</span><span class="op">)</span></span>
@@ -930,12 +927,12 @@ starting point for using the package.</p>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] ggplot2_3.5.1       AlpsNMR_4.7.0       future_1.33.2      </span></span>
-<span><span class="co">#&gt; [4] BiocParallel_1.38.0 BiocStyle_2.33.0   </span></span>
+<span><span class="co">#&gt; [1] ggplot2_3.5.1       AlpsNMR_4.7.1       BiocParallel_1.38.0</span></span>
+<span><span class="co">#&gt; [4] BiocStyle_2.33.0   </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;   [1] baseline_1.3-5         gridExtra_2.3          readxl_1.4.3          </span></span>
-<span><span class="co">#&gt;   [4] rlang_1.1.3            magrittr_2.0.3         MassSpecWavelet_1.70.0</span></span>
+<span><span class="co">#&gt;   [4] rlang_1.1.4            magrittr_2.0.3         MassSpecWavelet_1.70.0</span></span>
 <span><span class="co">#&gt;   [7] matrixStats_1.3.0      compiler_4.4.0         systemfonts_1.1.0     </span></span>
 <span><span class="co">#&gt;  [10] vctrs_0.6.5            reshape2_1.4.4         RcppZiggurat_0.1.6    </span></span>
 <span><span class="co">#&gt;  [13] rvest_1.0.4            quadprog_1.5-8         stringr_1.5.1         </span></span>
@@ -946,29 +943,28 @@ starting point for using the package.</p>
 <span><span class="co">#&gt;  [28] cachem_1.1.0           jsonlite_1.8.8         limSolve_1.5.7.1      </span></span>
 <span><span class="co">#&gt;  [31] highr_0.11             parallel_4.4.0         cluster_2.1.6         </span></span>
 <span><span class="co">#&gt;  [34] R6_2.5.1               bslib_0.7.0            stringi_1.8.4         </span></span>
-<span><span class="co">#&gt;  [37] RColorBrewer_1.1-3     parallelly_1.37.1      jquerylib_0.1.4       </span></span>
-<span><span class="co">#&gt;  [40] cellranger_1.1.0       Rcpp_1.0.12            bookdown_0.39         </span></span>
-<span><span class="co">#&gt;  [43] iterators_1.0.14       knitr_1.47             snow_0.4-4            </span></span>
-<span><span class="co">#&gt;  [46] Matrix_1.7-0           igraph_2.0.3           tidyselect_1.2.1      </span></span>
-<span><span class="co">#&gt;  [49] yaml_2.3.8             codetools_0.2-20       doRNG_1.8.6           </span></span>
-<span><span class="co">#&gt;  [52] listenv_0.9.1          lattice_0.22-6         tibble_3.2.1          </span></span>
-<span><span class="co">#&gt;  [55] plyr_1.8.9             withr_3.0.0            rARPACK_0.11-0        </span></span>
-<span><span class="co">#&gt;  [58] evaluate_0.23          signal_1.8-0           speaq_2.7.0           </span></span>
-<span><span class="co">#&gt;  [61] desc_1.4.3             RcppParallel_5.1.7     xml2_1.3.6            </span></span>
-<span><span class="co">#&gt;  [64] lpSolve_5.6.20         pillar_1.9.0           BiocManager_1.30.23   </span></span>
-<span><span class="co">#&gt;  [67] rngtools_1.5.2         foreach_1.5.2          ellipse_0.5.0         </span></span>
-<span><span class="co">#&gt;  [70] pcaPP_2.0-4            generics_0.1.3         munsell_0.5.1         </span></span>
-<span><span class="co">#&gt;  [73] scales_1.3.0           globals_0.16.3         glue_1.7.0            </span></span>
-<span><span class="co">#&gt;  [76] tools_4.4.0            data.table_1.15.4      SparseM_1.83          </span></span>
-<span><span class="co">#&gt;  [79] RSpectra_0.16-1        fs_1.6.4               mvtnorm_1.2-5         </span></span>
-<span><span class="co">#&gt;  [82] grid_4.4.0             impute_1.78.0          missForest_1.5        </span></span>
-<span><span class="co">#&gt;  [85] tidyr_1.3.1            colorspace_2.1-0       cli_3.6.2             </span></span>
-<span><span class="co">#&gt;  [88] textshaping_0.4.0      fansi_1.0.6            mixOmics_6.28.0       </span></span>
-<span><span class="co">#&gt;  [91] dplyr_1.1.4            corpcor_1.6.10         doSNOW_1.0.20         </span></span>
-<span><span class="co">#&gt;  [94] gtable_0.3.5           sass_0.4.9             digest_0.6.35         </span></span>
-<span><span class="co">#&gt;  [97] progressr_0.14.0       ggrepel_0.9.5          htmlwidgets_1.6.4     </span></span>
-<span><span class="co">#&gt; [100] farver_2.1.2           htmltools_0.5.8.1      pkgdown_2.0.9.9000    </span></span>
-<span><span class="co">#&gt; [103] lifecycle_1.0.4        httr_1.4.7             MASS_7.3-60.2</span></span></code></pre></div>
+<span><span class="co">#&gt;  [37] RColorBrewer_1.1-3     jquerylib_0.1.4        cellranger_1.1.0      </span></span>
+<span><span class="co">#&gt;  [40] Rcpp_1.0.12            bookdown_0.39          iterators_1.0.14      </span></span>
+<span><span class="co">#&gt;  [43] knitr_1.47             snow_0.4-4             Matrix_1.7-0          </span></span>
+<span><span class="co">#&gt;  [46] igraph_2.0.3           tidyselect_1.2.1       yaml_2.3.8            </span></span>
+<span><span class="co">#&gt;  [49] codetools_0.2-20       doRNG_1.8.6            lattice_0.22-6        </span></span>
+<span><span class="co">#&gt;  [52] tibble_3.2.1           plyr_1.8.9             withr_3.0.0           </span></span>
+<span><span class="co">#&gt;  [55] rARPACK_0.11-0         evaluate_0.23.0.9000   signal_1.8-0          </span></span>
+<span><span class="co">#&gt;  [58] speaq_2.7.0            desc_1.4.3             RcppParallel_5.1.7    </span></span>
+<span><span class="co">#&gt;  [61] xml2_1.3.6             lpSolve_5.6.20         pillar_1.9.0          </span></span>
+<span><span class="co">#&gt;  [64] BiocManager_1.30.23    rngtools_1.5.2         foreach_1.5.2         </span></span>
+<span><span class="co">#&gt;  [67] ellipse_0.5.0          pcaPP_2.0-4            generics_0.1.3        </span></span>
+<span><span class="co">#&gt;  [70] munsell_0.5.1          scales_1.3.0           glue_1.7.0            </span></span>
+<span><span class="co">#&gt;  [73] tools_4.4.0            data.table_1.15.4      SparseM_1.83          </span></span>
+<span><span class="co">#&gt;  [76] RSpectra_0.16-1        fs_1.6.4               mvtnorm_1.2-5         </span></span>
+<span><span class="co">#&gt;  [79] grid_4.4.0             impute_1.78.0          missForest_1.5        </span></span>
+<span><span class="co">#&gt;  [82] tidyr_1.3.1            colorspace_2.1-0       cli_3.6.2             </span></span>
+<span><span class="co">#&gt;  [85] textshaping_0.4.0      fansi_1.0.6            mixOmics_6.28.0       </span></span>
+<span><span class="co">#&gt;  [88] dplyr_1.1.4            corpcor_1.6.10         doSNOW_1.0.20         </span></span>
+<span><span class="co">#&gt;  [91] gtable_0.3.5           sass_0.4.9             digest_0.6.35         </span></span>
+<span><span class="co">#&gt;  [94] progressr_0.14.0       ggrepel_0.9.5          htmlwidgets_1.6.4     </span></span>
+<span><span class="co">#&gt;  [97] farver_2.1.2           htmltools_0.5.8.1      pkgdown_2.0.9.9000    </span></span>
+<span><span class="co">#&gt; [100] lifecycle_1.0.4        httr_1.4.7             MASS_7.3-60.2</span></span></code></pre></div>
 </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

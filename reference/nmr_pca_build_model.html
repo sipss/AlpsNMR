@@ -7,7 +7,7 @@ excluded from the analysis."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -29,7 +29,7 @@ excluded from the analysis."></head><body>
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <h1>Build a PCA on for an nmr_dataset</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/pca_helpers.R" class="external-link"><code>R/pca_helpers.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/pca_helpers.R" class="external-link"><code>R/pca_helpers.R</code></a></small>
       <div class="d-none name"><code>nmr_pca_build_model.Rd</code></div>
     </div>
     <div class="ref-description section level2">
@@ -58,7 +58,7 @@ excluded from the analysis.</p>
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-nmr-dataset">nmr_dataset<a class="anchor" aria-label="anchor" href="#arg-nmr-dataset"></a></dt>
+<dl><dt id="arg-nmr-dataset">nmr_dataset<a class="anchor" aria-label="anchor" href="#arg-nmr-dataset"></a></dt>
 <dd><p>a <a href="nmr_dataset_1D.html">nmr_dataset_1D</a> object</p></dd>
 <dt id="arg-ncomp">ncomp<a class="anchor" aria-label="anchor" href="#arg-ncomp"></a></dt>
 <dd><p>Integer, if data is complete <code>ncomp</code> decides the number of
@@ -85,17 +85,17 @@ columns of <code>X</code> can be supplied. The value is passed to
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p>A PCA model as given by <a href="https://rdrr.io/pkg/mixOmics/man/pca.html" class="external-link">mixOmics::pca</a> with two additional attributes:</p><ul><li><p><code>nmr_data_axis</code> containing the full ppm axis</p></li>
+    <p>A PCA model as given by <a href="https://rdrr.io/pkg/mixOmics/man/pca.html" class="external-link">mixOmics::pca</a> with two additional attributes:</p><ul><li><p><code>nmr_data_axis</code> containing the full ppm axis</p></li>
 <li><p><code>nmr_included</code> with the data points included in the model
 These attributes are used internally by AlpsNMR to create loading plots</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other PCA related functions:
+<code><a href="nmr_pca_outliers.html">nmr_pca_outliers</a>()</code>,
 <code><a href="nmr_pca_outliers_filter.html">nmr_pca_outliers_filter</a>()</code>,
 <code><a href="nmr_pca_outliers_plot.html">nmr_pca_outliers_plot</a>()</code>,
 <code><a href="nmr_pca_outliers_robust.html">nmr_pca_outliers_robust</a>()</code>,
-<code><a href="nmr_pca_outliers.html">nmr_pca_outliers</a>()</code>,
 <code><a href="nmr_pca_plots.html">nmr_pca_plots</a></code></p></div>
     </div>
     <div class="section level2">

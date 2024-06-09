@@ -5,7 +5,7 @@ nmr_dataset_1D full spectra as well as nmr_dataset_peak_table peak tables."></he
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -27,7 +27,7 @@ nmr_dataset_1D full spectra as well as nmr_dataset_peak_table peak tables."></he
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <h1>Bootstrap and permutation over PLS-VIP</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/nmr_data_analysis.R" class="external-link"><code>R/nmr_data_analysis.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/nmr_data_analysis.R" class="external-link"><code>R/nmr_data_analysis.R</code></a></small>
       <div class="d-none name"><code>bp_VIP_analysis.Rd</code></div>
     </div>
     <div class="ref-description section level2">
@@ -40,7 +40,7 @@ nmr_dataset_1D full spectra as well as nmr_dataset_peak_table peak tables."></he
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-dataset">dataset<a class="anchor" aria-label="anchor" href="#arg-dataset"></a></dt>
+<dl><dt id="arg-dataset">dataset<a class="anchor" aria-label="anchor" href="#arg-dataset"></a></dt>
 <dd><p>An <a href="nmr_dataset_family.html">nmr_dataset_family</a> object</p></dd>
 <dt id="arg-train-index">train_index<a class="anchor" aria-label="anchor" href="#arg-train-index"></a></dt>
 <dd><p>set of index used to generate the bootstrap datasets</p></dd>
@@ -54,7 +54,7 @@ metadata of the dataset)</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p>A list with the following elements:</p><ul><li><p><code>important_vips</code>: A list with the important vips selected</p></li>
+    <p>A list with the following elements:</p><ul><li><p><code>important_vips</code>: A list with the important vips selected</p></li>
 <li><p><code>relevant_vips</code>: List of vips with some relevance</p></li>
 <li><p><code>pls_vip</code>: Pls-VIPs of every bootstrap</p></li>
 <li><p><code>pls_vip_perm</code>: Pls-VIPs of every bootstrap with permuted variables</p></li>

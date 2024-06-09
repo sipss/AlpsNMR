@@ -9,7 +9,7 @@ detection."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -31,7 +31,7 @@ detection."></head><body>
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <h1>Peak detection for NMR</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/nmr_detect_peaks_align.R" class="external-link"><code>R/nmr_detect_peaks_align.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/nmr_detect_peaks_align.R" class="external-link"><code>R/nmr_detect_peaks_align.R</code></a></small>
       <div class="d-none name"><code>nmr_detect_peaks.Rd</code></div>
     </div>
     <div class="ref-description section level2">
@@ -55,7 +55,7 @@ detection.</p>
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-nmr-dataset">nmr_dataset<a class="anchor" aria-label="anchor" href="#arg-nmr-dataset"></a></dt>
+<dl><dt id="arg-nmr-dataset">nmr_dataset<a class="anchor" aria-label="anchor" href="#arg-nmr-dataset"></a></dt>
 <dd><p>An <a href="nmr_dataset_1D.html">nmr_dataset_1D</a>.</p></dd>
 <dt id="arg-ndivrange-ppm">nDivRange_ppm<a class="anchor" aria-label="anchor" href="#arg-ndivrange-ppm"></a></dt>
 <dd><p>Segment size, in ppms, to divide the spectra and search
@@ -65,7 +65,8 @@ for peaks.</p></dd>
 <dt id="arg-baselinethresh">baselineThresh<a class="anchor" aria-label="anchor" href="#arg-baselinethresh"></a></dt>
 <dd><p>All peaks with intensities below the thresholds are excluded. Either:</p><ul><li><p>A numeric vector of length the number of samples. Each number is a threshold for that sample</p></li>
 <li><p>A single number. All samples use this number as baseline threshold.</p></li>
-<li><p><code>NULL</code>. If that's the case, a default function is used (<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>)</p></li>
+<li><p><code>NULL</code>. If that's the case, a default function is used (<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>), which assumes
+that there is no signal in the region 9.5-10 ppm.</p></li>
 </ul></dd>
 <dt id="arg-snr-th">SNR.Th<a class="anchor" aria-label="anchor" href="#arg-snr-th"></a></dt>
 <dd><p>The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.</p></dd>
@@ -78,7 +79,7 @@ for peaks.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p>A data frame with the NMRExperiment, the sample index, the position
+    <p>A data frame with the NMRExperiment, the sample index, the position
 in ppm and index and the peak intensity</p>
     </div>
     <div class="section level2">
@@ -95,8 +96,8 @@ detections.</p>
 <p>Other peak detection functions:
 <code><a href="Pipelines.html">Pipelines</a></code>,
 <code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold</a>()</code>,
-<code><a href="nmr_detect_peaks_plot_overview.html">nmr_detect_peaks_plot_overview</a>()</code>,
 <code><a href="nmr_detect_peaks_plot.html">nmr_detect_peaks_plot</a>()</code>,
+<code><a href="nmr_detect_peaks_plot_overview.html">nmr_detect_peaks_plot_overview</a>()</code>,
 <code><a href="nmr_detect_peaks_tune_snr.html">nmr_detect_peaks_tune_snr</a>()</code>,
 <code><a href="nmr_identify_regions_blood.html">nmr_identify_regions_blood</a>()</code>,
 <code><a href="nmr_identify_regions_cell.html">nmr_identify_regions_cell</a>()</code>,

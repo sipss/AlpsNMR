@@ -45,6 +45,7 @@
 <url><loc>https://sipss.github.io/AlpsNMR/reference/new_nmr_dataset_peak_table.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_align.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_align_find_ref.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_autophase.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_baseline_estimation.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_baseline_removal.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/nmr_baseline_threshold.html</loc></url>
@@ -119,6 +120,7 @@
 <url><loc>https://sipss.github.io/AlpsNMR/reference/sub-.nmr_dataset_1D.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/sub-.nmr_dataset_peak_table.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/tidy.nmr_dataset_1D.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/to_ASICS.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/to_ChemoSpec.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/validate_nmr_dataset.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/validate_nmr_dataset_family.html</loc></url>

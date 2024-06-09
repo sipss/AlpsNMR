@@ -5,7 +5,7 @@ a range without peaks, by default the 9.5 - 10 ppm range."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -27,7 +27,7 @@ a range without peaks, by default the 9.5 - 10 ppm range."></head><body>
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <h1>Threshold estimation for peak detection</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/nmr_baseline_threshold.R" class="external-link"><code>R/nmr_baseline_threshold.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/nmr_baseline_threshold.R" class="external-link"><code>R/nmr_baseline_threshold.R</code></a></small>
       <div class="d-none name"><code>nmr_baseline_threshold.Rd</code></div>
     </div>
     <div class="ref-description section level2">
@@ -44,7 +44,7 @@ a range without peaks, by default the 9.5 - 10 ppm range.</p>
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-nmr-dataset">nmr_dataset<a class="anchor" aria-label="anchor" href="#arg-nmr-dataset"></a></dt>
+<dl><dt id="arg-nmr-dataset">nmr_dataset<a class="anchor" aria-label="anchor" href="#arg-nmr-dataset"></a></dt>
 <dd><p>An <a href="nmr_dataset_1D.html">nmr_dataset_1D</a>.</p></dd>
 <dt id="arg-range-without-peaks">range_without_peaks<a class="anchor" aria-label="anchor" href="#arg-range-without-peaks"></a></dt>
 <dd><p>A vector with two doubles describing a range without peaks suitable for baseline detection</p></dd>
@@ -53,7 +53,7 @@ a range without peaks, by default the 9.5 - 10 ppm range.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p>Numerical. A threshold value in intensity below that no peak is detected.</p>
+    <p>Numerical. A threshold value in intensity below that no peak is detected.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -71,10 +71,10 @@ with the <code>median+3mad</code> for each sample. This is a new more robust met
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other peak detection functions:
 <code><a href="Pipelines.html">Pipelines</a></code>,
-<code><a href="nmr_detect_peaks_plot_overview.html">nmr_detect_peaks_plot_overview</a>()</code>,
-<code><a href="nmr_detect_peaks_plot.html">nmr_detect_peaks_plot</a>()</code>,
-<code><a href="nmr_detect_peaks_tune_snr.html">nmr_detect_peaks_tune_snr</a>()</code>,
 <code><a href="nmr_detect_peaks.html">nmr_detect_peaks</a>()</code>,
+<code><a href="nmr_detect_peaks_plot.html">nmr_detect_peaks_plot</a>()</code>,
+<code><a href="nmr_detect_peaks_plot_overview.html">nmr_detect_peaks_plot_overview</a>()</code>,
+<code><a href="nmr_detect_peaks_tune_snr.html">nmr_detect_peaks_tune_snr</a>()</code>,
 <code><a href="nmr_identify_regions_blood.html">nmr_identify_regions_blood</a>()</code>,
 <code><a href="nmr_identify_regions_cell.html">nmr_identify_regions_cell</a>()</code>,
 <code><a href="nmr_identify_regions_urine.html">nmr_identify_regions_urine</a>()</code>,

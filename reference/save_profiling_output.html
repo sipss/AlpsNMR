@@ -3,7 +3,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -25,7 +25,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <h1>Save rDoplhin output</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/to_rDolphin_blood.R" class="external-link"><code>R/to_rDolphin_blood.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/to_rDolphin_blood.R" class="external-link"><code>R/to_rDolphin_blood.R</code></a></small>
       <div class="d-none name"><code>save_profiling_output.Rd</code></div>
     </div>
     <div class="ref-description section level2">
@@ -37,14 +37,14 @@
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-targeted-profiling">targeted_profiling<a class="anchor" aria-label="anchor" href="#arg-targeted-profiling"></a></dt>
+<dl><dt id="arg-targeted-profiling">targeted_profiling<a class="anchor" aria-label="anchor" href="#arg-targeted-profiling"></a></dt>
 <dd><p>A list from Automatic_targeted_profiling function</p></dd>
 <dt id="arg-output-directory">output_directory<a class="anchor" aria-label="anchor" href="#arg-output-directory"></a></dt>
 <dd><p>a directory in which the CSV files are saved</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p>rDolphin output from Automatic_targeted_profiling function:</p><ul><li><p>metabolites_intensity</p></li>
+    <p>rDolphin output from Automatic_targeted_profiling function:</p><ul><li><p>metabolites_intensity</p></li>
 <li><p>metabolites_quantification</p></li>
 <li><p>ROI_profiles_used</p></li>
 <li><p>chemical_shift</p></li>
@@ -68,11 +68,11 @@
     </div>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">rDolphin_object</span> <span class="op">&lt;-</span> <span class="fu">to_rDolphin</span><span class="op">(</span><span class="va">parameters</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">targeted_profiling</span> <span class="op">&lt;-</span> <span class="fu">Automatic_targeted_profiling</span><span class="op">(</span><span class="va">rDolphin</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">save_profiling_output</span><span class="op">(</span><span class="va">targeted_profiling</span>, <span class="va">output_directory</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

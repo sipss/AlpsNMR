@@ -15,7 +15,7 @@ function.'></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -37,7 +37,7 @@ function.'></head><body>
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <h1>Files to rDoplhin</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/to_rDolphin_blood.R" class="external-link"><code>R/to_rDolphin_blood.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/to_rDolphin_blood.R" class="external-link"><code>R/to_rDolphin_blood.R</code></a></small>
       <div class="d-none name"><code>files_to_rDolphin.Rd</code></div>
     </div>
     <div class="ref-description section level2">
@@ -55,14 +55,14 @@ function.</p>
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-nmr-dataset">nmr_dataset<a class="anchor" aria-label="anchor" href="#arg-nmr-dataset"></a></dt>
+<dl><dt id="arg-nmr-dataset">nmr_dataset<a class="anchor" aria-label="anchor" href="#arg-nmr-dataset"></a></dt>
 <dd><p>An <a href="nmr_dataset.html">nmr_dataset</a> object</p></dd>
 <dt id="arg-biological-origin">biological_origin<a class="anchor" aria-label="anchor" href="#arg-biological-origin"></a></dt>
 <dd><p>String specify the type of sample (blood, urine, cell)</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p>a list containing:</p><ul><li><p><code>meta_rDolphin</code>: metadata in rDolphin format,</p></li>
+    <p>a list containing:</p><ul><li><p><code>meta_rDolphin</code>: metadata in rDolphin format,</p></li>
 <li><p><code>NMR_spectra</code>: spectra matrix</p></li>
 <li><p><code>ROI</code>: ROI template</p></li>
 <li><p><code>Parameters</code>: parameters file</p></li>
@@ -83,7 +83,7 @@ function.</p>
     </div>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># Set the directory in which rDolphin files will be saved</span></span></span>
 <span class="r-in"><span><span class="va">output_dir_10_rDolphin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">your_path</span>, <span class="st">"10-rDolphin"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="va">output_dir_10_rDolphin</span><span class="op">)</span></span></span>
@@ -116,7 +116,7 @@ function.</p>
 <span class="r-in"><span><span class="va">intensities</span> <span class="op">&lt;-</span> <span class="va">targeted_profiling</span><span class="op">$</span><span class="va">final_output</span><span class="op">$</span><span class="va">intensity</span></span></span>
 <span class="r-in"><span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">rDolphin_object</span><span class="op">$</span><span class="va">Metadata</span><span class="op">$</span><span class="va">type</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">model_PLS</span> <span class="op">&lt;-</span> <span class="fu">rdCV_PLS_RF</span><span class="op">(</span>X <span class="op">=</span> <span class="va">intensities</span>, Y <span class="op">=</span> <span class="va">group</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

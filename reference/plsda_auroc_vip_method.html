@@ -3,7 +3,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -25,7 +25,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <h1>Method for nmr_data_analysis (PLSDA model with AUROC and VIP outputs)</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/R/plsda.R" class="external-link"><code>R/plsda.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/plsda.R" class="external-link"><code>R/plsda.R</code></a></small>
       <div class="d-none name"><code>plsda_auroc_vip_method.Rd</code></div>
     </div>
     <div class="ref-description section level2">
@@ -37,7 +37,7 @@
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-ncomp">ncomp<a class="anchor" aria-label="anchor" href="#arg-ncomp"></a></dt>
+<dl><dt id="arg-ncomp">ncomp<a class="anchor" aria-label="anchor" href="#arg-ncomp"></a></dt>
 <dd><p>Max. number of latent variables to explore in the PLSDA analysis</p></dd>
 <dt id="arg-auc-increment-threshold">auc_increment_threshold<a class="anchor" aria-label="anchor" href="#arg-auc-increment-threshold"></a></dt>
 <dd><p>Choose the number of latent variables when the
@@ -45,7 +45,7 @@ AUC does not increment more than this threshold.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p>Returns an object to be used with <a href="nmr_data_analysis.html">nmr_data_analysis</a> to perform a (optionally
+    <p>Returns an object to be used with <a href="nmr_data_analysis.html">nmr_data_analysis</a> to perform a (optionally
 multilevel) PLS-DA model, using the area under the ROC curve as figure of
 merit to determine the optimum number of latent variables.</p>
     </div>

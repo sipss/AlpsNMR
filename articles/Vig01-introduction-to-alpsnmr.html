@@ -11,21 +11,19 @@
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to AlpsNMR">
-<meta name="description" content="AlpsNMR">
-<meta property="og:description" content="AlpsNMR">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="active nav-item dropdown">
+<li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/Vig01-introduction-to-alpsnmr.html">Introduction to AlpsNMR</a></li>
@@ -52,8 +50,8 @@
       <h1>Introduction to AlpsNMR</h1>
                         <h4 data-toc-skip class="author">AlpsNMR
 authors</h4>
-                        <h4 data-toc-skip class="date">2024-06-02</h4>
-            <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/HEAD/vignettes/Vig01-introduction-to-alpsnmr.Rmd" class="external-link"><code>vignettes/Vig01-introduction-to-alpsnmr.Rmd</code></a></small>
+                        <h4 data-toc-skip class="date">2024-06-09</h4>
+            <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/vignettes/Vig01-introduction-to-alpsnmr.Rmd" class="external-link"><code>vignettes/Vig01-introduction-to-alpsnmr.Rmd</code></a></small>
       <div class="d-none name"><code>Vig01-introduction-to-alpsnmr.Rmd</code></div>
     </div>
             <div class="abstract">
@@ -91,7 +89,6 @@ packages:</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org" class="external-link">readxl</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Bioconductor/BiocParallel" class="external-link">BiocParallel</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sipss.github.io/AlpsNMR/">AlpsNMR</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Loading required package: future</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Attaching package: 'AlpsNMR'</span></span></code></pre>
 <pre><code><span><span class="co">## The following object is masked from 'package:stats':</span></span>
@@ -106,9 +103,9 @@ use of the <code>BiocParallel</code> package. Whether to parallelize or
 not is left to the user that can control the parallellization
 registering backends. Please check
 <code><a href="https://bioconductor.org/packages/release/bioc/vignettes/BiocParallel/inst/doc/Introduction_To_BiocParallel.html" class="external-link">vignette("Introduction_To_BiocParallel", package = "BiocParallel")</a></code>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#register(SerialParam(), default = TRUE)  # disable parallellization</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SnowParam-class.html" class="external-link">SnowParam</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">3</span>, exportglobals <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, default <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># enable parallellization with 3 workers</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">register</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SnowParam-class.html" class="external-link">SnowParam</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">2</span>, exportglobals <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, default <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># enable parallellization with 2 workers</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="data-the-meoh_plasma_extraction-dataset">Data: The <code>MeOH_plasma_extraction</code> dataset<a class="anchor" aria-label="anchor" href="#data-the-meoh_plasma_extraction-dataset"></a>
@@ -119,19 +116,19 @@ package. The samples are pooled quality control plasma samples, that
 were extracted with methanol. They only contain small molecules.</p>
 <p>If you have installed this package, you can obtain the directory
 where the samples are with the command:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">MeOH_plasma_extraction_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span>
 <span><span class="va">MeOH_plasma_extraction_dir</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "/__w/_temp/Library/AlpsNMR/dataset-demo"</span></span></code></pre>
 <p>The demo directory includes three zipped Bruker samples and a dummy
 Excel metadata file:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "10.zip"              "20.zip"              "30.zip"             </span></span>
 <span><span class="co">## [4] "dummy_metadata.xlsx" "README.txt"</span></span></code></pre>
 <p>Since these are quality control samples, the metadata is a dummy
 table:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">MeOH_plasma_extraction_xlsx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, <span class="st">"dummy_metadata.xlsx"</span><span class="op">)</span></span>
 <span><span class="va">annotations</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_xlsx</span><span class="op">)</span></span>
 <span><span class="va">annotations</span></span></code></pre></div>
@@ -151,13 +148,13 @@ samples to load that can be paths to directories of Bruker format
 samples or paths to JDX files.</p>
 <p>Additionally, this function can filter by pulse sequences (e.g. load
 only NOESY samples) or loading only metadata.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">zip_files</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="va">MeOH_plasma_extraction_dir</span>, glob <span class="op">=</span> <span class="st">"*.zip"</span><span class="op">)</span></span>
 <span><span class="va">zip_files</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/10.zip</span></span></span>
 <span><span class="co">## <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/20.zip</span></span></span>
 <span><span class="co">## <span style="color: #BB0000; font-weight: bold;">/__w/_temp/Library/AlpsNMR/dataset-demo/30.zip</span></span></span></code></pre>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_read_samples.html">nmr_read_samples</a></span><span class="op">(</span>sample_names <span class="op">=</span> <span class="va">zip_files</span><span class="op">)</span></span>
 <span><span class="va">dataset</span></span></code></pre></div>
 <pre><code><span><span class="co">## An nmr_dataset (3 samples)</span></span></code></pre>
@@ -185,10 +182,10 @@ clarification.</p>
 </h2>
 <p>We can embed the external annotations we loaded above into the
 dataset:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, metadata <span class="op">=</span> <span class="va">annotations</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span></span></code></pre></div>
 <p>And retrieve them from the dataset:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
 <span><span class="co">##   NMRExperiment SubjectID TimePoint</span></span>
@@ -200,6 +197,17 @@ dataset:</p>
 acquisition and FID processing parameters), as well as more complex ways
 of adding annotations, check out the
 <code><a href="../articles/Vig02-handling-metadata-and-annotations.html">vignette("Vig02-handling-metadata-and-annotations", package = "AlpsNMR")</a></code>.</p>
+</div>
+<div class="section level2">
+<h2 id="phasing">Phasing<a class="anchor" aria-label="anchor" href="#phasing"></a>
+</h2>
+<p>It might be the case that automatically reconstructed metabolite NMR
+spectra have a first-order phase error. AlpsNMR provides a convenient
+wrapper function the <code>NMRphasing</code> package, offering a variety
+of algorithms to estimate and correct for phase errors, which arise on
+physical grounds.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#dataset &lt;- nmr_autophase(dataset, method="MPC_DANM")</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="interpolation">Interpolation<a class="anchor" aria-label="anchor" href="#interpolation"></a>
@@ -260,7 +268,7 @@ detection.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pca_outliers_rob</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_pca_outliers_robust.html">nmr_pca_outliers_robust</a></span><span class="op">(</span><span class="va">dataset</span>, ncomp <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/nmr_pca_outliers_plot.html">nmr_pca_outliers_plot</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">pca_outliers_rob</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>Samples with greater QResiduals and Tscores than the threshold
 defined by the red line are candidates for further exploration and
 exclusion. With this small dataset, there is not much to see.</p>
@@ -291,7 +299,7 @@ check it fits as expected.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">spectra_to_plot</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">baseline_to_plot</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">NMRExperiment</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-16-1.png" width="960"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-17-1.png" width="960"></p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># TODO: Simplify this plot</span></span>
 <span><span class="va">spectra_to_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.5</span>, <span class="fl">3.8</span><span class="op">)</span><span class="op">)</span></span>
@@ -301,7 +309,7 @@ check it fits as expected.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">spectra_to_plot</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">baseline_to_plot</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">NMRExperiment</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-17-1.png" width="960"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-18-1.png" width="960"></p>
 </div>
 <div class="section level2">
 <h2 id="peak-detection">Peak detection<a class="anchor" aria-label="anchor" href="#peak-detection"></a>
@@ -317,7 +325,7 @@ automatically discarded.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">baselineThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_baseline_threshold.html">nmr_baseline_threshold</a></span><span class="op">(</span><span class="va">dataset</span>, range_without_peaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9.5</span>, <span class="fl">10</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"median3mad"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/nmr_baseline_threshold_plot.html">nmr_baseline_threshold_plot</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">baselineThresh</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_list_initial</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_detect_peaks.html">nmr_detect_peaks</a></span><span class="op">(</span></span>
 <span>    <span class="va">dataset</span>,</span>
@@ -331,11 +339,11 @@ automatically discarded.</p>
 sample and each chemical shift region:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_detect_peaks_plot_overview.html">nmr_detect_peaks_plot_overview</a></span><span class="op">(</span><span class="va">peak_list_initial</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 <p>We can explore in a more detailed way the detected peaks:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_detect_peaks_plot.html">nmr_detect_peaks_plot</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">peak_list_initial</span>, NMRExperiment <span class="op">=</span> <span class="st">"10"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3.3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 <p>Let’s the detected peaks in a smaller region across samples:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_list_in_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">peak_list_initial</span>, <span class="va">ppm</span> <span class="op">&gt;</span> <span class="fl">3.22</span>, <span class="va">ppm</span> <span class="op">&lt;</span> <span class="fl">3.24</span><span class="op">)</span></span>
@@ -364,7 +372,7 @@ sample and each chemical shift region:</p>
 <span>                    <span class="st">"\narea\u00a0=\u00a0{area},"</span>,</span>
 <span>                    <span class="st">"nrmse\u00a0=\u00a0{norm_rmse})"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_list_initial_accepted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/peaklist_accept_peaks.html">peaklist_accept_peaks</a></span><span class="op">(</span></span>
 <span>    <span class="va">peak_list_initial</span>,</span>
@@ -422,7 +430,7 @@ of the alignment:</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.22</span>, <span class="fl">3.25</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset_align</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.22</span>, <span class="fl">3.25</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-29-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-30-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="normalization">Normalization<a class="anchor" aria-label="anchor" href="#normalization"></a>
@@ -454,7 +462,7 @@ or small normalization factors.</p>
 <span><span class="co">## 3            30   1.0000000        1.0000000</span></span></code></pre>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">normalization_info</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-31-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-32-1.png" width="700"></p>
 <p>We can confirm sample 20 is now slightly more diluted:</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">to_plot</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
@@ -468,7 +476,7 @@ or small normalization factors.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Intensity"</span>, x <span class="op">=</span> <span class="st">"Chemical shift (ppm)"</span>,</span>
 <span>         caption <span class="op">=</span> <span class="st">"The normalization slightly diluted experiment 20"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-32-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-33-1.png" width="700"></p>
 <p>And all samples are more homogeneous now:</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span><span class="op">(</span></span>
@@ -476,7 +484,7 @@ or small normalization factors.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset_norm</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title<span class="op">=</span><span class="st">"After Normalization"</span><span class="op">)</span>,</span>
 <span>    ncol <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-33-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-34-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="peak-grouping">Peak grouping<a class="anchor" aria-label="anchor" href="#peak-grouping"></a>
@@ -487,7 +495,7 @@ calculated:</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">baselineThresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_baseline_threshold.html">nmr_baseline_threshold</a></span><span class="op">(</span><span class="va">dataset_norm</span>, range_without_peaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9.5</span>, <span class="fl">10</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"median3mad"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/nmr_baseline_threshold_plot.html">nmr_baseline_threshold_plot</a></span><span class="op">(</span><span class="va">dataset_norm</span>, <span class="va">baselineThresh</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-34-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-35-1.png" width="700"></p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_list_for_clustering_unfiltered</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_detect_peaks.html">nmr_detect_peaks</a></span><span class="op">(</span></span>
 <span>    <span class="va">dataset_norm</span>,</span>
@@ -526,7 +534,7 @@ together.</p>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span><span class="op">*</span><span class="va">clustering</span><span class="op">$</span><span class="va">num_cluster_estimation</span><span class="op">$</span><span class="va">max_dist_thresh_ppb</span><span class="op">)</span> <span class="op">+</span></span>
 <span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Fine region"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-37-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-38-1.png" width="700"></p>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_list_clustered</span> <span class="op">&lt;-</span> <span class="va">clustering</span><span class="op">$</span><span class="va">peak_data</span></span></code></pre></div>
 <p>We can plot the samples, with the detected peaks and how they have
@@ -543,7 +551,7 @@ it was filtered out.</p>
 <span>    NMRExperiments <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"20"</span><span class="op">)</span>,</span>
 <span>    chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.4</span>, <span class="fl">3.0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-39-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-40-1.png" width="700"></p>
 <p>Sometimes we see peaks and we wonder why are they not detected. We
 can include the <code>baselineThresh</code> to plot it in the sample as
 well. This can help to diagnose if the <code>baselineThresh</code>
@@ -556,7 +564,7 @@ argument is the cause of a peak not being detected.</p>
 <span>    chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.2</span>, <span class="fl">4.6</span><span class="op">)</span>,</span>
 <span>    baselineThresh <span class="op">=</span> <span class="va">baselineThresh</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-40-1.png" width="700"></p>
+<p><img src="Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-41-1.png" width="700"></p>
 <div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_build_peak_table.html">nmr_build_peak_table</a></span><span class="op">(</span><span class="va">peak_list_clustered</span>, <span class="va">dataset_norm</span><span class="op">)</span></span>
 <span><span class="va">peak_table</span></span></code></pre></div>
@@ -779,12 +787,11 @@ for more.
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] AlpsNMR_4.7.0       future_1.33.2       BiocParallel_1.38.0</span></span>
-<span><span class="co">## [4] readxl_1.4.3        ggplot2_3.5.1       dplyr_1.1.4        </span></span>
-<span><span class="co">## [7] BiocStyle_2.33.0   </span></span>
+<span><span class="co">## [1] AlpsNMR_4.7.1       BiocParallel_1.38.0 readxl_1.4.3       </span></span>
+<span><span class="co">## [4] ggplot2_3.5.1       dplyr_1.1.4         BiocStyle_2.33.0   </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##   [1] baseline_1.3-5         gridExtra_2.3          rlang_1.1.3           </span></span>
+<span><span class="co">##   [1] baseline_1.3-5         gridExtra_2.3          rlang_1.1.4           </span></span>
 <span><span class="co">##   [4] magrittr_2.0.3         MassSpecWavelet_1.70.0 matrixStats_1.3.0     </span></span>
 <span><span class="co">##   [7] compiler_4.4.0         systemfonts_1.1.0      vctrs_0.6.5           </span></span>
 <span><span class="co">##  [10] reshape2_1.4.4         RcppZiggurat_0.1.6     rvest_1.0.4           </span></span>
@@ -796,29 +803,28 @@ for more.
 <span><span class="co">##  [28] jsonlite_1.8.8         limSolve_1.5.7.1       highr_0.11            </span></span>
 <span><span class="co">##  [31] parallel_4.4.0         cluster_2.1.6          R6_2.5.1              </span></span>
 <span><span class="co">##  [34] bslib_0.7.0            stringi_1.8.4          RColorBrewer_1.1-3    </span></span>
-<span><span class="co">##  [37] parallelly_1.37.1      jquerylib_0.1.4        cellranger_1.1.0      </span></span>
-<span><span class="co">##  [40] Rcpp_1.0.12            bookdown_0.39          iterators_1.0.14      </span></span>
-<span><span class="co">##  [43] knitr_1.47             snow_0.4-4             Matrix_1.7-0          </span></span>
-<span><span class="co">##  [46] igraph_2.0.3           tidyselect_1.2.1       yaml_2.3.8            </span></span>
-<span><span class="co">##  [49] codetools_0.2-20       doRNG_1.8.6            listenv_0.9.1         </span></span>
-<span><span class="co">##  [52] lattice_0.22-6         tibble_3.2.1           plyr_1.8.9            </span></span>
-<span><span class="co">##  [55] withr_3.0.0            rARPACK_0.11-0         evaluate_0.23         </span></span>
-<span><span class="co">##  [58] signal_1.8-0           speaq_2.7.0            desc_1.4.3            </span></span>
-<span><span class="co">##  [61] RcppParallel_5.1.7     xml2_1.3.6             lpSolve_5.6.20        </span></span>
-<span><span class="co">##  [64] pillar_1.9.0           BiocManager_1.30.23    rngtools_1.5.2        </span></span>
-<span><span class="co">##  [67] foreach_1.5.2          ellipse_0.5.0          pcaPP_2.0-4           </span></span>
-<span><span class="co">##  [70] generics_0.1.3         munsell_0.5.1          scales_1.3.0          </span></span>
-<span><span class="co">##  [73] globals_0.16.3         glue_1.7.0             tools_4.4.0           </span></span>
-<span><span class="co">##  [76] data.table_1.15.4      SparseM_1.83           RSpectra_0.16-1       </span></span>
-<span><span class="co">##  [79] fs_1.6.4               mvtnorm_1.2-5          cowplot_1.1.3         </span></span>
-<span><span class="co">##  [82] grid_4.4.0             impute_1.78.0          missForest_1.5        </span></span>
-<span><span class="co">##  [85] tidyr_1.3.1            colorspace_2.1-0       cli_3.6.2             </span></span>
-<span><span class="co">##  [88] textshaping_0.4.0      fansi_1.0.6            mixOmics_6.28.0       </span></span>
-<span><span class="co">##  [91] corpcor_1.6.10         doSNOW_1.0.20          gtable_0.3.5          </span></span>
-<span><span class="co">##  [94] sass_0.4.9             digest_0.6.35          progressr_0.14.0      </span></span>
-<span><span class="co">##  [97] ggrepel_0.9.5          htmlwidgets_1.6.4      farver_2.1.2          </span></span>
-<span><span class="co">## [100] htmltools_0.5.8.1      pkgdown_2.0.9.9000     lifecycle_1.0.4       </span></span>
-<span><span class="co">## [103] httr_1.4.7             MASS_7.3-60.2</span></span></code></pre>
+<span><span class="co">##  [37] jquerylib_0.1.4        cellranger_1.1.0       Rcpp_1.0.12           </span></span>
+<span><span class="co">##  [40] bookdown_0.39          iterators_1.0.14       knitr_1.47            </span></span>
+<span><span class="co">##  [43] snow_0.4-4             Matrix_1.7-0           igraph_2.0.3          </span></span>
+<span><span class="co">##  [46] tidyselect_1.2.1       yaml_2.3.8             codetools_0.2-20      </span></span>
+<span><span class="co">##  [49] doRNG_1.8.6            lattice_0.22-6         tibble_3.2.1          </span></span>
+<span><span class="co">##  [52] plyr_1.8.9             withr_3.0.0            rARPACK_0.11-0        </span></span>
+<span><span class="co">##  [55] evaluate_0.23.0.9000   signal_1.8-0           speaq_2.7.0           </span></span>
+<span><span class="co">##  [58] desc_1.4.3             RcppParallel_5.1.7     xml2_1.3.6            </span></span>
+<span><span class="co">##  [61] lpSolve_5.6.20         pillar_1.9.0           BiocManager_1.30.23   </span></span>
+<span><span class="co">##  [64] rngtools_1.5.2         foreach_1.5.2          ellipse_0.5.0         </span></span>
+<span><span class="co">##  [67] pcaPP_2.0-4            generics_0.1.3         munsell_0.5.1         </span></span>
+<span><span class="co">##  [70] scales_1.3.0           glue_1.7.0             tools_4.4.0           </span></span>
+<span><span class="co">##  [73] data.table_1.15.4      SparseM_1.83           RSpectra_0.16-1       </span></span>
+<span><span class="co">##  [76] fs_1.6.4               mvtnorm_1.2-5          cowplot_1.1.3         </span></span>
+<span><span class="co">##  [79] grid_4.4.0             impute_1.78.0          missForest_1.5        </span></span>
+<span><span class="co">##  [82] tidyr_1.3.1            colorspace_2.1-0       cli_3.6.2             </span></span>
+<span><span class="co">##  [85] textshaping_0.4.0      fansi_1.0.6            mixOmics_6.28.0       </span></span>
+<span><span class="co">##  [88] corpcor_1.6.10         doSNOW_1.0.20          gtable_0.3.5          </span></span>
+<span><span class="co">##  [91] sass_0.4.9             digest_0.6.35          progressr_0.14.0      </span></span>
+<span><span class="co">##  [94] ggrepel_0.9.5          htmlwidgets_1.6.4      farver_2.1.2          </span></span>
+<span><span class="co">##  [97] htmltools_0.5.8.1      pkgdown_2.0.9.9000     lifecycle_1.0.4       </span></span>
+<span><span class="co">## [100] httr_1.4.7             MASS_7.3-60.2</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
