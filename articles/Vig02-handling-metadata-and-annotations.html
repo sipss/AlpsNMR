@@ -14,12 +14,19 @@
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -40,27 +47,36 @@
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/sipss/AlpsNMR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
+
+
   </div>
 </nav><div class="container template-article">
 
 
 
+
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
+
       <h1>Handling metadata and annotations</h1>
                         <h4 data-toc-skip class="author">AlpsNMR
 authors</h4>
-                        <h4 data-toc-skip class="date">2024-06-09</h4>
-            <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/vignettes/Vig02-handling-metadata-and-annotations.Rmd" class="external-link"><code>vignettes/Vig02-handling-metadata-and-annotations.Rmd</code></a></small>
+            
+            <h4 data-toc-skip class="date">2024-06-15</h4>
+      
+      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/vignettes/Vig02-handling-metadata-and-annotations.Rmd" class="external-link"><code>vignettes/Vig02-handling-metadata-and-annotations.Rmd</code></a></small>
       <div class="d-none name"><code>Vig02-handling-metadata-and-annotations.Rmd</code></div>
     </div>
-            <div class="abstract">
+
+    
+        <div class="abstract">
       <p class="abstract">Abstract</p>
       <p>This vignette shows some examples on how to explore sample
       metadata and add additional sample annotations, coming from one or
       more CSV or Excel files.</p>
     </div>
-    <div class="section level2">
+    
+<div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <p>We start by loading <code>AlpsNMR</code> and some convenience
@@ -398,42 +414,52 @@ functions:</p>
 <span><span class="co">## [1] AlpsNMR_4.7.1    readxl_1.4.3     dplyr_1.1.4      BiocStyle_2.33.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] gtable_0.3.5         ellipse_0.5.0        xfun_0.44           </span></span>
-<span><span class="co">##  [4] bslib_0.7.0          ggplot2_3.5.1        htmlwidgets_1.6.4   </span></span>
-<span><span class="co">##  [7] ggrepel_0.9.5        lattice_0.22-6       vctrs_0.6.5         </span></span>
-<span><span class="co">## [10] tools_4.4.0          generics_0.1.3       parallel_4.4.0      </span></span>
-<span><span class="co">## [13] tibble_3.2.1         fansi_1.0.6          highr_0.11          </span></span>
-<span><span class="co">## [16] rARPACK_0.11-0       pkgconfig_2.0.3      Matrix_1.7-0        </span></span>
-<span><span class="co">## [19] RColorBrewer_1.1-3   desc_1.4.3           mixOmics_6.28.0     </span></span>
-<span><span class="co">## [22] lifecycle_1.0.4      farver_2.1.2         compiler_4.4.0      </span></span>
-<span><span class="co">## [25] stringr_1.5.1        textshaping_0.4.0    munsell_0.5.1       </span></span>
-<span><span class="co">## [28] codetools_0.2-20     htmltools_0.5.8.1    sass_0.4.9          </span></span>
-<span><span class="co">## [31] yaml_2.3.8           pillar_1.9.0         pkgdown_2.0.9.9000  </span></span>
-<span><span class="co">## [34] jquerylib_0.1.4      tidyr_1.3.1          MASS_7.3-60.2       </span></span>
-<span><span class="co">## [37] BiocParallel_1.38.0  cachem_1.1.0         RSpectra_0.16-1     </span></span>
-<span><span class="co">## [40] tidyselect_1.2.1     digest_0.6.35        stringi_1.8.4       </span></span>
-<span><span class="co">## [43] reshape2_1.4.4       purrr_1.0.2          bookdown_0.39       </span></span>
-<span><span class="co">## [46] labeling_0.4.3       fastmap_1.2.0        grid_4.4.0          </span></span>
-<span><span class="co">## [49] colorspace_2.1-0     cli_3.6.2            magrittr_2.0.3      </span></span>
-<span><span class="co">## [52] utf8_1.2.4           corpcor_1.6.10       withr_3.0.0         </span></span>
-<span><span class="co">## [55] scales_1.3.0         rmarkdown_2.27       matrixStats_1.3.0   </span></span>
-<span><span class="co">## [58] signal_1.8-0         igraph_2.0.3         gridExtra_2.3       </span></span>
-<span><span class="co">## [61] progressr_0.14.0     cellranger_1.1.0     ragg_1.3.2          </span></span>
-<span><span class="co">## [64] evaluate_0.23.0.9000 knitr_1.47           rlang_1.1.4         </span></span>
-<span><span class="co">## [67] Rcpp_1.0.12          glue_1.7.0           BiocManager_1.30.23 </span></span>
-<span><span class="co">## [70] jsonlite_1.8.8       R6_2.5.1             plyr_1.8.9          </span></span>
-<span><span class="co">## [73] systemfonts_1.1.0    fs_1.6.4</span></span></code></pre>
+<span><span class="co">##  [1] gtable_0.3.5        ellipse_0.5.0       xfun_0.44          </span></span>
+<span><span class="co">##  [4] bslib_0.7.0         ggplot2_3.5.1       htmlwidgets_1.6.4  </span></span>
+<span><span class="co">##  [7] ggrepel_0.9.5       lattice_0.22-6      vctrs_0.6.5        </span></span>
+<span><span class="co">## [10] tools_4.4.0         generics_0.1.3      parallel_4.4.0     </span></span>
+<span><span class="co">## [13] tibble_3.2.1        fansi_1.0.6         highr_0.11         </span></span>
+<span><span class="co">## [16] rARPACK_0.11-0      pkgconfig_2.0.3     Matrix_1.7-0       </span></span>
+<span><span class="co">## [19] RColorBrewer_1.1-3  desc_1.4.3          mixOmics_6.28.0    </span></span>
+<span><span class="co">## [22] lifecycle_1.0.4     farver_2.1.2        compiler_4.4.0     </span></span>
+<span><span class="co">## [25] stringr_1.5.1       textshaping_0.4.0   munsell_0.5.1      </span></span>
+<span><span class="co">## [28] codetools_0.2-20    htmltools_0.5.8.1   sass_0.4.9         </span></span>
+<span><span class="co">## [31] yaml_2.3.8          pillar_1.9.0        pkgdown_2.0.9.9000 </span></span>
+<span><span class="co">## [34] jquerylib_0.1.4     tidyr_1.3.1         MASS_7.3-61        </span></span>
+<span><span class="co">## [37] BiocParallel_1.38.0 cachem_1.1.0        RSpectra_0.16-1    </span></span>
+<span><span class="co">## [40] tidyselect_1.2.1    digest_0.6.35       stringi_1.8.4      </span></span>
+<span><span class="co">## [43] reshape2_1.4.4      purrr_1.0.2         bookdown_0.39      </span></span>
+<span><span class="co">## [46] labeling_0.4.3      fastmap_1.2.0       grid_4.4.0         </span></span>
+<span><span class="co">## [49] colorspace_2.1-0    cli_3.6.2           magrittr_2.0.3     </span></span>
+<span><span class="co">## [52] utf8_1.2.4          corpcor_1.6.10      withr_3.0.0        </span></span>
+<span><span class="co">## [55] scales_1.3.0        rmarkdown_2.27      matrixStats_1.3.0  </span></span>
+<span><span class="co">## [58] signal_1.8-0        igraph_2.0.3        gridExtra_2.3      </span></span>
+<span><span class="co">## [61] progressr_0.14.0    cellranger_1.1.0    ragg_1.3.2         </span></span>
+<span><span class="co">## [64] evaluate_0.24.0     knitr_1.47          rlang_1.1.4        </span></span>
+<span><span class="co">## [67] Rcpp_1.0.12         glue_1.7.0          BiocManager_1.30.23</span></span>
+<span><span class="co">## [70] jsonlite_1.8.8      R6_2.5.1            plyr_1.8.9         </span></span>
+<span><span class="co">## [73] systemfonts_1.1.0   fs_1.6.4</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
+
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer>
 </div>
+
+
+
+
+
   </body>
 </html>

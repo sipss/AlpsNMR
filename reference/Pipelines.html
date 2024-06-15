@@ -5,12 +5,19 @@ that region and finally perform PQN normalization."><meta property="og:descripti
 Normalize the full spectra to the internal calibrant region, then exclude
 that region and finally perform PQN normalization."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
@@ -24,19 +31,24 @@ that region and finally perform PQN normalization."></head><body>
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/sipss/AlpsNMR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
+
       <h1>Pipelines</h1>
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/pipeline.R" class="external-link"><code>R/pipeline.R</code></a></small>
       <div class="d-none name"><code>Pipelines.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p>Uses <a href="nmr_pca_outliers_robust.html">nmr_pca_outliers_robust</a> to perform the detection of outliers</p>
 <p>Normalize the full spectra to the internal calibrant region, then exclude
 that region and finally perform PQN normalization.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pipe_load_samples</span><span class="op">(</span><span class="va">samples_dir</span>, glob <span class="op">=</span> <span class="st">"*0"</span>, output_dir <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
@@ -75,16 +87,27 @@ that region and finally perform PQN normalization.</p>
 <span>  output_dir <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
 <dl><dt id="arg-samples-dir">samples_dir<a class="anchor" aria-label="anchor" href="#arg-samples-dir"></a></dt>
 <dd><p>The directory where the samples are</p></dd>
+
+
 <dt id="arg-glob">glob<a class="anchor" aria-label="anchor" href="#arg-glob"></a></dt>
 <dd><p>A wildcard aka globbing pattern (e.g. <code>*.csv</code>) passed on to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep()</a></code> to filter paths.</p></dd>
+
+
 <dt id="arg-output-dir">output_dir<a class="anchor" aria-label="anchor" href="#arg-output-dir"></a></dt>
 <dd><p>The output directory for this pipe element</p></dd>
+
+
 <dt id="arg-nmr-dataset-rds">nmr_dataset_rds<a class="anchor" aria-label="anchor" href="#arg-nmr-dataset-rds"></a></dt>
 <dd><p>The nmr_dataset.rds file name coming from previous nodes</p></dd>
+
+
 <dt id="arg-excel-file">excel_file<a class="anchor" aria-label="anchor" href="#arg-excel-file"></a></dt>
 <dd><p>An excel file name. See details for the requirements</p>
 <p>The excel file can have one or more sheets. The excel sheets need to be as
@@ -99,11 +122,17 @@ for instance the "SubjectID", and any additional columns (e.g. Gender, Age).</p>
 <p>The first column on each sheet, named the key column, MUST have unique values.
 For instance, a sheet starting with "SubjectID" MUST specify each subject ID
 only once (without repetitions).</p></dd>
+
+
 <dt id="arg-axis">axis<a class="anchor" aria-label="anchor" href="#arg-axis"></a></dt>
 <dd><p>The ppm axis range and optionally the ppm step. Set it to <code>NULL</code> for autodetection</p></dd>
+
+
 <dt id="arg-exclude">exclude<a class="anchor" aria-label="anchor" href="#arg-exclude"></a></dt>
 <dd><p>A list with regions to be removed Typically:
 <code>exclude = list(water = c(4.7, 5.0))</code></p></dd>
+
+
 <dt id="arg-conditions">conditions<a class="anchor" aria-label="anchor" href="#arg-conditions"></a></dt>
 <dd><p>A character vector with conditions to filter metadata.
 The <code>conditions</code> parameter should be a character vector of
@@ -113,29 +142,48 @@ Some examples:</p><ul><li><p>conditions &lt;- 'Gender == "Female"'</p></li>
 <li><p>conditions &lt;- 'TimePoint %in% c("T0", "T31")'</p></li>
 <li><p>conditions &lt;- c(Cohort == "Chuv", 'TimePoint %in% c("T0", "T31")')</p></li>
 </ul><p>Only samples fullfilling all the given conditions are kept in further analysis.</p></dd>
+
+
 <dt id="arg-ndivrange-ppm">nDivRange_ppm<a class="anchor" aria-label="anchor" href="#arg-ndivrange-ppm"></a></dt>
 <dd><p>Segment size, in ppms, to divide the spectra and search
 for peaks.</p></dd>
+
+
 <dt id="arg-scales">scales<a class="anchor" aria-label="anchor" href="#arg-scales"></a></dt>
 <dd><p>The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function.</p></dd>
+
+
 <dt id="arg-baselinethresh">baselineThresh<a class="anchor" aria-label="anchor" href="#arg-baselinethresh"></a></dt>
 <dd><p>All peaks with intensities below the thresholds are excluded. Either:</p><ul><li><p>A numeric vector of length the number of samples. Each number is a threshold for that sample</p></li>
 <li><p>A single number. All samples use this number as baseline threshold.</p></li>
 <li><p><code>NULL</code>. If that's the case, a default function is used (<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>), which assumes
 that there is no signal in the region 9.5-10 ppm.</p></li>
 </ul></dd>
+
+
 <dt id="arg-snr-th">SNR.Th<a class="anchor" aria-label="anchor" href="#arg-snr-th"></a></dt>
 <dd><p>The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.</p></dd>
+
+
 <dt id="arg-maxshift-ppm">maxShift_ppm<a class="anchor" aria-label="anchor" href="#arg-maxshift-ppm"></a></dt>
 <dd><p>The maximum shift allowed, in ppm</p></dd>
+
+
 <dt id="arg-acceptlostpeak">acceptLostPeak<a class="anchor" aria-label="anchor" href="#arg-acceptlostpeak"></a></dt>
 <dd><p>This is an option for users, TRUE is the default value. If the users believe that all the peaks in the peak list are true positive, change it to FALSE.</p></dd>
+
+
 <dt id="arg-peak-det-align-dir">peak_det_align_dir<a class="anchor" aria-label="anchor" href="#arg-peak-det-align-dir"></a></dt>
 <dd><p>Output directory from pipe_peakdet_align</p></dd>
+
+
 <dt id="arg-peak-width-ppm">peak_width_ppm<a class="anchor" aria-label="anchor" href="#arg-peak-width-ppm"></a></dt>
 <dd><p>A peak width in ppm</p></dd>
+
+
 <dt id="arg-internal-calibrant">internal_calibrant<a class="anchor" aria-label="anchor" href="#arg-internal-calibrant"></a></dt>
 <dd><p>A ppm range where the internal calibrant is, or <code>NULL</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -198,6 +246,7 @@ that there is no signal in the region 9.5-10 ppm.</p></li>
 <code><a href="nmr_integrate_peak_positions.html">nmr_integrate_peak_positions</a>()</code>,
 <code><a href="nmr_integrate_regions.html">nmr_integrate_regions</a>()</code></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Example of pipeline usage</span></span></span>
@@ -258,12 +307,21 @@ that there is no signal in the region 9.5-10 ppm.</p></li>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

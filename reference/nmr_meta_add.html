@@ -3,12 +3,19 @@
 plotting spectra or further analysis (PCA...)."><meta property="og:description" content="This is useful to add metadata to datasets that can be later used for
 plotting spectra or further analysis (PCA...)."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
@@ -22,36 +29,50 @@ plotting spectra or further analysis (PCA...)."></head><body>
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/sipss/AlpsNMR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
+
       <h1>Add metadata to an nmr_dataset object</h1>
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/nmr_meta.R" class="external-link"><code>R/nmr_meta.R</code></a></small>
       <div class="d-none name"><code>nmr_meta_add.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p>This is useful to add metadata to datasets that can be later used for
 plotting spectra or further analysis (PCA...).</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nmr_meta_add</span><span class="op">(</span><span class="va">nmr_data</span>, <span class="va">metadata</span>, by <span class="op">=</span> <span class="st">"NMRExperiment"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">nmr_meta_add_tidy_excel</span><span class="op">(</span><span class="va">nmr_data</span>, <span class="va">excel_file</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
 <dl><dt id="arg-nmr-data">nmr_data<a class="anchor" aria-label="anchor" href="#arg-nmr-data"></a></dt>
 <dd><p>an <a href="nmr_dataset_family.html">nmr_dataset_family</a> object</p></dd>
+
+
 <dt id="arg-metadata">metadata<a class="anchor" aria-label="anchor" href="#arg-metadata"></a></dt>
 <dd><p>A data frame with metadata to add</p></dd>
+
+
 <dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
 <dd><p>A column name of both the <code>nmr_data$metadata$external</code> and the metadata
 data.frame. If you want to merge two columns with different headers you can
 use a named character vector <code>c("NMRExperiment" = "ExperimentNMR")</code> where
 the left side is the column name of the <code>nmr_data$metadata$external</code> and the right side is
 the column name of the metadata data frame.</p></dd>
+
+
 <dt id="arg-excel-file">excel_file<a class="anchor" aria-label="anchor" href="#arg-excel-file"></a></dt>
 <dd><p>Path to a tidy Excel file name. The Excel can consist
 of multiple sheets, that are added sequentially. The first column of the first
@@ -62,6 +83,7 @@ named as one of the metadata already present in the dataset, typically
 "NMRExperiment" or any of the columns of the first sheet. The rest of the columns
 of the second sheet can be named at will. See the package vignette for an
 example.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -96,6 +118,7 @@ example.</p></dd>
 <code><a href="nmr_meta_get.html">nmr_meta_get</a>()</code>,
 <code><a href="nmr_meta_get_column.html">nmr_meta_get_column</a>()</code></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Load a demo dataset with four samples:</span></span></span>
@@ -178,12 +201,21 @@ example.</p></dd>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

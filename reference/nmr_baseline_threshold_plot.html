@@ -3,12 +3,19 @@
 use " ```{r fig.height=10, fig.width=10}" in notebooks), or choose some NMRExperiments.'><meta property="og:description" content='If you have a lot of samples you can make the plot window bigger (or
 use " ```{r fig.height=10, fig.width=10}" in notebooks), or choose some NMRExperiments.'></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
@@ -22,18 +29,23 @@ use " ```{r fig.height=10, fig.width=10}" in notebooks), or choose some NMRExper
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/sipss/AlpsNMR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
+
       <h1>Plot the baseline thresholds</h1>
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/nmr_baseline_threshold.R" class="external-link"><code>R/nmr_baseline_threshold.R</code></a></small>
       <div class="d-none name"><code>nmr_baseline_threshold_plot.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p>If you have a lot of samples you can make the plot window bigger (or
 use "<code> ```{r fig.height=10, fig.width=10}</code>" in notebooks), or choose some NMRExperiments.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nmr_baseline_threshold_plot</span><span class="op">(</span></span>
@@ -44,23 +56,36 @@ use "<code> ```{r fig.height=10, fig.width=10}</code>" in notebooks), or choose 
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
 <dl><dt id="arg-nmr-dataset">nmr_dataset<a class="anchor" aria-label="anchor" href="#arg-nmr-dataset"></a></dt>
 <dd><p>An <a href="nmr_dataset_1D.html">nmr_dataset_1D</a> object</p></dd>
+
+
 <dt id="arg-thresholds">thresholds<a class="anchor" aria-label="anchor" href="#arg-thresholds"></a></dt>
 <dd><p>A named vector. The values are baseline thresholds. The names are NMRExperiments.</p></dd>
+
+
 <dt id="arg-nmrexperiment">NMRExperiment<a class="anchor" aria-label="anchor" href="#arg-nmrexperiment"></a></dt>
 <dd><p>The NMRExperiments to plot (Use <code>"all"</code> to plot all of them)</p></dd>
+
+
 <dt id="arg-chemshift-range">chemshift_range<a class="anchor" aria-label="anchor" href="#arg-chemshift-range"></a></dt>
 <dd><p>The range to plot, as a first check use the <code>range_without_peaks</code> from <a href="nmr_baseline_threshold.html">nmr_baseline_threshold</a></p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>arguments passed to <a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">ggplot2::aes</a> (or to <a href="https://ggplot2.tidyverse.org/reference/aes_.html" class="external-link">ggplot2::aes_string</a>, being deprecated).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A plot.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
@@ -79,12 +104,21 @@ use "<code> ```{r fig.height=10, fig.width=10}</code>" in notebooks), or choose 
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

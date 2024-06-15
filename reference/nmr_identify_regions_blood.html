@@ -3,12 +3,19 @@
 in human plasma/serum samples."><meta property="og:description" content="Identify given regions and return a data frame with plausible assignations
 in human plasma/serum samples."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
@@ -22,18 +29,23 @@ in human plasma/serum samples."></head><body>
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/sipss/AlpsNMR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
+
       <h1>NMR peak identification (plasma/serum samples)</h1>
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/nmr_identify_regions.R" class="external-link"><code>R/nmr_identify_regions.R</code></a></small>
       <div class="d-none name"><code>nmr_identify_regions_blood.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p>Identify given regions and return a data frame with plausible assignations
 in human plasma/serum samples.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nmr_identify_regions_blood</span><span class="op">(</span></span>
@@ -42,14 +54,22 @@ in human plasma/serum samples.</p>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
 <dl><dt id="arg-ppm-to-assign">ppm_to_assign<a class="anchor" aria-label="anchor" href="#arg-ppm-to-assign"></a></dt>
 <dd><p>A vector with the ppm regions to assign</p></dd>
+
+
 <dt id="arg-num-proposed-compounds">num_proposed_compounds<a class="anchor" aria-label="anchor" href="#arg-num-proposed-compounds"></a></dt>
 <dd><p>set the number of proposed metabolites sorted by the number times reported in the HMDB: <code>HMDB_blood</code>.</p></dd>
+
+
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>Logical value. Set it to TRUE to print additional information</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -75,6 +95,7 @@ in human plasma/serum samples.</p>
 <code><a href="nmr_integrate_peak_positions.html">nmr_integrate_peak_positions</a>()</code>,
 <code><a href="nmr_integrate_regions.html">nmr_integrate_regions</a>()</code></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># We identify regions from from the corresponding ppm storaged in a vector.</span></span></span>
@@ -87,12 +108,21 @@ in human plasma/serum samples.</p>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

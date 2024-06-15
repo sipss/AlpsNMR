@@ -5,12 +5,19 @@ function."><meta property="og:description" content="The function lists samples f
 create a nmr_dataset_1D object. The function is based on the fs::dir_ls()
 function."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.1</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
@@ -24,37 +31,49 @@ function."></head><body>
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/sipss/AlpsNMR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
+
       <h1>NMR file lister</h1>
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/file_lister.R" class="external-link"><code>R/file_lister.R</code></a></small>
       <div class="d-none name"><code>file_lister.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p>The function lists samples from the chosen folder required to import and
 create a <a href="nmr_dataset_1D.html">nmr_dataset_1D</a> object. The function is based on the <code><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">fs::dir_ls()</a></code>
 function.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">file_lister</span><span class="op">(</span><span class="va">dataset_path_nmr</span>, <span class="va">glob</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
 <dl><dt id="arg-dataset-path-nmr">dataset_path_nmr<a class="anchor" aria-label="anchor" href="#arg-dataset-path-nmr"></a></dt>
 <dd><p>A character vector of the path where samples are.</p></dd>
+
+
 <dt id="arg-glob">glob<a class="anchor" aria-label="anchor" href="#arg-glob"></a></dt>
 <dd><p>A wildcard or globbing pattern common for the samples to be read,
 for example ending with *0 (spectra acquired by a NOESY sequence often end
 by 0: 10, 20, 30...) or *s (for example, samples from the tutorial in this
 package) passed on to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep()</a></code> to filter paths.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>lists of samples from the chosen folder</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dir_to_demo_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"dataset-demo"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span></span></span>
@@ -64,12 +83,21 @@ package) passed on to <code><a href="https://rdrr.io/r/base/grep.html" class="ex
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Ivan Montoliu Roura, Sergio Oller Moreno, Francisco Madrid Gambin, Luis Fernandez, Héctor Gracia Cabrera, Santiago Marco Colás.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 
