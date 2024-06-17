@@ -1,4 +1,4 @@
-split_multiplet_peaks <- function(multiplet_type) {
+split_multiplet_orders <- function(multiplet_type) {
     splits <- strsplit(multiplet_type, split = " of ", fixed = TRUE)[[1]]
     splits <- purrr::map(splits, function(x) {
         if (grepl("^[sdtq]+$", x)) {
@@ -47,46 +47,61 @@ multiplet_name_to_peak_number <- function(multiplet) {
     if (anyNA(peak_nums)) {
         cli::cli_abort("Could not parse {multiplet}. Best effort: {peak_nums}")
     }
-    peak_nums
+    unname(peak_nums)
 }
 
 #' Parse a multiplet structure returning the number of peaks to generate
 #' @param multiplet_types A character vector describing the multiplets, see examples
 #' @return A vector of the same length as `multiplet_types` with the cardinality of the peaks in the multiplet
 #' @examples
-#' multiplet_to_cardinality(c("ddd", "doublet of 3", "singlet"))
+#' multiplet_to_cardinality("ddd")
+#' multiplet_to_cardinality("doublet of 3")
+#' multiplet_to_cardinality("singlet")
 #' 
-#' @export
-multiplet_to_cardinality <- function(multiplet_types) {
-    multiplet_types |>
-        purrr::set_names() |>
-        purrr::map(
-            function(multiplet_type) {
-                multiplet_type |>
-                    split_multiplet_peaks() |>
-                    purrr::map(multiplet_name_to_peak_number) |>
-                    purrr::list_c(ptype=integer(1)) |>
-                    purrr::set_names(NULL)
-            }
-        )
+#' @noRd
+multiplet_to_cardinality <- function(multiplet_type) {
+  multiplet_orders_str <- split_multiplet_orders(multiplet_type)
+  multiplet_orders_int <- purrr::map(
+    multiplet_orders_str,
+    multiplet_name_to_peak_number
+  )
+  purrr::list_c(
+    multiplet_orders_int,
+    ptype=integer(1)
+  )
 }
 
-pascal_triangle_row_n <- function(n) {
-    out <- 1L
-    if (n == 1) {
-        return(out)
-    }
-    prev <- 1
-    for (i in seq_len(n)) {
-        curr <- prev * (n -i + 1) / i
-        out <- c(out, curr)
-        prev <- curr
-    }
-    out
-}
-
-
-multiplet_to_amplitudes <- function(peak_cardinality) {
-    peaks_to_convolve <- purrr::map(peak_cardinality, pascal_triangle_row_n)
-    peaks_to_convolve
+multiplet_to_peaks <- function(multiplet_type, multiplet_center, coupling_constants) {
+    peak_cardinality <- multiplet_to_cardinality(multiplet_type)
+    peaks_to_convolve <- purrr::map(
+      peak_cardinality,
+      function(plet) {
+        choose(plet-1, seq(0, plet-1))
+      }
+    )
+    peak_amplitudes <- purrr::reduce(
+      peaks_to_convolve,
+      function(x, y) {
+        as.numeric(t(outer(x, y)))
+      }
+    )
+    peak_deltas <- purrr::map2(
+      peak_cardinality,
+      coupling_constants,
+      function(plet, J) {
+        n <- (plet-1)/2
+        J*seq(from = -n, to = n, length.out=plet)
+      }
+    )
+    peak_positions <- purrr::reduce(
+      peak_deltas,
+      function(x, y) {
+        as.numeric(t(outer(x, y, `+`)))
+      },
+      .init = multiplet_center
+    )
+    data.frame(
+      position = peak_positions,
+      amplitude = peak_amplitudes
+    )
 }
