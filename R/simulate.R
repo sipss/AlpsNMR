@@ -72,25 +72,65 @@ multiplet_to_cardinality <- function(multiplet_type) {
 }
 
 multiplet_to_peaks <- function(multiplet_type, multiplet_center, coupling_constants) {
+    # "dt" to c(2, 3)
     peak_cardinality <- multiplet_to_cardinality(multiplet_type)
+    names(peak_cardinality) <- paste0("Order", seq_along(peak_cardinality))
+    
+    # c(2, 3) to list(c(1,1), c(1,2,1))
     peaks_to_convolve <- purrr::map(
       peak_cardinality,
       function(plet) {
         choose(plet-1, seq(0, plet-1))
       }
     )
-    peak_amplitudes <- purrr::reduce(
+    # c(2,3) to list(c(1,2), c(1,2,3))
+    peak_src <- purrr::map(
       peaks_to_convolve,
-      function(x, y) {
-        as.numeric(t(outer(x, y)))
-      }
+      seq_len
     )
+
+    # data.frame with one row per peak and one column per order
+    peak_src_df <- tidyr::expand_grid(!!!peak_src)
+    # Add amplitude contribution from each order:
+    peak_src_df <- mutate(
+      peak_src_df,
+      across(
+        starts_with("Order"), 
+        function(col) peaks_to_convolve[[cur_column()]][col],
+        .names = "Amp_{.col}"
+      )
+    )
+    # Multiply amplitude contributions
+    to_mult <- grepl("^Amp_", colnames(peak_src_df))
+    peak_src_df$amplitude <- do.call(prod, peak_src_df[to_mult])
+
+    # Compute shifts based on coupling constants
     peak_deltas <- purrr::map2(
       peak_cardinality,
       coupling_constants,
       function(plet, J) {
         n <- (plet-1)/2
         J*seq(from = -n, to = n, length.out=plet)
+      }
+    )
+    
+    peak_src_df <- mutate(
+      peak_src_df,
+      across(
+        starts_with("Order"), 
+        function(col) peak_deltas[[cur_column()]][col],
+        .names = "Delta_{.col}"
+      )
+    )
+
+    # Sum delta contributions
+    to_sum <- grepl("^Delta_", colnames(peak_src_df))
+    peak_src_df$Delta <- do.call(sum, peak_src_df[to_sum])
+    peak_src_df$position <- peak_src_df$Delta + multiplet_center
+    peak_amplitudes <- purrr::reduce(
+      peaks_to_convolve,
+      function(x, y) {
+        as.numeric(t(outer(x, y)))
       }
     )
     peak_positions <- purrr::reduce(
@@ -100,8 +140,11 @@ multiplet_to_peaks <- function(multiplet_type, multiplet_center, coupling_consta
       },
       .init = multiplet_center
     )
-    data.frame(
-      position = peak_positions,
-      amplitude = peak_amplitudes
+    list(
+         data.frame(
+           position = peak_positions,
+           amplitude = peak_amplitudes
+         ),
+        dplyr::select(peak_src_df, position, amplitudes, everything())
     )
 }
