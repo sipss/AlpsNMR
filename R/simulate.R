@@ -145,6 +145,6 @@ multiplet_to_peaks <- function(multiplet_type, multiplet_center, coupling_consta
            position = peak_positions,
            amplitude = peak_amplitudes
          ),
-        dplyr::select(peak_src_df, position, amplitudes, everything())
+         dplyr::select(peak_src_df, position, amplitudes, everything())
     )
 }
