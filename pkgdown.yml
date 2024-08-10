@@ -1,11 +1,11 @@
-pandoc: 3.1.13
-pkgdown: 2.0.9.9000
-pkgdown_sha: 3d24d9cef8ebe9d10bc1460cb837a934ab1ca7f4
+pandoc: '3.2'
+pkgdown: 2.1.0.9000
+pkgdown_sha: 1d40a80e6b3564a6d7da0ce467b0a4570aa5665e
 articles:
   Vig01-introduction-to-alpsnmr: Vig01-introduction-to-alpsnmr.html
   Vig01b-introduction-to-alpsnmr-old-api: Vig01b-introduction-to-alpsnmr-old-api.html
   Vig02-handling-metadata-and-annotations: Vig02-handling-metadata-and-annotations.html
-last_built: 2024-06-15T18:12Z
+last_built: 2024-08-10T13:06Z
 urls:
   reference: https://sipss.github.io/AlpsNMR/reference
   article: https://sipss.github.io/AlpsNMR/articles
