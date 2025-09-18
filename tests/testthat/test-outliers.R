@@ -23,10 +23,11 @@ test_that("nmr_pca_outliers_robust works", {
     expect_true(is.numeric(pca_outliers_no_robust[["outlier_info"]][["Tscores"]]))
 
     expect_true(is.matrix(pca_built[["X"]]))
-    expect_true(is.list(plot_variance))
-    expect_true(is.list(score))
-    expect_true(is.list(loadings))
-    expect_true(is.list(outliers_plot))
-    expect_true(is.list(plot))
+    expect_true(inherits(plot_variance, "ggplot"))
+    expect_true(inherits(score, "ggplot"))
+    expect_true(inherits(loadings, "ggplot"))
+    expect_true(inherits(outliers_plot, "ggplot"))
+    expect_true(inherits(plot, "ggplot"))
     expect_true(is.integer(dataset[["data_1r"]][[1]]))
 })
+
