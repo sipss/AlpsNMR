@@ -85,7 +85,7 @@ validate_nmr_dataset_family <- function(nmr_dataset_family) {
 #' Keep samples based on metadata column criteria
 #'
 #' @param .data An [nmr_dataset_family] object
-#' @param ... conditions, as in [dplyr]
+#' @param ... conditions, as in [dplyr::filter()]
 #' @return The same object, with the matching rows
 #' @importFrom dplyr filter
 #' @family subsetting functions
