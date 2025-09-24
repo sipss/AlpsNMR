@@ -8,8 +8,8 @@
 <title>Handling metadata and annotations • AlpsNMR</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Handling metadata and annotations">
 </head>
 <body>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">AlpsNMR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">4.11.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@
                         <h4 data-toc-skip class="author">AlpsNMR
 authors</h4>
             
-            <h4 data-toc-skip class="date">2024-08-10</h4>
+            <h4 data-toc-skip class="date">2025-09-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/vignettes/Vig02-handling-metadata-and-annotations.Rmd" class="external-link"><code>vignettes/Vig02-handling-metadata-and-annotations.Rmd</code></a></small>
       <div class="d-none name"><code>Vig02-handling-metadata-and-annotations.Rmd</code></div>
@@ -284,6 +284,14 @@ plots:</p>
 <pre><code><span><span class="co">## Warning: <span style="color: #BBBB00;">!</span> Passing aes_string arguments to plot(nmr_dataset, ...) is deprecated.</span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please pass aes arguments instead</span></span>
 <span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span></code></pre>
+<pre><code><span><span class="co">## Warning: `aes_string()` was deprecated in ggplot2 3.0.0.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use tidy evaluation idioms with `aes()`.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> See also `vignette("ggplot2-in-packages")` for more information.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">AlpsNMR</span> package.</span></span>
+<span><span class="co">##   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/sipss/AlpsNMR/issues&gt;</span>.</span></span>
+<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
 <p><img src="Vig02-handling-metadata-and-annotations_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -292,7 +300,7 @@ plots:</p>
 <p>Sometimes due to the study design we have more than one table that we
 want to match with our data.</p>
 <p>For instance, a collaborator just sent us this table:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">additional_annotations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    NMRExperiment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10"</span>, <span class="st">"20"</span>, <span class="st">"30"</span><span class="op">)</span>,</span>
 <span>    SampleCollectionDay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">91</span>, <span class="fl">3</span><span class="op">)</span></span>
@@ -304,10 +312,10 @@ want to match with our data.</p>
 <span><span class="co">## 3            30                   3</span></span></code></pre>
 <p>Since we have the <code>NMRExperiment</code> column it is very easy
 to include it:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">additional_annotations</span><span class="op">)</span></span></code></pre></div>
 <p>And the column has been added:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 4</span></span></span>
 <span><span class="co">##   NMRExperiment SubjectID TimePoint SampleCollectionDay</span></span>
@@ -317,7 +325,7 @@ to include it:</p>
 <span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline                    3</span></span></code></pre>
 <p>We received further information, but this time it is related to the
 <code>SubjectID</code> that we added before:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">subject_related_information</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    SubjectID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ana"</span>, <span class="st">"Elia"</span><span class="op">)</span>,</span>
 <span>    Age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">33</span>, <span class="fl">3</span><span class="op">)</span>,</span>
@@ -331,10 +339,10 @@ to include it:</p>
 <code>NMRExperiment</code> column anymore.</p>
 <p>We can specify the <code>by</code> argument in
 <code><a href="../reference/nmr_meta_add.html">nmr_meta_add()</a></code> to use another column for merging:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">subject_related_information</span>, by <span class="op">=</span> <span class="st">"SubjectID"</span><span class="op">)</span></span></code></pre></div>
 <p>And the Sex and Age columns will have been added:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nmr_meta_get.html">nmr_meta_get</a></span><span class="op">(</span><span class="va">dataset</span>, groups <span class="op">=</span> <span class="st">"external"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 6</span></span></span>
 <span><span class="co">##   NMRExperiment SubjectID TimePoint SampleCollectionDay   Age Sex   </span></span>
@@ -343,7 +351,7 @@ to include it:</p>
 <span><span class="co">## <span style="color: #BCBCBC;">2</span> 20            Ana       3 months                   91    33 female</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">3</span> 30            Elia      baseline                    3     3 female</span></span></code></pre>
 <p>We can also use it in a plot:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dataset</span>, color <span class="op">=</span> <span class="st">"SubjectID"</span>, linetype <span class="op">=</span> <span class="st">"as.factor(Age)"</span>, chemshift_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7.7</span>, <span class="fl">7.8</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="st">"Age"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vig02-handling-metadata-and-annotations_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 </div>
@@ -366,15 +374,15 @@ functions:</p>
 <tbody>
 <tr class="odd">
 <td>CSV</td>
-<td><code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_csv()</a></code></td>
+<td><code>readr::read_csv()</code></td>
 </tr>
 <tr class="even">
 <td>TSV</td>
-<td><code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_tsv()</a></code></td>
+<td><code>readr::read_tsv()</code></td>
 </tr>
 <tr class="odd">
 <td>SPSS</td>
-<td><code><a href="https://haven.tidyverse.org/reference/read_spss.html" class="external-link">haven::read_spss()</a></code></td>
+<td><code>haven::read_spss()</code></td>
 </tr>
 <tr class="even">
 <td>xls/xlsx</td>
@@ -386,15 +394,15 @@ functions:</p>
 <div class="section level2">
 <h2 id="session-information">Session Information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R version 4.4.1 (2024-06-14)</span></span>
+<pre><code><span><span class="co">## R version 4.5.1 (2025-06-13)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">## Running under: Ubuntu 22.04.4 LTS</span></span>
+<span><span class="co">## Running under: Ubuntu 24.04.3 LTS</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
 <span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
-<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
+<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
@@ -411,34 +419,33 @@ functions:</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] AlpsNMR_4.7.2    readxl_1.4.3     dplyr_1.1.4      BiocStyle_2.33.0</span></span>
+<span><span class="co">## [1] AlpsNMR_4.11.1   readxl_1.4.5     dplyr_1.1.4      BiocStyle_2.33.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] gtable_0.3.5        ellipse_0.5.0       xfun_0.46          </span></span>
-<span><span class="co">##  [4] bslib_0.8.0         ggplot2_3.5.1       htmlwidgets_1.6.4  </span></span>
-<span><span class="co">##  [7] ggrepel_0.9.5       lattice_0.22-6      vctrs_0.6.5        </span></span>
-<span><span class="co">## [10] tools_4.4.1         generics_0.1.3      parallel_4.4.1     </span></span>
-<span><span class="co">## [13] tibble_3.2.1        fansi_1.0.6         highr_0.11         </span></span>
-<span><span class="co">## [16] rARPACK_0.11-0      pkgconfig_2.0.3     Matrix_1.7-0       </span></span>
-<span><span class="co">## [19] RColorBrewer_1.1-3  desc_1.4.3          mixOmics_6.28.0    </span></span>
-<span><span class="co">## [22] lifecycle_1.0.4     farver_2.1.2        compiler_4.4.1     </span></span>
-<span><span class="co">## [25] stringr_1.5.1       textshaping_0.4.0   munsell_0.5.1      </span></span>
-<span><span class="co">## [28] codetools_0.2-20    htmltools_0.5.8.1   sass_0.4.9         </span></span>
-<span><span class="co">## [31] yaml_2.3.10         pillar_1.9.0        pkgdown_2.1.0.9000 </span></span>
-<span><span class="co">## [34] jquerylib_0.1.4     tidyr_1.3.1         MASS_7.3-61        </span></span>
-<span><span class="co">## [37] BiocParallel_1.38.0 cachem_1.1.0        RSpectra_0.16-2    </span></span>
-<span><span class="co">## [40] tidyselect_1.2.1    digest_0.6.36       stringi_1.8.4      </span></span>
-<span><span class="co">## [43] reshape2_1.4.4      purrr_1.0.2         bookdown_0.40      </span></span>
-<span><span class="co">## [46] labeling_0.4.3      fastmap_1.2.0       grid_4.4.1         </span></span>
-<span><span class="co">## [49] colorspace_2.1-1    cli_3.6.3           magrittr_2.0.3     </span></span>
-<span><span class="co">## [52] utf8_1.2.4          corpcor_1.6.10      withr_3.0.1        </span></span>
-<span><span class="co">## [55] scales_1.3.0        rmarkdown_2.27      matrixStats_1.3.0  </span></span>
-<span><span class="co">## [58] signal_1.8-1        igraph_2.0.3        gridExtra_2.3      </span></span>
-<span><span class="co">## [61] progressr_0.14.0    cellranger_1.1.0    ragg_1.3.2         </span></span>
-<span><span class="co">## [64] evaluate_0.24.0     knitr_1.48          rlang_1.1.4        </span></span>
-<span><span class="co">## [67] Rcpp_1.0.13         glue_1.7.0          BiocManager_1.30.23</span></span>
-<span><span class="co">## [70] jsonlite_1.8.8      R6_2.5.1            plyr_1.8.9         </span></span>
-<span><span class="co">## [73] systemfonts_1.1.0   fs_1.6.4</span></span></code></pre>
+<span><span class="co">##  [1] gtable_0.3.6        ellipse_0.5.0       xfun_0.53          </span></span>
+<span><span class="co">##  [4] bslib_0.9.0         ggplot2_4.0.0       htmlwidgets_1.6.4  </span></span>
+<span><span class="co">##  [7] ggrepel_0.9.6       lattice_0.22-7      vctrs_0.6.5        </span></span>
+<span><span class="co">## [10] tools_4.5.1         generics_0.1.4      parallel_4.5.1     </span></span>
+<span><span class="co">## [13] tibble_3.3.0        rARPACK_0.11-0      pkgconfig_2.0.3    </span></span>
+<span><span class="co">## [16] Matrix_1.7-4        RColorBrewer_1.1-3  S7_0.2.0           </span></span>
+<span><span class="co">## [19] desc_1.4.3          mixOmics_6.32.0     lifecycle_1.0.4    </span></span>
+<span><span class="co">## [22] compiler_4.5.1      farver_2.1.2        stringr_1.5.2      </span></span>
+<span><span class="co">## [25] textshaping_1.0.3   codetools_0.2-20    htmltools_0.5.8.1  </span></span>
+<span><span class="co">## [28] sass_0.4.10         yaml_2.3.10         crayon_1.5.3       </span></span>
+<span><span class="co">## [31] pillar_1.11.1       pkgdown_2.1.3       jquerylib_0.1.4    </span></span>
+<span><span class="co">## [34] tidyr_1.3.1         MASS_7.3-65         BiocParallel_1.42.2</span></span>
+<span><span class="co">## [37] cachem_1.1.0        RSpectra_0.16-2     tidyselect_1.2.1   </span></span>
+<span><span class="co">## [40] digest_0.6.37       stringi_1.8.7       reshape2_1.4.4     </span></span>
+<span><span class="co">## [43] purrr_1.1.0         bookdown_0.44       labeling_0.4.3     </span></span>
+<span><span class="co">## [46] fastmap_1.2.0       grid_4.5.1          cli_3.6.5          </span></span>
+<span><span class="co">## [49] magrittr_2.0.4      utf8_1.2.6          corpcor_1.6.10     </span></span>
+<span><span class="co">## [52] withr_3.0.2         scales_1.4.0        rmarkdown_2.29     </span></span>
+<span><span class="co">## [55] matrixStats_1.5.0   signal_1.8-1        igraph_2.1.4       </span></span>
+<span><span class="co">## [58] gridExtra_2.3       progressr_0.16.0    cellranger_1.1.0   </span></span>
+<span><span class="co">## [61] ragg_1.5.0          evaluate_1.0.5      knitr_1.50         </span></span>
+<span><span class="co">## [64] rlang_1.1.6         Rcpp_1.1.0          glue_1.8.0         </span></span>
+<span><span class="co">## [67] BiocManager_1.30.26 jsonlite_2.0.0      R6_2.6.1           </span></span>
+<span><span class="co">## [70] plyr_1.8.9          systemfonts_1.2.3   fs_1.6.6</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -451,7 +458,7 @@ functions:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
