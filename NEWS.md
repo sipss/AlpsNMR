@@ -1,3 +1,7 @@
+# AlpsNMR 4.10.1 (2025-09-24)
+
+- Backport fix for ggplot 4.0 from devel
+
 # AlpsNMR 4.7.2 (2024-08-10)
 
 - Disable nested parallellization in `nmr_detect_peaks_tune_snr()`.
