@@ -203,11 +203,14 @@ read_levels <-
         file_level <- file.path(full_pdata_path, "level")
         if (file.exists(file_level)) {
             if (is.null(endian) || is.null(NC_proc)) {
-                warning("Can't read old level file without endian information and NC_proc")
+                stop("Can't read old level file without endian information and NC_proc")
             }
             lev <-
                 read_bin_data(file_name = file_level, endian = endian)
             # The first two figures is the number of pos. and neg. levels
+            if (length(lev) < 3) {
+                stop("Can't read old level file: not enough data in level file")
+            }
             levels_vec <- lev[3:length(lev)]
             # Adjust for NC-parameter
             levels_vec <- levels_vec / (2^-NC_proc)
@@ -246,6 +249,7 @@ read_levels <-
 #' @keywords internal
 #' @noRd
 read_bin_data <- function(file_name, endian) {
+    con <- NULL
     tryCatch(
         {
             con <- file(file_name, "rb")
@@ -278,7 +282,7 @@ read_bin_data <- function(file_name, endian) {
             }
         },
         finally = {
-            close(con)
+            if (!is.null(con)) close(con)
         }
     )
     return(data)
@@ -374,7 +378,7 @@ read_orig_file <- function(sample_path) {
     lines_split <- strsplit(orig_lines, split = " ", fixed = TRUE)
     all_names <- purrr::map_chr(lines_split, 1)
     all_vals <- purrr::map_chr(lines_split, function(line) {
-        paste0(line[2:length(line)], collapse = " ")
+        if (length(line) < 2) "" else paste0(line[2:length(line)], collapse = " ")
     })
     output <- list()
     output[all_names] <- all_vals
@@ -518,6 +522,9 @@ read_bruker_pdata <- function(sample_path,
         full_filename <- file.path(full_pdata_path, filename)
         output[[field_name]] <-
             read_bin_data(full_filename, endian = endian)
+        if (is.null(output$procs$NC_proc)) {
+            stop("NC_proc is missing from the procs file for sample ", sample_path)
+        }
         output[[field_name]] <-
             output[[field_name]] / (2^-output$procs$NC_proc)
     }
@@ -647,6 +654,9 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
 
     # The pulse sequence is not that obvious
     experiment_name <- acqus_list$acqus$EXP
+    if (is.null(experiment_name) || length(experiment_name) == 0) {
+        stop("The EXP field is missing from the acqus file")
+    }
     # NUC1... NUC8 help to tell us the nuclei present
     NUCLEI <- paste0("NUC", seq_len(8))
 
@@ -920,7 +930,7 @@ nmr_read_bruker_fid <- function(sample_name, endian = "little") {
     if (file.exists(file.path(sample_name, "fid"))) {
         fid_file <- file.path(sample_name, "fid")
 
-        num_numbers <- file.size(fid_file) / 8
+        num_numbers <- file.size(fid_file) / 4
         fid <-
             readBin(
                 fid_file,

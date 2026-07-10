@@ -185,7 +185,7 @@ process_block <- function(lines, metadata_only = FALSE) {
                         unlist(lapply(
                             strsplit(cleaned_spaces, split = "[[:blank:]]+"),
                             function(x) {
-                                as.numeric(x[2:length(x)])
+                                if (length(x) < 2) numeric(0) else as.numeric(x[2:length(x)])
                             }
                         ))
                     block[[field_name]] <- data.frame(
@@ -234,7 +234,10 @@ process_block <- function(lines, metadata_only = FALSE) {
                 block[[data_field]][["y"]] * block[["YFACTOR"]]
         }
         # Convert x axis from frequency to chemshift
-        if (tolower(block[["XUNITS"]]) == "hz") {
+        if (!is.null(block[["XUNITS"]]) && tolower(block[["XUNITS"]]) == "hz") {
+            if (is.null(block[[".OBSERVE FREQUENCY"]])) {
+                rlang::abort(".OBSERVE FREQUENCY is missing from the JDX file but XUNITS is 'Hz'")
+            }
             block[[data_field]][["x"]] <-
                 block[[data_field]][["x"]] / block[[".OBSERVE FREQUENCY"]]
         }
