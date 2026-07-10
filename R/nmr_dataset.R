@@ -259,11 +259,16 @@ nmr_read_samples_bruker <-
             ...
         )
         
-        # Remove samples that could not be loaded:
-        any_error <- purrr::map_lgl(list_of_samples, function(s) inherits(s, "error"))
-        list_of_errors <- list_of_samples[any_error]
-        list_of_samples <- list_of_samples[!any_error]
-        sample_names <- sample_names[!any_error]
+        # Remove samples that could not be loaded, as well as samples that
+        # were deliberately skipped (e.g. pulse sequence mismatch or the
+        # Bruker internal "98888" processing folder), which come back as
+        # NULL rather than an "error" condition:
+        is_error <- purrr::map_lgl(list_of_samples, function(s) inherits(s, "error"))
+        is_skipped <- purrr::map_lgl(list_of_samples, is.null)
+        to_remove <- is_error | is_skipped
+        list_of_errors <- list_of_samples[is_error]
+        list_of_samples <- list_of_samples[!to_remove]
+        sample_names <- sample_names[!to_remove]
 
 
         if (length(list_of_samples) == 0) {
