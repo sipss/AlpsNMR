@@ -35,6 +35,13 @@ nmr_meta_get <- function(samples,
         stop("groups and columns can't be given simultaneously")
     }
     if (is.null(columns) && !is.null(groups)) {
+        if (!all(groups %in% names(metadata_list))) {
+            groups_miss <- groups[!groups %in% names(metadata_list)]
+            rlang::abort(message = c(
+                "Some missing groups in the dataset were requested:",
+                groups_miss
+            ))
+        }
         columns <- metadata_list[groups] %>%
             purrr::map(colnames) %>%
             purrr::flatten_chr() %>%
@@ -152,7 +159,7 @@ nmr_meta_get_column <- function(samples, column = "NMRExperiment") {
 #' @family nmr_dataset_peak_table functions
 nmr_meta_add <- function(nmr_data, metadata, by = "NMRExperiment") {
     nmr_meta <- nmr_meta_get(nmr_data, groups = "external")
-    by_left <- ifelse(is.null(names(by)), by, names(by))
+    by_left <- if (is.null(names(by))) by else names(by)
     existing_vars <- base::setdiff(colnames(nmr_meta), by_left)
     conflict <- base::intersect(existing_vars, colnames(metadata))
     # We must ensure metadata[[by]] is unique:
@@ -276,8 +283,7 @@ nmr_meta_export <- function(nmr_dataset,
     if (!all(groups_present)) {
         warning(
             "These metadata groups are missing and will be ignored: \n",
-            paste(groups[!groups_present]),
-            collapse = ", "
+            paste(groups[!groups_present], collapse = ", ")
         )
         groups <- groups[groups_present]
     }

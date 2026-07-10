@@ -601,9 +601,14 @@ plot_plsda_samples <- function(model, newdata = NULL, plot = TRUE) {
         # Hidding the plot
         t <- tempfile()
         pdf(file = t)
+        on.exit(
+            {
+                dev.off()
+                file.remove(t)
+            },
+            add = TRUE
+        )
         ploty <- mixOmics::plotIndiv(model, comp = c(1, 1))
-        dev.off()
-        file.remove(t)
 
         tr_data <- data.frame(
             x = ploty$graph$data$x,
@@ -636,9 +641,14 @@ plot_plsda_samples <- function(model, newdata = NULL, plot = TRUE) {
         # Hidding the plot
         t <- tempfile()
         pdf(file = t)
+        on.exit(
+            {
+                dev.off()
+                file.remove(t)
+            },
+            add = TRUE
+        )
         ploty <- mixOmics::plotIndiv(model)
-        dev.off()
-        file.remove(t)
 
         tr_y <- ploty$graph$data$y
         te_y <- predictions$variates[, 2]
@@ -763,6 +773,13 @@ plot_plsda_multimodel <- function(model, plot = TRUE) {
     # Hidding the plots
     t <- tempfile()
     pdf(file = t)
+    on.exit(
+        {
+            dev.off()
+            file.remove(t)
+        },
+        add = TRUE
+    )
     for (i in seq_len(n_models)) {
         # Predictions of test set
         predictions <- predict(model$outer_cv_results[[i]]$model,
@@ -798,8 +815,6 @@ plot_plsda_multimodel <- function(model, plot = TRUE) {
             ))
         }
     }
-    dev.off()
-    file.remove(t)
 
     # Individuals plot
     if (min_ncomp == 1) {

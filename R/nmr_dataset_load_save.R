@@ -16,7 +16,15 @@ NULL
 #' nmr_dataset <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 #'
 nmr_dataset_load <- function(file_name) {
-    return(readRDS(file_name))
+    loaded <- readRDS(file_name)
+    abort_if_not(
+        inherits(loaded, "nmr_dataset_family"),
+        message = glue::glue(
+            "The file '{file_name}' does not contain a valid AlpsNMR dataset object ",
+            "(got class: {paste(class(loaded), collapse = ', ')})"
+        )
+    )
+    return(loaded)
 }
 
 #' @rdname load_and_save_functions

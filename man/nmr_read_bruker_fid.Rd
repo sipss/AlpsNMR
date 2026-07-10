@@ -4,18 +4,25 @@
 \alias{nmr_read_bruker_fid}
 \title{Read Free Induction Decay file}
 \usage{
-nmr_read_bruker_fid(sample_name, endian = "little")
+nmr_read_bruker_fid(sample_name)
 }
 \arguments{
-\item{sample_name}{A single sample name}
-
-\item{endian}{Endianness of the fid file ("little" by default, use "big" if acqus$BYTORDA == 1)}
+\item{sample_name}{A single sample directory. It must contain an
+\code{acqus} file and a \code{fid} file.}
 }
 \value{
-A numeric vector with the free induction decay values
+A data frame with columns \code{time_s} (the acquisition time, in
+seconds, of each complex data point) and \code{fid_complex} (the free
+induction decay, as a complex vector). Returns \code{NULL} if the sample
+has no \code{fid} file.
 }
 \description{
-Reads an FID file. This is a very simple function.
+Reads a Bruker FID file. The sample's \code{acqus} file is used to
+determine how to interpret the raw binary data: \code{BYTORDA} gives the
+byte order, \code{DTYPA} gives the data type (32-bit integer or 64-bit
+double), \code{TD} gives the number of raw (real+imaginary interleaved)
+data points actually acquired, and \code{SW_h} (the spectral width, in Hz)
+is used to build the acquisition time axis.
 }
 \examples{
 fid <- nmr_read_bruker_fid("sample.fid")

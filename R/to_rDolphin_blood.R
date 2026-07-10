@@ -85,6 +85,11 @@ files_to_rDolphin <- function(nmr_dataset, biological_origin) {
     meta_rDolphin <- AlpsNMR::nmr_meta_get(nmr_dataset)[meta_D_3col]
     newcolnames <- c("sample", "individual", "type")
     colnames(meta_rDolphin) <- newcolnames
+    type_levels <- levels(as.factor(meta_rDolphin$type))
+    message(
+        "Group labels encoded as: ",
+        paste(type_levels, "=", seq_along(type_levels), collapse = ", ")
+    )
     meta_rDolphin$type <- as.numeric(as.factor(meta_rDolphin$type))
 
     NMR_spectra <- nmr_data(nmr_dataset)

@@ -203,11 +203,14 @@ read_levels <-
         file_level <- file.path(full_pdata_path, "level")
         if (file.exists(file_level)) {
             if (is.null(endian) || is.null(NC_proc)) {
-                warning("Can't read old level file without endian information and NC_proc")
+                stop("Can't read old level file without endian information and NC_proc")
             }
             lev <-
                 read_bin_data(file_name = file_level, endian = endian)
             # The first two figures is the number of pos. and neg. levels
+            if (length(lev) < 3) {
+                stop("Can't read old level file: not enough data in level file")
+            }
             levels_vec <- lev[3:length(lev)]
             # Adjust for NC-parameter
             levels_vec <- levels_vec / (2^-NC_proc)
@@ -246,6 +249,7 @@ read_levels <-
 #' @keywords internal
 #' @noRd
 read_bin_data <- function(file_name, endian) {
+    con <- NULL
     tryCatch(
         {
             con <- file(file_name, "rb")
@@ -278,7 +282,7 @@ read_bin_data <- function(file_name, endian) {
             }
         },
         finally = {
-            close(con)
+            if (!is.null(con)) close(con)
         }
     )
     return(data)
@@ -374,7 +378,7 @@ read_orig_file <- function(sample_path) {
     lines_split <- strsplit(orig_lines, split = " ", fixed = TRUE)
     all_names <- purrr::map_chr(lines_split, 1)
     all_vals <- purrr::map_chr(lines_split, function(line) {
-        paste0(line[2:length(line)], collapse = " ")
+        if (length(line) < 2) "" else paste0(line[2:length(line)], collapse = " ")
     })
     output <- list()
     output[all_names] <- all_vals
@@ -518,6 +522,9 @@ read_bruker_pdata <- function(sample_path,
         full_filename <- file.path(full_pdata_path, filename)
         output[[field_name]] <-
             read_bin_data(full_filename, endian = endian)
+        if (is.null(output$procs$NC_proc)) {
+            stop("NC_proc is missing from the procs file for sample ", sample_path)
+        }
         output[[field_name]] <-
             output[[field_name]] / (2^-output$procs$NC_proc)
     }
@@ -647,6 +654,9 @@ infer_dim_pulse_nuclei <- function(acqus_list) {
 
     # The pulse sequence is not that obvious
     experiment_name <- acqus_list$acqus$EXP
+    if (is.null(experiment_name) || length(experiment_name) == 0) {
+        stop("The EXP field is missing from the acqus file")
+    }
     # NUC1... NUC8 help to tell us the nuclei present
     NUCLEI <- paste0("NUC", seq_len(8))
 
@@ -907,31 +917,95 @@ nmr_zip_bruker_samples <-
 
 #' Read Free Induction Decay file
 #'
-#' Reads an FID file. This is a very simple function.
+#' Reads a Bruker FID file. The sample's \code{acqus} file is used to
+#' determine how to interpret the raw binary data: \code{BYTORDA} gives the
+#' byte order, \code{DTYPA} gives the data type (32-bit integer or 64-bit
+#' double), \code{TD} gives the number of raw (real+imaginary interleaved)
+#' data points actually acquired, and \code{SW_h} (the spectral width, in Hz)
+#' is used to build the acquisition time axis.
 #'
-#' @param sample_name A single sample name
-#' @param endian Endianness of the fid file ("little" by default, use "big" if acqus$BYTORDA == 1)
-#' @return A numeric vector with the free induction decay values
+#' @param sample_name A single sample directory. It must contain an
+#'   \code{acqus} file and a \code{fid} file.
+#' @return A data frame with columns \code{time_s} (the acquisition time, in
+#'   seconds, of each complex data point) and \code{fid_complex} (the free
+#'   induction decay, as a complex vector). Returns \code{NULL} if the sample
+#'   has no \code{fid} file.
 #' @export
 #' @family import/export functions
 #' @examples
 #' fid <- nmr_read_bruker_fid("sample.fid")
-nmr_read_bruker_fid <- function(sample_name, endian = "little") {
-    if (file.exists(file.path(sample_name, "fid"))) {
-        fid_file <- file.path(sample_name, "fid")
-
-        num_numbers <- file.size(fid_file) / 8
-        fid <-
-            readBin(
-                fid_file,
-                what = "integer",
-                n = num_numbers,
-                size = 4,
-                signed = TRUE,
-                endian = endian
-            )
-    } else {
-        fid <- NULL
+nmr_read_bruker_fid <- function(sample_name) {
+    fid_file <- file.path(sample_name, "fid")
+    if (!file.exists(fid_file)) {
+        return(NULL)
     }
-    fid
+
+    acqus_file <- file.path(sample_name, "acqus")
+    if (!file.exists(acqus_file)) {
+        stop("Can't read the fid file without the acqus file (missing: ", acqus_file, ")")
+    }
+    acqus <- read_bruker_param(file_name = acqus_file)
+
+    if (is.null(acqus[["BYTORDA"]])) {
+        stop("BYTORDA is missing from the acqus file for sample ", sample_name)
+    }
+    endian <- if (acqus[["BYTORDA"]] == 0) "little" else "big"
+
+    if (is.null(acqus[["DTYPA"]])) {
+        stop("DTYPA is missing from the acqus file for sample ", sample_name)
+    }
+    dtypa <- acqus[["DTYPA"]]
+    if (dtypa == 0) {
+        # 32-bit integer raw data
+        what <- "integer"
+        size <- 4
+    } else if (dtypa == 2) {
+        # 64-bit double raw data
+        what <- "double"
+        size <- 8
+    } else {
+        stop("Unsupported DTYPA value (", dtypa, ") in acqus file for sample ", sample_name)
+    }
+
+    if (is.null(acqus[["TD"]])) {
+        stop("TD is missing from the acqus file for sample ", sample_name)
+    }
+    td <- acqus[["TD"]]
+    if (td %% 2 != 0) {
+        stop("TD (", td, ") is not even, can't pair raw values into complex points for sample ", sample_name)
+    }
+
+    if (is.null(acqus[["SW_h"]])) {
+        stop("SW_h is missing from the acqus file for sample ", sample_name)
+    }
+    sw_h <- acqus[["SW_h"]]
+
+    num_numbers <- file.size(fid_file) / size
+    raw <- readBin(
+        fid_file,
+        what = what,
+        n = num_numbers,
+        size = size,
+        signed = TRUE,
+        endian = endian
+    )
+
+    if (length(raw) < td) {
+        stop(
+            "The fid file for sample ", sample_name, " has fewer data points (",
+            length(raw), ") than TD (", td, ") declares. The file may be truncated."
+        )
+    }
+    # Bruker fid files can be zero-padded to a block boundary; TD gives the
+    # actual number of meaningful raw (real+imaginary interleaved) points.
+    raw <- raw[seq_len(td)]
+
+    real_part <- raw[c(TRUE, FALSE)]
+    imag_part <- raw[c(FALSE, TRUE)]
+    fid_complex <- complex(real = real_part, imaginary = imag_part)
+
+    # Dwell time between complex points is 1/SW_h:
+    time_s <- seq(from = 0, by = 1 / sw_h, length.out = length(fid_complex))
+
+    data.frame(time_s = time_s, fid_complex = fid_complex)
 }

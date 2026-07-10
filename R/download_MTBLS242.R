@@ -57,6 +57,12 @@ download_MTBLS242 <- function(
         keep_only_complete_time_points = TRUE
     ) {
     require_pkgs(pkg = c("curl", "zip"))
+    # NOTE (security): this dataset is fetched over plain, unauthenticated FTP and this
+    # function performs no checksum/integrity verification of the downloaded files. The
+    # retrieved data should therefore not be treated as tamper-proof. A future improvement
+    # would be to compute and verify a SHA-256 checksum of each downloaded file once a
+    # canonical, trusted hash is obtained from the data provider (e.g. published alongside
+    # the dataset on MetaboLights/EBI).
     url <- "ftp://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242/"
 
     dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
@@ -167,6 +173,23 @@ download_MTBLS242 <- function(
                 filenames_in_zip <- zip::zip_list(intermediate_dst_file)[["filename"]]
                 prefix_to_keep <- file.path(filename_base, "3", "") # subdirectory 3/ contains the CPMG sample
                 filenames_in_zip <- filenames_in_zip[startsWith(filenames_in_zip, prefix_to_keep)]
+
+                # Guard against zip-slip: the entry names above come straight from the
+                # (unauthenticated) archive's own listing, and startsWith() alone does not
+                # prevent an entry such as "<filename_base>/3/../../../etc/passwd" from also
+                # matching the prefix while still escaping dst_rootdir on extraction. Resolve
+                # every entry's intended destination and make sure it stays inside dst_rootdir;
+                # if any entry fails this check, refuse to extract *any* file from the archive.
+                dst_rootdir_norm <- fs::path_norm(fs::path_abs(dst_rootdir))
+                intended_paths <- fs::path_norm(fs::path_abs(file.path(dst_rootdir, filenames_in_zip)))
+                is_within_rootdir <- startsWith(as.character(intended_paths), paste0(as.character(dst_rootdir_norm), .Platform$file.sep))
+                if (!all(is_within_rootdir)) {
+                    cli::cli_abort(c(
+                        "x" = "Refusing to extract {.file {intermediate_dst_file}}: it contains {.val {sum(!is_within_rootdir)}} entr{?y/ies} that would be written outside of {.file {dst_rootdir}} (zip-slip).",
+                        "i" = "Offending entr{?y/ies}: {.val {filenames_in_zip[!is_within_rootdir]}}"
+                    ))
+                }
+
                 # extract 3/ to dst_rootdir:
                 zip::unzip(zipfile = intermediate_dst_file, exdir = dst_rootdir, files = filenames_in_zip)
                 unlink(intermediate_dst_file)

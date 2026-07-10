@@ -1,3 +1,14 @@
+# AlpsNMR (development version)
+
+- `nmr_read_bruker_fid()`: fixed silent truncation of FID data to half its
+  length (wrong byte-size divisor), and rewrote the function to determine
+  byte order (`BYTORDA`), data type (`DTYPA`), and timing (`SW_h`, `TD`)
+  from the sample's `acqus` file instead of assuming little-endian 32-bit
+  integers. It now returns a data frame with `time_s` and `fid_complex`
+  columns instead of a raw interleaved numeric vector. **This is a breaking
+  change**: the `endian` argument has been removed (byte order is now
+  auto-detected) and the return type has changed.
+
 # AlpsNMR 4.11.1 (2025-09-24)
 
 - Compatibility with ggplot2-4.0.

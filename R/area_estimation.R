@@ -11,7 +11,7 @@ get_peak_bounds <- function(peak_limit_left, peak_limit_right, pos, x, sgf) {
     peak_limit_left <- peak_limit_left[pos - peak_limit_left > 0]
     peak_limit_right <- peak_limit_right[peak_limit_right - pos > 0]
     if (length(peak_limit_right) == 0 || length(peak_limit_left) == 0) {
-        return(c("left" = 0, "apex" = pos, "right" = 0, "xleft" = 0, "xright" = 0))
+        return(c("left" = NA_real_, "apex" = pos, "right" = NA_real_, "xleft" = NA_real_, "xright" = NA_real_))
     }
     right <- peak_limit_right[1]
     left <- peak_limit_left[length(peak_limit_left)]
@@ -97,7 +97,7 @@ refine_lorentzian_fit_with_nls <- function(data_to_fit, start, method) {
         },
         error = function(e) {
             msg <- conditionMessage(e)
-            error_msgs <- c(error_msgs, msg)
+            error_msgs <<- c(error_msgs, msg)
         }
     )
     list(
@@ -217,6 +217,13 @@ peaklist_fit_lorentzians <- function(peak_data,
             peak_limit_right <- which((diff(sign(sgf))) == 2)
         }
         peak_bounds <- get_peak_bounds(peak_limit_left, peak_limit_right, posi, x, sgf)
+        if (is.na(peak_bounds["left"]) || is.na(peak_bounds["right"])) {
+            # Peak too close to the spectrum edge to be bounded on both sides:
+            # skip the lorentzian fit for this peak (its peak_data columns stay NA)
+            # instead of proceeding with NA:NA range indexing.
+            sindex_prev <- sindex
+            next
+        }
         # Estimate gamma with the inflection points:
         # The lorentzian second derivative:
         # $$f''(x, x_0, A, \gamma) = -\frac{2A \gamma \left(\gamma^2-3\left(x-x_0\right)^2\right)}{\pi \left(\gamma^2+\left(x-x_0\right)^2\right)^3}$$
@@ -262,7 +269,7 @@ peaklist_fit_lorentzians <- function(peak_data,
             peak_pos_ppm <- new_params[["peak_pos_ppm"]]
             if (!is.null(new_params[["error_msgs"]])) {
                 all_errors$peak_id <- c(all_errors$peak_id, peak_data$peak_id[i])
-                all_errors$error_msg <- paste(new_params[["error_msgs"]], collapse = "\n")
+                all_errors$error_msg <- c(all_errors$error_msg, paste(new_params[["error_msgs"]], collapse = "\n"))
             }
         } else if (identical(refine_peak_model, "2nd_derivative")) {
             # Further fitting with nls:
@@ -283,7 +290,7 @@ peaklist_fit_lorentzians <- function(peak_data,
             peak_pos_ppm <- new_params[["peak_pos_ppm"]]
             if (!is.null(new_params[["error_msgs"]])) {
                 all_errors$peak_id <- c(all_errors$peak_id, peak_data$peak_id[i])
-                all_errors$error_msg <- paste(new_params[["error_msgs"]], collapse = "\n")
+                all_errors$error_msg <- c(all_errors$error_msg, paste(new_params[["error_msgs"]], collapse = "\n"))
             }
         } else if (!identical(refine_peak_model, "none")) {
             rlang::abort("Unknown refine_peak_model")
@@ -298,10 +305,10 @@ peaklist_fit_lorentzians <- function(peak_data,
         # So we can estimate how good our fit is to the real data:
         y_fitted_apex_idx <- peak_bounds["apex"] - peak_bounds["left"] + 1L
         norm_rmse <- get_norm_rmse(
-            y_fitted,
-            y[peak_bounds["left"]:peak_bounds["right"]],
+            y_fitted = y_fitted,
+            y = y[peak_bounds["left"]:peak_bounds["right"]],
             y_fitted_apex = y_fitted[y_fitted_apex_idx],
-            y_fitted = y[peak_bounds["apex"]]
+            y_apex = y[peak_bounds["apex"]]
         )
         # And save the result in the peak_data table:
         peak_data$ppm_infl_min[i] <- peak_bounds["xleft"]

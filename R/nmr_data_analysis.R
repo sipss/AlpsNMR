@@ -682,10 +682,10 @@ bp_VIP_analysis <- function(dataset,
             # if y_train_boots only have one class, plsda models give error
             if (length(unique(y_train_boots)) == 1) {
                 # Replace the first element for the first element of another class
-                for (i in seq_len(y_train)) {
-                    if (y_train[i] != y_train_boots[1]) {
-                        y_train_boots[1] <- y_train[i]
-                        x_train_boots[1, ] <- x_train[i, ]
+                for (class_idx in seq_along(y_train)) {
+                    if (y_train[class_idx] != y_train_boots[1]) {
+                        y_train_boots[1] <- y_train[class_idx]
+                        x_train_boots[1, ] <- x_train[class_idx, ]
                         break
                     }
                 }
@@ -712,9 +712,11 @@ bp_VIP_analysis <- function(dataset,
 
             # Permutation of variables
             for (j in seq_len(num_features)) {
-                random_pos <- sample(seq_len(num_features), 1)
                 x_train_boots_perm <- x_train_boots
-                x_train_boots_perm[, j] <- x_train_boots[, random_pos]
+                # Shuffle column j's own values (breaks its row-order
+                # association with the outcome) to obtain the permutation
+                # null distribution for feature j's importance.
+                x_train_boots_perm[, j] <- sample(x_train_boots[, j])
 
                 # Refit model with permuted variables
                 model_perm <-
@@ -775,6 +777,12 @@ bp_VIP_analysis <- function(dataset,
         upper_bound[k] <- boots_vip[k] + error[k]
     }
 
+    # NOTE: this compares a CI-adjusted lower bound against a raw t-critical
+    # value; verify intended semantics (see the "more stringent subset"
+    # comment in train_models_with_only_vip_features() and the deprecated
+    # vip_means-2*error criterion below in bp_kfold_VIP_analysis(), which
+    # suggest important_vips is meant to use a different/stricter, but not
+    # necessarily this, threshold than relevant_vips).
     important_vips <- names[lower_bound > qt(0.975, df = nbootstrap - 1)]
     relevant_vips <- names[lower_bound > 0]
 

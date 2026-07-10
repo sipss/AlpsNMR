@@ -27,7 +27,11 @@ norm_pqn <- function(spectra, basel = NULL) {
     }
     # Normalize to the area
     areas <- rowSums(spectra_minus_basel)
-    areas <- areas / stats::median(areas)
+    areas_median <- stats::median(areas)
+    if (areas_median == 0) {
+        stop("The median of the normalization areas is zero. PQN normalization cannot proceed.")
+    }
+    areas <- areas / areas_median
     if (num_samples == 1) {
         # We have warned, and here there is nothing to do anymore
         rlang::warn("PQN is meaningless with a single sample. We have normalized it to the area.")
@@ -128,6 +132,15 @@ nmr_normalize <- function(samples,
         norm_factor <- apply(spec_minus_basel, 1, max)
     } else if (method == "value") {
         norm_factor <- dots[["values"]]
+        if (is.null(norm_factor)) {
+            stop("The 'values' argument is required for method = 'value'")
+        }
+        if (length(norm_factor) != samples$num_samples) {
+            stop(
+                "The 'values' argument must have length equal to the number of samples (",
+                samples$num_samples, "), got length ", length(norm_factor)
+            )
+        }
     } else if (method == "region") {
         ppm_range <- dots[["ppm_range"]]
         norm_factor <- nmr_integrate_regions(samples, regions = list(ic = ppm_range), ...)
@@ -144,8 +157,21 @@ nmr_normalize <- function(samples,
     } else {
         stop("Unimplemented method: ", method)
     }
+    if (any(norm_factor <= 0)) {
+        rlang::warn(
+            message = c(
+                "Normalization produced a non-positive factor for at least one sample",
+                "i" = "This may indicate a data-quality issue (e.g. an over-subtracted baseline)",
+                "i" = "The affected sample(s) may end up with a flipped or undefined spectrum sign"
+            )
+        )
+    }
     # Normalize the normalization factors to the median, to avoid large changes
-    norm_factor_to_apply <- norm_factor / stats::median(norm_factor)
+    norm_factor_median <- stats::median(norm_factor)
+    if (norm_factor_median == 0) {
+        stop("The median of the normalization factors is zero. Normalization cannot proceed.")
+    }
+    norm_factor_to_apply <- norm_factor / norm_factor_median
     samples[["data_1r"]] <- sweep(
         x = samples[["data_1r"]],
         MARGIN = 1,
