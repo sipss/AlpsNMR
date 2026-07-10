@@ -110,6 +110,12 @@ plot_with_aes <- function(
     
     if (is.null(NMRExperiment)) {
         if (x$num_samples > 20) {
+            cli::cli_inform(
+                c(
+                    "i" = "The dataset has more than 20 samples, so a random subset of 10 samples is being plotted.",
+                    "i" = "Pass the {.arg NMRExperiment} argument with the sample names you want to see, or {.code NMRExperiment = \"all\"} to plot all of them."
+                )
+            )
             NMRExperiment <- sample(names(x), size = 10)
         } else {
             NMRExperiment <- names(x)
@@ -187,6 +193,12 @@ plot_with_aes_string <- function(
     
     if (is.null(NMRExperiment)) {
         if (x$num_samples > 20) {
+            cli::cli_inform(
+                c(
+                    "i" = "The dataset has more than 20 samples, so a random subset of 10 samples is being plotted.",
+                    "i" = "Pass the {.arg NMRExperiment} argument with the sample names you want to see, or {.code NMRExperiment = \"all\"} to plot all of them."
+                )
+            )
             NMRExperiment <- sample(names(x), size = 10)
         } else {
             NMRExperiment <- names(x)
@@ -194,7 +206,7 @@ plot_with_aes_string <- function(
     } else if (identical(NMRExperiment, "all")) {
         NMRExperiment <- names(x)
     }
-    
+
     aes_str <- as.character(list(...))
     columns_to_request <- c("NMRExperiment", get_vars_from_aes_string(aes_str))
     
