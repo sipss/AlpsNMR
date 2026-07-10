@@ -102,6 +102,27 @@ interpolate_1d <- function(list_of_ppms, list_of_1r, ppm_axis) {
                 )
             }
             for (i in seq_len(num_samples)) {
+                native_range <- range(list_of_ppms[[i]])
+                requested_range <- range(ppm_axis)
+                if (requested_range[1] < native_range[1] || requested_range[2] > native_range[2]) {
+                    below <- max(0, native_range[1] - requested_range[1])
+                    above <- max(0, requested_range[2] - native_range[2])
+                    rlang::warn(
+                        message = c(
+                            paste0(
+                                "Requested interpolation axis exceeds the native ppm range for sample ", i,
+                                " and will be extrapolated"
+                            ),
+                            "i" = paste0(
+                                "Sample native range: [", native_range[1], ", ", native_range[2], "]; ",
+                                "requested range: [", requested_range[1], ", ", requested_range[2], "]"
+                            ),
+                            "i" = paste0(
+                                "Exceeds native range by ", below, " below and ", above, " above"
+                            )
+                        )
+                    )
+                }
                 data_matr[i, ] <- signal::interp1(
                     x = list_of_ppms[[i]],
                     y = list_of_1r[[i]],

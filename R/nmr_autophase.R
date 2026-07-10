@@ -69,7 +69,7 @@ nmr_autophase <- function(dataset,
         any_imag_missing <- purrr::map_lgl(imag_list_of_spectra, is.null)
         any_imag_missing <- any_imag_missing[any_imag_missing]
         if (length(any_imag_missing) > 0) {
-            if (length(any_imag_missing < 7)) {
+            if (length(any_imag_missing) < 7) {
                 miss_sample_names <- paste0(names(any_imag_missing), collapse = ", ")
                 msg <- "Samples without imaginary component: {miss_sample_names}"
             } else {
@@ -96,7 +96,7 @@ nmr_autophase <- function(dataset,
                 absorptionOnly <- TRUE
                 to_phase <- real
             }
-            phased <- NMRphasing::NMRphasing(to_phase, absorptionOnly = TRUE, ...)
+            phased <- NMRphasing::NMRphasing(to_phase, absorptionOnly = absorptionOnly, ...)
             list(real = Re(phased), imag = Im(phased))
         },
         real_list_of_spectra, imag_list_of_spectra,
