@@ -442,10 +442,10 @@ peakList_to_dataframe <- function(nmr_dataset, peakList) {
     out
 }
 
-#' Convert the data frame created by [peakList_to_dataframe] back to a peakList
+#' Convert the data frame created by `peakList_to_dataframe()` back to a peakList
 #' This is required because speaq::dohCluster in nmr_align needs the peakList
 #' @noRd
-#' @param peak_data The peak list returned by [peakList_to_dataframe]
+#' @param peak_data The peak list returned by `peakList_to_dataframe()`
 #' @return a peakList
 #' @importFrom rlang .data
 #' @keywords internal

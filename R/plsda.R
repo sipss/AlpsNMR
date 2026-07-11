@@ -228,7 +228,7 @@ choose_best_nlv_impl <- function(ncomp_auc, auc_threshold) {
 }
 
 #' Choose best number of latent variables based on a threshold on the auc increment.
-#' @param inner_cv_results A list of elements returned by [callback_plsda_auroc_vip]
+#' @param inner_cv_results A list of elements returned by `callback_plsda_auroc_vip()`
 #' @param auc_threshold Threshold on the increment of AUC. Increasing the number of
 #' latent variables must increase the AUC at least by this threshold.
 #' @return A list with:
