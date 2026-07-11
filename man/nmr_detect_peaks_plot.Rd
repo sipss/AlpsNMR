@@ -35,26 +35,15 @@ Plot peak detection results
 \seealso{
 Peak_detection nmr_detect_peaks
 
-Other peak detection functions: 
+Other peak detection functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_baseline_threshold}()},
-\code{\link{nmr_detect_peaks}()},
-\code{\link{nmr_detect_peaks_plot_overview}()},
-\code{\link{nmr_detect_peaks_tune_snr}()},
-\code{\link{nmr_identify_regions_blood}()},
-\code{\link{nmr_identify_regions_cell}()},
-\code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_regions}()}
-
-Other peak detection functions: 
-\code{\link{Pipelines}},
-\code{\link{nmr_baseline_threshold}()},
-\code{\link{nmr_detect_peaks}()},
-\code{\link{nmr_detect_peaks_plot_overview}()},
-\code{\link{nmr_detect_peaks_tune_snr}()},
-\code{\link{nmr_identify_regions_blood}()},
-\code{\link{nmr_identify_regions_cell}()},
-\code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_regions}()}
+\code{\link[=nmr_baseline_threshold]{nmr_baseline_threshold()}},
+\code{\link[=nmr_detect_peaks]{nmr_detect_peaks()}},
+\code{\link[=nmr_detect_peaks_plot_overview]{nmr_detect_peaks_plot_overview()}},
+\code{\link[=nmr_detect_peaks_tune_snr]{nmr_detect_peaks_tune_snr()}},
+\code{\link[=nmr_identify_regions_blood]{nmr_identify_regions_blood()}},
+\code{\link[=nmr_identify_regions_cell]{nmr_identify_regions_cell()}},
+\code{\link[=nmr_identify_regions_urine]{nmr_identify_regions_urine()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}}
 }
 \concept{peak detection functions}

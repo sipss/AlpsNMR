@@ -29,7 +29,7 @@ dataset_1D <- nmr_baseline_estimation(dataset_1D, lambda = 9, p = 0.01)
 \seealso{
 \link[baseline:baseline.als]{baseline::baseline.als}
 
-Other baseline removal functions: 
-\code{\link{nmr_baseline_removal}()}
+Other baseline removal functions:
+\code{\link[=nmr_baseline_removal]{nmr_baseline_removal()}}
 }
 \concept{baseline removal functions}

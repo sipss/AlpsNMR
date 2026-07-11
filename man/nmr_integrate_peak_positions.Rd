@@ -19,12 +19,25 @@ nmr_integrate_peak_positions(
 \item{peak_width_ppm}{The peak widths (or a single peak width for all peaks)}
 
 \item{...}{
-  Arguments passed on to \code{\link[=nmr_integrate_regions]{nmr_integrate_regions}}
+  Arguments passed on to \code{\link{nmr_integrate_regions}}
   \describe{
     \item{\code{regions}}{A named list. Each element of the list is a region,
 given as a named numeric vector of length two with the range
 to integrate. The name of the region will be the name of the
 column}
+    \item{\code{fix_baseline}}{A logical. If \code{TRUE} it removes the baseline. See details
+below}
+    \item{\code{excluded_regions_as_zero}}{A logical. It determines the behaviour of the
+integration when integrating regions that have been excluded. If \code{TRUE},
+it will treat those regions as zero. If \code{FALSE} (the default) it will return
+NA values.
+
+If \code{fix_baseline} is \code{TRUE}, then the region boundaries are used to estimate
+a baseline. The baseline is estimated "connecting the boundaries with a straight
+line". Only when the spectrum is above the baseline the area is integrated
+(negative contributions due to the baseline estimation are ignored).}
+    \item{\code{set_negative_areas_to_zero}}{A logical. Ignored if \code{fix_baseline} is \code{FALSE}.
+When set to \code{TRUE} negative areas are set to zero.}
   }}
 }
 \value{
@@ -34,26 +47,26 @@ Integrate peak positions
 The function allows the integration of a given ppm vector with a specific width.
 }
 \seealso{
-Other peak integration functions: 
+Other peak integration functions:
 \code{\link{Pipelines}},
-\code{\link{get_integration_with_metadata}()},
-\code{\link{nmr_identify_regions_blood}()},
-\code{\link{nmr_identify_regions_cell}()},
-\code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_regions}()}
+\code{\link[=get_integration_with_metadata]{get_integration_with_metadata()}},
+\code{\link[=nmr_identify_regions_blood]{nmr_identify_regions_blood()}},
+\code{\link[=nmr_identify_regions_cell]{nmr_identify_regions_cell()}},
+\code{\link[=nmr_identify_regions_urine]{nmr_identify_regions_urine()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}}
 
-Other nmr_dataset_1D functions: 
-\code{\link{[.nmr_dataset_1D}()},
-\code{\link{format.nmr_dataset_1D}()},
-\code{\link{get_integration_with_metadata}()},
-\code{\link{is.nmr_dataset_1D}()},
-\code{\link{nmr_integrate_regions}()},
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_ppm_resolution}()},
-\code{\link{print.nmr_dataset_1D}()}
+Other nmr_dataset_1D functions:
+\code{\link[=[.nmr_dataset_1D]{[.nmr_dataset_1D()}},
+\code{\link[=format.nmr_dataset_1D]{format.nmr_dataset_1D()}},
+\code{\link[=get_integration_with_metadata]{get_integration_with_metadata()}},
+\code{\link[=is.nmr_dataset_1D]{is.nmr_dataset_1D()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}},
+\code{\link[=nmr_meta_add]{nmr_meta_add()}},
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}},
+\code{\link[=nmr_ppm_resolution]{nmr_ppm_resolution()}},
+\code{\link[=print.nmr_dataset_1D]{print.nmr_dataset_1D()}}
 }
 \concept{nmr_dataset_1D functions}
 \concept{peak integration functions}

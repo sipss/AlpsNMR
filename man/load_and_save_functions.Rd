@@ -39,16 +39,16 @@ dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 
 }
 \seealso{
-Other import/export functions: 
+Other import/export functions:
 \code{\link{Pipelines}},
-\code{\link{files_to_rDolphin}()},
-\code{\link{nmr_data}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_read_bruker_fid}()},
-\code{\link{nmr_read_samples}()},
-\code{\link{nmr_zip_bruker_samples}()},
-\code{\link{save_files_to_rDolphin}()},
-\code{\link{save_profiling_output}()},
-\code{\link{to_ChemoSpec}()}
+\code{\link[=files_to_rDolphin]{files_to_rDolphin()}},
+\code{\link[=nmr_data]{nmr_data()}},
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_read_bruker_fid]{nmr_read_bruker_fid()}},
+\code{\link[=nmr_read_samples]{nmr_read_samples()}},
+\code{\link[=nmr_zip_bruker_samples]{nmr_zip_bruker_samples()}},
+\code{\link[=save_files_to_rDolphin]{save_files_to_rDolphin()}},
+\code{\link[=save_profiling_output]{save_profiling_output()}},
+\code{\link[=to_ChemoSpec]{to_ChemoSpec()}}
 }
 \concept{import/export functions}

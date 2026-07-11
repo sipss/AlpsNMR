@@ -75,35 +75,35 @@ nmr_dataset <- nmr_meta_add_tidy_excel(nmr_dataset, dummy_metadata)
 nmr_meta_get(nmr_dataset, groups = "external")
 }
 \seealso{
-Other metadata functions: 
+Other metadata functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_meta_groups}()}
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}},
+\code{\link[=nmr_meta_groups]{nmr_meta_groups()}}
 
-Other nmr_dataset functions: 
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()}
+Other nmr_dataset functions:
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}}
 
-Other nmr_dataset_1D functions: 
-\code{\link{[.nmr_dataset_1D}()},
-\code{\link{format.nmr_dataset_1D}()},
-\code{\link{get_integration_with_metadata}()},
-\code{\link{is.nmr_dataset_1D}()},
-\code{\link{nmr_integrate_peak_positions}()},
-\code{\link{nmr_integrate_regions}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_ppm_resolution}()},
-\code{\link{print.nmr_dataset_1D}()}
+Other nmr_dataset_1D functions:
+\code{\link[=[.nmr_dataset_1D]{[.nmr_dataset_1D()}},
+\code{\link[=format.nmr_dataset_1D]{format.nmr_dataset_1D()}},
+\code{\link[=get_integration_with_metadata]{get_integration_with_metadata()}},
+\code{\link[=is.nmr_dataset_1D]{is.nmr_dataset_1D()}},
+\code{\link[=nmr_integrate_peak_positions]{nmr_integrate_peak_positions()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}},
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}},
+\code{\link[=nmr_ppm_resolution]{nmr_ppm_resolution()}},
+\code{\link[=print.nmr_dataset_1D]{print.nmr_dataset_1D()}}
 
-Other nmr_dataset_peak_table functions: 
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()}
+Other nmr_dataset_peak_table functions:
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}}
 }
 \concept{metadata functions}
 \concept{nmr_dataset functions}

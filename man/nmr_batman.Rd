@@ -75,7 +75,7 @@ metabolite_names <- c("alanine", "glucose")
 
 }
 \seealso{
-Other batman functions: 
-\code{\link{nmr_batman_options}()}
+Other batman functions:
+\code{\link[=nmr_batman_options]{nmr_batman_options()}}
 }
 \concept{batman functions}

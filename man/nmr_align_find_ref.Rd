@@ -18,12 +18,12 @@ The NMRExperiment of the reference sample
 Find alignment reference
 }
 \seealso{
-Other alignment functions: 
+Other alignment functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_align}()}
+\code{\link[=nmr_align]{nmr_align()}}
 
-Other peak alignment functions: 
-\code{\link{nmr_align}()}
+Other peak alignment functions:
+\code{\link[=nmr_align]{nmr_align()}}
 }
 \concept{alignment functions}
 \concept{peak alignment functions}

@@ -21,11 +21,11 @@ dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 metadata_column <- nmr_meta_get_column(dataset)
 }
 \seealso{
-Other metadata functions: 
+Other metadata functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()}
+\code{\link[=nmr_meta_add]{nmr_meta_add()}},
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}}
 }
 \concept{metadata functions}

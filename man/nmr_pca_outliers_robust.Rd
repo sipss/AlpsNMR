@@ -45,18 +45,18 @@ outliers_info <- nmr_pca_outliers_robust(dataset_1D)
 
 }
 \seealso{
-Other PCA related functions: 
-\code{\link{nmr_pca_build_model}()},
-\code{\link{nmr_pca_outliers}()},
-\code{\link{nmr_pca_outliers_filter}()},
-\code{\link{nmr_pca_outliers_plot}()},
+Other PCA related functions:
+\code{\link[=nmr_pca_build_model]{nmr_pca_build_model()}},
+\code{\link[=nmr_pca_outliers]{nmr_pca_outliers()}},
+\code{\link[=nmr_pca_outliers_filter]{nmr_pca_outliers_filter()}},
+\code{\link[=nmr_pca_outliers_plot]{nmr_pca_outliers_plot()}},
 \code{\link{nmr_pca_plots}}
 
-Other outlier detection functions: 
+Other outlier detection functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_pca_outliers}()},
-\code{\link{nmr_pca_outliers_filter}()},
-\code{\link{nmr_pca_outliers_plot}()}
+\code{\link[=nmr_pca_outliers]{nmr_pca_outliers()}},
+\code{\link[=nmr_pca_outliers_filter]{nmr_pca_outliers_filter()}},
+\code{\link[=nmr_pca_outliers_plot]{nmr_pca_outliers_plot()}}
 }
 \concept{PCA related functions}
 \concept{outlier detection functions}

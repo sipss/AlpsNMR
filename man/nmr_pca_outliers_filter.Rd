@@ -27,24 +27,24 @@ dataset_whitout_outliers <- nmr_pca_outliers_filter(dataset_1D, outliers_info)
 
 }
 \seealso{
-Other PCA related functions: 
-\code{\link{nmr_pca_build_model}()},
-\code{\link{nmr_pca_outliers}()},
-\code{\link{nmr_pca_outliers_plot}()},
-\code{\link{nmr_pca_outliers_robust}()},
+Other PCA related functions:
+\code{\link[=nmr_pca_build_model]{nmr_pca_build_model()}},
+\code{\link[=nmr_pca_outliers]{nmr_pca_outliers()}},
+\code{\link[=nmr_pca_outliers_plot]{nmr_pca_outliers_plot()}},
+\code{\link[=nmr_pca_outliers_robust]{nmr_pca_outliers_robust()}},
 \code{\link{nmr_pca_plots}}
 
-Other outlier detection functions: 
+Other outlier detection functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_pca_outliers}()},
-\code{\link{nmr_pca_outliers_plot}()},
-\code{\link{nmr_pca_outliers_robust}()}
+\code{\link[=nmr_pca_outliers]{nmr_pca_outliers()}},
+\code{\link[=nmr_pca_outliers_plot]{nmr_pca_outliers_plot()}},
+\code{\link[=nmr_pca_outliers_robust]{nmr_pca_outliers_robust()}}
 
-Other subsetting functions: 
-\code{\link{[.nmr_dataset}()},
-\code{\link{[.nmr_dataset_1D}()},
-\code{\link{[.nmr_dataset_peak_table}()},
-\code{\link{filter.nmr_dataset_family}()}
+Other subsetting functions:
+\code{\link[=[.nmr_dataset]{[.nmr_dataset()}},
+\code{\link[=[.nmr_dataset_1D]{[.nmr_dataset_1D()}},
+\code{\link[=[.nmr_dataset_peak_table]{[.nmr_dataset_peak_table()}},
+\code{\link[=filter.nmr_dataset_family]{filter.nmr_dataset_family()}}
 }
 \concept{PCA related functions}
 \concept{outlier detection functions}

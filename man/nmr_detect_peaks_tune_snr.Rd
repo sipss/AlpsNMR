@@ -19,7 +19,7 @@ nmr_detect_peaks_tune_snr(
 \item{SNR_thresholds}{A numeric vector with the SNR thresholds to explore}
 
 \item{...}{
-  Arguments passed on to \code{\link[=nmr_detect_peaks]{nmr_detect_peaks}}
+  Arguments passed on to \code{\link{nmr_detect_peaks}}
   \describe{
     \item{\code{nmr_dataset}}{An \link{nmr_dataset_1D}.}
     \item{\code{nDivRange_ppm}}{Segment size, in ppms, to divide the spectra and search
@@ -56,15 +56,15 @@ Diagnose SNR threshold in peak detection
 \seealso{
 nmr_detect_peaks
 
-Other peak detection functions: 
+Other peak detection functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_baseline_threshold}()},
-\code{\link{nmr_detect_peaks}()},
-\code{\link{nmr_detect_peaks_plot}()},
-\code{\link{nmr_detect_peaks_plot_overview}()},
-\code{\link{nmr_identify_regions_blood}()},
-\code{\link{nmr_identify_regions_cell}()},
-\code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_regions}()}
+\code{\link[=nmr_baseline_threshold]{nmr_baseline_threshold()}},
+\code{\link[=nmr_detect_peaks]{nmr_detect_peaks()}},
+\code{\link[=nmr_detect_peaks_plot]{nmr_detect_peaks_plot()}},
+\code{\link[=nmr_detect_peaks_plot_overview]{nmr_detect_peaks_plot_overview()}},
+\code{\link[=nmr_identify_regions_blood]{nmr_identify_regions_blood()}},
+\code{\link[=nmr_identify_regions_cell]{nmr_identify_regions_cell()}},
+\code{\link[=nmr_identify_regions_urine]{nmr_identify_regions_urine()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}}
 }
 \concept{peak detection functions}

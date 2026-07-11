@@ -15,12 +15,12 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dplyr}{\code{\link[dplyr]{filter}}, \code{\link[dplyr]{rename}}}
+  \item{dplyr}{\code{\link[dplyr:filter]{filter()}}, \code{\link[dplyr:rename]{rename()}}}
 
-  \item{generics}{\code{\link[generics]{tidy}}}
+  \item{generics}{\code{\link[generics:tidy]{tidy()}}}
 
-  \item{magrittr}{\code{\link[magrittr:pipe]{\%>\%}}}
+  \item{magrittr}{\code{\link[magrittr:\%>\%]{\%>\%}}}
 
-  \item{utils}{\code{\link[utils:rcompgen]{.DollarNames}}}
+  \item{utils}{\code{\link[utils:.DollarNames]{.DollarNames()}}}
 }}
 
