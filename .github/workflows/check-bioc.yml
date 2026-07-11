@@ -232,6 +232,16 @@ jobs:
         continue-on-error: true
         shell: Rscript {0}
 
+      - name: Install BiocStyle fork (pandoc >=3.8.1 uncaptioned-table counter fix)
+        run: |
+          ## Vignette builds fail with recent pandoc versions ("LaTeX Error: No
+          ## counter 'none' defined") because pandoc >=3.8.1 emits \LTcaptype{none}
+          ## for uncaptioned longtables, and BiocStyle's LaTeX template never
+          ## predefines that counter. Use zeehio/BiocStyle@my-fixes until the fix
+          ## lands upstream: https://github.com/Bioconductor/BiocStyle/pull/116
+          remotes::install_github("zeehio/BiocStyle@my-fixes", force = TRUE)
+        shell: Rscript {0}
+
       - name: Install dependencies pass 2
         run: |
           ## Pass #2 at installing dependencies
