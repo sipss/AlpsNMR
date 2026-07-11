@@ -182,6 +182,76 @@ test_that("bp_VIP_analysis identifies a strongly predictive feature as relevant"
     expect_gt(means["V1"], max(means[setdiff(names(means), "V1")]))
 })
 
+test_that("bp_VIP_analysis uses the ncomp-th (cumulative) VIP column, not a re-aggregation across components", {
+    # mixOmics::vip() returns, in its column h, the VIP already computed
+    # cumulatively over components 1..h (Eq. 9 of Afanador, Tran & Buydens,
+    # 2013). bp_VIP_analysis() must therefore take column `ncomp` as-is; it
+    # must not re-aggregate the per-component columns (e.g. via
+    # sqrt(rowSums(x^2) / ncomp)), which would apply Eq. 9's normalization a
+    # second time to already-normalized quantities.
+    #
+    # plsda_vip() is mocked to return an (almost) fixed, easily distinguished
+    # matrix regardless of the fitted model (a small jitter is added so the
+    # across-bootstrap variance used later isn't degenerately zero), so the
+    # two candidate formulas produce numerically distinct, checkable
+    # results: taking column `ncomp` (2) gives approximately c(10, 20, 30,
+    # 40), while sqrt(rowSums(x^2) / 2) would instead give approximately
+    # sqrt(c(101, 404, 909, 1616) / 2) ~= c(7.1, 14.2, 21.3, 28.4).
+    skip_if_not_installed("mixOmics")
+    skip_if_not_installed("BiocParallel")
+
+    old_bpparam <- BiocParallel::bpparam()
+    BiocParallel::register(BiocParallel::SerialParam())
+    on.exit(BiocParallel::register(old_bpparam), add = TRUE)
+
+    p <- 4
+    base_vip <- matrix(
+        c(1, 2, 3, 4, 10, 20, 30, 40),
+        nrow = p, ncol = 2,
+        dimnames = list(paste0("V", seq_len(p)), NULL)
+    )
+    # A little call-to-call jitter keeps each bootstrap replicate's
+    # VIP-difference distribution non-degenerate (bp_VIP_analysis() divides
+    # by its across-replicate standard deviation), without disturbing which
+    # of the two candidate formulas the assertion below distinguishes.
+    testthat::local_mocked_bindings(
+        plsda_vip = function(plsda_model) base_vip + stats::rnorm(length(base_vip), sd = 0.01)
+    )
+
+    set.seed(1)
+    n <- 20
+    y <- factor(rep(c("A", "B"), each = n / 2))
+    x <- matrix(rnorm(n * p), nrow = n, ncol = p)
+    colnames(x) <- paste0("V", seq_len(p))
+
+    metadata <- data.frame(
+        NMRExperiment = as.character(seq_len(n)),
+        Condition = y
+    )
+    dataset <- new_nmr_dataset_peak_table(
+        peak_table = x,
+        metadata = list(external = metadata)
+    )
+    train_index <- c(1:7, 11:17) # both classes in train (1:7, 11:17) and test (8:10, 18:20)
+
+    result <- suppressWarnings(bp_VIP_analysis(
+        dataset,
+        train_index,
+        y_column = "Condition",
+        ncomp = 2,
+        nbootstrap = 3
+    ))
+
+    expected <- base_vip[, 2]
+    for (feature in names(expected)) {
+        expect_equal(
+            unname(result$pls_vip[feature, ]),
+            rep(expected[[feature]], 3),
+            tolerance = 0.1
+        )
+    }
+})
+
 test_that("bp_VIP_analysis shuffles each feature's own column when building its permutation baseline", {
     # Each feature's own values must be shuffled independently, not swapped
     # for another feature's values, or the permutation-importance baseline

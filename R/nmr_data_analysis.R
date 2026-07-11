@@ -702,10 +702,12 @@ bp_VIP_analysis <- function(dataset,
                     identity = NULL,
                     ncomp = ncomp
                 )
-            # VIPs per component extraction
+            # VIPs per component extraction. mixOmics::vip() already returns,
+            # in column h, the cumulative VIP (Eq. 9 of Afanador et al. 2013)
+            # computed over components 1..h, so the last column (h = ncomp)
+            # is the VIP of the fitted model.
             pls_vip_comps <- plsda_vip(model)
-            # Sum contributions of VIPs to each component
-            pls_vip <- sqrt(rowSums(pls_vip_comps^2) / ncomp)
+            pls_vip <- pls_vip_comps[, ncomp]
             # Measure the classification rate (CR) of the bootstrap model
             CR <- get_test_accuracy(model, x_test, y_test)
             pls_vip_perm <- matrix(nrow = n, ncol = n, dimnames = list(names, NULL))
@@ -726,10 +728,11 @@ bp_VIP_analysis <- function(dataset,
                         identity = NULL,
                         ncomp = ncomp
                     )
-                # VIPs per component extraction
+                # VIPs per component extraction (see note above: take the
+                # cumulative VIP through component ncomp, not a re-aggregation
+                # across components).
                 pls_vip_comps_perm <- plsda_vip(model_perm)
-                # Sum contributions of VIPs to each component
-                pls_vip_perm[, j] <- sqrt(rowSums(pls_vip_comps_perm^2) / ncomp)
+                pls_vip_perm[, j] <- pls_vip_comps_perm[, ncomp]
             }
             # bootsrapped and randomly permuted PLS-VIPs
             pls_vip_perm_score <- colSums(pls_vip_perm) / n
