@@ -641,6 +641,7 @@ bp_VIP_analysis <- function(dataset,
     y_all <- nmr_meta_get_column(dataset, column = y_column)
     x_train <- x_all[train_index, , drop = FALSE]
     y_train <- y_all[train_index]
+    n_samples <- nrow(x_train)
     # For check performance
     x_test <- x_all[-train_index, , drop = FALSE]
     y_test <- y_all[-train_index]
@@ -776,18 +777,18 @@ bp_VIP_analysis <- function(dataset,
         element <- pls_vip_score_diff[k, ] / sd(pls_vip_score_diff[k, ])
         boots_vip[k] <- sum(element) / nbootstrap
         boots_vip_sd[k] <- sqrt(sum((element - boots_vip[k])^2) / (nbootstrap - 1))
-        error[k] <- qt(0.975, df = nbootstrap - 1) * boots_vip_sd[k]
+        error[k] <- qt(0.975, df = n_samples - 1) * boots_vip_sd[k]
         lower_bound[k] <- boots_vip[k] - error[k]
         upper_bound[k] <- boots_vip[k] + error[k]
     }
 
-    # NOTE: this compares a CI-adjusted lower bound against a raw t-critical
-    # value; verify intended semantics (see the "more stringent subset"
-    # comment in train_models_with_only_vip_features() and the deprecated
-    # vip_means-2*error criterion below in bp_kfold_VIP_analysis(), which
-    # suggest important_vips is meant to use a different/stricter, but not
-    # necessarily this, threshold than relevant_vips).
-    important_vips <- names[lower_bound > qt(0.975, df = nbootstrap - 1)]
+    # The "important" threshold is the same t_{1-alpha/2, n-1} quantile used
+    # to build the confidence interval above (n = number of training
+    # samples, not the number of bootstrap datasets): a variable is
+    # "important" when its entire two-sided (1-alpha) confidence interval
+    # lies above that quantile, and merely "marginally important"
+    # (relevant_vips) when its lower bound clears zero.
+    important_vips <- names[lower_bound > qt(0.975, df = n_samples - 1)]
     relevant_vips <- names[lower_bound > 0]
 
     # Checking performance
