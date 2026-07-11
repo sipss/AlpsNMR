@@ -207,53 +207,53 @@ dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
 
 }
 \seealso{
-Other import/export functions: 
-\code{\link{files_to_rDolphin}()},
+Other import/export functions:
+\code{\link[=files_to_rDolphin]{files_to_rDolphin()}},
 \code{\link{load_and_save_functions}},
-\code{\link{nmr_data}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_read_bruker_fid}()},
-\code{\link{nmr_read_samples}()},
-\code{\link{nmr_zip_bruker_samples}()},
-\code{\link{save_files_to_rDolphin}()},
-\code{\link{save_profiling_output}()},
-\code{\link{to_ChemoSpec}()}
+\code{\link[=nmr_data]{nmr_data()}},
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_read_bruker_fid]{nmr_read_bruker_fid()}},
+\code{\link[=nmr_read_samples]{nmr_read_samples()}},
+\code{\link[=nmr_zip_bruker_samples]{nmr_zip_bruker_samples()}},
+\code{\link[=save_files_to_rDolphin]{save_files_to_rDolphin()}},
+\code{\link[=save_profiling_output]{save_profiling_output()}},
+\code{\link[=to_ChemoSpec]{to_ChemoSpec()}}
 
-Other metadata functions: 
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_meta_groups}()}
+Other metadata functions:
+\code{\link[=nmr_meta_add]{nmr_meta_add()}},
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}},
+\code{\link[=nmr_meta_groups]{nmr_meta_groups()}}
 
-Other outlier detection functions: 
-\code{\link{nmr_pca_outliers}()},
-\code{\link{nmr_pca_outliers_filter}()},
-\code{\link{nmr_pca_outliers_plot}()},
-\code{\link{nmr_pca_outliers_robust}()}
+Other outlier detection functions:
+\code{\link[=nmr_pca_outliers]{nmr_pca_outliers()}},
+\code{\link[=nmr_pca_outliers_filter]{nmr_pca_outliers_filter()}},
+\code{\link[=nmr_pca_outliers_plot]{nmr_pca_outliers_plot()}},
+\code{\link[=nmr_pca_outliers_robust]{nmr_pca_outliers_robust()}}
 
-Other peak detection functions: 
-\code{\link{nmr_baseline_threshold}()},
-\code{\link{nmr_detect_peaks}()},
-\code{\link{nmr_detect_peaks_plot}()},
-\code{\link{nmr_detect_peaks_plot_overview}()},
-\code{\link{nmr_detect_peaks_tune_snr}()},
-\code{\link{nmr_identify_regions_blood}()},
-\code{\link{nmr_identify_regions_cell}()},
-\code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_regions}()}
+Other peak detection functions:
+\code{\link[=nmr_baseline_threshold]{nmr_baseline_threshold()}},
+\code{\link[=nmr_detect_peaks]{nmr_detect_peaks()}},
+\code{\link[=nmr_detect_peaks_plot]{nmr_detect_peaks_plot()}},
+\code{\link[=nmr_detect_peaks_plot_overview]{nmr_detect_peaks_plot_overview()}},
+\code{\link[=nmr_detect_peaks_tune_snr]{nmr_detect_peaks_tune_snr()}},
+\code{\link[=nmr_identify_regions_blood]{nmr_identify_regions_blood()}},
+\code{\link[=nmr_identify_regions_cell]{nmr_identify_regions_cell()}},
+\code{\link[=nmr_identify_regions_urine]{nmr_identify_regions_urine()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}}
 
-Other alignment functions: 
-\code{\link{nmr_align}()},
-\code{\link{nmr_align_find_ref}()}
+Other alignment functions:
+\code{\link[=nmr_align]{nmr_align()}},
+\code{\link[=nmr_align_find_ref]{nmr_align_find_ref()}}
 
-Other peak integration functions: 
-\code{\link{get_integration_with_metadata}()},
-\code{\link{nmr_identify_regions_blood}()},
-\code{\link{nmr_identify_regions_cell}()},
-\code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_peak_positions}()},
-\code{\link{nmr_integrate_regions}()}
+Other peak integration functions:
+\code{\link[=get_integration_with_metadata]{get_integration_with_metadata()}},
+\code{\link[=nmr_identify_regions_blood]{nmr_identify_regions_blood()}},
+\code{\link[=nmr_identify_regions_cell]{nmr_identify_regions_cell()}},
+\code{\link[=nmr_identify_regions_urine]{nmr_identify_regions_urine()}},
+\code{\link[=nmr_integrate_peak_positions]{nmr_integrate_peak_positions()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}}
 }
 \concept{alignment functions}
 \concept{import/export functions}

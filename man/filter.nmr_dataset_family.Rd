@@ -9,7 +9,7 @@
 \arguments{
 \item{.data}{An \link{nmr_dataset_family} object}
 
-\item{...}{conditions, as in \link{dplyr}}
+\item{...}{conditions, as in \code{\link[dplyr:filter]{dplyr::filter()}}}
 }
 \value{
 The same object, with the matching rows
@@ -29,10 +29,10 @@ sample_10 <- filter(dataset_1D, NMRExperiment == "10")
 # test_samples <- dataset_1D \%>\% filter(nmr_peak_table$metadata$external$Group == "placebo")
 }
 \seealso{
-Other subsetting functions: 
-\code{\link{[.nmr_dataset}()},
-\code{\link{[.nmr_dataset_1D}()},
-\code{\link{[.nmr_dataset_peak_table}()},
-\code{\link{nmr_pca_outliers_filter}()}
+Other subsetting functions:
+\code{\link[=[.nmr_dataset]{[.nmr_dataset()}},
+\code{\link[=[.nmr_dataset_1D]{[.nmr_dataset_1D()}},
+\code{\link[=[.nmr_dataset_peak_table]{[.nmr_dataset_peak_table()}},
+\code{\link[=nmr_pca_outliers_filter]{nmr_pca_outliers_filter()}}
 }
 \concept{subsetting functions}

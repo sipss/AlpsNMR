@@ -33,7 +33,7 @@ the samples that match that pulse sequence.}
 \item{metadata_only}{A logical, to load only metadata (default: \code{FALSE})}
 
 \item{...}{
-  Arguments passed on to \code{\link[=read_bruker_pdata]{read_bruker_pdata}}
+  Arguments passed on to \code{\link{read_bruker_pdata}}
   \describe{
     \item{\code{pdata_file}}{File name of the binary NMR data to load. Usually "1r".
 If \code{NULL}, it is autodetected based on the dimension}
@@ -63,16 +63,16 @@ dataset <- nmr_read_samples(sample_names = zip_files)
 \seealso{
 \code{\link[=read_bruker_pdata]{read_bruker_pdata()}}
 
-Other import/export functions: 
+Other import/export functions:
 \code{\link{Pipelines}},
-\code{\link{files_to_rDolphin}()},
+\code{\link[=files_to_rDolphin]{files_to_rDolphin()}},
 \code{\link{load_and_save_functions}},
-\code{\link{nmr_data}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_read_bruker_fid}()},
-\code{\link{nmr_zip_bruker_samples}()},
-\code{\link{save_files_to_rDolphin}()},
-\code{\link{save_profiling_output}()},
-\code{\link{to_ChemoSpec}()}
+\code{\link[=nmr_data]{nmr_data()}},
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_read_bruker_fid]{nmr_read_bruker_fid()}},
+\code{\link[=nmr_zip_bruker_samples]{nmr_zip_bruker_samples()}},
+\code{\link[=save_files_to_rDolphin]{save_files_to_rDolphin()}},
+\code{\link[=save_profiling_output]{save_profiling_output()}},
+\code{\link[=to_ChemoSpec]{to_ChemoSpec()}}
 }
 \concept{import/export functions}

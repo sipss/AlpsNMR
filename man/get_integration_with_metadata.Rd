@@ -29,26 +29,26 @@ dataset <- new_nmr_dataset_peak_table(
 get_integration_with_metadata(dataset)
 }
 \seealso{
-Other peak integration functions: 
+Other peak integration functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_identify_regions_blood}()},
-\code{\link{nmr_identify_regions_cell}()},
-\code{\link{nmr_identify_regions_urine}()},
-\code{\link{nmr_integrate_peak_positions}()},
-\code{\link{nmr_integrate_regions}()}
+\code{\link[=nmr_identify_regions_blood]{nmr_identify_regions_blood()}},
+\code{\link[=nmr_identify_regions_cell]{nmr_identify_regions_cell()}},
+\code{\link[=nmr_identify_regions_urine]{nmr_identify_regions_urine()}},
+\code{\link[=nmr_integrate_peak_positions]{nmr_integrate_peak_positions()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}}
 
-Other nmr_dataset_1D functions: 
-\code{\link{[.nmr_dataset_1D}()},
-\code{\link{format.nmr_dataset_1D}()},
-\code{\link{is.nmr_dataset_1D}()},
-\code{\link{nmr_integrate_peak_positions}()},
-\code{\link{nmr_integrate_regions}()},
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_ppm_resolution}()},
-\code{\link{print.nmr_dataset_1D}()}
+Other nmr_dataset_1D functions:
+\code{\link[=[.nmr_dataset_1D]{[.nmr_dataset_1D()}},
+\code{\link[=format.nmr_dataset_1D]{format.nmr_dataset_1D()}},
+\code{\link[=is.nmr_dataset_1D]{is.nmr_dataset_1D()}},
+\code{\link[=nmr_integrate_peak_positions]{nmr_integrate_peak_positions()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}},
+\code{\link[=nmr_meta_add]{nmr_meta_add()}},
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}},
+\code{\link[=nmr_ppm_resolution]{nmr_ppm_resolution()}},
+\code{\link[=print.nmr_dataset_1D]{print.nmr_dataset_1D()}}
 }
 \concept{nmr_dataset_1D functions}
 \concept{peak integration functions}

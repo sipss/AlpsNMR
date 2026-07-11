@@ -28,7 +28,7 @@ dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.
 
 }
 \seealso{
-Other plotting functions: 
-\code{\link{plot.nmr_dataset_1D}()}
+Other plotting functions:
+\code{\link[=plot.nmr_dataset_1D]{plot.nmr_dataset_1D()}}
 }
 \concept{plotting functions}

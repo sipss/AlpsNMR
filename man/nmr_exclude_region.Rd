@@ -32,7 +32,7 @@ nmr_dataset <- nmr_exclude_region(nmr_dataset, exclude = exclude_regions)
 
 }
 \seealso{
-Other basic functions: 
-\code{\link{nmr_normalize}()}
+Other basic functions:
+\code{\link[=nmr_normalize]{nmr_normalize()}}
 }
 \concept{basic functions}

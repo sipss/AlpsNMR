@@ -24,33 +24,33 @@ dataset_1D <- nmr_interpolate_1D(dataset, axis = c(min = -0.5, max = 10, by = 2.
 print(dataset_1D)
 }
 \seealso{
-Other class helper functions: 
-\code{\link{format.nmr_dataset}()},
-\code{\link{format.nmr_dataset_1D}()},
-\code{\link{format.nmr_dataset_peak_table}()},
-\code{\link{is.nmr_dataset_1D}()},
-\code{\link{is.nmr_dataset_peak_table}()},
-\code{\link{new_nmr_dataset}()},
-\code{\link{new_nmr_dataset_1D}()},
-\code{\link{new_nmr_dataset_peak_table}()},
-\code{\link{print.nmr_dataset}()},
-\code{\link{print.nmr_dataset_peak_table}()},
-\code{\link{validate_nmr_dataset}()},
-\code{\link{validate_nmr_dataset_family}()},
-\code{\link{validate_nmr_dataset_peak_table}()}
+Other class helper functions:
+\code{\link[=format.nmr_dataset]{format.nmr_dataset()}},
+\code{\link[=format.nmr_dataset_1D]{format.nmr_dataset_1D()}},
+\code{\link[=format.nmr_dataset_peak_table]{format.nmr_dataset_peak_table()}},
+\code{\link[=is.nmr_dataset_1D]{is.nmr_dataset_1D()}},
+\code{\link[=is.nmr_dataset_peak_table]{is.nmr_dataset_peak_table()}},
+\code{\link[=new_nmr_dataset]{new_nmr_dataset()}},
+\code{\link[=new_nmr_dataset_1D]{new_nmr_dataset_1D()}},
+\code{\link[=new_nmr_dataset_peak_table]{new_nmr_dataset_peak_table()}},
+\code{\link[=print.nmr_dataset]{print.nmr_dataset()}},
+\code{\link[=print.nmr_dataset_peak_table]{print.nmr_dataset_peak_table()}},
+\code{\link[=validate_nmr_dataset]{validate_nmr_dataset()}},
+\code{\link[=validate_nmr_dataset_family]{validate_nmr_dataset_family()}},
+\code{\link[=validate_nmr_dataset_peak_table]{validate_nmr_dataset_peak_table()}}
 
-Other nmr_dataset_1D functions: 
-\code{\link{[.nmr_dataset_1D}()},
-\code{\link{format.nmr_dataset_1D}()},
-\code{\link{get_integration_with_metadata}()},
-\code{\link{is.nmr_dataset_1D}()},
-\code{\link{nmr_integrate_peak_positions}()},
-\code{\link{nmr_integrate_regions}()},
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_export}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_ppm_resolution}()}
+Other nmr_dataset_1D functions:
+\code{\link[=[.nmr_dataset_1D]{[.nmr_dataset_1D()}},
+\code{\link[=format.nmr_dataset_1D]{format.nmr_dataset_1D()}},
+\code{\link[=get_integration_with_metadata]{get_integration_with_metadata()}},
+\code{\link[=is.nmr_dataset_1D]{is.nmr_dataset_1D()}},
+\code{\link[=nmr_integrate_peak_positions]{nmr_integrate_peak_positions()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}},
+\code{\link[=nmr_meta_add]{nmr_meta_add()}},
+\code{\link[=nmr_meta_export]{nmr_meta_export()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}},
+\code{\link[=nmr_ppm_resolution]{nmr_ppm_resolution()}}
 }
 \concept{class helper functions}
 \concept{nmr_dataset_1D functions}

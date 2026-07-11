@@ -13,7 +13,7 @@ an abstract class to ensure that the shared structures are compatible
 \seealso{
 \link[=load_and_save_functions]{Functions to save and load these objects}
 
-Other AlpsNMR dataset objects: 
+Other AlpsNMR dataset objects:
 \code{\link{nmr_dataset}}
 }
 \concept{AlpsNMR dataset objects}

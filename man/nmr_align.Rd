@@ -30,12 +30,12 @@ An \link{nmr_dataset_1D}, with the spectra aligned
 This function is based on \link[speaq:dohCluster]{speaq::dohCluster}.
 }
 \seealso{
-Other alignment functions: 
+Other alignment functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_align_find_ref}()}
+\code{\link[=nmr_align_find_ref]{nmr_align_find_ref()}}
 
-Other peak alignment functions: 
-\code{\link{nmr_align_find_ref}()}
+Other peak alignment functions:
+\code{\link[=nmr_align_find_ref]{nmr_align_find_ref()}}
 }
 \concept{alignment functions}
 \concept{peak alignment functions}

@@ -31,47 +31,47 @@ dataset <- nmr_read_samples_dir(dir_to_demo_dataset)
 
 }
 \seealso{
-Other metadata functions: 
+Other metadata functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_meta_groups}()}
+\code{\link[=nmr_meta_add]{nmr_meta_add()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}},
+\code{\link[=nmr_meta_groups]{nmr_meta_groups()}}
 
-Other nmr_dataset functions: 
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()}
+Other nmr_dataset functions:
+\code{\link[=nmr_meta_add]{nmr_meta_add()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}}
 
-Other nmr_dataset_1D functions: 
-\code{\link{[.nmr_dataset_1D}()},
-\code{\link{format.nmr_dataset_1D}()},
-\code{\link{get_integration_with_metadata}()},
-\code{\link{is.nmr_dataset_1D}()},
-\code{\link{nmr_integrate_peak_positions}()},
-\code{\link{nmr_integrate_regions}()},
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()},
-\code{\link{nmr_ppm_resolution}()},
-\code{\link{print.nmr_dataset_1D}()}
+Other nmr_dataset_1D functions:
+\code{\link[=[.nmr_dataset_1D]{[.nmr_dataset_1D()}},
+\code{\link[=format.nmr_dataset_1D]{format.nmr_dataset_1D()}},
+\code{\link[=get_integration_with_metadata]{get_integration_with_metadata()}},
+\code{\link[=is.nmr_dataset_1D]{is.nmr_dataset_1D()}},
+\code{\link[=nmr_integrate_peak_positions]{nmr_integrate_peak_positions()}},
+\code{\link[=nmr_integrate_regions]{nmr_integrate_regions()}},
+\code{\link[=nmr_meta_add]{nmr_meta_add()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}},
+\code{\link[=nmr_ppm_resolution]{nmr_ppm_resolution()}},
+\code{\link[=print.nmr_dataset_1D]{print.nmr_dataset_1D()}}
 
-Other nmr_dataset_peak_table functions: 
-\code{\link{nmr_meta_add}()},
-\code{\link{nmr_meta_get}()},
-\code{\link{nmr_meta_get_column}()}
+Other nmr_dataset_peak_table functions:
+\code{\link[=nmr_meta_add]{nmr_meta_add()}},
+\code{\link[=nmr_meta_get]{nmr_meta_get()}},
+\code{\link[=nmr_meta_get_column]{nmr_meta_get_column()}}
 
-Other import/export functions: 
+Other import/export functions:
 \code{\link{Pipelines}},
-\code{\link{files_to_rDolphin}()},
+\code{\link[=files_to_rDolphin]{files_to_rDolphin()}},
 \code{\link{load_and_save_functions}},
-\code{\link{nmr_data}()},
-\code{\link{nmr_read_bruker_fid}()},
-\code{\link{nmr_read_samples}()},
-\code{\link{nmr_zip_bruker_samples}()},
-\code{\link{save_files_to_rDolphin}()},
-\code{\link{save_profiling_output}()},
-\code{\link{to_ChemoSpec}()}
+\code{\link[=nmr_data]{nmr_data()}},
+\code{\link[=nmr_read_bruker_fid]{nmr_read_bruker_fid()}},
+\code{\link[=nmr_read_samples]{nmr_read_samples()}},
+\code{\link[=nmr_zip_bruker_samples]{nmr_zip_bruker_samples()}},
+\code{\link[=save_files_to_rDolphin]{save_files_to_rDolphin()}},
+\code{\link[=save_profiling_output]{save_profiling_output()}},
+\code{\link[=to_ChemoSpec]{to_ChemoSpec()}}
 }
 \concept{import/export functions}
 \concept{metadata functions}

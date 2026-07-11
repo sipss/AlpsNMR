@@ -37,11 +37,11 @@ nmr_pca_loadingplot(model, 1)
 
 }
 \seealso{
-Other PCA related functions: 
-\code{\link{nmr_pca_build_model}()},
-\code{\link{nmr_pca_outliers}()},
-\code{\link{nmr_pca_outliers_filter}()},
-\code{\link{nmr_pca_outliers_plot}()},
-\code{\link{nmr_pca_outliers_robust}()}
+Other PCA related functions:
+\code{\link[=nmr_pca_build_model]{nmr_pca_build_model()}},
+\code{\link[=nmr_pca_outliers]{nmr_pca_outliers()}},
+\code{\link[=nmr_pca_outliers_filter]{nmr_pca_outliers_filter()}},
+\code{\link[=nmr_pca_outliers_plot]{nmr_pca_outliers_plot()}},
+\code{\link[=nmr_pca_outliers_robust]{nmr_pca_outliers_robust()}}
 }
 \concept{PCA related functions}

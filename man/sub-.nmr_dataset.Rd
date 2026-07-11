@@ -24,10 +24,10 @@ dataset2 <- dataset[1:3] # get the first 3 samples
 
 }
 \seealso{
-Other subsetting functions: 
-\code{\link{[.nmr_dataset_1D}()},
-\code{\link{[.nmr_dataset_peak_table}()},
-\code{\link{filter.nmr_dataset_family}()},
-\code{\link{nmr_pca_outliers_filter}()}
+Other subsetting functions:
+\code{\link[=[.nmr_dataset_1D]{[.nmr_dataset_1D()}},
+\code{\link[=[.nmr_dataset_peak_table]{[.nmr_dataset_peak_table()}},
+\code{\link[=filter.nmr_dataset_family]{filter.nmr_dataset_family()}},
+\code{\link[=nmr_pca_outliers_filter]{nmr_pca_outliers_filter()}}
 }
 \concept{subsetting functions}

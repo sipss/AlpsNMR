@@ -32,7 +32,7 @@ my_1D_data <- new_nmr_dataset(metadata_1D, data_fields_1D, axis_1D)
 \seealso{
 \link[=load_and_save_functions]{Functions to save and load these objects}
 
-Other AlpsNMR dataset objects: 
+Other AlpsNMR dataset objects:
 \code{\link{nmr_dataset_family}}
 }
 \concept{AlpsNMR dataset objects}

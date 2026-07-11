@@ -48,17 +48,18 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Sergio Oller Moreno \email{sergioller@gmail.com} (\href{https://orcid.org/0000-0002-8994-1549}{ORCID})
   \item Ivan Montoliu Roura \email{Ivan.MontoliuRoura@rd.nestle.com}
   \item Francisco Madrid Gambin \email{fmadrid@ibecbarcelona.eu} (\href{https://orcid.org/0000-0001-9333-0014}{ORCID})
   \item Luis Fernandez \email{lfernandez@ibecbarcelona.eu} (\href{https://orcid.org/0000-0001-9790-6287}{ORCID})
-  \item Héctor Gracia Cabrera \email{hgracia@ibecbarcelona.eu}
-  \item Santiago Marco Colás \email{smarco@ibecbarcelona.eu} (\href{https://orcid.org/0000-0003-2663-2965}{ORCID})
+  \item H<U+00E9>ctor Gracia Cabrera \email{hgracia@ibecbarcelona.eu}
+  \item Santiago Marco Col<U+00E1>s \email{smarco@ibecbarcelona.eu} (\href{https://orcid.org/0000-0003-2663-2965}{ORCID})
 }
 
 Other contributors:
 \itemize{
-  \item Laura López Sánchez [contributor]
-  \item Nestlé Institute of Health Sciences [copyright holder]
+  \item Laura L<U+00F3>pez S<U+00E1>nchez [contributor]
+  \item Nestl<U+00E9> Institute of Health Sciences [copyright holder]
   \item Institute for Bioengineering of Catalonia [copyright holder]
   \item Miller Jack \email{jack.miller@physics.org} (\href{https://orcid.org/0000-0002-6258-1299}{ORCID}) (Autophase wrapper, ASICS export) [contributor]
 }

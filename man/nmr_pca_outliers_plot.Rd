@@ -11,7 +11,7 @@ nmr_pca_outliers_plot(nmr_dataset, pca_outliers, ...)
 
 \item{pca_outliers}{The output from \code{\link[=nmr_pca_outliers]{nmr_pca_outliers()}}}
 
-\item{...}{Additional parameters passed on to \code{\link[ggplot2:aes]{ggplot2::aes()}} (or now deprecated to \code{\link[ggplot2:aes_]{ggplot2::aes_string()}})}
+\item{...}{Additional parameters passed on to \code{\link[ggplot2:aes]{ggplot2::aes()}} (or now deprecated to \code{\link[ggplot2:aes_string]{ggplot2::aes_string()}})}
 }
 \value{
 A plot for the outlier detection
@@ -29,18 +29,18 @@ Plot for outlier detection diagnostic
 
 }
 \seealso{
-Other PCA related functions: 
-\code{\link{nmr_pca_build_model}()},
-\code{\link{nmr_pca_outliers}()},
-\code{\link{nmr_pca_outliers_filter}()},
-\code{\link{nmr_pca_outliers_robust}()},
+Other PCA related functions:
+\code{\link[=nmr_pca_build_model]{nmr_pca_build_model()}},
+\code{\link[=nmr_pca_outliers]{nmr_pca_outliers()}},
+\code{\link[=nmr_pca_outliers_filter]{nmr_pca_outliers_filter()}},
+\code{\link[=nmr_pca_outliers_robust]{nmr_pca_outliers_robust()}},
 \code{\link{nmr_pca_plots}}
 
-Other outlier detection functions: 
+Other outlier detection functions:
 \code{\link{Pipelines}},
-\code{\link{nmr_pca_outliers}()},
-\code{\link{nmr_pca_outliers_filter}()},
-\code{\link{nmr_pca_outliers_robust}()}
+\code{\link[=nmr_pca_outliers]{nmr_pca_outliers()}},
+\code{\link[=nmr_pca_outliers_filter]{nmr_pca_outliers_filter()}},
+\code{\link[=nmr_pca_outliers_robust]{nmr_pca_outliers_robust()}}
 }
 \concept{PCA related functions}
 \concept{outlier detection functions}

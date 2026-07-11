@@ -100,7 +100,7 @@ Batman Options helper
 bopts <- nmr_batman_options()
 }
 \seealso{
-Other batman functions: 
+Other batman functions:
 \code{\link{nmr_batman}}
 }
 \concept{batman functions}

@@ -24,19 +24,19 @@ pt_validated <- validate_nmr_dataset_peak_table(pt)
 
 }
 \seealso{
-Other class helper functions: 
-\code{\link{format.nmr_dataset}()},
-\code{\link{format.nmr_dataset_1D}()},
-\code{\link{format.nmr_dataset_peak_table}()},
-\code{\link{is.nmr_dataset_1D}()},
-\code{\link{is.nmr_dataset_peak_table}()},
-\code{\link{new_nmr_dataset}()},
-\code{\link{new_nmr_dataset_1D}()},
-\code{\link{new_nmr_dataset_peak_table}()},
-\code{\link{print.nmr_dataset}()},
-\code{\link{print.nmr_dataset_1D}()},
-\code{\link{print.nmr_dataset_peak_table}()},
-\code{\link{validate_nmr_dataset}()},
-\code{\link{validate_nmr_dataset_family}()}
+Other class helper functions:
+\code{\link[=format.nmr_dataset]{format.nmr_dataset()}},
+\code{\link[=format.nmr_dataset_1D]{format.nmr_dataset_1D()}},
+\code{\link[=format.nmr_dataset_peak_table]{format.nmr_dataset_peak_table()}},
+\code{\link[=is.nmr_dataset_1D]{is.nmr_dataset_1D()}},
+\code{\link[=is.nmr_dataset_peak_table]{is.nmr_dataset_peak_table()}},
+\code{\link[=new_nmr_dataset]{new_nmr_dataset()}},
+\code{\link[=new_nmr_dataset_1D]{new_nmr_dataset_1D()}},
+\code{\link[=new_nmr_dataset_peak_table]{new_nmr_dataset_peak_table()}},
+\code{\link[=print.nmr_dataset]{print.nmr_dataset()}},
+\code{\link[=print.nmr_dataset_1D]{print.nmr_dataset_1D()}},
+\code{\link[=print.nmr_dataset_peak_table]{print.nmr_dataset_peak_table()}},
+\code{\link[=validate_nmr_dataset]{validate_nmr_dataset()}},
+\code{\link[=validate_nmr_dataset_family]{validate_nmr_dataset_family()}}
 }
 \concept{class helper functions}
