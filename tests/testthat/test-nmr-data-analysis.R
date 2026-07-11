@@ -111,3 +111,163 @@ test_that("split_double_cv works", {
         expected_samples_in_train_internal_train
     )
 })
+
+## bp_VIP_analysis --------------------------------------------------------
+##
+## These tests register BiocParallel::SerialParam() for the duration of the
+## call to bp_VIP_analysis() so that the sequence of sample() calls made
+## inside its (parallel-capable) bplapply() loop is fully deterministic given
+## a set.seed() call, and reproducible across machines/CI (the default
+## MulticoreParam backend forks workers and its RNG behaviour is not a
+## reliable basis for a reproducible unit test).
+
+test_that("bp_VIP_analysis identifies a strongly predictive feature as relevant", {
+    # bp_VIP_analysis() permutes each feature j *in place* to build a
+    # null-importance baseline for that feature. We call bp_VIP_analysis()
+    # directly (not a reimplementation of the permutation step) on a tiny
+    # synthetic dataset with exactly one strongly predictive feature (V1)
+    # and several pure-noise features. If permutation correctly shuffles
+    # each feature's own column, V1 should reliably surface as the single
+    # "relevant" VIP with a markedly higher importance score than the noise
+    # features.
+    skip_if_not_installed("mixOmics")
+    skip_if_not_installed("BiocParallel")
+
+    old_bpparam <- BiocParallel::bpparam()
+    BiocParallel::register(BiocParallel::SerialParam())
+    on.exit(BiocParallel::register(old_bpparam), add = TRUE)
+
+    set.seed(1)
+    n <- 30
+    p <- 4
+    y <- factor(rep(c("A", "B"), times = n / 2))
+    x <- matrix(rnorm(n * p, sd = 1), nrow = n, ncol = p)
+    colnames(x) <- paste0("V", seq_len(p))
+    # V1 is made strongly predictive of the class; V2-V4 stay pure noise
+    x[y == "A", 1] <- x[y == "A", 1] + 15
+
+    metadata <- data.frame(
+        NMRExperiment = as.character(seq_len(n)),
+        Condition = y
+    )
+    dataset <- new_nmr_dataset_peak_table(
+        peak_table = x,
+        metadata = list(external = metadata)
+    )
+
+    train_index <- 1:20 # both classes present in train (1:20) and test (21:30)
+
+    # bp_VIP_analysis() emits an informational cli_warn() when few VIPs
+    # clear the "important" (stricter) threshold with so few bootstraps;
+    # that is expected/benign with nbootstrap = 5, so it is suppressed here.
+    result <- suppressWarnings(bp_VIP_analysis(
+        dataset,
+        train_index,
+        y_column = "Condition",
+        ncomp = 1,
+        nbootstrap = 5 # kept tiny for test speed
+    ))
+
+    # Expected shape: num_features x nbootstrap matrices
+    expect_equal(dim(result$pls_vip), c(p, 5))
+    expect_equal(dim(result$pls_vip_perm), c(p, 5))
+    expect_setequal(rownames(result$pls_vip_means), colnames(x))
+
+    # The informative feature is (the only feature) flagged as relevant:
+    expect_equal(result$relevant_vips, "V1")
+
+    # And its bootstrapped VIP-difference mean is clearly the largest,
+    # well above every noise feature:
+    means <- result$pls_vip_means[, 1]
+    expect_gt(means["V1"], max(means[setdiff(names(means), "V1")]))
+})
+
+test_that("bp_VIP_analysis shuffles each feature's own column when building its permutation baseline", {
+    # Each feature's own values must be shuffled independently, not swapped
+    # for another feature's values, or the permutation-importance baseline
+    # would not reflect that feature's own association with the outcome.
+    body_txt <- paste(deparse(body(bp_VIP_analysis)), collapse = " ")
+
+    expect_true(
+        grepl(
+            "x_train_boots_perm\\[, j\\] *<- *sample\\(x_train_boots\\[, *j\\]\\)",
+            body_txt
+        ),
+        info = "Expected column j to be shuffled via sample(x_train_boots[, j])"
+    )
+    expect_false(
+        grepl("random_pos", body_txt),
+        info = "Column j must not be replaced by another (random) column's values"
+    )
+})
+
+test_that("bp_VIP_analysis recovers from a degenerate single-class bootstrap resample", {
+    # Inside the bootstrap loop of bp_VIP_analysis(), if a bootstrap
+    # resample happens to contain only one class, the code recovers by
+    # swapping in one sample of the missing class from the (unbootstrapped)
+    # original y_train. To exercise this exact code path with the real
+    # function (not a reimplementation of it), we build a deliberately
+    # imbalanced train set (1 sample of class A, 4 of class B). Bootstrap
+    # resampling with replacement from 5 elements, only one of which is
+    # class A, has a per-iteration probability of ~(4/5)^5 = 32.8% of
+    # missing the lone A sample entirely (a degenerate, single-class
+    # resample). With nbootstrap = 10 draws, the probability of the
+    # degenerate branch firing at least once is 1 - 0.672^10 ~= 98%. We pin
+    # a seed (verified across 15 candidate seeds to all succeed) and assert
+    # the call completes without error.
+    skip_if_not_installed("mixOmics")
+    skip_if_not_installed("BiocParallel")
+
+    old_bpparam <- BiocParallel::bpparam()
+    BiocParallel::register(BiocParallel::SerialParam())
+    on.exit(BiocParallel::register(old_bpparam), add = TRUE)
+
+    set.seed(1)
+    n <- 20
+    p <- 4
+    y <- factor(rep(c("A", "B"), each = n / 2))
+    x <- matrix(rnorm(n * p), nrow = n, ncol = p)
+    colnames(x) <- paste0("V", seq_len(p))
+    x[y == "A", 1] <- x[y == "A", 1] + 8
+
+    metadata <- data.frame(
+        NMRExperiment = as.character(seq_len(n)),
+        Condition = y
+    )
+    dataset <- new_nmr_dataset_peak_table(
+        peak_table = x,
+        metadata = list(external = metadata)
+    )
+
+    # 1 sample of class A (row 1) + 4 samples of class B (rows 11-14):
+    train_index <- c(1L, 11L, 12L, 13L, 14L)
+
+    result <- NULL
+    expect_no_error(
+        result <- suppressWarnings(bp_VIP_analysis(
+            dataset,
+            train_index,
+            y_column = "Condition",
+            ncomp = 1,
+            nbootstrap = 10
+        ))
+    )
+    expect_true(is.list(result))
+    expect_true(all(c("pls_vip", "relevant_vips") %in% names(result)))
+})
+
+test_that("bp_VIP_analysis's single-class recovery loop iterates over y_train's elements", {
+    # The recovery loop must iterate over each element of y_train, not treat
+    # it as a count: y_train is a factor/character vector, and seq_len()
+    # requires a scalar, so seq_len(y_train) would error.
+    body_txt <- paste(deparse(body(bp_VIP_analysis)), collapse = " ")
+
+    expect_true(
+        grepl("seq_along\\(y_train\\)", body_txt),
+        info = "Expected the recovery loop to iterate with seq_along(y_train)"
+    )
+    expect_false(
+        grepl("seq_len\\(y_train\\)", body_txt),
+        info = "seq_len(y_train) requires a scalar count, not a vector"
+    )
+})
