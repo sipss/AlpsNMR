@@ -734,8 +734,12 @@ bp_VIP_analysis <- function(dataset,
                 pls_vip_comps_perm <- plsda_vip(model_perm)
                 pls_vip_perm[, j] <- pls_vip_comps_perm[, ncomp]
             }
-            # bootsrapped and randomly permuted PLS-VIPs
-            pls_vip_perm_score <- colSums(pls_vip_perm) / n
+            # bootsrapped and randomly permuted PLS-VIPs: for each feature j,
+            # take its own VIP from the model fit with feature j (and only
+            # feature j) permuted -- i.e. pls_vip_perm[j, j] -- rather than
+            # averaging feature j's column across all n permuted-feature
+            # models.
+            pls_vip_perm_score <- diag(pls_vip_perm)
 
             # bootsrapped and randomly permuted difference
             pls_vip_score_diff <- pls_vip - pls_vip_perm_score

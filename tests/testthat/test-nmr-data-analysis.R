@@ -159,18 +159,21 @@ test_that("bp_VIP_analysis identifies a strongly predictive feature as relevant"
 
     # bp_VIP_analysis() emits an informational cli_warn() when few VIPs
     # clear the "important" (stricter) threshold with so few bootstraps;
-    # that is expected/benign with nbootstrap = 5, so it is suppressed here.
+    # that is expected/benign here, so it is suppressed. nbootstrap = 30 (as
+    # opposed to a handful) keeps the per-feature bootstrap standard
+    # deviation used to standardize the VIP-score difference (see the paper's
+    # Eq. (13)/step 6) from being dominated by noise on this tiny dataset.
     result <- suppressWarnings(bp_VIP_analysis(
         dataset,
         train_index,
         y_column = "Condition",
         ncomp = 1,
-        nbootstrap = 5 # kept tiny for test speed
+        nbootstrap = 30 # kept small for test speed
     ))
 
     # Expected shape: num_features x nbootstrap matrices
-    expect_equal(dim(result$pls_vip), c(p, 5))
-    expect_equal(dim(result$pls_vip_perm), c(p, 5))
+    expect_equal(dim(result$pls_vip), c(p, 30))
+    expect_equal(dim(result$pls_vip_perm), c(p, 30))
     expect_setequal(rownames(result$pls_vip_means), colnames(x))
 
     # The informative feature is (the only feature) flagged as relevant:
@@ -247,6 +250,67 @@ test_that("bp_VIP_analysis uses the ncomp-th (cumulative) VIP column, not a re-a
         expect_equal(
             unname(result$pls_vip[feature, ]),
             rep(expected[[feature]], 3),
+            tolerance = 0.1
+        )
+    }
+})
+
+test_that("bp_VIP_analysis's permutation score for feature j is feature j's own VIP in the j-permuted model", {
+    # Per the paper's steps (4)-(5) (Section 2.4), the permutation baseline
+    # used for feature j's importance must be feature j's own VIP value in
+    # the model fit with (only) feature j permuted -- the diagonal entry
+    # pls_vip_perm[j, j] -- not an average of feature j's VIP across the p
+    # separate permuted-feature models.
+    #
+    # plsda_vip() is mocked so its return value depends only on the position
+    # of the call within a bootstrap iteration: the first call (the
+    # un-permuted model) returns a fixed vector, and the k-th call inside the
+    # permutation loop (the model with feature k permuted) returns
+    # 10*k + m for feature m, so the diagonal (m == k) is numerically
+    # distinguishable from a column mean. A small jitter keeps the
+    # across-bootstrap variance non-degenerate.
+    skip_if_not_installed("mixOmics")
+    skip_if_not_installed("BiocParallel")
+
+    old_bpparam <- BiocParallel::bpparam()
+    BiocParallel::register(BiocParallel::SerialParam())
+    on.exit(BiocParallel::register(old_bpparam), add = TRUE)
+
+    p <- 4
+    call_count <- 0L
+    testthat::local_mocked_bindings(
+        plsda_vip = function(plsda_model) {
+            call_count <<- call_count + 1L
+            pos <- (call_count - 1L) %% (p + 1L)
+            base_vip <- if (pos == 0L) {
+                c(100, 200, 300, 400) # the un-permuted bootstrap model
+            } else {
+                10 * pos + seq_len(p) # model with feature `pos` permuted
+            }
+            vip <- base_vip + stats::rnorm(p, sd = 0.01)
+            matrix(vip, nrow = p, ncol = 1, dimnames = list(paste0("V", seq_len(p)), NULL))
+        }
+    )
+
+    set.seed(1)
+    n <- 20
+    y <- factor(rep(c("A", "B"), each = n / 2))
+    x <- matrix(rnorm(n * p), nrow = n, ncol = p)
+    colnames(x) <- paste0("V", seq_len(p))
+    metadata <- data.frame(NMRExperiment = as.character(seq_len(n)), Condition = y)
+    dataset <- new_nmr_dataset_peak_table(peak_table = x, metadata = list(external = metadata))
+    train_index <- c(1:7, 11:17) # both classes in train (1:7, 11:17) and test (8:10, 18:20)
+
+    result <- suppressWarnings(bp_VIP_analysis(
+        dataset, train_index,
+        y_column = "Condition", ncomp = 1, nbootstrap = 3
+    ))
+
+    expected_perm_score <- c(V1 = 11, V2 = 22, V3 = 33, V4 = 44)
+    for (feature in names(expected_perm_score)) {
+        expect_equal(
+            unname(result$pls_vip_perm[feature, ]),
+            rep(expected_perm_score[[feature]], 3),
             tolerance = 0.1
         )
     }
