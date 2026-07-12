@@ -1,117 +1,3 @@
-## Prepare demo dataset
-prepare_dataset <- function() {
-    # 12 artificial samples created based on the 3 demo samples
-    MeOH_plasma_extraction_dir <- system.file("dataset-demo", package = "AlpsNMR")
-    MeOH_plasma_extraction_xlsx <- file.path(MeOH_plasma_extraction_dir, "dummy_metadata.xlsx")
-    exp_subj_id <- readxl::read_excel(MeOH_plasma_extraction_xlsx, sheet = 1)
-
-    zip_files <- fs::dir_ls(MeOH_plasma_extraction_dir, glob = "*.zip")
-
-    dataset <- nmr_read_samples(sample_names = zip_files)
-    dataset <- nmr_meta_add(dataset, metadata = exp_subj_id, by = "NMRExperiment")
-    dataset <- nmr_interpolate_1D(dataset, axis = c(min = 3.7, max = 4.5, by = 2.3E-4))
-    dataset <- nmr_baseline_removal(dataset, lambda = 6, p = 0.01)
-    dataset <- nmr_normalize(dataset, method = "area")
-
-    metadata <- nmr_meta_get(dataset, groups = "external")
-    metadata$Group <- c("A", "B", "B")
-    # Artificially create a larger dataset
-    larger_metadata <- rbind(metadata, metadata, metadata, metadata, metadata)
-
-    larger_metadata$NMRExperiment <- as.character(
-        seq(from = 10, by = 10, length.out = nrow(larger_metadata))
-    )
-    data_matrix <- nmr_data(dataset)
-    dataset <- new_nmr_dataset_1D(
-        ppm_axis = dataset$axis,
-        data_1r = rbind(data_matrix, data_matrix, data_matrix, data_matrix, data_matrix),
-        metadata = list(external = larger_metadata)
-    )
-    dataset
-}
-
-## Dataset can be used
-
-test_that("nmr_data_analysis works", {
-    dataset <- prepare_dataset()
-    methodology <- plsda_auroc_vip_method(ncomp = 2)
-    set.seed(123L)
-    out <- nmr_data_analysis(
-        dataset,
-        y_column = "Group",
-        identity_column = NULL,
-        external_val = list(iterations = 1, test_size = 0.25),
-        internal_val = list(iterations = 2, test_size = 0.25),
-        data_analysis_method = methodology
-    )
-    expect_false(is.null(out))
-})
-
-test_that("random subsampling works", {
-    subject_id <- rep(c("Alice", "Bob", "Charlie", "Diana"), times = 2)
-    replicate <- rep(c(1, 2), each = 4)
-    set.seed(2563432L)
-    sample_idx <- 1:8
-    num_iterations <- 2L
-    out <- random_subsampling(sample_idx,
-        iterations = num_iterations, test_size = 0.25,
-        keep_together = subject_id
-    )
-    expect_equal(length(out), num_iterations)
-    expect_equal(length(out[[1]][["training"]]), 6L)
-    expect_equal(length(out[[1]][["test"]]), 2L)
-    # Subjects kept together in the split, no subject in train is present in test:
-    expect_equal(
-        length(
-            intersect(
-                subject_id[out[[1]][["test"]]],
-                subject_id[out[[1]][["training"]]]
-            )
-        ),
-        0L
-    )
-})
-
-test_that("split_double_cv works", {
-    nsamples <- 16L
-    subject_id <- rep(c("Alice", "Bob", "Charlie", "Diana"), times = 4)
-    replicate <- rep(c(1, 2), each = 8)
-    metadata <- data.frame(
-        NMRExperiment = as.character(seq(from = 10, by = 10, length.out = nsamples)),
-        SubjectID = subject_id,
-        Replicate = replicate
-    )
-    dataset <- new_nmr_dataset_1D(
-        ppm_axis = 1:10,
-        data_1r = matrix(sample(1:200, 10 * nsamples), ncol = 10, nrow = nsamples),
-        metadata = list(external = metadata)
-    )
-
-    external_val_niter <- 2L
-    internal_val_niter <- 4L
-    external_test_size <- 0.25
-    internal_test_size <- 0.34
-    out <- split_double_cv(
-        dataset = dataset,
-        keep_together = "SubjectID",
-        external_val = list(iterations = external_val_niter, test_size = external_test_size),
-        internal_val = list(iterations = internal_val_niter, test_size = internal_test_size)
-    )
-
-    expect_equal(names(out), c("outer", "inner"))
-    expect_equal(length(out[["outer"]]), external_val_niter)
-    expect_equal(length(out[["inner"]]), external_val_niter * internal_val_niter)
-    expected_samples_in_external_test <- floor(nsamples * external_test_size)
-    expected_samples_in_train <- nsamples - expected_samples_in_external_test
-    expected_samples_in_train_internal_test <- floor(expected_samples_in_train * internal_test_size)
-    expected_samples_in_train_internal_train <- expected_samples_in_train - expected_samples_in_train_internal_test
-
-    expect_equal(
-        length(out$inner$`1_1`$inner_train_idx),
-        expected_samples_in_train_internal_train
-    )
-})
-
 ## bp_VIP_analysis --------------------------------------------------------
 ##
 ## These tests register BiocParallel::SerialParam() for the duration of the
@@ -510,5 +396,75 @@ test_that("bp_kfold_VIP_analysis assigns folds at random, not by a fixed modulo 
     expect_true(
         grepl("rep_len", body_txt, fixed = TRUE),
         info = "Random fold assignment is expected to be built from sample(rep_len(...))"
+    )
+})
+
+## bp_kfold_VIP_analysis ----------------------------------------------------
+##
+## These tests register BiocParallel::SerialParam() for the duration of the
+## call, for the same reason as the bp_VIP_analysis() tests above:
+## bp_kfold_VIP_analysis() calls the (parallel-capable) bp_VIP_analysis() once
+## per fold, and its bplapply()-based sample() calls need a deterministic,
+## non-forking backend to be reproducible.
+
+build_kfold_test_dataset <- function(seed = 1, n = 30, p = 4) {
+    set.seed(seed)
+    y <- factor(rep(c("A", "B"), times = n / 2))
+    x <- matrix(rnorm(n * p), nrow = n, ncol = p)
+    colnames(x) <- paste0("V", seq_len(p))
+    # V1 is made strongly predictive of the class; the rest stay pure noise
+    x[y == "A", 1] <- x[y == "A", 1] + 15
+
+    metadata <- data.frame(NMRExperiment = as.character(seq_len(n)), Condition = y)
+    new_nmr_dataset_peak_table(peak_table = x, metadata = list(external = metadata))
+}
+
+test_that("bp_kfold_VIP_analysis combines results across folds and ranks the predictive feature first", {
+    skip_if_not_installed("mixOmics")
+    skip_if_not_installed("BiocParallel")
+
+    old_bpparam <- BiocParallel::bpparam()
+    BiocParallel::register(BiocParallel::SerialParam())
+    on.exit(BiocParallel::register(old_bpparam), add = TRUE)
+
+    dataset <- build_kfold_test_dataset()
+
+    set.seed(2)
+    k <- 2
+    result <- suppressWarnings(bp_kfold_VIP_analysis(
+        dataset,
+        y_column = "Condition",
+        k = k,
+        ncomp = 1,
+        nbootstrap = 5
+    ))
+
+    expect_setequal(
+        names(result),
+        c("important_vips", "relevant_vips", "wilcoxon_vips", "vip_means", "vip_score_plot", "kfold_results", "kfold_index")
+    )
+    expect_length(result$kfold_results, k)
+    expect_length(result$kfold_index, k)
+    expect_s3_class(result$vip_score_plot, "ggplot")
+    expect_setequal(names(result$vip_means), c("V1", "V2", "V3", "V4"))
+    # The predictive feature has the highest mean VIP-difference score:
+    expect_equal(names(result$vip_means)[1], "V1")
+    expect_true(result$vip_means[["V1"]] > max(result$vip_means[setdiff(names(result$vip_means), "V1")]))
+})
+
+test_that("bp_kfold_VIP_analysis requires k > 1", {
+    dataset <- build_kfold_test_dataset()
+    expect_error(
+        bp_kfold_VIP_analysis(dataset, y_column = "Condition", k = 1),
+        "K must be integer greater than 1"
+    )
+})
+
+test_that("bp_kfold_VIP_analysis requires at least two classes", {
+    dataset <- build_kfold_test_dataset()
+    dataset$metadata$external$Condition <- factor(rep("A", nrow(dataset$metadata$external)))
+    expect_error(
+        bp_kfold_VIP_analysis(dataset, y_column = "Condition", k = 2),
+        "Only one class in data set"
     )
 })

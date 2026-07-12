@@ -1,3 +1,78 @@
+test_that("random subsampling works", {
+    subject_id <- rep(c("Alice", "Bob", "Charlie", "Diana"), times = 2)
+    replicate <- rep(c(1, 2), each = 4)
+    set.seed(2563432L)
+    sample_idx <- 1:8
+    num_iterations <- 2L
+    out <- random_subsampling(sample_idx,
+        iterations = num_iterations, test_size = 0.25,
+        keep_together = subject_id
+    )
+    expect_equal(length(out), num_iterations)
+    expect_equal(length(out[[1]][["training"]]), 6L)
+    expect_equal(length(out[[1]][["test"]]), 2L)
+    # Subjects kept together in the split, no subject in train is present in test:
+    expect_equal(
+        length(
+            intersect(
+                subject_id[out[[1]][["test"]]],
+                subject_id[out[[1]][["training"]]]
+            )
+        ),
+        0L
+    )
+})
+
+test_that("random_subsampling defaults keep_together to one group per sample", {
+    # With no keep_together (and no balance_in_train), each sample is free to
+    # land in either train or test independently of every other sample.
+    out <- random_subsampling(1:4, iterations = 2, test_size = 0.3)
+    expect_length(out, 2)
+    for (iter in out) {
+        expect_equal(sort(c(iter$training, iter$test)), 1:4)
+    }
+})
+
+test_that("split_double_cv works", {
+    nsamples <- 16L
+    subject_id <- rep(c("Alice", "Bob", "Charlie", "Diana"), times = 4)
+    replicate <- rep(c(1, 2), each = 8)
+    metadata <- data.frame(
+        NMRExperiment = as.character(seq(from = 10, by = 10, length.out = nsamples)),
+        SubjectID = subject_id,
+        Replicate = replicate
+    )
+    dataset <- new_nmr_dataset_1D(
+        ppm_axis = 1:10,
+        data_1r = matrix(sample(1:200, 10 * nsamples), ncol = 10, nrow = nsamples),
+        metadata = list(external = metadata)
+    )
+
+    external_val_niter <- 2L
+    internal_val_niter <- 4L
+    external_test_size <- 0.25
+    internal_test_size <- 0.34
+    out <- split_double_cv(
+        dataset = dataset,
+        keep_together = "SubjectID",
+        external_val = list(iterations = external_val_niter, test_size = external_test_size),
+        internal_val = list(iterations = internal_val_niter, test_size = internal_test_size)
+    )
+
+    expect_equal(names(out), c("outer", "inner"))
+    expect_equal(length(out[["outer"]]), external_val_niter)
+    expect_equal(length(out[["inner"]]), external_val_niter * internal_val_niter)
+    expected_samples_in_external_test <- floor(nsamples * external_test_size)
+    expected_samples_in_train <- nsamples - expected_samples_in_external_test
+    expected_samples_in_train_internal_test <- floor(expected_samples_in_train * internal_test_size)
+    expected_samples_in_train_internal_train <- expected_samples_in_train - expected_samples_in_train_internal_test
+
+    expect_equal(
+        length(out$inner$`1_1`$inner_train_idx),
+        expected_samples_in_train_internal_train
+    )
+})
+
 ## random_subsampling: balance_in_train branch ---------------------------
 
 test_that("random_subsampling with balance_in_train keeps the training set balanced", {
