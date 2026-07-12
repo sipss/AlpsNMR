@@ -75,6 +75,14 @@ test_that("nmr_baseline_threshold's median3mad method subtracts data_1r_baseline
     expect_false(isTRUE(all.equal(unname(result), unname(result_no_baseline))))
 })
 
+test_that("nmr_baseline_threshold requires range_without_peaks to be given", {
+    dataset_1D <- make_dataset(n = 1)
+    expect_error(
+        nmr_baseline_threshold(dataset_1D),
+        "range_without_peaks must be given"
+    )
+})
+
 test_that("nmr_baseline_threshold requires range_without_peaks to have length 2", {
     dataset_1D <- make_dataset(n = 1)
     expect_error(
@@ -141,6 +149,15 @@ test_that("tidy_spectra_baseline_and_threshold offsets the threshold by the base
 })
 
 ## nmr_baseline_threshold_plot --------------------------------------------------
+
+test_that("nmr_baseline_threshold_plot requires chemshift_range to be given", {
+    dataset_1D <- make_dataset(n = 1)
+    th <- nmr_baseline_threshold(dataset_1D, range_without_peaks = c(9.5, 10), method = "median3mad")
+    expect_error(
+        nmr_baseline_threshold_plot(dataset_1D, th),
+        "chemshift_range must be given"
+    )
+})
 
 test_that("nmr_baseline_threshold_plot returns a ggplot for the default NMRExperiment='all'", {
     skip_if_not_installed("ggplot2")

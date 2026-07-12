@@ -15,6 +15,6 @@ test_that("nmr_baseline_threshold works", {
         metadata = list(external = data.frame(NMRExperiment = c("10", "20")))
     )
 
-    n <- nmr_baseline_threshold(dataset)
+    n <- nmr_baseline_threshold(dataset, range_without_peaks = c(9.5, 10))
     expect_true(is.numeric(n))
 })

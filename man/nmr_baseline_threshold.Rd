@@ -6,14 +6,15 @@
 \usage{
 nmr_baseline_threshold(
   nmr_dataset,
-  range_without_peaks = c(9.5, 10),
+  range_without_peaks = NULL,
   method = c("mean3sd", "median3mad")
 )
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D}.}
 
-\item{range_without_peaks}{A vector with two doubles describing a range without peaks suitable for baseline detection}
+\item{range_without_peaks}{A vector with two doubles describing a range without peaks suitable for baseline detection.
+There is no such a range that works for every sample type, so you must inspect your spectra and provide one.}
 
 \item{method}{Either "mean3sd" or the more robust "median3mad". See the details.}
 }
@@ -22,13 +23,14 @@ Numerical. A threshold value in intensity below that no peak is detected.
 }
 \description{
 Estimates the threshold value for peak detection on an \link{nmr_dataset_1D} object by examining
-a range without peaks, by default the 9.5 - 10 ppm range.
+a range without peaks that you must provide (there is no ppm range guaranteed to be free of
+peaks for every sample type).
 }
 \details{
 Two methods can be used:
 \itemize{
 \item "mean3sd": The mean3sd method computes the mean and the standard deviation of each spectrum
-in the 9.5 - 10 ppm range. The mean spectrum and the mean standard deviation are both vectors
+in the given range. The mean spectrum and the mean standard deviation are both vectors
 of length equal to the number of points in the given range. The mean of the mean spectrum
 the noise. The threshold is defined as \verb{center + 3 dispersion}, and it is one single threshold
 for the whole dataset. This is the default for backwards compatibility.

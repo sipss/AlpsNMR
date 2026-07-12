@@ -1,12 +1,13 @@
 #' Threshold estimation for peak detection
 #'
 #' Estimates the threshold value for peak detection on an [nmr_dataset_1D] object by examining
-#' a range without peaks, by default the 9.5 - 10 ppm range.
+#' a range without peaks that you must provide (there is no ppm range guaranteed to be free of
+#' peaks for every sample type).
 #'
 #' Two methods can be used:
 #'
 #' - "mean3sd": The mean3sd method computes the mean and the standard deviation of each spectrum
-#' in the 9.5 - 10 ppm range. The mean spectrum and the mean standard deviation are both vectors
+#' in the given range. The mean spectrum and the mean standard deviation are both vectors
 #' of length equal to the number of points in the given range. The mean of the mean spectrum
 #  and the mean of the standard deviations are used to summarize the center and dispersion of
 #' the noise. The threshold is defined as `center + 3 dispersion`, and it is one single threshold
@@ -20,7 +21,8 @@
 #' @family peak detection functions
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @param method Either "mean3sd" or the more robust "median3mad". See the details.
-#' @param range_without_peaks A vector with two doubles describing a range without peaks suitable for baseline detection
+#' @param range_without_peaks A vector with two doubles describing a range without peaks suitable for baseline detection.
+#' There is no such a range that works for every sample type, so you must inspect your spectra and provide one.
 #' @return Numerical. A threshold value in intensity below that no peak is detected.
 #' @export
 #' @examples
@@ -33,9 +35,18 @@
 #' )
 #' bl_threshold <- nmr_baseline_threshold(dataset_1D, range_without_peaks = c(9.5,10))
 #'
-nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = c(9.5, 10), method = c("mean3sd", "median3mad")) {
+nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = NULL, method = c("mean3sd", "median3mad")) {
     # FIXME: Maybe a whole baseline would be better, so we can cope with slowly changing baselines better
     method <- match.arg(method)
+    if (is.null(range_without_peaks)) {
+        rlang::abort(
+            message = c(
+                "range_without_peaks must be given",
+                "i" = "There is no ppm range guaranteed to be free of peaks for every sample type.",
+                "i" = "Inspect your spectra and pass a two-value ppm range (e.g. c(9.5, 10)) known to be free of peaks for your samples."
+            )
+        )
+    }
     if (length(range_without_peaks) != 2) {
         rlang::abort("range_without_peaks must have length 2")
     }
@@ -101,9 +112,17 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = c(9.5, 10)
 #'     metadata = list(external=data.frame(NMRExperiment = "10"))
 #' )
 #' bl_threshold <- nmr_baseline_threshold(dataset_1D, range_without_peaks = c(9.5,10))
-#' baselineThresh <- nmr_baseline_threshold(dataset_1D)
-#' nmr_baseline_threshold_plot(dataset_1D, bl_threshold)
-nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment = "all", chemshift_range = c(9.5, 10), ...) {
+#' nmr_baseline_threshold_plot(dataset_1D, bl_threshold, chemshift_range = c(9.5, 10))
+nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment = "all", chemshift_range = NULL, ...) {
+    if (is.null(chemshift_range)) {
+        rlang::abort(
+            message = c(
+                "chemshift_range must be given",
+                "i" = "There is no ppm range guaranteed to be free of peaks for every sample type.",
+                "i" = "Pass the same two-value ppm range you used as range_without_peaks in nmr_baseline_threshold()."
+            )
+        )
+    }
     if (is.null(NMRExperiment)) {
         if (nmr_dataset$num_samples > 20) {
             NMRExperiment <- sample(names(nmr_dataset), size = 10)

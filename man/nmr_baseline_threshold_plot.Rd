@@ -8,7 +8,7 @@ nmr_baseline_threshold_plot(
   nmr_dataset,
   thresholds,
   NMRExperiment = "all",
-  chemshift_range = c(9.5, 10),
+  chemshift_range = NULL,
   ...
 )
 }
@@ -40,6 +40,5 @@ dataset_1D <- new_nmr_dataset_1D(
     metadata = list(external=data.frame(NMRExperiment = "10"))
 )
 bl_threshold <- nmr_baseline_threshold(dataset_1D, range_without_peaks = c(9.5,10))
-baselineThresh <- nmr_baseline_threshold(dataset_1D)
-nmr_baseline_threshold_plot(dataset_1D, bl_threshold)
+nmr_baseline_threshold_plot(dataset_1D, bl_threshold, chemshift_range = c(9.5, 10))
 }
