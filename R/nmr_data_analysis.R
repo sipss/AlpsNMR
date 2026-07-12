@@ -652,7 +652,7 @@ bp_VIP_analysis <- function(dataset,
         stop("Only one class in test set, please increase number of samples")
     }
 
-    num_features <- n <- ncol(x_all)
+    num_features <- ncol(x_all)
     
     if (ncomp > num_features) {
         cli::cli_abort("ncomp ({ncomp}) can't be larger than num_features ({num_features})")
@@ -710,9 +710,12 @@ bp_VIP_analysis <- function(dataset,
             pls_vip <- pls_vip_comps[, ncomp]
             # Measure the classification rate (CR) of the bootstrap model
             CR <- get_test_accuracy(model, x_test, y_test)
-            pls_vip_perm <- matrix(nrow = n, ncol = n, dimnames = list(names, NULL))
 
-            # Permutation of variables
+            # bootsrapped and randomly permuted PLS-VIPs: for each feature j,
+            # take its own VIP from the model fit with feature j (and only
+            # feature j) permuted, rather than averaging feature j's VIP
+            # across all num_features permuted-feature models.
+            pls_vip_perm_score <- stats::setNames(numeric(num_features), names)
             for (j in seq_len(num_features)) {
                 x_train_boots_perm <- x_train_boots
                 # Shuffle column j's own values (breaks its row-order
@@ -732,10 +735,8 @@ bp_VIP_analysis <- function(dataset,
                 # cumulative VIP through component ncomp, not a re-aggregation
                 # across components).
                 pls_vip_comps_perm <- plsda_vip(model_perm)
-                pls_vip_perm[, j] <- pls_vip_comps_perm[, ncomp]
+                pls_vip_perm_score[j] <- pls_vip_comps_perm[j, ncomp]
             }
-            # bootsrapped and randomly permuted PLS-VIPs
-            pls_vip_perm_score <- colSums(pls_vip_perm) / n
 
             # bootsrapped and randomly permuted difference
             pls_vip_score_diff <- pls_vip - pls_vip_perm_score
