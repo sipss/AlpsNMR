@@ -40,7 +40,10 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="alpsnmr-development-version">AlpsNMR (development version)<a class="anchor" aria-label="anchor" href="#alpsnmr-development-version"></a></h2>
-<ul><li>
+<ul><li>BP-VIP (<code><a href="../reference/bp_kfold_VIP_analysis.html">bp_kfold_VIP_analysis()</a></code>, <code><a href="../reference/plot_vip_scores.html">plot_vip_scores()</a></code>): the plotted importance-threshold line now uses the correct degrees of freedom <code>df = n_samples - 1</code> (number of training samples), matching the cut-off quantile <code>t_{1-alpha/2,n-1}</code> in Afanador, Tran &amp; Buydens (2013) and the actual selection performed in <code><a href="../reference/bp_VIP_analysis.html">bp_VIP_analysis()</a></code>. Previously it used <code>df = nbootstrap - 1</code>, so the drawn line did not correspond to the threshold that selected the variables. <strong>Breaking change</strong>: <code><a href="../reference/plot_vip_scores.html">plot_vip_scores()</a></code>’s <code>nbootstrap</code> argument has been renamed to <code>n_samples</code>.</li>
+<li>
+<code><a href="../reference/bp_kfold_VIP_analysis.html">bp_kfold_VIP_analysis()</a></code>: fixed the k-fold partitioning, which assigned samples to folds by a deterministic <code>x %% k</code> split while the intended random shuffle was computed and then discarded (dead code). Folds are now a genuine random partition of the samples.</li>
+<li>
 <code><a href="../reference/nmr_read_bruker_fid.html">nmr_read_bruker_fid()</a></code>: fixed silent truncation of FID data to half its length (wrong byte-size divisor), and rewrote the function to determine byte order (<code>BYTORDA</code>), data type (<code>DTYPA</code>), and timing (<code>SW_h</code>, <code>TD</code>) from the sample’s <code>acqus</code> file instead of assuming little-endian 32-bit integers. It now returns a data frame with <code>time_s</code> and <code>fid_complex</code> columns instead of a raw interleaved numeric vector. <strong>This is a breaking change</strong>: the <code>endian</code> argument has been removed (byte order is now auto-detected) and the return type has changed.</li>
 </ul></div>
     <div class="section level2">

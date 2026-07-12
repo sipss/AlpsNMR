@@ -109,8 +109,6 @@ bp_results <- bp_kfold_VIP_analysis(peak_table, # Data to be analyzed
 )
 #> Warning: No VIPs are ranked as important
 #> ℹ Try increasing the number of bootstrap iterations
-#> Warning: No VIPs are ranked as important
-#> ℹ Try increasing the number of bootstrap iterations
 
 message("Selected VIPs are: ", bp_results$important_vips)
 #> Selected VIPs are: 

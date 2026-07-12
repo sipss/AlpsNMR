@@ -45,7 +45,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_vip_scores</span><span class="op">(</span><span class="va">vip_means</span>, <span class="va">error</span>, <span class="va">nbootstrap</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_vip_scores</span><span class="op">(</span><span class="va">vip_means</span>, <span class="va">error</span>, <span class="va">n_samples</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -60,8 +60,11 @@
 <dd><p>error tolerated, calculated in the bootstrap</p></dd>
 
 
-<dt id="arg-nbootstrap">nbootstrap<a class="anchor" aria-label="anchor" href="#arg-nbootstrap"></a></dt>
-<dd><p>number of bootstraps realiced</p></dd>
+<dt id="arg-n-samples">n_samples<a class="anchor" aria-label="anchor" href="#arg-n-samples"></a></dt>
+<dd><p>number of training samples the bootstrap models were fit on.
+It sets the importance threshold line at <code>qt(0.975, df = n_samples - 1)</code>,
+following Afanador, Tran &amp; Buydens (2013), where the cut-off quantile
+<code>t_{1-alpha/2,n-1}</code> uses n = number of samples (not the number of bootstraps).</p></dd>
 
 
 <dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
@@ -119,7 +122,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># plot_vip_scores(bp_results$kfold_results[[1]]$vip_means,</span></span></span>
 <span class="r-in"><span><span class="co">#                bp_results$kfold_results[[1]]$error[1],</span></span></span>
-<span class="r-in"><span><span class="co">#                nbootstrap = 10)</span></span></span>
+<span class="r-in"><span><span class="co">#                n_samples = length(bp_results$kfold_index[[1]]))</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
