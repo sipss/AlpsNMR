@@ -74,7 +74,7 @@ read_bruker_param <- function(file_name) {
     for (i in seq_len(length(type_of_row))) {
         if (type_of_row[i] == "ParVecVal") {
             field_name <- all_matches[[i]][1, 2]
-            output[[field_name]] <- all_matches[[i]][1, 4]
+            output[[field_name]] <- all_matches[[i]][1, 3]
         } else if (type_of_row[i] == "ParVec") {
             field_name <- all_matches[[i]][1, 2]
             output[[field_name]] <- NULL
@@ -402,7 +402,8 @@ parse_title_file <- function(title_lines) {
             gsub(
                 pattern = "[\\s;]+$",
                 replacement = "",
-                x = value
+                x = value,
+                perl = TRUE
             )
         })
         output <- list()
