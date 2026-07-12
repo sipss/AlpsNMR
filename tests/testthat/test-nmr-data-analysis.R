@@ -316,6 +316,69 @@ test_that("bp_VIP_analysis's permutation score for feature j is feature j's own 
     }
 })
 
+test_that("bp_VIP_analysis's significance threshold uses df = n_samples - 1, not df = nbootstrap - 1", {
+    # Afanador, Tran & Buydens (2013) calculate the 95% confidence interval
+    # for the (per-feature) standardized VIP-score difference by multiplying
+    # its bootstrap standard deviation by "the appropriate quantile,
+    # t_{1-alpha/2,n-1}" (text following Eqs. (12)-(13); the same quantile is
+    # reused verbatim for the "Important" cut-off in the guidelines list of
+    # Section 2.3). Throughout the paper, n denotes the number of *training
+    # samples* the model was fit on (e.g. "VACCINE data set with n = 50" in
+    # Section 3.6) -- not B, the number of bootstrap datasets (nbootstrap in
+    # this code; B = 300 for the paper's own experiments). This is confirmed
+    # numerically by the paper's own worked example: for the VACCINE
+    # dataset (n = 50 training samples, B = 300 bootstraps), the text reports
+    # the cut-off as "2.01 (t_{1-alpha/2,n-1})" -- which is qt(0.975, df = 49)
+    # = 2.0096, not qt(0.975, df = 299) = 1.9679.
+    #
+    # Because `element <- pls_vip_score_diff[k, ] / sd(pls_vip_score_diff[k, ])`
+    # standardizes each feature's difference vector to its own sample
+    # standard deviation, boots_vip_sd[k] (recomputed from `element` with the
+    # same n-1 estimator) is analytically always 1, so
+    # result$error[k] == qt(0.975, df = <whatever df is used>) exactly,
+    # independent of the (random) bootstrap data. This lets the two
+    # candidate degrees of freedom be told apart without any mocking.
+    skip_if_not_installed("mixOmics")
+    skip_if_not_installed("BiocParallel")
+
+    old_bpparam <- BiocParallel::bpparam()
+    BiocParallel::register(BiocParallel::SerialParam())
+    on.exit(BiocParallel::register(old_bpparam), add = TRUE)
+
+    set.seed(1)
+    n <- 20
+    p <- 4
+    y <- factor(rep(c("A", "B"), each = n / 2))
+    x <- matrix(rnorm(n * p), nrow = n, ncol = p)
+    colnames(x) <- paste0("V", seq_len(p))
+    x[y == "A", 1] <- x[y == "A", 1] + 8
+
+    metadata <- data.frame(
+        NMRExperiment = as.character(seq_len(n)),
+        Condition = y
+    )
+    dataset <- new_nmr_dataset_peak_table(
+        peak_table = x,
+        metadata = list(external = metadata)
+    )
+    train_index <- c(1:5, 11:15) # n_samples = 10, both classes in train and test
+    nbootstrap <- 20 # deliberately != n_samples, so the two df choices disagree
+
+    result <- suppressWarnings(bp_VIP_analysis(
+        dataset,
+        train_index,
+        y_column = "Condition",
+        ncomp = 1,
+        nbootstrap = nbootstrap
+    ))
+
+    n_samples <- length(train_index)
+    expected_error <- qt(0.975, df = n_samples - 1)
+    wrong_error <- qt(0.975, df = nbootstrap - 1)
+    expect_false(isTRUE(all.equal(expected_error, wrong_error)))
+    expect_equal(unname(result$error[, 1]), rep(expected_error, p))
+})
+
 test_that("bp_VIP_analysis shuffles each feature's own column when building its permutation baseline", {
     # Each feature's own values must be shuffled independently, not swapped
     # for another feature's values, or the permutation-importance baseline
