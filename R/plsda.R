@@ -339,8 +339,9 @@ choose_best_nlv_diagnostic_info <- function(inner_cv_results, nlv) {
         ggplot2::scale_y_continuous(name = "Area under ROC")
     
     list(
-        diagnostic_plot = plot_to_choose_nlv,
-        diagnostic_box_plot = box_plot
+        plot_to_choose_nlv = plot_to_choose_nlv,
+        box_plot = box_plot,
+        model_performances = model_performances
     )
 }
 
