@@ -400,18 +400,18 @@ test_that("bp_VIP_analysis shuffles each feature's own column when building its 
 
 test_that("bp_VIP_analysis recovers from a degenerate single-class bootstrap resample", {
     # Inside the bootstrap loop of bp_VIP_analysis(), if a bootstrap
-    # resample happens to contain only one class, the code recovers by
-    # swapping in one sample of the missing class from the (unbootstrapped)
-    # original y_train. To exercise this exact code path with the real
-    # function (not a reimplementation of it), we build a deliberately
-    # imbalanced train set (1 sample of class A, 4 of class B). Bootstrap
-    # resampling with replacement from 5 elements, only one of which is
-    # class A, has a per-iteration probability of ~(4/5)^5 = 32.8% of
-    # missing the lone A sample entirely (a degenerate, single-class
-    # resample). With nbootstrap = 10 draws, the probability of the
-    # degenerate branch firing at least once is 1 - 0.672^10 ~= 98%. We pin
-    # a seed (verified across 15 candidate seeds to all succeed) and assert
-    # the call completes without error.
+    # resample happens to contain only one class, the code redraws it (a
+    # fresh sample-with-replacement) until it contains more than one class,
+    # rather than patching a single element of the offending resample. To
+    # exercise this code path with the real function (not a reimplementation
+    # of it), we build a deliberately imbalanced train set (1 sample of
+    # class A, 4 of class B). Bootstrap resampling with replacement from 5
+    # elements, only one of which is class A, has a per-iteration
+    # probability of ~(4/5)^5 = 32.8% of missing the lone A sample entirely
+    # (a degenerate, single-class resample). With nbootstrap = 10 draws, the
+    # probability of the degenerate branch firing at least once is
+    # 1 - 0.672^10 ~= 98%. We pin a seed (verified across 15 candidate seeds
+    # to all succeed) and assert the call completes without error.
     skip_if_not_installed("mixOmics")
     skip_if_not_installed("BiocParallel")
 
@@ -453,18 +453,16 @@ test_that("bp_VIP_analysis recovers from a degenerate single-class bootstrap res
     expect_true(all(c("pls_vip", "relevant_vips") %in% names(result)))
 })
 
-test_that("bp_VIP_analysis's single-class recovery loop iterates over y_train's elements", {
-    # The recovery loop must iterate over each element of y_train, not treat
-    # it as a count: y_train is a factor/character vector, and seq_len()
-    # requires a scalar, so seq_len(y_train) would error.
+test_that("bp_VIP_analysis redraws a degenerate bootstrap resample instead of patching a single element", {
+    # Patching a single element of a degenerate resample (e.g. always
+    # overwriting position 1 with the first alternate-class sample found in
+    # y_train) would bias that position towards a fixed, non-random value
+    # instead of leaving the resample an unbiased draw with replacement.
+    # Guard against that pattern reappearing.
     body_txt <- paste(deparse(body(bp_VIP_analysis)), collapse = " ")
 
-    expect_true(
-        grepl("seq_along\\(y_train\\)", body_txt),
-        info = "Expected the recovery loop to iterate with seq_along(y_train)"
-    )
     expect_false(
-        grepl("seq_len\\(y_train\\)", body_txt),
-        info = "seq_len(y_train) requires a scalar count, not a vector"
+        grepl("x_train_boots\\[1, *\\] *<-", body_txt),
+        info = "A degenerate resample must be redrawn, not fixed up by patching a single row"
     )
 })

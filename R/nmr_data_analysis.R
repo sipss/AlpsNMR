@@ -676,19 +676,18 @@ bp_VIP_analysis <- function(dataset,
         seq_len(nbootstrap),
         function(i, x_train, y_train, ncomp) {
             num_features <- ncol(x_train)
-            index <- sample(seq_len(nrow(x_train)), nrow(x_train), replace = TRUE)
-            x_train_boots <- x_train[index, ]
-            y_train_boots <- y_train[index]
-
-            # if y_train_boots only have one class, plsda models give error
-            if (length(unique(y_train_boots)) == 1) {
-                # Replace the first element for the first element of another class
-                for (class_idx in seq_along(y_train)) {
-                    if (y_train[class_idx] != y_train_boots[1]) {
-                        y_train_boots[1] <- y_train[class_idx]
-                        x_train_boots[1, ] <- x_train[class_idx, ]
-                        break
-                    }
+            # A bootstrap resample can happen to draw only one class (plsda
+            # models require at least two); when that happens, redraw rather
+            # than patching a single element of the offending resample, which
+            # would bias every degenerate resample towards the same fixed
+            # (first-encountered) replacement sample instead of leaving the
+            # resample an unbiased draw with replacement.
+            repeat {
+                index <- sample(seq_len(nrow(x_train)), nrow(x_train), replace = TRUE)
+                x_train_boots <- x_train[index, ]
+                y_train_boots <- y_train[index]
+                if (length(unique(y_train_boots)) > 1) {
+                    break
                 }
             }
 
