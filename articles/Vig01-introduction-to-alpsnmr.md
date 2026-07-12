@@ -354,7 +354,7 @@ for more information.
 ``` r
 
 baselineThresh <- nmr_baseline_threshold(dataset, range_without_peaks = c(9.5, 10), method = "median3mad")
-nmr_baseline_threshold_plot(dataset, baselineThresh)
+nmr_baseline_threshold_plot(dataset, baselineThresh, chemshift_range = c(9.5, 10))
 ```
 
 ![](Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-19-1.png)
@@ -595,7 +595,7 @@ calculated:
 ``` r
 
 baselineThresh <- nmr_baseline_threshold(dataset_norm, range_without_peaks = c(9.5, 10), method = "median3mad")
-nmr_baseline_threshold_plot(dataset_norm, baselineThresh)
+nmr_baseline_threshold_plot(dataset_norm, baselineThresh, chemshift_range = c(9.5, 10))
 ```
 
 ![](Vig01-introduction-to-alpsnmr_files/figure-html/unnamed-chunk-35-1.png)

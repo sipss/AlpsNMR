@@ -2,15 +2,15 @@
 
 Estimates the threshold value for peak detection on an
 [nmr_dataset_1D](https://sipss.github.io/AlpsNMR/reference/nmr_dataset_1D.md)
-object by examining a range without peaks, by default the 9.5 - 10 ppm
-range.
+object by examining a range without peaks that you must provide (there
+is no ppm range guaranteed to be free of peaks for every sample type).
 
 ## Usage
 
 ``` r
 nmr_baseline_threshold(
   nmr_dataset,
-  range_without_peaks = c(9.5, 10),
+  range_without_peaks = NULL,
   method = c("mean3sd", "median3mad")
 )
 ```
@@ -25,7 +25,8 @@ nmr_baseline_threshold(
 - range_without_peaks:
 
   A vector with two doubles describing a range without peaks suitable
-  for baseline detection
+  for baseline detection. There is no such a range that works for every
+  sample type, so you must inspect your spectra and provide one.
 
 - method:
 
@@ -41,12 +42,12 @@ detected.
 Two methods can be used:
 
 - "mean3sd": The mean3sd method computes the mean and the standard
-  deviation of each spectrum in the 9.5 - 10 ppm range. The mean
-  spectrum and the mean standard deviation are both vectors of length
-  equal to the number of points in the given range. The mean of the mean
-  spectrum the noise. The threshold is defined as
-  `center + 3 dispersion`, and it is one single threshold for the whole
-  dataset. This is the default for backwards compatibility.
+  deviation of each spectrum in the given range. The mean spectrum and
+  the mean standard deviation are both vectors of length equal to the
+  number of points in the given range. The mean of the mean spectrum the
+  noise. The threshold is defined as `center + 3 dispersion`, and it is
+  one single threshold for the whole dataset. This is the default for
+  backwards compatibility.
 
 - "median3mad": First we take the data matrix. If we have estimated a
   baseline already, subtract it. In the defined region without peaks,
