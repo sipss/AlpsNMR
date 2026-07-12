@@ -466,3 +466,49 @@ test_that("bp_VIP_analysis redraws a degenerate bootstrap resample instead of pa
         info = "A degenerate resample must be redrawn, not fixed up by patching a single row"
     )
 })
+
+test_that("plot_vip_scores draws the importance threshold at df = n_samples - 1", {
+    # Afanador, Tran & Buydens (2013) place the "Important" cut-off at the
+    # quantile t_{1-alpha/2,n-1}, where n is the number of training samples the
+    # models were fit on -- not the number of bootstrap datasets. The threshold
+    # line must therefore use df = n_samples - 1.
+    skip_if_not_installed("ggplot2")
+
+    vip_means <- c(V1 = 3, V2 = 1, V3 = 0.2)
+    error <- 2
+    n_samples <- 12L
+
+    p <- plot_vip_scores(vip_means, error, n_samples = n_samples, plot = FALSE)
+
+    # Extract the y-intercept of the horizontal threshold line from the ggplot
+    # (geom_hline stores its yintercept in that layer's data frame):
+    hline_y <- NULL
+    for (ly in p$layers) {
+        d <- ly$data
+        if (is.data.frame(d) && "yintercept" %in% names(d)) {
+            hline_y <- d$yintercept
+        }
+    }
+    expect_false(is.null(hline_y))
+    expect_equal(hline_y, qt(0.975, df = n_samples - 1))
+    # The old (wrong) API took an `nbootstrap` argument used for this df:
+    expect_false("nbootstrap" %in% names(formals(plot_vip_scores)))
+    expect_true("n_samples" %in% names(formals(plot_vip_scores)))
+})
+
+test_that("bp_kfold_VIP_analysis assigns folds at random, not by a fixed modulo split", {
+    # The previous implementation shuffled a local copy of the data but then
+    # built the folds with split(x, x %% k) over the *unshuffled* index vector,
+    # so the partition was a deterministic modulo split and the shuffle was dead
+    # code. Folds must instead be a genuine random partition of the samples.
+    body_txt <- paste(deparse(body(bp_kfold_VIP_analysis)), collapse = " ")
+
+    expect_false(
+        grepl("%%", body_txt, fixed = TRUE),
+        info = "Folds must be a random partition, not a deterministic x %% k modulo split"
+    )
+    expect_true(
+        grepl("rep_len", body_txt, fixed = TRUE),
+        info = "Random fold assignment is expected to be built from sample(rep_len(...))"
+    )
+})

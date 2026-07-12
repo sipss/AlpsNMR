@@ -1,5 +1,17 @@
 # AlpsNMR (development version)
 
+- BP-VIP (`bp_kfold_VIP_analysis()`, `plot_vip_scores()`): the plotted
+  importance-threshold line now uses the correct degrees of freedom
+  `df = n_samples - 1` (number of training samples), matching the cut-off
+  quantile `t_{1-alpha/2,n-1}` in Afanador, Tran & Buydens (2013) and the
+  actual selection performed in `bp_VIP_analysis()`. Previously it used
+  `df = nbootstrap - 1`, so the drawn line did not correspond to the
+  threshold that selected the variables. **Breaking change**:
+  `plot_vip_scores()`'s `nbootstrap` argument has been renamed to `n_samples`.
+- `bp_kfold_VIP_analysis()`: fixed the k-fold partitioning, which assigned
+  samples to folds by a deterministic `x %% k` split while the intended
+  random shuffle was computed and then discarded (dead code). Folds are now a
+  genuine random partition of the samples.
 - `nmr_read_bruker_fid()`: fixed silent truncation of FID data to half its
   length (wrong byte-size divisor), and rewrote the function to determine
   byte order (`BYTORDA`), data type (`DTYPA`), and timing (`SW_h`, `TD`)

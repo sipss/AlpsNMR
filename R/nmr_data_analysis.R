@@ -915,23 +915,23 @@ bp_kfold_VIP_analysis <- function(dataset,
     }
 
     # Extract data and split for train and test
-    x_all <- dataset$peak_table
     y_all <- nmr_meta_get_column(dataset, column = y_column)
     if (length(unique(y_all)) == 1) {
         stop("Only one class in data set, at least two needed")
     }
 
-    # Random and spliting
-    x <- seq_len(length(y_all))
-    index <- sample(x, replace = FALSE)
-    x_all <- x_all[index, ]
-    y_all <- y_all[index]
-
-    # Split data for k-fold
-    k_fold_split <- split(x, x %% k)
+    # Randomly assign each sample to one of the k folds. `rep_len()` spreads the
+    # fold labels as evenly as possible and `sample()` shuffles them, so the
+    # partition is random and (nearly) balanced. The indices refer to the
+    # original dataset ordering, because bp_VIP_analysis() below reads the
+    # samples straight from `dataset` using these indices. Each fold in turn is
+    # held out as the test set, so k_fold_index[[i]] is its training set (every
+    # sample not in fold i).
+    n_all <- length(y_all)
+    fold_of_sample <- sample(rep_len(seq_len(k), n_all))
     k_fold_index <- list()
     for (i in seq_len(k)) {
-        k_fold_index[[i]] <- seq_len(length(y_all))[-k_fold_split[[i]]]
+        k_fold_index[[i]] <- which(fold_of_sample != i)
     }
 
     # bp_VIP_analysis is already parallellized.
@@ -961,6 +961,9 @@ bp_kfold_VIP_analysis <- function(dataset,
     ordered_means <- colSums(ordered_means) / k
     vip_means <- ordered_means[order(ordered_means, decreasing = TRUE)]
     error <- results[[1]]$error
+    # `error` (and hence the importance threshold line below) is taken from the
+    # first fold, so the cut-off must use that fold's training-sample count.
+    n_samples_fold1 <- length(k_fold_index[[1]])
 
     # Selection based on the means (deprecated, now ussing intersection of the vips)
     # important_vips <- vip_means[vip_means-2*error > 0]
@@ -998,7 +1001,7 @@ bp_kfold_VIP_analysis <- function(dataset,
             shape = 21,
             fill = "white"
         ) +
-        ggplot2::geom_hline(yintercept = qt(0.975, df = nbootstrap - 1)) +
+        ggplot2::geom_hline(yintercept = qt(0.975, df = n_samples_fold1 - 1)) +
         ggplot2::ggtitle("BP-VIP") +
         ggplot2::labs(x = "Variables", y = "Scores") +
         ggplot2::theme_bw()
@@ -1020,7 +1023,10 @@ bp_kfold_VIP_analysis <- function(dataset,
 #'
 #' @param vip_means vips means values of bootstraps
 #' @param error error tolerated, calculated in the bootstrap
-#' @param nbootstrap number of bootstraps realiced
+#' @param n_samples number of training samples the bootstrap models were fit on.
+#'    It sets the importance threshold line at `qt(0.975, df = n_samples - 1)`,
+#'    following Afanador, Tran & Buydens (2013), where the cut-off quantile
+#'    `t_{1-alpha/2,n-1}` uses n = number of samples (not the number of bootstraps).
 #' @param plot A boolean that indicate if results are plotted or not
 #'
 #' @return A plot of the results or a ggplot object
@@ -1070,9 +1076,9 @@ bp_kfold_VIP_analysis <- function(dataset,
 #'
 #' # plot_vip_scores(bp_results$kfold_results[[1]]$vip_means,
 #' #                bp_results$kfold_results[[1]]$error[1],
-#' #                nbootstrap = 10)
+#' #                n_samples = length(bp_results$kfold_index[[1]]))
 #'
-plot_vip_scores <- function(vip_means, error, nbootstrap, plot = TRUE) {
+plot_vip_scores <- function(vip_means, error, n_samples, plot = TRUE) {
 
     # Plot of the scores
     x <- seq_len(length(vip_means))
@@ -1091,7 +1097,7 @@ plot_vip_scores <- function(vip_means, error, nbootstrap, plot = TRUE) {
             shape = 21,
             fill = "white"
         ) +
-        ggplot2::geom_hline(yintercept = qt(0.975, df = nbootstrap - 1)) +
+        ggplot2::geom_hline(yintercept = qt(0.975, df = n_samples - 1)) +
         ggplot2::ggtitle("BP-VIP") +
         ggplot2::labs(x = "Variables", y = "Scores") +
         ggplot2::theme_bw()
