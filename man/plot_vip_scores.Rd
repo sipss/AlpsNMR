@@ -4,14 +4,17 @@
 \alias{plot_vip_scores}
 \title{Plot vip scores of bootstrap}
 \usage{
-plot_vip_scores(vip_means, error, nbootstrap, plot = TRUE)
+plot_vip_scores(vip_means, error, n_samples, plot = TRUE)
 }
 \arguments{
 \item{vip_means}{vips means values of bootstraps}
 
 \item{error}{error tolerated, calculated in the bootstrap}
 
-\item{nbootstrap}{number of bootstraps realiced}
+\item{n_samples}{number of training samples the bootstrap models were fit on.
+It sets the importance threshold line at \code{qt(0.975, df = n_samples - 1)},
+following Afanador, Tran & Buydens (2013), where the cut-off quantile
+\code{t_{1-alpha/2,n-1}} uses n = number of samples (not the number of bootstraps).}
 
 \item{plot}{A boolean that indicate if results are plotted or not}
 }
@@ -66,6 +69,6 @@ peak_table <- new_nmr_dataset_peak_table(
 
 # plot_vip_scores(bp_results$kfold_results[[1]]$vip_means,
 #                bp_results$kfold_results[[1]]$error[1],
-#                nbootstrap = 10)
+#                n_samples = length(bp_results$kfold_index[[1]]))
 
 }
