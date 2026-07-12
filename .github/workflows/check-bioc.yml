@@ -232,13 +232,17 @@ jobs:
         continue-on-error: true
         shell: Rscript {0}
 
-      - name: Install BiocStyle fork (pandoc >=3.8.1 uncaptioned-table counter fix)
+      - name: Install BiocStyle fork (pandoc and pkgdown compatibility fixes)
         run: |
-          ## Vignette builds fail with recent pandoc versions ("LaTeX Error: No
-          ## counter 'none' defined") because pandoc >=3.8.1 emits \LTcaptype{none}
-          ## for uncaptioned longtables, and BiocStyle's LaTeX template never
-          ## predefines that counter. Use zeehio/BiocStyle@my-fixes until the fix
-          ## lands upstream: https://github.com/Bioconductor/BiocStyle/pull/116
+          ## zeehio/BiocStyle@my-fixes carries two fixes not yet upstream:
+          ##  - pandoc >=3.8.1: vignette builds fail ("LaTeX Error: No counter
+          ##    'none' defined") because pandoc emits \LTcaptype{none} for
+          ##    uncaptioned longtables, and BiocStyle's LaTeX template never
+          ##    predefines that counter.
+          ##    https://github.com/Bioconductor/BiocStyle/pull/116
+          ##  - pkgdown: fixes BiocStyle/pkgdown interaction issues when
+          ##    building the pkgdown site (see the "Install pkgdown" step
+          ##    below, which re-installs this same fork defensively).
           remotes::install_github("zeehio/BiocStyle@my-fixes", force = TRUE)
         shell: Rscript {0}
 
@@ -270,7 +274,12 @@ jobs:
       - name: Install pkgdown
         if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
-          remotes::install_github("zeehio/BiocStyle@fix-biocstyle-with-pkgdown") # Fix BiocStyle - pkgdown interaction
+          ## zeehio/BiocStyle@my-fixes (already installed above for the pandoc
+          ## fix) also carries the pkgdown-compatibility fix, so both live on
+          ## the same branch now. Re-install defensively in case a future
+          ## dependency pass pulls in CRAN/Bioconductor BiocStyle and
+          ## overwrites it.
+          remotes::install_github("zeehio/BiocStyle@my-fixes", force = TRUE)
           remotes::install_cran("pkgdown")
         shell: Rscript {0}
 
