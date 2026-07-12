@@ -241,8 +241,12 @@ jobs:
           ##    predefines that counter.
           ##    https://github.com/Bioconductor/BiocStyle/pull/116
           ##  - pkgdown: fixes BiocStyle/pkgdown interaction issues when
-          ##    building the pkgdown site (see the "Install pkgdown" step
-          ##    below, which re-installs this same fork defensively).
+          ##    building the pkgdown site.
+          ## Installed once, here, for every run (not just the pkgdown-deploying
+          ## devel runs): later steps' dependency installs (e.g. "Install
+          ## dependencies pass 2", which runs with upgrade = TRUE) leave an
+          ## already-installed package alone once its version satisfies the
+          ## requirement, so this doesn't need to be re-installed later.
           remotes::install_github("zeehio/BiocStyle@my-fixes", force = TRUE)
         shell: Rscript {0}
 
@@ -274,12 +278,9 @@ jobs:
       - name: Install pkgdown
         if: github.ref == 'refs/heads/devel' && env.run_pkgdown == 'true' && runner.os == 'Linux'
         run: |
-          ## zeehio/BiocStyle@my-fixes (already installed above for the pandoc
-          ## fix) also carries the pkgdown-compatibility fix, so both live on
-          ## the same branch now. Re-install defensively in case a future
-          ## dependency pass pulls in CRAN/Bioconductor BiocStyle and
-          ## overwrites it.
-          remotes::install_github("zeehio/BiocStyle@my-fixes", force = TRUE)
+          ## The pkgdown-compatibility fix for BiocStyle is already installed
+          ## by the "Install BiocStyle fork" step above (zeehio/BiocStyle@my-fixes
+          ## covers both the pandoc and pkgdown fixes now).
           remotes::install_cran("pkgdown")
         shell: Rscript {0}
 
