@@ -106,7 +106,7 @@ models_stability_plot_plsda <- function(model) {
             direction = 1,
             na.value = "white"
         ) +
-        ggplot2::guides(fill = FALSE) + # removing legend for `fill`
+        ggplot2::guides(fill = "none") + # removing legend for `fill`
         ggplot2::labs(title = "Stability among models") + # using a title instead
         ggplot2::geom_text(
             ggplot2::aes(
@@ -234,7 +234,7 @@ models_stability_plot_bootstrap <- function(bp_results) {
             direction = 1,
             na.value = "white"
         ) +
-        ggplot2::guides(fill = FALSE) + # removing legend for `fill`
+        ggplot2::guides(fill = "none") + # removing legend for `fill`
         ggplot2::labs(title = "Stability among models") + # using a title instead
         ggplot2::geom_text(
             ggplot2::aes(
@@ -365,11 +365,11 @@ plot_bootstrap_multimodel <- function(bp_results, dataset, y_column, plot = TRUE
         ) +
             ggplot2::geom_hline(
                 yintercept = 0, linetype = "dashed",
-                color = "black", size = 0.5
+                color = "black", linewidth = 0.5
             ) +
             ggplot2::geom_vline(
                 xintercept = 0, linetype = "dashed",
-                color = "black", size = 0.5
+                color = "black", linewidth = 0.5
             ) +
             ggplot2::geom_point(ggplot2::aes(.data[["x"]], .data[["y"]]), size = 1.5) +
             ggplot2::ggtitle("PLS-DA") +
