@@ -431,7 +431,7 @@ sessionInfo()
     ## [25] textshaping_1.0.5   codetools_0.2-20    htmltools_0.5.9    
     ## [28] sass_0.4.10         yaml_2.3.12         pillar_1.11.1      
     ## [31] pkgdown_2.2.1       jquerylib_0.1.4     tidyr_1.3.2        
-    ## [34] MASS_7.3-65         BiocParallel_1.46.0 cachem_1.1.0       
+    ## [34] MASS_7.3-66         BiocParallel_1.46.0 cachem_1.1.0       
     ## [37] RSpectra_0.16-2     tidyselect_1.2.1    digest_0.6.39      
     ## [40] stringi_1.8.7       reshape2_1.4.5      purrr_1.2.2        
     ## [43] bookdown_0.47       labeling_0.4.3      fastmap_1.2.0      

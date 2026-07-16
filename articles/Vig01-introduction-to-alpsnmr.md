@@ -966,4 +966,4 @@ sessionInfo()
     ## [88] gtable_0.3.6           sass_0.4.10            digest_0.6.39         
     ## [91] progressr_1.0.0        ggrepel_0.9.8          htmlwidgets_1.6.4     
     ## [94] farver_2.1.2           htmltools_0.5.9        pkgdown_2.2.1         
-    ## [97] lifecycle_1.0.5        httr_1.4.8             MASS_7.3-65
+    ## [97] lifecycle_1.0.5        httr_1.4.8             MASS_7.3-66
