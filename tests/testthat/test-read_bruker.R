@@ -47,6 +47,37 @@ test_that("nmr_read_samples_dir names samples by parent directory when the same 
     expect_false(any(grepl("\\.\\.\\.", names(dataset))))
 })
 
+test_that("nmr_read_samples_dir disambiguates samples whose collision goes deeper than one directory level", {
+    # Regression test for https://github.com/sipss/AlpsNMR/issues/62: two
+    # samples can share not just the same leaf EXPNO name ("10") but also
+    # the same *immediate parent* name ("subject1"), while still being
+    # distinguishable a level further up ("groupA" vs "groupB"). A naming
+    # scheme that only prepends one parent directory level would still
+    # collide on "subject1/10" for both and fall back to the unreadable
+    # vctrs::vec_as_names() suffixes; create_sample_names() must walk up as
+    # many levels as needed instead.
+    dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+    zip_files <- fs::dir_ls(dir_to_demo_dataset, glob = "*.zip")[1:2]
+
+    study_root <- withr::local_tempdir()
+    group_names <- c("groupA", "groupB")
+    sample_dirs <- character(length(zip_files))
+    for (i in seq_along(zip_files)) {
+        subject_dir <- file.path(study_root, "study1", group_names[i], "subject1")
+        dir.create(subject_dir, recursive = TRUE)
+        utils::unzip(zip_files[i], exdir = subject_dir)
+        expno_dir <- list.dirs(subject_dir, recursive = FALSE)
+        file.rename(expno_dir, file.path(subject_dir, "10")) # force the same leaf name "10"
+        sample_dirs[i] <- subject_dir
+    }
+
+    dataset <- nmr_read_samples_dir(sample_dirs)
+
+    expect_equal(dataset$num_samples, length(zip_files))
+    expect_equal(sort(names(dataset)), sort(paste0(group_names, "/subject1/10")))
+    expect_false(any(grepl("\\.\\.\\.", names(dataset))))
+})
+
 test_that("create_sample_names returns good unique guesses", {
     sample_names <- c("a", "b")
     expect_equal(create_sample_names(sample_names), sample_names)
@@ -58,6 +89,17 @@ test_that("create_sample_names returns good unique guesses", {
     expect_equal(create_sample_names(sample_names), c("a", "b"))
     sample_names <- c("bar/a.zip", "foo/a.zip")
     expect_equal(create_sample_names(sample_names), c("bar/a", "foo/a"))
+    # A collision that only resolves two directory levels up: both the leaf
+    # ("10") and the immediate parent ("subject1") repeat, but a
+    # grandparent ("groupA"/"groupB") differs.
+    sample_names <- c(
+        "root/study1/groupA/subject1/10.zip",
+        "root/study1/groupB/subject1/10.zip"
+    )
+    expect_equal(
+        create_sample_names(sample_names),
+        c("groupA/subject1/10", "groupB/subject1/10")
+    )
 })
 
 test_that("read_orig_file() leaves an empty value for a key with no value", {
