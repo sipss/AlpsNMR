@@ -1,65 +1,49 @@
 # AlpsNMR (development version)
 
-- BP-VIP (`bp_kfold_VIP_analysis()`, `plot_vip_scores()`): the plotted
-  importance-threshold line now uses the correct degrees of freedom
-  `df = n_samples - 1` (number of training samples), matching the cut-off
-  quantile `t_{1-alpha/2,n-1}` in Afanador, Tran & Buydens (2013) and the
-  actual selection performed in `bp_VIP_analysis()`. Previously it used
-  `df = nbootstrap - 1`, so the drawn line did not correspond to the
-  threshold that selected the variables. **Breaking change**:
-  `plot_vip_scores()`'s `nbootstrap` argument has been renamed to `n_samples`.
-- `bp_kfold_VIP_analysis()`: fixed the k-fold partitioning, which assigned
-  samples to folds by a deterministic `x %% k` split while the intended
-  random shuffle was computed and then discarded (dead code). Folds are now a
-  genuine random partition of the samples.
-- `nmr_read_bruker_fid()`: fixed silent truncation of FID data to half its
-  length (wrong byte-size divisor), and rewrote the function to determine
-  byte order (`BYTORDA`), data type (`DTYPA`), and timing (`SW_h`, `TD`)
-  from the sample's `acqus` file instead of assuming little-endian 32-bit
-  integers. It now returns a data frame with `time_s` and `fid_complex`
-  columns instead of a raw interleaved numeric vector. **This is a breaking
-  change**: the `endian` argument has been removed (byte order is now
-  auto-detected) and the return type has changed.
-- `bp_VIP_analysis()`: a degenerate (single-class) bootstrap resample is now
-  redrawn (rejection sampling) instead of having one of its elements patched
-  with a fixed replacement. The old patch always used the same, non-random
-  sample, which introduced a systematic bias into a fraction of the
-  bootstrap replicates.
+## Breaking changes
+
+- `plot_vip_scores()`: `nbootstrap` argument renamed to `n_samples`, and its
+  threshold line now uses the correct degrees of freedom
+  (`df = n_samples - 1`), matching the selection `bp_VIP_analysis()` actually
+  performs.
+- `nmr_read_bruker_fid()`: `endian` argument removed (byte order is now
+  auto-detected from `acqus`), and it now returns a data frame with
+  `time_s`/`fid_complex` columns instead of a raw numeric vector. Also fixes
+  silent truncation of the FID to half its length.
 - `nmr_baseline_threshold()` / `nmr_baseline_threshold_plot()`:
   `range_without_peaks` / `chemshift_range` no longer default to `c(9.5, 10)`
-  ppm. There is no ppm range guaranteed to be free of peaks for every sample
-  type, so this must now be given explicitly; both functions abort with a
-  clear message if it's missing. **Breaking change**.
-- `read_bruker_param()`: fixed a wrong regex capture-group index that could
-  cause `subscript out of bounds` when a Bruker parameter file used the
-  one-line range-and-value vector format (e.g. `##$MYVEC= (0..2) 1 2 3`).
+  ppm; must now be given explicitly.
+
+## Bug fixes
+
+- `bp_kfold_VIP_analysis()`: fixed fold partitioning, which assigned samples
+  to folds with a deterministic `x %% k` split instead of the intended random
+  shuffle.
+- `bp_VIP_analysis()`: a degenerate (single-class) bootstrap resample is now
+  redrawn instead of being patched with a fixed, non-random replacement,
+  which biased a fraction of the bootstrap replicates.
+- `read_bruker_param()`: fixed a wrong regex capture-group index causing
+  `subscript out of bounds` on some Bruker parameter files.
 - `parse_title_file()`: fixed a `gsub()` call missing `perl = TRUE`, which
-  left trailing whitespace/semicolons untrimmed from Bruker pdata title
-  fields (e.g. `"John Doe "` instead of `"John Doe"`).
-- `choose_best_nlv()` (used by `plsda_auroc_vip_method()`): fixed a
-  key-name mismatch that made `diagnostic_plot`, `diagnostic_box_plot`, and
-  `model_performances` in `nmr_data_analysis()`'s result always `NULL`,
-  regardless of input, for every model built with `plsda_auroc_vip_method()`.
-  This only affected these diagnostic outputs, not the fitted models, their
-  predictions, or the number of latent variables selected.
+  left trailing whitespace untrimmed from Bruker pdata title fields.
+- `choose_best_nlv()`: fixed a key-name mismatch that made
+  `diagnostic_plot`, `diagnostic_box_plot`, and `model_performances` always
+  `NULL` for models built with `plsda_auroc_vip_method()`.
 - `models_stability_plot_plsda()` / `models_stability_plot_bootstrap()` /
-  `plot_bootstrap_multimodel()`: fixed two ggplot2 arguments deprecated
-  since ggplot2 3.3.4/3.4.0 (`guides(fill = FALSE)`, `size =` on
-  `geom_hline()`/`geom_vline()`) that emitted a warning on every call.
-- `create_sample_names()` (used by `nmr_read_samples()` /
-  `nmr_read_samples_dir()`): disambiguating samples that share the same
-  leaf directory name (e.g. the default Bruker EXPNO `10`) now strips the
-  full path prefix common to every sample, instead of only prepending one
-  parent directory level. Collisions more than one level deep are now
-  resolved with readable names instead of falling back to
-  `vctrs`-generated `...N` suffixes (#62).
-- Bumped several dependency version floors. Packages with a major-version
-  release in roughly the last year are pinned to the last minor release of
-  the *previous* major version, not the new one, to avoid forcing an
-  upgrade: `ggplot2 (>= 3.5.2)`, `fs (>= 1.6.7)`, `curl (>= 6.4.0)`,
-  `zip (>= 2.3.3)`, `progressr (>= 0.19.0)`. Most other `Imports`/`Suggests`
-  floors are refreshed to roughly their version from a year ago; several had
-  gone years without being updated, and a few had no floor at all.
+  `plot_bootstrap_multimodel()`: fixed two ggplot2 arguments deprecated since
+  ggplot2 3.3.4/3.4.0, which warned on every call.
+- `create_sample_names()`: disambiguates samples sharing a leaf directory
+  name (e.g. Bruker EXPNO `10`) by stripping the full common path prefix,
+  instead of only one parent level. Collisions more than one level deep now
+  get readable names instead of `vctrs`-generated `...N` suffixes (#62).
+
+## Other changes
+
+- Bumped several dependency version floors to roughly their versions from a
+  year ago. Packages with a recent major release are pinned to the last
+  minor of the previous major instead, to avoid forcing an upgrade:
+  `ggplot2 (>= 3.5.2)`, `fs (>= 1.6.7)`, `curl (>= 6.4.0)`, `zip (>= 2.3.3)`,
+  `progressr (>= 0.19.0)`.
 
 # AlpsNMR 4.11.1 (2025-09-24)
 
