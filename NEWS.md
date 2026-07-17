@@ -47,14 +47,20 @@
 
 ## Other changes
 
-- `download_MTBLS242()`: the SHA-256 of every downloaded file is now pinned
-  to `<dest_dir>/SHA256SUMS` the first time it is saved, and re-verified
-  against that pinned value on every later call that reuses a cached file
-  (including cache hits with `force = FALSE`), aborting with a clear error on
-  mismatch instead of silently reusing a corrupted or tampered file. This
-  does not protect the very first download of a file, since MetaboLights
-  does not publish a canonical checksum for it to be verified against (#72).
-  Adds `digest` as a new `Suggests` dependency.
+- `download_MTBLS242()`: now downloads the dataset over HTTPS instead of
+  plain, unauthenticated FTP (EBI mirrors the same file tree at
+  `https://ftp.ebi.ac.uk/...`), and verifies every freshly downloaded file
+  against the canonical SHA-256 checksums MetaboLights publishes for
+  MTBLS242 (`<url>/HASHES/{metadata,data}_sha256.json`), aborting with a
+  clear error on mismatch instead of silently accepting a corrupted or
+  tampered file. As a fallback for when that manifest can't be fetched, the
+  SHA-256 of every downloaded file is also pinned to
+  `<dest_dir>/SHA256SUMS` the first time it is saved and re-verified on
+  every later call that reuses a cached file (#72). Also fixes the sample
+  data URLs, which 404'd against the current server layout (missing a
+  `FILES/` path segment) and metadata filename casing
+  (`s_mtbls242.txt` vs. the server's `s_MTBLS242.txt`).
+  Adds `digest` and `jsonlite` as new `Suggests` dependencies.
 - Bumped several dependency version floors to roughly their versions from a
   year ago. Packages with a recent major release are pinned to the last
   minor of the previous major instead, to avoid forcing an upgrade:

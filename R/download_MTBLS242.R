@@ -23,17 +23,20 @@
 #' download function and it will restart from where it stopped.
 #' 
 #' Note as well, that we observed several files to have incorrect data:
-#' - Obs4_0346s.zip is not present in the FTP server
+#' - Obs4_0346s.zip is not present on the server
 #' - Obs0_0110s.zip and Obs1_0256s.zip incorrectly contain sample Obs1_0010s
 #' 
 #' This function removes all three samples from the samples annotations and
 #' doesn't download their data.
 #' 
 #' 
-#' @param dest_dir Directory where the dataset should be saved. The SHA-256
-#' checksum of every downloaded file is pinned to `<dest_dir>/SHA256SUMS` the
-#' first time it is saved, and re-verified on every later call that reuses a
-#' cached file, so local corruption or tampering between calls is detected.
+#' @param dest_dir Directory where the dataset should be saved. Every freshly
+#' downloaded file is verified against the canonical SHA-256 checksums
+#' MetaboLights publishes for MTBLS242. As a fallback for when that manifest
+#' cannot be fetched, the SHA-256 of every downloaded file is also pinned to
+#' `<dest_dir>/SHA256SUMS` the first time it is saved, and re-verified on
+#' every later call that reuses a cached file, so local corruption or
+#' tampering between calls is detected either way.
 #' @param force Logical. If `TRUE` we do not re-download files if they exist. The function does not check whether cached versions were
 #' downloaded with different `keep_only_*` arguments, so please use `force = TRUE` if you change the `keep_only_*` settings.
 #' `force = TRUE` also re-downloads and re-pins the checksum of every file, rather than
@@ -61,27 +64,38 @@ download_MTBLS242 <- function(
         keep_only_preop_and_3months = TRUE,
         keep_only_complete_time_points = TRUE
     ) {
-    require_pkgs(pkg = c("curl", "zip", "digest"))
-    # NOTE (security): this dataset is fetched over plain, unauthenticated FTP.
-    # MetaboLights' public API and its FTP server do not publish a canonical
-    # checksum for these files, so a freshly downloaded file cannot be verified
-    # against a hash obtained from the data provider itself: a network-position
-    # attacker or a compromised mirror could still tamper with the very first
-    # download of a given file undetected.
-    # What we *can* guarantee is integrity across runs: the SHA-256 of every
-    # downloaded file is pinned to `<dest_dir>/SHA256SUMS` the first time it is
-    # saved, and is re-verified against that pinned value on every later call
-    # that reuses the cached file (including cache hits with `force = FALSE`).
-    # This reliably detects local corruption or tampering of previously
-    # downloaded files and aborts loudly; pass `force = TRUE` to intentionally
-    # re-download and re-pin a file.
-    url <- "ftp://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242/"
+    require_pkgs(pkg = c("curl", "zip", "digest", "jsonlite"))
+    # NOTE (security): this dataset used to be fetched over plain, unauthenticated
+    # FTP. EBI also mirrors the very same MTBLS242 file tree over HTTPS, so we now
+    # fetch everything over HTTPS instead: the transfer itself is encrypted and the
+    # server is authenticated via the usual TLS certificate chain, closing the
+    # original "a network-position attacker could alter the data in transit"
+    # concern for the download itself.
+    # On top of that, EBI publishes canonical SHA-256 checksums for MTBLS242's
+    # metadata and per-sample data files at `<url>/HASHES/{metadata,data}_sha256.json`
+    # (also served over HTTPS). Every freshly downloaded file is verified against
+    # those provider-published hashes right after download, before any local
+    # extraction/repacking, and the function aborts loudly on a mismatch instead of
+    # silently accepting a corrupted or tampered file.
+    # If that canonical manifest cannot be fetched (e.g. a transient network issue),
+    # we fall back to a local safety net: the SHA-256 of every file that persists on
+    # disk (`<dest_dir>/SHA256SUMS`) is pinned the first time it is seen and
+    # re-verified on every later call that reuses the cached file (including cache
+    # hits with `force = FALSE`), which still catches local corruption or tampering
+    # between calls even without a canonical source. This local pin cannot verify a
+    # file's very first download; pass `force = TRUE` to intentionally re-download
+    # and re-verify/re-pin a file.
+    url <- "https://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242"
+    canonical_hashes <- fetch_canonical_checksums(url)
 
     dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
 
-    # Download metadata file s_mtbls242.txt
+    # Download metadata file (the file is actually named "s_MTBLS242.txt" on the
+    # server; we keep saving it locally as lowercase "s_mtbls242.txt" for backwards
+    # compatibility with previously downloaded caches).
+    remote_meta_file <- "s_MTBLS242.txt"
     meta_file <- "s_mtbls242.txt"
-    meta_url <- file.path(url, meta_file)
+    meta_url <- file.path(url, remote_meta_file)
 
     # meta_dst <- file.path(dest_dir, meta_file)
     # utils::download.file(meta_url, method = "auto", destfile = meta_dst, mode = "wb")
@@ -91,6 +105,7 @@ download_MTBLS242 <- function(
     if (!file.exists(annotations_orig_destfile) || force) {
         cli::cli_inform(c("i" = "Downloading sample annotations..."))
         curl_download_retry(url = meta_url, destfile = annotations_orig_destfile)
+        verify_canonical_checksum(annotations_orig_destfile, canonical_hashes, remote_meta_file)
     }
     verify_or_pin_checksum(dest_dir, annotations_orig_destfile, meta_file)
     if (!file.exists(annotations_destfile) || force) {
@@ -131,7 +146,7 @@ download_MTBLS242 <- function(
         sample_annot <- dplyr::filter(sample_annot, .data$NMRExperiment != "Obs0_0110s")
         # File Obs1_0256s.zip incorrectly contains Obs1_0010s. Remove that ID
         sample_annot <- dplyr::filter(sample_annot, .data$NMRExperiment != "Obs1_0256s")
-        # File Obs4_0346s.zip does not exist in the FTP server, remove that entry:
+        # File Obs4_0346s.zip does not exist on the server, remove that entry:
         sample_annot <- dplyr::filter(sample_annot, .data$NMRExperiment != "Obs4_0346s")
 
         
@@ -167,9 +182,10 @@ download_MTBLS242 <- function(
     report_skipped_downloads <- FALSE
     purrr::walk(
         sample_annot$NMRExperiment,
-        function(filename_base, url, dst_rootdir, dest_dir, keep_only_CPMG_1r) {
+        function(filename_base, url, dst_rootdir, dest_dir, keep_only_CPMG_1r, canonical_hashes) {
             filename <- paste0(filename_base, ".zip")
-            src_url <- file.path(url, filename)
+            src_url <- file.path(url, "FILES", filename)
+            canonical_key <- paste0("FILES/", filename)
             final_dst_file <- file.path(dst_rootdir, filename)
             intermediate_dst_file <- file.path(dst_rootdir, paste0(filename, "intermediate.zip"))
             if (file.exists(final_dst_file) && !force) {
@@ -181,6 +197,10 @@ download_MTBLS242 <- function(
                 return()
             }
             curl_download_retry(url = src_url, destfile = intermediate_dst_file)
+            # Verify the raw download against MetaboLights' published checksum
+            # before touching it any further (extraction/repacking below would
+            # otherwise obscure whether the *downloaded* bytes were intact).
+            verify_canonical_checksum(intermediate_dst_file, canonical_hashes, canonical_key)
             if (!keep_only_CPMG_1r) {
                 file.rename(intermediate_dst_file, final_dst_file)
                 verify_or_pin_checksum(dest_dir, final_dst_file, fs::path_rel(final_dst_file, dest_dir))
@@ -230,6 +250,7 @@ download_MTBLS242 <- function(
         dst_rootdir = dst_rootdir,
         dest_dir = dest_dir,
         keep_only_CPMG_1r = keep_only_CPMG_1r,
+        canonical_hashes = canonical_hashes,
         .progress = "Downloading and preparing samples..."
     )
     invisible(sample_annot)
@@ -274,6 +295,55 @@ sha256_file <- function(path) {
     digest::digest(path, algo = "sha256", file = TRUE)
 }
 
+# Fetches the SHA-256 checksums MetaboLights publishes for MTBLS242's
+# metadata and per-sample data files (`<url>/HASHES/{metadata,data}_sha256.json`)
+# and returns them merged into a single character vector of hashes named by
+# their path relative to `url` (e.g. "s_MTBLS242.txt", "FILES/Obs0_0001s.zip").
+# Returns NULL (with a warning) if the manifest cannot be fetched, so callers
+# can fall back to a weaker, local-only integrity check.
+fetch_canonical_checksums <- function(url) {
+    tmp_metadata <- tempfile(fileext = ".json")
+    tmp_data <- tempfile(fileext = ".json")
+    on.exit(unlink(c(tmp_metadata, tmp_data)))
+    tryCatch({
+        curl_download_retry(url = file.path(url, "HASHES", "metadata_sha256.json"), destfile = tmp_metadata)
+        curl_download_retry(url = file.path(url, "HASHES", "data_sha256.json"), destfile = tmp_data)
+        c(
+            unlist(jsonlite::fromJSON(tmp_metadata)),
+            unlist(jsonlite::fromJSON(tmp_data))
+        )
+    }, error = function(e) {
+        cli::cli_warn(c(
+            "!" = "Could not fetch the SHA-256 checksums MetaboLights publishes for MTBLS242 ({conditionMessage(e)}).",
+            "i" = "Downloaded files will only be checked for integrity across runs, not verified against the data provider on first download."
+        ))
+        NULL
+    })
+}
+
+# Verifies `file`'s SHA-256 against the canonical hash MetaboLights published
+# for `canonical_key`, if one was fetched. Silently does nothing if no
+# canonical manifest is available, or if it has no entry for `canonical_key`.
+verify_canonical_checksum <- function(file, canonical_hashes, canonical_key) {
+    if (is.null(canonical_hashes)) {
+        return(invisible(NULL))
+    }
+    canonical <- unname(canonical_hashes[canonical_key])
+    if (is.na(canonical)) {
+        return(invisible(NULL))
+    }
+    actual <- sha256_file(file)
+    if (!identical(actual, canonical)) {
+        cli::cli_abort(c(
+            "x" = "Checksum mismatch for {.file {file}}.",
+            "i" = "Expected SHA-256 {.val {canonical}}, published by MetaboLights for {.val {canonical_key}}, but got {.val {actual}}.",
+            "i" = "The downloaded file does not match the data provider's checksum and may have been corrupted or tampered with in transit.",
+            "i" = "Try downloading it again."
+        ))
+    }
+    invisible(actual)
+}
+
 checksum_manifest_path <- function(dest_dir) {
     file.path(dest_dir, "SHA256SUMS")
 }
@@ -301,12 +371,14 @@ write_checksum_manifest_entry <- function(dest_dir, relative_path, sha256) {
     writeLines(lines, checksum_manifest_path(dest_dir))
 }
 
-# Pins the SHA-256 of `file` (recorded under `relative_path`, relative to
-# `dest_dir`) to `<dest_dir>/SHA256SUMS` the first time it is seen, and
-# verifies `file` against that pinned value on every later call that reuses
-# the cached file. See the NOTE (security) comment in download_MTBLS242()
-# for why this cannot verify the very first download against a hash obtained
-# from the data provider.
+# Local-only fallback layer (see verify_canonical_checksum() for the
+# provider-verified one): pins the SHA-256 of `file` (recorded under
+# `relative_path`, relative to `dest_dir`) to `<dest_dir>/SHA256SUMS` the
+# first time it is seen, and verifies `file` against that pinned value on
+# every later call that reuses the cached file. This has no canonical source
+# to compare against (e.g. a locally repacked, CPMG-only archive has no
+# provider-published hash of its own), so it cannot catch tampering with a
+# file's very first download the way verify_canonical_checksum() can.
 verify_or_pin_checksum <- function(dest_dir, file, relative_path) {
     manifest <- read_checksum_manifest(dest_dir)
     actual <- sha256_file(file)

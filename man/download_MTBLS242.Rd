@@ -13,10 +13,13 @@ download_MTBLS242(
 )
 }
 \arguments{
-\item{dest_dir}{Directory where the dataset should be saved. The SHA-256
-checksum of every downloaded file is pinned to \verb{<dest_dir>/SHA256SUMS} the
-first time it is saved, and re-verified on every later call that reuses a
-cached file, so local corruption or tampering between calls is detected.}
+\item{dest_dir}{Directory where the dataset should be saved. Every freshly
+downloaded file is verified against the canonical SHA-256 checksums
+MetaboLights publishes for MTBLS242. As a fallback for when that manifest
+cannot be fetched, the SHA-256 of every downloaded file is also pinned to
+\verb{<dest_dir>/SHA256SUMS} the first time it is saved, and re-verified on
+every later call that reuses a cached file, so local corruption or
+tampering between calls is detected either way.}
 
 \item{force}{Logical. If \code{TRUE} we do not re-download files if they exist. The function does not check whether cached versions were
 downloaded with different \verb{keep_only_*} arguments, so please use \code{force = TRUE} if you change the \verb{keep_only_*} settings.
@@ -61,7 +64,7 @@ download function and it will restart from where it stopped.
 
 Note as well, that we observed several files to have incorrect data:
 \itemize{
-\item Obs4_0346s.zip is not present in the FTP server
+\item Obs4_0346s.zip is not present on the server
 \item Obs0_0110s.zip and Obs1_0256s.zip incorrectly contain sample Obs1_0010s
 }
 

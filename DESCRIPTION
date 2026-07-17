@@ -102,6 +102,7 @@ Suggests:
     GGally (>= 2.2.1),
     ggrepel (>= 0.9.6),
     gridExtra (>= 2.3),
+    jsonlite (>= 1.8.9),
     knitr (>= 1.50),
     NMRphasing (>= 1.0.7),
     plotly (>= 4.11.0),
