@@ -106,8 +106,9 @@ for peaks.}
 \itemize{
 \item A numeric vector of length the number of samples. Each number is a threshold for that sample
 \item A single number. All samples use this number as baseline threshold.
-\item \code{NULL}. If that's the case, a default function is used (\code{\link[=nmr_baseline_threshold]{nmr_baseline_threshold()}}), which assumes
-that there is no signal in the region 9.5-10 ppm.
+\item \code{NULL}. If that's the case, a default function is used (\code{\link[=nmr_baseline_threshold]{nmr_baseline_threshold()}}) with the
+given \code{range_without_peaks}. There is no ppm range guaranteed to be free of peaks for every
+sample type, so \code{range_without_peaks} must be given when \code{baselineThresh} is \code{NULL}.
 }}
 
 \item{SNR.Th}{The parameter of peakDetectionCWT function of MassSpecWavelet package, look it up in the original function. If you set -1, the function will itself re-compute this value.}

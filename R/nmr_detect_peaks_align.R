@@ -93,10 +93,12 @@ NULL
 #' @param baselineThresh All peaks with intensities below the thresholds are excluded. Either:
 #'   - A numeric vector of length the number of samples. Each number is a threshold for that sample
 #'   - A single number. All samples use this number as baseline threshold.
-#'   - `NULL`. If that's the case, a default function is used ([nmr_baseline_threshold()]), which assumes 
-#'     that there is no signal in the region 9.5-10 ppm. 
+#'   - `NULL`. If that's the case, a default function is used ([nmr_baseline_threshold()]) with the
+#'     given `range_without_peaks`. There is no ppm range guaranteed to be free of peaks for every
+#'     sample type, so `range_without_peaks` must be given when `baselineThresh` is `NULL`.
 #' @inheritParams speaq::detectSpecPeaks
-#' @param range_without_peaks A numeric vector of length two with a region without peaks, only used when `baselineThresh = NULL`
+#' @param range_without_peaks A numeric vector of length two with a region without peaks.
+#'     Required when `baselineThresh = NULL`, ignored otherwise.
 #' @param fit_lorentzians If `TRUE`, fit a lorentzian to each detected peak, to infer its inflection points. For now disabled for backwards compatibility.
 #' @param verbose Logical (`TRUE` or `FALSE`). Show informational messages, such as the estimated baseline
 #' @return A data frame with the NMRExperiment, the sample index, the position
@@ -108,10 +110,19 @@ nmr_detect_peaks <- function(nmr_dataset,
     scales = seq(1, 16, 2),
     baselineThresh = NULL,
     SNR.Th = 3,
-    range_without_peaks = c(9.5, 10),
+    range_without_peaks = NULL,
     fit_lorentzians = FALSE,
     verbose = FALSE) {
     nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
+    if (is.null(baselineThresh) && is.null(range_without_peaks)) {
+        rlang::abort(
+            message = c(
+                "Either baselineThresh or range_without_peaks must be given",
+                "i" = "There is no ppm range guaranteed to be free of peaks for every sample type.",
+                "i" = "Pass range_without_peaks (a two-value ppm range known to be free of peaks for your samples) to estimate baselineThresh automatically, or pass baselineThresh directly."
+            )
+        )
+    }
 
     # Convert ppm to number of data points
     ppm_resolution <- stats::median(diff(nmr_dataset$axis))
