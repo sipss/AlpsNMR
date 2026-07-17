@@ -20,6 +20,46 @@
   columns instead of a raw interleaved numeric vector. **This is a breaking
   change**: the `endian` argument has been removed (byte order is now
   auto-detected) and the return type has changed.
+- `bp_VIP_analysis()`: a degenerate (single-class) bootstrap resample is now
+  redrawn (rejection sampling) instead of having one of its elements patched
+  with a fixed replacement. The old patch always used the same, non-random
+  sample, which introduced a systematic bias into a fraction of the
+  bootstrap replicates.
+- `nmr_baseline_threshold()` / `nmr_baseline_threshold_plot()`:
+  `range_without_peaks` / `chemshift_range` no longer default to `c(9.5, 10)`
+  ppm. There is no ppm range guaranteed to be free of peaks for every sample
+  type, so this must now be given explicitly; both functions abort with a
+  clear message if it's missing. **Breaking change**.
+- `read_bruker_param()`: fixed a wrong regex capture-group index that could
+  cause `subscript out of bounds` when a Bruker parameter file used the
+  one-line range-and-value vector format (e.g. `##$MYVEC= (0..2) 1 2 3`).
+- `parse_title_file()`: fixed a `gsub()` call missing `perl = TRUE`, which
+  left trailing whitespace/semicolons untrimmed from Bruker pdata title
+  fields (e.g. `"John Doe "` instead of `"John Doe"`).
+- `choose_best_nlv()` (used by `plsda_auroc_vip_method()`): fixed a
+  key-name mismatch that made `diagnostic_plot`, `diagnostic_box_plot`, and
+  `model_performances` in `nmr_data_analysis()`'s result always `NULL`,
+  regardless of input, for every model built with `plsda_auroc_vip_method()`.
+  This only affected these diagnostic outputs, not the fitted models, their
+  predictions, or the number of latent variables selected.
+- `models_stability_plot_plsda()` / `models_stability_plot_bootstrap()` /
+  `plot_bootstrap_multimodel()`: fixed two ggplot2 arguments deprecated
+  since ggplot2 3.3.4/3.4.0 (`guides(fill = FALSE)`, `size =` on
+  `geom_hline()`/`geom_vline()`) that emitted a warning on every call.
+- `create_sample_names()` (used by `nmr_read_samples()` /
+  `nmr_read_samples_dir()`): disambiguating samples that share the same
+  leaf directory name (e.g. the default Bruker EXPNO `10`) now strips the
+  full path prefix common to every sample, instead of only prepending one
+  parent directory level. Collisions more than one level deep are now
+  resolved with readable names instead of falling back to
+  `vctrs`-generated `...N` suffixes (#62).
+- Bumped several dependency version floors. Packages with a major-version
+  release in roughly the last year are pinned to the last minor release of
+  the *previous* major version, not the new one, to avoid forcing an
+  upgrade: `ggplot2 (>= 3.5.2)`, `fs (>= 1.6.7)`, `curl (>= 6.4.0)`,
+  `zip (>= 2.3.3)`, `progressr (>= 0.19.0)`. Most other `Imports`/`Suggests`
+  floors are refreshed to roughly their version from a year ago; several had
+  gone years without being updated, and a few had no floor at all.
 
 # AlpsNMR 4.11.1 (2025-09-24)
 
