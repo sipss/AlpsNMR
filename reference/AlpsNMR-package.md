@@ -86,6 +86,8 @@ my_nmr_dataset <- dataset %>%
     nmr_normalize(method = "pqn") %>%
     plot()
 #> Warning: There are not enough samples for reliably estimating the median spectra
-#> ℹ The Probabalistic Quotient Normalization requires several samples to compute the median spectra. Your number of samples is low
-#> ℹ Review your peaks before and after normalization to ensure there are no big distortions
+#> ℹ The Probabalistic Quotient Normalization requires several samples to compute
+#>   the median spectra. Your number of samples is low
+#> ℹ Review your peaks before and after normalization to ensure there are no big
+#>   distortions
 ```

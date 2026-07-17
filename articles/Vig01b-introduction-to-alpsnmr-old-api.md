@@ -402,8 +402,10 @@ median spectra. Nevertheless, it is possible to compute it:
 
 dataset_norm <- nmr_normalize(dataset_align, method = "pqn")
 #> Warning: There are not enough samples for reliably estimating the median spectra
-#> ℹ The Probabalistic Quotient Normalization requires several samples to compute the median spectra. Your number of samples is low
-#> ℹ Review your peaks before and after normalization to ensure there are no big distortions
+#> ℹ The Probabalistic Quotient Normalization requires several samples to compute
+#>   the median spectra. Your number of samples is low
+#> ℹ Review your peaks before and after normalization to ensure there are no big
+#>   distortions
 ```
 
 The `AlpsNMR` package offers the possibility to extract additional

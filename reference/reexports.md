@@ -10,7 +10,7 @@ to see their documentation.
 
 - generics:
 
-  [`tidy()`](https://rdrr.io/pkg/generics/man/tidy.html)
+  [`tidy()`](https://generics.r-lib.org/reference/tidy.html)
 
 - magrittr:
 
