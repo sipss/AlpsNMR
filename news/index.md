@@ -2,33 +2,76 @@
 
 ## AlpsNMR (development version)
 
-- BP-VIP
-  ([`bp_kfold_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_kfold_VIP_analysis.md),
-  [`plot_vip_scores()`](https://sipss.github.io/AlpsNMR/reference/plot_vip_scores.md)):
-  the plotted importance-threshold line now uses the correct degrees of
-  freedom `df = n_samples - 1` (number of training samples), matching
-  the cut-off quantile `t_{1-alpha/2,n-1}` in Afanador, Tran &
-  Buydens (2013) and the actual selection performed in
-  [`bp_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_VIP_analysis.md).
-  Previously it used `df = nbootstrap - 1`, so the drawn line did not
-  correspond to the threshold that selected the variables. **Breaking
-  change**:
-  [`plot_vip_scores()`](https://sipss.github.io/AlpsNMR/reference/plot_vip_scores.md)’s
-  `nbootstrap` argument has been renamed to `n_samples`.
-- [`bp_kfold_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_kfold_VIP_analysis.md):
-  fixed the k-fold partitioning, which assigned samples to folds by a
-  deterministic `x %% k` split while the intended random shuffle was
-  computed and then discarded (dead code). Folds are now a genuine
-  random partition of the samples.
+### Breaking changes
+
+- [`plot_vip_scores()`](https://sipss.github.io/AlpsNMR/reference/plot_vip_scores.md):
+  `nbootstrap` argument renamed to `n_samples`, and its threshold line
+  now uses the correct degrees of freedom (`df = n_samples - 1`),
+  matching the selection
+  [`bp_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_VIP_analysis.md)
+  actually performs.
 - [`nmr_read_bruker_fid()`](https://sipss.github.io/AlpsNMR/reference/nmr_read_bruker_fid.md):
-  fixed silent truncation of FID data to half its length (wrong
-  byte-size divisor), and rewrote the function to determine byte order
-  (`BYTORDA`), data type (`DTYPA`), and timing (`SW_h`, `TD`) from the
-  sample’s `acqus` file instead of assuming little-endian 32-bit
-  integers. It now returns a data frame with `time_s` and `fid_complex`
-  columns instead of a raw interleaved numeric vector. **This is a
-  breaking change**: the `endian` argument has been removed (byte order
-  is now auto-detected) and the return type has changed.
+  `endian` argument removed (byte order is now auto-detected from
+  `acqus`), and it now returns a data frame with `time_s`/`fid_complex`
+  columns instead of a raw numeric vector. Also fixes silent truncation
+  of the FID to half its length.
+- [`nmr_baseline_threshold()`](https://sipss.github.io/AlpsNMR/reference/nmr_baseline_threshold.md)
+  /
+  [`nmr_baseline_threshold_plot()`](https://sipss.github.io/AlpsNMR/reference/nmr_baseline_threshold_plot.md):
+  `range_without_peaks` / `chemshift_range` no longer default to
+  `c(9.5, 10)` ppm; must now be given explicitly.
+- [`nmr_detect_peaks()`](https://sipss.github.io/AlpsNMR/reference/nmr_detect_peaks.md):
+  `range_without_peaks` no longer defaults to `c(9.5, 10)` ppm either;
+  either it or `baselineThresh` must now be given, or the call aborts
+  with a clear message instead of failing deep inside with a confusing
+  one ([\#66](https://github.com/sipss/AlpsNMR/issues/66)).
+
+### Bug fixes
+
+- [`bp_kfold_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_kfold_VIP_analysis.md):
+  fixed fold partitioning, which assigned samples to folds with a
+  deterministic `x %% k` split instead of the intended random shuffle.
+- [`bp_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_VIP_analysis.md):
+  a degenerate (single-class) bootstrap resample is now redrawn instead
+  of being patched with a fixed, non-random replacement, which biased a
+  fraction of the bootstrap replicates.
+- `read_bruker_param()`: fixed a wrong regex capture-group index causing
+  `subscript out of bounds` on some Bruker parameter files.
+- `parse_title_file()`: fixed a
+  [`gsub()`](https://rdrr.io/r/base/grep.html) call missing
+  `perl = TRUE`, which left trailing whitespace untrimmed from Bruker
+  pdata title fields.
+- `choose_best_nlv()`: fixed a key-name mismatch that made
+  `diagnostic_plot`, `diagnostic_box_plot`, and `model_performances`
+  always `NULL` for models built with
+  [`plsda_auroc_vip_method()`](https://sipss.github.io/AlpsNMR/reference/plsda_auroc_vip_method.md).
+- [`models_stability_plot_plsda()`](https://sipss.github.io/AlpsNMR/reference/models_stability_plot_plsda.md)
+  /
+  [`models_stability_plot_bootstrap()`](https://sipss.github.io/AlpsNMR/reference/models_stability_plot_bootstrap.md)
+  /
+  [`plot_bootstrap_multimodel()`](https://sipss.github.io/AlpsNMR/reference/plot_bootstrap_multimodel.md):
+  fixed two ggplot2 arguments deprecated since ggplot2 3.3.4/3.4.0,
+  which warned on every call.
+- `create_sample_names()`: disambiguates samples sharing a leaf
+  directory name (e.g. Bruker EXPNO `10`) by stripping the full common
+  path prefix, instead of only one parent level. Collisions more than
+  one level deep now get readable names instead of `vctrs`-generated
+  `...N` suffixes ([\#62](https://github.com/sipss/AlpsNMR/issues/62)).
+- [`tidy.nmr_dataset_1D()`](https://sipss.github.io/AlpsNMR/reference/tidy.nmr_dataset_1D.md)
+  (and thus [`plot()`](https://rdrr.io/r/graphics/plot.default.html) /
+  [`nmr_baseline_threshold_plot()`](https://sipss.github.io/AlpsNMR/reference/nmr_baseline_threshold_plot.md)):
+  an unknown `NMRExperiment` value now warns and is excluded (if some
+  values are valid) or errors (if none are), instead of silently
+  returning rows with `NA` intensities
+  ([\#69](https://github.com/sipss/AlpsNMR/issues/69)).
+
+### Other changes
+
+- Bumped several dependency version floors to roughly their versions
+  from a year ago. Packages with a recent major release are pinned to
+  the last minor of the previous major instead, to avoid forcing an
+  upgrade: `ggplot2 (>= 3.5.2)`, `fs (>= 1.6.7)`, `curl (>= 6.4.0)`,
+  `zip (>= 2.3.3)`, `progressr (>= 0.19.0)`.
 
 ## AlpsNMR 4.11.1 (2025-09-24)
 

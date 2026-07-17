@@ -40,12 +40,41 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="alpsnmr-development-version">AlpsNMR (development version)<a class="anchor" aria-label="anchor" href="#alpsnmr-development-version"></a></h2>
-<ul><li>BP-VIP (<code><a href="../reference/bp_kfold_VIP_analysis.html">bp_kfold_VIP_analysis()</a></code>, <code><a href="../reference/plot_vip_scores.html">plot_vip_scores()</a></code>): the plotted importance-threshold line now uses the correct degrees of freedom <code>df = n_samples - 1</code> (number of training samples), matching the cut-off quantile <code>t_{1-alpha/2,n-1}</code> in Afanador, Tran &amp; Buydens (2013) and the actual selection performed in <code><a href="../reference/bp_VIP_analysis.html">bp_VIP_analysis()</a></code>. Previously it used <code>df = nbootstrap - 1</code>, so the drawn line did not correspond to the threshold that selected the variables. <strong>Breaking change</strong>: <code><a href="../reference/plot_vip_scores.html">plot_vip_scores()</a></code>’s <code>nbootstrap</code> argument has been renamed to <code>n_samples</code>.</li>
+<div class="section level3">
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li>
+<code><a href="../reference/plot_vip_scores.html">plot_vip_scores()</a></code>: <code>nbootstrap</code> argument renamed to <code>n_samples</code>, and its threshold line now uses the correct degrees of freedom (<code>df = n_samples - 1</code>), matching the selection <code><a href="../reference/bp_VIP_analysis.html">bp_VIP_analysis()</a></code> actually performs.</li>
 <li>
-<code><a href="../reference/bp_kfold_VIP_analysis.html">bp_kfold_VIP_analysis()</a></code>: fixed the k-fold partitioning, which assigned samples to folds by a deterministic <code>x %% k</code> split while the intended random shuffle was computed and then discarded (dead code). Folds are now a genuine random partition of the samples.</li>
+<code><a href="../reference/nmr_read_bruker_fid.html">nmr_read_bruker_fid()</a></code>: <code>endian</code> argument removed (byte order is now auto-detected from <code>acqus</code>), and it now returns a data frame with <code>time_s</code>/<code>fid_complex</code> columns instead of a raw numeric vector. Also fixes silent truncation of the FID to half its length.</li>
 <li>
-<code><a href="../reference/nmr_read_bruker_fid.html">nmr_read_bruker_fid()</a></code>: fixed silent truncation of FID data to half its length (wrong byte-size divisor), and rewrote the function to determine byte order (<code>BYTORDA</code>), data type (<code>DTYPA</code>), and timing (<code>SW_h</code>, <code>TD</code>) from the sample’s <code>acqus</code> file instead of assuming little-endian 32-bit integers. It now returns a data frame with <code>time_s</code> and <code>fid_complex</code> columns instead of a raw interleaved numeric vector. <strong>This is a breaking change</strong>: the <code>endian</code> argument has been removed (byte order is now auto-detected) and the return type has changed.</li>
+<code><a href="../reference/nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code> / <code><a href="../reference/nmr_baseline_threshold_plot.html">nmr_baseline_threshold_plot()</a></code>: <code>range_without_peaks</code> / <code>chemshift_range</code> no longer default to <code>c(9.5, 10)</code> ppm; must now be given explicitly.</li>
+<li>
+<code><a href="../reference/nmr_detect_peaks.html">nmr_detect_peaks()</a></code>: <code>range_without_peaks</code> no longer defaults to <code>c(9.5, 10)</code> ppm either; either it or <code>baselineThresh</code> must now be given, or the call aborts with a clear message instead of failing deep inside with a confusing one (<a href="https://github.com/sipss/AlpsNMR/issues/66" class="external-link">#66</a>).</li>
 </ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<ul><li>
+<code><a href="../reference/bp_kfold_VIP_analysis.html">bp_kfold_VIP_analysis()</a></code>: fixed fold partitioning, which assigned samples to folds with a deterministic <code>x %% k</code> split instead of the intended random shuffle.</li>
+<li>
+<code><a href="../reference/bp_VIP_analysis.html">bp_VIP_analysis()</a></code>: a degenerate (single-class) bootstrap resample is now redrawn instead of being patched with a fixed, non-random replacement, which biased a fraction of the bootstrap replicates.</li>
+<li>
+<code>read_bruker_param()</code>: fixed a wrong regex capture-group index causing <code>subscript out of bounds</code> on some Bruker parameter files.</li>
+<li>
+<code>parse_title_file()</code>: fixed a <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub()</a></code> call missing <code>perl = TRUE</code>, which left trailing whitespace untrimmed from Bruker pdata title fields.</li>
+<li>
+<code>choose_best_nlv()</code>: fixed a key-name mismatch that made <code>diagnostic_plot</code>, <code>diagnostic_box_plot</code>, and <code>model_performances</code> always <code>NULL</code> for models built with <code><a href="../reference/plsda_auroc_vip_method.html">plsda_auroc_vip_method()</a></code>.</li>
+<li>
+<code><a href="../reference/models_stability_plot_plsda.html">models_stability_plot_plsda()</a></code> / <code><a href="../reference/models_stability_plot_bootstrap.html">models_stability_plot_bootstrap()</a></code> / <code><a href="../reference/plot_bootstrap_multimodel.html">plot_bootstrap_multimodel()</a></code>: fixed two ggplot2 arguments deprecated since ggplot2 3.3.4/3.4.0, which warned on every call.</li>
+<li>
+<code>create_sample_names()</code>: disambiguates samples sharing a leaf directory name (e.g. Bruker EXPNO <code>10</code>) by stripping the full common path prefix, instead of only one parent level. Collisions more than one level deep now get readable names instead of <code>vctrs</code>-generated <code>...N</code> suffixes (<a href="https://github.com/sipss/AlpsNMR/issues/62" class="external-link">#62</a>).</li>
+<li>
+<code><a href="../reference/tidy.nmr_dataset_1D.html">tidy.nmr_dataset_1D()</a></code> (and thus <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> / <code><a href="../reference/nmr_baseline_threshold_plot.html">nmr_baseline_threshold_plot()</a></code>): an unknown <code>NMRExperiment</code> value now warns and is excluded (if some values are valid) or errors (if none are), instead of silently returning rows with <code>NA</code> intensities (<a href="https://github.com/sipss/AlpsNMR/issues/69" class="external-link">#69</a>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-changes-development-version">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-development-version"></a></h3>
+<ul><li>Bumped several dependency version floors to roughly their versions from a year ago. Packages with a recent major release are pinned to the last minor of the previous major instead, to avoid forcing an upgrade: <code>ggplot2 (&gt;= 3.5.2)</code>, <code>fs (&gt;= 1.6.7)</code>, <code>curl (&gt;= 6.4.0)</code>, <code>zip (&gt;= 2.3.3)</code>, <code>progressr (&gt;= 0.19.0)</code>.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="4.11.1" id="alpsnmr-4111-2025-09-24">AlpsNMR 4.11.1 (2025-09-24)<a class="anchor" aria-label="anchor" href="#alpsnmr-4111-2025-09-24"></a></h2>
 <ul><li>Compatibility with ggplot2-4.0.</li>
