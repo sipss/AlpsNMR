@@ -351,7 +351,7 @@ tidy.nmr_dataset_1D <-
                 valid_examples <- paste(utils::head(names(x), 2), collapse = ", ")
                 unknown_values <- paste(NMRExperiment[is_unknown], collapse = ", ")
                 if (all(is_unknown)) {
-                    rlang::abort(
+                    cli::cli_abort(
                         message = c(
                             "None of the given NMRExperiment values were found in the dataset",
                             "x" = glue::glue("Not found: {unknown_values}"),
@@ -496,7 +496,7 @@ plot_interactive <- function(plt, html_filename, overwrite = NULL) {
     if (is.null(overwrite) && libdir_exists) {
         if (interactive()) {
             # warning user before some contents of lib folder could be destroyed
-            rlang::inform("{libdir} folder already exists, plot_interactive will replace it. Continue? [y/n]:")
+            cli::cli_inform("{libdir} folder already exists, plot_interactive will replace it. Continue? [y/n]:")
             response <- scan("stdin", character(), n = 1)
             overwrite <- response %in% c("y", "Y")
         } else {
@@ -504,7 +504,7 @@ plot_interactive <- function(plt, html_filename, overwrite = NULL) {
         }
     }
     if (libdir_exists && isFALSE(overwrite)) {
-        rlang::abort(message = c("plot_interactive aborted", "x" = "{libdir} folder already exists, use overwrite=TRUE"))
+        cli::cli_abort(message = c("plot_interactive aborted", "x" = "{libdir} folder already exists, use overwrite=TRUE"))
     }
     suppressMessages(utils::capture.output({
         htmltools::save_html(

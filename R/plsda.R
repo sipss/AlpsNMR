@@ -24,7 +24,7 @@ plsda_build <- function(x, y, identity, ncomp) {
         },
         error = function(e) {
             msg <- conditionMessage(e)
-            rlang::abort(
+            cli::cli_abort(
                 message = c(
                     "plsda_build failed",
                     "i" = glue::glue("Original message: {msg}")
@@ -73,7 +73,7 @@ plsda_auroc <-
             },
             error = function(e) {
                 msg <- conditionMessage(e)
-                rlang::abort(
+                cli::cli_abort(
                     message = c(
                         "Area Under Curve estimation failed",
                         "i" = glue::glue("Original message: {msg}")
@@ -113,7 +113,7 @@ plsda_vip <- function(plsda_model) {
         },
         error = function(e) {
             msg <- conditionMessage(e)
-            rlang::inform(
+            cli::cli_inform(
                 message = c(
                     "VIP calculation failed",
                     "i" = glue::glue("Original message: {msg}")

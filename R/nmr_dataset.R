@@ -64,7 +64,7 @@ nmr_read_samples_dir <- function(samples_dir,
     samples_dir <- as.character(samples_dir)
     dirs_that_dont_exist <- !dir.exists(samples_dir)
     if (any(dirs_that_dont_exist)) {
-        rlang::abort(c("These directories do not exist:", samples_dir[dirs_that_dont_exist]))
+        cli::cli_abort(c("These directories do not exist:", samples_dir[dirs_that_dont_exist]))
     }
     if (format == "bruker") {
         all_samples <-
@@ -269,7 +269,7 @@ nmr_read_samples_bruker <-
                         },
                         error = function(err) {
                             msg <- conditionMessage(err)
-                            rlang::warn(
+                            cli::cli_warn(
                                 message = c(
                                     "Error loading a sample",
                                     "i" = glue::glue("The sample '{sampl}' failed to load"),
@@ -300,7 +300,7 @@ nmr_read_samples_bruker <-
 
 
         if (length(list_of_samples) == 0) {
-            rlang::abort(
+            cli::cli_abort(
                 message = c(
                     "No samples could be loaded",
                     "i" = "You can check the underlying error messages with rlang::last_error()$error_list"
@@ -406,7 +406,7 @@ nmr_read_samples_jdx <-
         # 3. Based on the filename
         if (!is.null(nn)) {
             if (anyDuplicated(nn) > 0) {
-                rlang::abort("names of samples must be unique")
+                cli::cli_abort("names of samples must be unique")
             }
             NMRExperiments <- nn
         } else if (!"NMRExperiment" %in% colnames(metadata)) {

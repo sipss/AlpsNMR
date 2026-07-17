@@ -85,7 +85,7 @@ random_subsampling <- function(sample_idx,
                 test = test_samples
             )
             if (length(train_samples) == 0 || length(test_samples) == 0) {
-                rlang::abort(
+                cli::cli_abort(
                     message = c(
                         "Too few samples in a random subsampling split",
                         "i" = glue::glue("Train samples: {length(train_samples)}"),
@@ -107,7 +107,7 @@ random_subsampling <- function(sample_idx,
                 test = test_samples
             )
             if (length(train_samples) == 0 || length(test_samples) == 0) {
-                rlang::abort(
+                cli::cli_abort(
                     message = c(
                         "Too few samples in a random subsampling split",
                         "i" = glue::glue("Train samples: {length(train_samples)}"),
@@ -215,7 +215,7 @@ split_build_perform <- function(train_test_subset,
     x_all <- nmr_data(dataset)
     y_all <- nmr_meta_get_column(dataset, column = y_column)
     if (is.null(y_all)) {
-        rlang::abort(
+        cli::cli_abort(
             c(
                 "y_column not found",
                 "x" = sprintf('Column "%s" does not exist in the dataset', y_column)

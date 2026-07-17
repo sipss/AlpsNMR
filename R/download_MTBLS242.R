@@ -77,7 +77,7 @@ download_MTBLS242 <- function(
     annotations_orig_destfile <- file.path(dest_dir, "s_mtbls242.txt")
     dst_rootdir <- file.path(dest_dir, "samples")
     if (!file.exists(annotations_orig_destfile) || force) {
-        rlang::inform(c("i" = "Downloading sample annotations..."))
+        cli::cli_inform(c("i" = "Downloading sample annotations..."))
         curl_download_retry(url = meta_url, destfile = annotations_orig_destfile)
     }
     if (!file.exists(annotations_destfile) || force) {
@@ -147,7 +147,7 @@ download_MTBLS242 <- function(
         }
         utils::write.table(sample_annot, file = annotations_destfile, sep = "\t", row.names = FALSE)
     } else {
-        rlang::inform(c("i" = glue("Annotations were previously saved. Loading {annotations_destfile}")))
+        cli::cli_inform(c("i" = glue("Annotations were previously saved. Loading {annotations_destfile}")))
         sample_annot <- utils::read.csv(annotations_destfile, header = TRUE, sep = "\t")
     }
     dir.create(dst_rootdir, recursive = TRUE, showWarnings = FALSE)
@@ -161,7 +161,7 @@ download_MTBLS242 <- function(
             intermediate_dst_file <- file.path(dst_rootdir, paste0(filename, "intermediate.zip"))
             if (file.exists(final_dst_file) && !force) {
                 if (!report_skipped_downloads) {
-                    rlang::inform(c("i" = "Skipping re-download of previously downloaded samples."))
+                    cli::cli_inform(c("i" = "Skipping re-download of previously downloaded samples."))
                     report_skipped_downloads <<- TRUE
                 }
                 return()

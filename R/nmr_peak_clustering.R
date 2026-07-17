@@ -128,7 +128,7 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters =
         if (is.null(max_dist_thresh_ppb)) {
             max_dist_thresh_ppb <- signif(3 * stats::median(peak_data$gamma_ppb), digits = 2)
             if (verbose) {
-                rlang::inform(c("i" = glue("The maximum distance between two peaks in the same cluster is of {max_dist_thresh_ppb} ppbs")))
+                cli::cli_inform(c("i" = glue("The maximum distance between two peaks in the same cluster is of {max_dist_thresh_ppb} ppbs")))
             }
         }
         num_cluster_estimation <- estimate_num_clusters(
@@ -160,7 +160,7 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters =
 
     if (nrow(wrong_clusters) > 0) {
         wrong_peak_ids <- purrr::flatten_chr(wrong_clusters$peak_ids)
-        rlang::warn(
+        cli::cli_warn(
             message = c(
                 glue("Ambiguity detected in the peak clustering affecting {length(wrong_peak_ids)} out of {nrow(peak_data)} peaks in the dataset"),
                 "i" = "Some samples have more than one peak in the same cluster.",
@@ -256,7 +256,7 @@ estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
         ggplot2::geom_hline(yintercept = max_dist_thresh_ppb, color = "gray") +
         ggplot2::labs(x = "Number of clusters", y = "Max distance within cluster (ppb)")
     if (length(num_clusters) == 0) {
-        rlang::abort(
+        cli::cli_abort(
             c(
                 "Can't find a suitable number of clusters",
                 "Probably the distance threshold is too small",
@@ -295,7 +295,7 @@ estimate_num_clusters <- function(peak_list, cluster, max_dist_thresh_ppb) {
 #'
 nmr_peak_clustering_plot <- function(dataset, peak_list_clustered, NMRExperiments, chemshift_range, baselineThresh = NULL) {
     if (length(NMRExperiments) != 2) {
-        rlang::abort("Please provide 2 and only 2 NMRExperiments")
+        cli::cli_abort("Please provide 2 and only 2 NMRExperiments")
     }
 
     tidy_data <- tidy_spectra_baseline_and_threshold(

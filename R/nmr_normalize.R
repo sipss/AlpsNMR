@@ -6,7 +6,7 @@
 norm_pqn <- function(spectra, basel = NULL) {
     num_samples <- nrow(spectra)
     if (num_samples < 10) {
-        rlang::warn(
+        cli::cli_warn(
             message = c(
                 "There are not enough samples for reliably estimating the median spectra",
                 "i" = paste0(
@@ -34,7 +34,7 @@ norm_pqn <- function(spectra, basel = NULL) {
     areas <- areas / areas_median
     if (num_samples == 1) {
         # We have warned, and here there is nothing to do anymore
-        rlang::warn("PQN is meaningless with a single sample. We have normalized it to the area.")
+        cli::cli_warn("PQN is meaningless with a single sample. We have normalized it to the area.")
         out <- list(
             spectra = spectra / areas,
             norm_factor = areas
@@ -158,7 +158,7 @@ nmr_normalize <- function(samples,
         stop("Unimplemented method: ", method)
     }
     if (any(norm_factor <= 0)) {
-        rlang::warn(
+        cli::cli_warn(
             message = c(
                 "Normalization produced a non-positive factor for at least one sample",
                 "i" = "This may indicate a data-quality issue (e.g. an over-subtracted baseline)",
