@@ -16,6 +16,37 @@ test_that("nmr_read_samples returns unique NMR experiments", {
     expect_false(any(duplicated(names(dataset))))
 })
 
+test_that("nmr_read_samples_dir names samples by parent directory when the same EXPNO repeats across unrelated study folders", {
+    # Regression test for https://github.com/sipss/AlpsNMR/issues/62: several
+    # unrelated top-level directories (not sharing any common naming scheme)
+    # each containing a single Bruker experiment folder named identically
+    # (e.g. the default EXPNO "10"). The leaf name alone ("10") is
+    # duplicated across all of them, so create_sample_names() must fall
+    # back to prepending the (differing) parent directory name.
+    dir_to_demo_dataset <- system.file("dataset-demo", package = "AlpsNMR")
+    zip_files <- fs::dir_ls(dir_to_demo_dataset, glob = "*.zip")
+
+    study_root <- withr::local_tempdir()
+    study_dirs <- character(length(zip_files))
+    for (i in seq_along(zip_files)) {
+        study_dir <- file.path(study_root, paste0("Study", i))
+        dir.create(study_dir)
+        utils::unzip(zip_files[i], exdir = study_dir)
+        expno_dir <- list.dirs(study_dir, recursive = FALSE)
+        file.rename(expno_dir, file.path(study_dir, "10")) # force the same leaf name "10"
+        study_dirs[i] <- study_dir
+    }
+
+    dataset <- nmr_read_samples_dir(study_dirs)
+
+    expect_equal(dataset$num_samples, length(zip_files))
+    expect_equal(sort(names(dataset)), sort(paste0("Study", seq_along(zip_files), "/10")))
+    # None of the vctrs::vec_as_names "...N" disambiguation suffixes should
+    # have been needed here, since the parent directory names already make
+    # every sample unique:
+    expect_false(any(grepl("\\.\\.\\.", names(dataset))))
+})
+
 test_that("create_sample_names returns good unique guesses", {
     sample_names <- c("a", "b")
     expect_equal(create_sample_names(sample_names), sample_names)
