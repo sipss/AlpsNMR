@@ -13,6 +13,10 @@
 - `nmr_baseline_threshold()` / `nmr_baseline_threshold_plot()`:
   `range_without_peaks` / `chemshift_range` no longer default to `c(9.5, 10)`
   ppm; must now be given explicitly.
+- `nmr_detect_peaks()`: `range_without_peaks` no longer defaults to
+  `c(9.5, 10)` ppm either; either it or `baselineThresh` must now be given,
+  or the call aborts with a clear message instead of failing deep inside
+  with a confusing one (#66).
 
 ## Bug fixes
 
@@ -36,6 +40,10 @@
   name (e.g. Bruker EXPNO `10`) by stripping the full common path prefix,
   instead of only one parent level. Collisions more than one level deep now
   get readable names instead of `vctrs`-generated `...N` suffixes (#62).
+- `tidy.nmr_dataset_1D()` (and thus `plot()` /
+  `nmr_baseline_threshold_plot()`): an unknown `NMRExperiment` value now
+  warns and is excluded (if some values are valid) or errors (if none are),
+  instead of silently returning rows with `NA` intensities (#69).
 
 ## Other changes
 
