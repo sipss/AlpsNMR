@@ -47,6 +47,14 @@
 
 ## Other changes
 
+- `download_MTBLS242()`: the SHA-256 of every downloaded file is now pinned
+  to `<dest_dir>/SHA256SUMS` the first time it is saved, and re-verified
+  against that pinned value on every later call that reuses a cached file
+  (including cache hits with `force = FALSE`), aborting with a clear error on
+  mismatch instead of silently reusing a corrupted or tampered file. This
+  does not protect the very first download of a file, since MetaboLights
+  does not publish a canonical checksum for it to be verified against (#72).
+  Adds `digest` as a new `Suggests` dependency.
 - Bumped several dependency version floors to roughly their versions from a
   year ago. Packages with a recent major release are pinned to the last
   minor of the previous major instead, to avoid forcing an upgrade:

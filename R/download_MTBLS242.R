@@ -30,9 +30,14 @@
 #' doesn't download their data.
 #' 
 #' 
-#' @param dest_dir Directory where the dataset should be saved
+#' @param dest_dir Directory where the dataset should be saved. The SHA-256
+#' checksum of every downloaded file is pinned to `<dest_dir>/SHA256SUMS` the
+#' first time it is saved, and re-verified on every later call that reuses a
+#' cached file, so local corruption or tampering between calls is detected.
 #' @param force Logical. If `TRUE` we do not re-download files if they exist. The function does not check whether cached versions were
 #' downloaded with different `keep_only_*` arguments, so please use `force = TRUE` if you change the `keep_only_*` settings.
+#' `force = TRUE` also re-downloads and re-pins the checksum of every file, rather than
+#' verifying it against a previously pinned value.
 #' @param keep_only_CPMG_1r If `TRUE`, remove all other data beyond the CPMG real spectrum, which is enough for the tutorial
 #' @param keep_only_preop_and_3months If `TRUE`, keep only the preoperatory and the "three months after surgery" time points, enough for the tutorial
 #' @param keep_only_complete_time_points If `TRUE`, remove samples that do not appear on all timepoints. Useful for the tutorial.
@@ -56,13 +61,20 @@ download_MTBLS242 <- function(
         keep_only_preop_and_3months = TRUE,
         keep_only_complete_time_points = TRUE
     ) {
-    require_pkgs(pkg = c("curl", "zip"))
-    # NOTE (security): this dataset is fetched over plain, unauthenticated FTP and this
-    # function performs no checksum/integrity verification of the downloaded files. The
-    # retrieved data should therefore not be treated as tamper-proof. A future improvement
-    # would be to compute and verify a SHA-256 checksum of each downloaded file once a
-    # canonical, trusted hash is obtained from the data provider (e.g. published alongside
-    # the dataset on MetaboLights/EBI).
+    require_pkgs(pkg = c("curl", "zip", "digest"))
+    # NOTE (security): this dataset is fetched over plain, unauthenticated FTP.
+    # MetaboLights' public API and its FTP server do not publish a canonical
+    # checksum for these files, so a freshly downloaded file cannot be verified
+    # against a hash obtained from the data provider itself: a network-position
+    # attacker or a compromised mirror could still tamper with the very first
+    # download of a given file undetected.
+    # What we *can* guarantee is integrity across runs: the SHA-256 of every
+    # downloaded file is pinned to `<dest_dir>/SHA256SUMS` the first time it is
+    # saved, and is re-verified against that pinned value on every later call
+    # that reuses the cached file (including cache hits with `force = FALSE`).
+    # This reliably detects local corruption or tampering of previously
+    # downloaded files and aborts loudly; pass `force = TRUE` to intentionally
+    # re-download and re-pin a file.
     url <- "ftp://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242/"
 
     dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
@@ -80,6 +92,7 @@ download_MTBLS242 <- function(
         cli::cli_inform(c("i" = "Downloading sample annotations..."))
         curl_download_retry(url = meta_url, destfile = annotations_orig_destfile)
     }
+    verify_or_pin_checksum(dest_dir, annotations_orig_destfile, meta_file)
     if (!file.exists(annotations_destfile) || force) {
         sample_annot <- tibble::as_tibble(
             utils::read.table(
@@ -154,7 +167,7 @@ download_MTBLS242 <- function(
     report_skipped_downloads <- FALSE
     purrr::walk(
         sample_annot$NMRExperiment,
-        function(filename_base, url, dst_rootdir, keep_only_CPMG_1r) {
+        function(filename_base, url, dst_rootdir, dest_dir, keep_only_CPMG_1r) {
             filename <- paste0(filename_base, ".zip")
             src_url <- file.path(url, filename)
             final_dst_file <- file.path(dst_rootdir, filename)
@@ -164,11 +177,13 @@ download_MTBLS242 <- function(
                     cli::cli_inform(c("i" = "Skipping re-download of previously downloaded samples."))
                     report_skipped_downloads <<- TRUE
                 }
+                verify_or_pin_checksum(dest_dir, final_dst_file, fs::path_rel(final_dst_file, dest_dir))
                 return()
             }
             curl_download_retry(url = src_url, destfile = intermediate_dst_file)
             if (!keep_only_CPMG_1r) {
                 file.rename(intermediate_dst_file, final_dst_file)
+                verify_or_pin_checksum(dest_dir, final_dst_file, fs::path_rel(final_dst_file, dest_dir))
             } else {
                 filenames_in_zip <- zip::zip_list(intermediate_dst_file)[["filename"]]
                 prefix_to_keep <- file.path(filename_base, "3", "") # subdirectory 3/ contains the CPMG sample
@@ -208,10 +223,12 @@ download_MTBLS242 <- function(
                 )
                 # And once you have the zip file, remove the directory:
                 unlink(file.path(dst_rootdir, filename_base), recursive = TRUE)
+                verify_or_pin_checksum(dest_dir, final_dst_file, fs::path_rel(final_dst_file, dest_dir))
             }
         },
         url = url,
         dst_rootdir = dst_rootdir,
+        dest_dir = dest_dir,
         keep_only_CPMG_1r = keep_only_CPMG_1r,
         .progress = "Downloading and preparing samples..."
     )
@@ -251,4 +268,60 @@ curl_download_retry <- function(url, destfile, ..., timeout_retries = 3) {
         attempts <- attempts + 1
     }
     stop("Download failed too many times. Retry later or fix the URL")
+}
+
+sha256_file <- function(path) {
+    digest::digest(path, algo = "sha256", file = TRUE)
+}
+
+checksum_manifest_path <- function(dest_dir) {
+    file.path(dest_dir, "SHA256SUMS")
+}
+
+# Reads `<dest_dir>/SHA256SUMS` (`sha256sum`-format: "<64-hex-digit hash>  <path>"
+# per line) into a character vector of hashes named by their relative path, so
+# the manifest can also be checked independently with `sha256sum -c SHA256SUMS`.
+read_checksum_manifest <- function(dest_dir) {
+    path <- checksum_manifest_path(dest_dir)
+    if (!file.exists(path)) {
+        return(character(0))
+    }
+    lines <- readLines(path, warn = FALSE)
+    lines <- lines[nzchar(lines)]
+    hashes <- substr(lines, 1, 64)
+    paths <- substring(lines, 67)
+    stats::setNames(hashes, paths)
+}
+
+write_checksum_manifest_entry <- function(dest_dir, relative_path, sha256) {
+    manifest <- read_checksum_manifest(dest_dir)
+    manifest[relative_path] <- sha256
+    manifest <- manifest[order(names(manifest))]
+    lines <- paste0(manifest, "  ", names(manifest))
+    writeLines(lines, checksum_manifest_path(dest_dir))
+}
+
+# Pins the SHA-256 of `file` (recorded under `relative_path`, relative to
+# `dest_dir`) to `<dest_dir>/SHA256SUMS` the first time it is seen, and
+# verifies `file` against that pinned value on every later call that reuses
+# the cached file. See the NOTE (security) comment in download_MTBLS242()
+# for why this cannot verify the very first download against a hash obtained
+# from the data provider.
+verify_or_pin_checksum <- function(dest_dir, file, relative_path) {
+    manifest <- read_checksum_manifest(dest_dir)
+    actual <- sha256_file(file)
+    expected <- unname(manifest[relative_path])
+    if (is.na(expected)) {
+        write_checksum_manifest_entry(dest_dir, relative_path, actual)
+        return(invisible(actual))
+    }
+    if (!identical(actual, expected)) {
+        cli::cli_abort(c(
+            "x" = "Checksum mismatch for {.file {file}}.",
+            "i" = "Expected SHA-256 {.val {expected}} (recorded the first time this file was downloaded) but got {.val {actual}}.",
+            "i" = "The file may be corrupted or have been modified locally since it was downloaded.",
+            "i" = "Delete it (or pass {.code force = TRUE}) to re-download and re-pin it."
+        ))
+    }
+    invisible(actual)
 }

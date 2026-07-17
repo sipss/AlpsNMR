@@ -141,3 +141,89 @@ test_that("download_MTBLS242() extracts a benign zip archive normally", {
     )
     expect_true(file.exists(file.path(dst_rootdir, "Obs0_0001s.zip")))
 })
+
+test_that("download_MTBLS242() pins SHA-256 checksums and detects local tampering with cached files", {
+    skip_if_not_installed("zip")
+    skip_if_not_installed("fs")
+    skip_if_not_installed("digest")
+
+    # download_MTBLS242() fetches this dataset over plain, unauthenticated FTP,
+    # and MetaboLights does not publish a canonical checksum for these files
+    # that the package could verify a fresh download against (see the NOTE
+    # (security) comment in download_MTBLS242()). What the function *can* do
+    # is pin the SHA-256 of every downloaded file to `<dest_dir>/SHA256SUMS`
+    # the first time it is saved, and re-verify it on every later call that
+    # reuses the cached file, so local corruption/tampering between calls is
+    # detected instead of being silently accepted.
+    work_root <- withr::local_tempdir()
+    dest_dir <- file.path(work_root, "mtbls_test")
+    dst_rootdir <- file.path(dest_dir, "samples")
+    dir.create(dst_rootdir, recursive = TRUE)
+
+    benign_src <- file.path(work_root, "benign_src")
+    dir.create(file.path(benign_src, "Obs0_0001s", "3"), recursive = TRUE)
+    writeLines("spectrum-data", file.path(benign_src, "Obs0_0001s", "3", "1r"))
+    benign_zip <- file.path(work_root, "benign.zip")
+    withr::with_dir(benign_src, {
+        zip::zip(zipfile = benign_zip, files = file.path("Obs0_0001s", "3", "1r"))
+    })
+
+    mock_curl_download_retry <- function(url, destfile, ...) {
+        if (grepl("s_mtbls242\\.txt$", url)) {
+            writeLines(
+                c("Sample Name\tFactor Value[time point]", "0-0001-1\tpreop"),
+                destfile
+            )
+        } else if (grepl("\\.zip$", url)) {
+            file.copy(benign_zip, destfile, overwrite = TRUE)
+        } else {
+            stop("Unexpected curl_download_retry() call in test mock: ", url)
+        }
+        invisible(destfile)
+    }
+    testthat::local_mocked_bindings(
+        curl_download_retry = mock_curl_download_retry,
+        .package = "AlpsNMR"
+    )
+
+    # First download: checksums get pinned to SHA256SUMS.
+    download_MTBLS242(
+        dest_dir = dest_dir,
+        force = TRUE,
+        keep_only_CPMG_1r = TRUE,
+        keep_only_preop_and_3months = TRUE,
+        keep_only_complete_time_points = TRUE
+    )
+    manifest_file <- file.path(dest_dir, "SHA256SUMS")
+    expect_true(file.exists(manifest_file))
+    sample_zip <- file.path(dst_rootdir, "Obs0_0001s.zip")
+    expected_hash <- digest::digest(sample_zip, algo = "sha256", file = TRUE)
+    manifest <- readLines(manifest_file)
+    expect_true(any(grepl(paste0("^", expected_hash, "  samples/Obs0_0001s\\.zip$"), manifest)))
+
+    # A subsequent call that reuses the cached file (force = FALSE) must
+    # verify it against the pinned checksum without error or re-download.
+    expect_no_error(
+        download_MTBLS242(
+            dest_dir = dest_dir,
+            force = FALSE,
+            keep_only_CPMG_1r = TRUE,
+            keep_only_preop_and_3months = TRUE,
+            keep_only_complete_time_points = TRUE
+        )
+    )
+
+    # Tampering with (or corrupting) the cached sample zip after it was
+    # pinned must be caught and refused, not silently used.
+    writeBin(as.raw(c(0, 1, 2, 3)), sample_zip)
+    expect_error(
+        download_MTBLS242(
+            dest_dir = dest_dir,
+            force = FALSE,
+            keep_only_CPMG_1r = TRUE,
+            keep_only_preop_and_3months = TRUE,
+            keep_only_complete_time_points = TRUE
+        ),
+        regexp = "Checksum mismatch"
+    )
+})

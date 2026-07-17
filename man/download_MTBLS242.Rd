@@ -13,10 +13,15 @@ download_MTBLS242(
 )
 }
 \arguments{
-\item{dest_dir}{Directory where the dataset should be saved}
+\item{dest_dir}{Directory where the dataset should be saved. The SHA-256
+checksum of every downloaded file is pinned to \verb{<dest_dir>/SHA256SUMS} the
+first time it is saved, and re-verified on every later call that reuses a
+cached file, so local corruption or tampering between calls is detected.}
 
 \item{force}{Logical. If \code{TRUE} we do not re-download files if they exist. The function does not check whether cached versions were
-downloaded with different \verb{keep_only_*} arguments, so please use \code{force = TRUE} if you change the \verb{keep_only_*} settings.}
+downloaded with different \verb{keep_only_*} arguments, so please use \code{force = TRUE} if you change the \verb{keep_only_*} settings.
+\code{force = TRUE} also re-downloads and re-pins the checksum of every file, rather than
+verifying it against a previously pinned value.}
 
 \item{keep_only_CPMG_1r}{If \code{TRUE}, remove all other data beyond the CPMG real spectrum, which is enough for the tutorial}
 
