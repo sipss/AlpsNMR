@@ -65,28 +65,33 @@ download_MTBLS242 <- function(
         keep_only_complete_time_points = TRUE
     ) {
     require_pkgs(pkg = c("curl", "zip", "digest", "jsonlite"))
-    # NOTE (security): this dataset used to be fetched over plain, unauthenticated
-    # FTP. EBI also mirrors the very same MTBLS242 file tree over HTTPS, so we now
-    # fetch everything over HTTPS instead: the transfer itself is encrypted and the
-    # server is authenticated via the usual TLS certificate chain, closing the
-    # original "a network-position attacker could alter the data in transit"
-    # concern for the download itself.
-    # On top of that, EBI publishes canonical SHA-256 checksums for MTBLS242's
-    # metadata and per-sample data files at `<url>/HASHES/{metadata,data}_sha256.json`
-    # (also served over HTTPS). Every freshly downloaded file is verified against
-    # those provider-published hashes right after download, before any local
-    # extraction/repacking, and the function aborts loudly on a mismatch instead of
-    # silently accepting a corrupted or tampered file.
-    # If that canonical manifest cannot be fetched (e.g. a transient network issue),
-    # we fall back to a local safety net: the SHA-256 of every file that persists on
-    # disk (`<dest_dir>/SHA256SUMS`) is pinned the first time it is seen and
+    # NOTE (security): this dataset is fetched over plain, unauthenticated FTP, as
+    # documented by MetaboLights (https://ebi-metabolights.github.io/guides/Files/,
+    # "If you want to download data files, you MUST use FTP, Aspera or Globus
+    # clients."). EBI happens to also mirror the same file tree over HTTPS at
+    # `https://ftp.ebi.ac.uk/...`, but that is not a documented, supported access
+    # path, so we don't rely on it for the actual downloads -- it could be
+    # reorganized or dropped without notice.
+    # We do use that same HTTPS mirror for one thing: EBI publishes canonical
+    # SHA-256 checksums for MTBLS242's metadata and per-sample data files at
+    # `<https_url>/HASHES/{metadata,data}_sha256.json` (also undocumented, but
+    # low-risk to depend on since it only affects checksum verification, not
+    # whether the download itself succeeds). Every freshly downloaded file is
+    # verified against those provider-published hashes right after download,
+    # before any local extraction/repacking, and the function aborts loudly on a
+    # mismatch instead of silently accepting a corrupted or tampered file.
+    # If that canonical manifest cannot be fetched (e.g. a transient network issue,
+    # or EBI removing this undocumented endpoint), we fall back to a local safety
+    # net: the SHA-256 of every file that persists on disk
+    # (`<dest_dir>/SHA256SUMS`) is pinned the first time it is seen and
     # re-verified on every later call that reuses the cached file (including cache
     # hits with `force = FALSE`), which still catches local corruption or tampering
     # between calls even without a canonical source. This local pin cannot verify a
     # file's very first download; pass `force = TRUE` to intentionally re-download
     # and re-verify/re-pin a file.
-    url <- "https://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242"
-    canonical_hashes <- fetch_canonical_checksums(url)
+    url <- "ftp://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242"
+    https_url <- "https://ftp.ebi.ac.uk/pub/databases/metabolights/studies/public/MTBLS242"
+    canonical_hashes <- fetch_canonical_checksums(https_url)
 
     dir.create(dest_dir, recursive = TRUE, showWarnings = FALSE)
 
