@@ -56,13 +56,16 @@ nmr_detect_peaks_tune_snr(
       threshold.
 
     - `NULL`. If that's the case, a default function is used
-      ([`nmr_baseline_threshold()`](https://sipss.github.io/AlpsNMR/reference/nmr_baseline_threshold.md)),
-      which assumes that there is no signal in the region 9.5-10 ppm.
+      ([`nmr_baseline_threshold()`](https://sipss.github.io/AlpsNMR/reference/nmr_baseline_threshold.md))
+      with the given `range_without_peaks`. There is no ppm range
+      guaranteed to be free of peaks for every sample type, so
+      `range_without_peaks` must be given when `baselineThresh` is
+      `NULL`.
 
   `range_without_peaks`
 
-  : A numeric vector of length two with a region without peaks, only
-    used when `baselineThresh = NULL`
+  : A numeric vector of length two with a region without peaks. Required
+    when `baselineThresh = NULL`, ignored otherwise.
 
   `fit_lorentzians`
 

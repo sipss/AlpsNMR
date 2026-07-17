@@ -360,7 +360,8 @@ used as a dynamic baseline threshold level.
 peak_table <- nmr_detect_peaks(dataset,
                                nDivRange_ppm = 0.1,
                                scales = seq(1, 16, 2),
-                               baselineThresh = NULL, SNR.Th = 3)
+                               baselineThresh = NULL, SNR.Th = 3,
+                               range_without_peaks = c(9.5, 10))
 NMRExp_ref <- nmr_align_find_ref(dataset, peak_table)
 message("Your reference is NMRExperiment ", NMRExp_ref)
 #> Your reference is NMRExperiment 30

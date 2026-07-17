@@ -80,12 +80,14 @@ for peaks.</p></dd>
     <dt><code>baselineThresh</code></dt>
 <dd><p>All peaks with intensities below the thresholds are excluded. Either:</p><ul><li><p>A numeric vector of length the number of samples. Each number is a threshold for that sample</p></li>
 <li><p>A single number. All samples use this number as baseline threshold.</p></li>
-<li><p><code>NULL</code>. If that's the case, a default function is used (<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>), which assumes
-that there is no signal in the region 9.5-10 ppm.</p></li>
+<li><p><code>NULL</code>. If that's the case, a default function is used (<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>) with the
+given <code>range_without_peaks</code>. There is no ppm range guaranteed to be free of peaks for every
+sample type, so <code>range_without_peaks</code> must be given when <code>baselineThresh</code> is <code>NULL</code>.</p></li>
 </ul></dd>
 
     <dt><code>range_without_peaks</code></dt>
-<dd><p>A numeric vector of length two with a region without peaks, only used when <code>baselineThresh = NULL</code></p></dd>
+<dd><p>A numeric vector of length two with a region without peaks.
+Required when <code>baselineThresh = NULL</code>, ignored otherwise.</p></dd>
 
     <dt><code>fit_lorentzians</code></dt>
 <dd><p>If <code>TRUE</code>, fit a lorentzian to each detected peak, to infer its inflection points. For now disabled for backwards compatibility.</p></dd>
