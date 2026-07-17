@@ -10,6 +10,21 @@ make_dataset <- function(with_baseline = FALSE) {
     ds
 }
 
+## nmr_detect_peaks ------------------------------------------------------------
+
+test_that("nmr_detect_peaks requires either baselineThresh or range_without_peaks", {
+    # Regression test for https://github.com/sipss/AlpsNMR/issues/66:
+    # nmr_detect_peaks() used to silently default range_without_peaks to
+    # c(9.5, 10), which errors deep inside nmr_baseline_threshold() with a
+    # confusing message when the dataset's axis doesn't reach that range.
+    # It must instead fail early with a clear, actionable message.
+    ds <- make_dataset()
+    expect_error(
+        nmr_detect_peaks(ds),
+        "Either baselineThresh or range_without_peaks must be given"
+    )
+})
+
 ## peakList_to_dataframe / peak_data_to_peakList (round trip) -----------------
 
 test_that("peakList_to_dataframe builds one row per peak with ppm/pos/intensity columns", {
