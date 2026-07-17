@@ -74,7 +74,7 @@ refine_lorentzian_fit_with_nls <- function(data_to_fit, start, method) {
     } else if (method == "2nd_derivative") {
         formula <- y ~ -2 * A * gamma / pi * (gamma^2 - 3 * (x - x0)^2) / (gamma^2 + (x - x0)^2)^3
     } else {
-        rlang::abort("Unknown method")
+        cli::cli_abort("Unknown method")
     }
 
     tryCatch(
@@ -195,7 +195,7 @@ peaklist_fit_lorentzians <- function(peak_data,
                     y_basel <- as.numeric(nmr_dataset$data_1r_baseline[sindex, ])
                 } else {
                     if (!has_warned_baseline) {
-                        rlang::warn(
+                        cli::cli_warn(
                             c(
                                 "Estimating the baseline using ALS with lambda 9 and p = 0.05...",
                                 "i" = "Use nmr_baseline_estimation before calling this function to customize"
@@ -248,7 +248,7 @@ peaklist_fit_lorentzians <- function(peak_data,
             # Estimate A based on the amplitude of the signal without baseline
             estimated_A <- y_nobasel[posi] * pi * gamma
         } else {
-            rlang::abort(sprintf("amplitude_method '%s'unknown", amplitude_method))
+            cli::cli_abort(sprintf("amplitude_method '%s'unknown", amplitude_method))
         }
         if (identical(refine_peak_model, "peak")) {
             # Further fitting with nls:
@@ -293,7 +293,7 @@ peaklist_fit_lorentzians <- function(peak_data,
                 all_errors$error_msg <- c(all_errors$error_msg, paste(new_params[["error_msgs"]], collapse = "\n"))
             }
         } else if (!identical(refine_peak_model, "none")) {
-            rlang::abort("Unknown refine_peak_model")
+            cli::cli_abort("Unknown refine_peak_model")
         }
         # And then get the whole lorentzian:
         y_fitted <- lorentzian(
@@ -449,7 +449,7 @@ peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_
         peak_data$accepted <- NULL
     }
     if (verbose) {
-        rlang::inform(message = report)
+        cli::cli_inform(message = report)
     }
     peak_data
 }

@@ -39,7 +39,7 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = NULL, meth
     # FIXME: Maybe a whole baseline would be better, so we can cope with slowly changing baselines better
     method <- match.arg(method)
     if (is.null(range_without_peaks)) {
-        rlang::abort(
+        cli::cli_abort(
             message = c(
                 "range_without_peaks must be given",
                 "i" = "There is no ppm range guaranteed to be free of peaks for every sample type.",
@@ -48,13 +48,13 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = NULL, meth
         )
     }
     if (length(range_without_peaks) != 2) {
-        rlang::abort("range_without_peaks must have length 2")
+        cli::cli_abort("range_without_peaks must have length 2")
     }
     r_start <- min(range_without_peaks)
     r_end <- max(range_without_peaks)
     threshold_ind <- nmr_dataset$axis >= r_start & nmr_dataset$axis < r_end
     if (sum(threshold_ind) < 10) {
-        rlang::abort(
+        cli::cli_abort(
             message = c(
                 "Can't estimate a baseline threshold reliably",
                 "i" = glue("The selected range_without_peaks [{r_start},{r_end}] ppm contains {sum(threshold_ind)} points."),
@@ -115,7 +115,7 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = NULL, meth
 #' nmr_baseline_threshold_plot(dataset_1D, bl_threshold, chemshift_range = c(9.5, 10))
 nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment = "all", chemshift_range = NULL, ...) {
     if (is.null(chemshift_range)) {
-        rlang::abort(
+        cli::cli_abort(
             message = c(
                 "chemshift_range must be given",
                 "i" = "There is no ppm range guaranteed to be free of peaks for every sample type.",

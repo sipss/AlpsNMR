@@ -57,7 +57,7 @@ nmr_interpolate_1D.nmr_dataset <- function(samples, axis = c(min = 0.2, max = 10
     verify_dimensionality(samples, valid_dimensions = 1)
 
     if (missing(axis)) {
-        rlang::inform(
+        cli::cli_inform(
             message = c(
                 "Change in default axis for interpolation",
                 "i" = "The default axis in the interpolation has changed from `axis = c(min=0.2, max=10, by = 8E-4)` to `axis = NULL`",
@@ -107,7 +107,7 @@ interpolate_1d <- function(list_of_ppms, list_of_1r, ppm_axis) {
                 if (requested_range[1] < native_range[1] || requested_range[2] > native_range[2]) {
                     below <- max(0, native_range[1] - requested_range[1])
                     above <- max(0, requested_range[2] - native_range[2])
-                    rlang::warn(
+                    cli::cli_warn(
                         message = c(
                             paste0(
                                 "Requested interpolation axis exceeds the native ppm range for sample ", i,

@@ -115,7 +115,7 @@ nmr_detect_peaks <- function(nmr_dataset,
     verbose = FALSE) {
     nmr_dataset <- validate_nmr_dataset_1D(nmr_dataset)
     if (is.null(baselineThresh) && is.null(range_without_peaks)) {
-        rlang::abort(
+        cli::cli_abort(
             message = c(
                 "Either baselineThresh or range_without_peaks must be given",
                 "i" = "There is no ppm range guaranteed to be free of peaks for every sample type.",
@@ -134,7 +134,7 @@ nmr_detect_peaks <- function(nmr_dataset,
         if (isTRUE(verbose)) {
             if (length(baselineThresh) > 1L) {
                 bth_minmax <- range(baselineThresh)
-                rlang::inform(
+                cli::cli_inform(
                     message = c(
                         "i" = glue::glue("Using baseline thresholds in the range [{bthmin} - {bthmax}]",
                             bthmin = bth_minmax[1], bthmax = bth_minmax[2]
@@ -142,13 +142,13 @@ nmr_detect_peaks <- function(nmr_dataset,
                     )
                 )
             } else {
-                rlang::inform(
+                cli::cli_inform(
                     message = c(
                         "i" = glue::glue("Using baselineThresh={baselineThresh}", baselineThresh = baselineThresh)
                     )
                 )
             }
-            rlang::inform(
+            cli::cli_inform(
                 message = c(
                     "i" = glue::glue(
                         "You may plot(<your-dataset>, chemshift_range=c({rmin}, {rmax})) ",
@@ -163,7 +163,7 @@ nmr_detect_peaks <- function(nmr_dataset,
     }
 
     if (!is.numeric(baselineThresh)) {
-        rlang::abort(glue::glue("The baseline threshold is not numeric: {baselineThresh}"))
+        cli::cli_abort(glue::glue("The baseline threshold is not numeric: {baselineThresh}"))
     }
     if (length(baselineThresh) == 1) {
         baselineThresh <- rep(baselineThresh, times = nmr_dataset$num_samples)

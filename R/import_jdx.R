@@ -196,7 +196,7 @@ process_block <- function(lines, metadata_only = FALSE) {
                 next
             }
             # Unknown data format:
-            rlang::abort(c(
+            cli::cli_abort(c(
                 "The format of this data field is not implemented",
                 "i" = sprintf("Line: %d", i),
                 "i" = sprintf("Content: %s", line)
@@ -236,7 +236,7 @@ process_block <- function(lines, metadata_only = FALSE) {
         # Convert x axis from frequency to chemshift
         if (!is.null(block[["XUNITS"]]) && tolower(block[["XUNITS"]]) == "hz") {
             if (is.null(block[[".OBSERVE FREQUENCY"]])) {
-                rlang::abort(".OBSERVE FREQUENCY is missing from the JDX file but XUNITS is 'Hz'")
+                cli::cli_abort(".OBSERVE FREQUENCY is missing from the JDX file but XUNITS is 'Hz'")
             }
             block[[data_field]][["x"]] <-
                 block[[data_field]][["x"]] / block[[".OBSERVE FREQUENCY"]]

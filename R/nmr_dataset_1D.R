@@ -87,7 +87,7 @@ validate_nmr_dataset_1D <- function(nmr_dataset_1D) {
     )
 
     if (!"excluded_regions" %in% names(unclass(nmr_dataset_1D))) {
-        rlang::warn(
+        cli::cli_warn(
             message = c(
                 'The dataset should have a "excluded_regions" element with the excluded regions.',
                 "i" = paste0(

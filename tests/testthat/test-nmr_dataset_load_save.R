@@ -4,18 +4,23 @@ test_that("nmr_dataset_load() rejects an .rds file that is not a valid AlpsNMR d
     # unrelated .rds file must not be silently treated as a valid dataset --
     # it must be rejected with a clear error instead of returning garbage
     # that downstream code would then operate on.
+    # cli::cli_abort() word-wraps long messages to the console width, so the
+    # regexp is matched against whitespace-collapsed text rather than the raw
+    # (possibly wrapped) condition message.
     bad_file_list <- withr::local_tempfile(fileext = ".rds")
     saveRDS(list(foo = "bar"), bad_file_list)
-    expect_error(
-        nmr_dataset_load(bad_file_list),
-        regexp = "does not contain a valid AlpsNMR dataset"
+    err_list <- tryCatch(nmr_dataset_load(bad_file_list), error = function(e) e)
+    expect_match(
+        gsub("\\s+", " ", conditionMessage(err_list)),
+        "does not contain a valid AlpsNMR dataset"
     )
 
     bad_file_scalar <- withr::local_tempfile(fileext = ".rds")
     saveRDS(42, bad_file_scalar)
-    expect_error(
-        nmr_dataset_load(bad_file_scalar),
-        regexp = "does not contain a valid AlpsNMR dataset"
+    err_scalar <- tryCatch(nmr_dataset_load(bad_file_scalar), error = function(e) e)
+    expect_match(
+        gsub("\\s+", " ", conditionMessage(err_scalar)),
+        "does not contain a valid AlpsNMR dataset"
     )
 })
 

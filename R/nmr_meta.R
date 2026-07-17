@@ -37,7 +37,7 @@ nmr_meta_get <- function(samples,
     if (is.null(columns) && !is.null(groups)) {
         if (!all(groups %in% names(metadata_list))) {
             groups_miss <- groups[!groups %in% names(metadata_list)]
-            rlang::abort(message = c(
+            cli::cli_abort(message = c(
                 "Some missing groups in the dataset were requested:",
                 groups_miss
             ))
@@ -72,7 +72,7 @@ nmr_meta_get <- function(samples,
         if (length(cols_miss) - show_cols > 0) {
             err_msg <- c(err_msg, glue("and {length(cols_miss) - show_cols} more columns"))
         }
-        rlang::abort(message = err_msg)
+        cli::cli_abort(message = err_msg)
     }
 
     columns <- columns[columns %in% colnames(metadata)]

@@ -121,7 +121,7 @@ names.nmr_dataset_family <- function(x) {
 #' @export
 `names<-.nmr_dataset_family` <- function(x, value) {
     if (length(value) != x$num_samples) {
-        rlang::abort(
+        cli::cli_abort(
             message = c(
                 glue("names should be vector of length {x$num_samples}, but a vector of length {length(value)} was given instead")
             )
@@ -129,7 +129,7 @@ names.nmr_dataset_family <- function(x) {
     }
     if (anyDuplicated(value) > 0) {
         (
-            rlang::abort("NMRExperiment names should not be repeated")
+            cli::cli_abort("NMRExperiment names should not be repeated")
         )
     }
     for (table_name in names(x$metadata)) {

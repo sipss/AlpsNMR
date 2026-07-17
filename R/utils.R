@@ -301,7 +301,7 @@ to_ASICS <- function(dataset, ...) {
 
 abort_if_not <- function(condition, ...) {
     if (!condition) {
-        rlang::abort(...)
+        cli::cli_abort(...)
     }
 }
 
@@ -314,7 +314,7 @@ require_pkgs <- function(pkg, msgs = NULL, ...) {
     if (!all(have_pkgs)) {
         missing_pkgs <- names(have_pkgs)[!have_pkgs]
         parent_call <- format(rlang::caller_call())
-        rlang::abort(
+        cli::cli_abort(
             message = c(
                 glue::glue("{parent_call} requires additional packages. Please install them. You may want to use:", parent_call = parent_call),
                 glue::glue("    BiocManager::install({deparse(missing_pkgs)})", missing_pkgs = missing_pkgs),
@@ -329,7 +329,7 @@ require_pkgs <- function(pkg, msgs = NULL, ...) {
 get_geom_text <- function() {
     has_ggrepel <- requireNamespace("ggrepel", quietly = TRUE)
     if (!has_ggrepel) {
-        rlang::warn(
+        cli::cli_warn(
             message = c(
                 "Text labels in the plot may overlap",
                 "i" = 'You may use `install.packages("ggrepel")` to install the ggrepel package',
