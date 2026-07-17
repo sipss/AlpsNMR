@@ -148,7 +148,9 @@ nmr_read_samples <- function(sample_names,
 create_sample_names <- function(x) {
     # 1. Separate the zip path: "/a/b/c.zip!/d/e" -> "/a/b/c.zip"
     # 1. Use the basename without the extension: "c"
-    # 2. If there are repeated names, prepend the dirname: "b/c"
+    # 2. If there are repeated names, strip the path prefix common to every
+    #    sample, keeping as much of the remaining path as needed for
+    #    uniqueness (not just the immediate parent directory): "b/c"
     # 3. If there are repeated names, use vctrs::name_repair()
     has_zip_path <- grepl("\\.zip!.*$", x)
     x_without_zip_path <- x
@@ -162,12 +164,38 @@ create_sample_names <- function(x) {
     if (anyDuplicated(xnames) == 0) {
         return(xnames)
     }
-    prepended_dirnames <- basename(dirname(remove_extensions))
-    xnames2 <- paste(prepended_dirnames, xnames, sep = "/")
+    xnames2 <- strip_common_path_prefix(remove_extensions)
     if (anyDuplicated(xnames2) == 0) {
         return(xnames2)
     }
     vctrs::vec_as_names(xnames2, repair = "unique")
+}
+
+# Removes the path prefix (in whole directory components, not raw
+# characters) shared by every element of `paths`, so two samples that only
+# differ a few levels up (e.g. "study1/groupA/subject1/10" vs
+# "study1/groupB/subject1/10") get disambiguated using as much of the path
+# as needed, rather than just the immediate parent directory.
+strip_common_path_prefix <- function(paths) {
+    path_parts <- strsplit(paths, "/", fixed = TRUE)
+    min_len <- min(lengths(path_parts))
+    common_len <- 0
+    if (min_len > 0) {
+        for (i in seq_len(min_len)) {
+            component_i <- vapply(path_parts, `[[`, character(1), i)
+            if (length(unique(component_i)) > 1) {
+                break
+            }
+            common_len <- i
+        }
+    }
+    vapply(path_parts, function(parts) {
+        if (length(parts) > common_len) {
+            paste(parts[seq(common_len + 1, length(parts))], collapse = "/")
+        } else {
+            ""
+        }
+    }, character(1))
 }
 
 nmr_read_sample_bruker <- function(sample_path, pulse_sequence = NULL, metadata_only = FALSE, ...) {
