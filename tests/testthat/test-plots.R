@@ -135,6 +135,41 @@ test_that("tidy.nmr_dataset_1D returns a long data frame with NMRExperiment/chem
     expect_true(all(df$chemshift >= 0.2 & df$chemshift <= 0.6))
 })
 
+test_that("tidy.nmr_dataset_1D warns and excludes unknown NMRExperiment values when some are valid", {
+    # Regression test for https://github.com/sipss/AlpsNMR/issues/69: an
+    # unknown NMRExperiment used to silently produce NA-filled rows labelled
+    # with the wrong (nonexistent) name instead of warning and dropping them.
+    dataset <- make_large_nmr_dataset_1D(3)
+
+    expect_warning(
+        df <- tidy(dataset, NMRExperiment = c(names(dataset)[1], "does-not-exist")),
+        "does-not-exist"
+    )
+
+    expect_equal(unique(df$NMRExperiment), names(dataset)[1])
+    expect_false(anyNA(df$intensity))
+})
+
+test_that("tidy.nmr_dataset_1D errors when every given NMRExperiment value is unknown", {
+    dataset <- make_large_nmr_dataset_1D(3)
+
+    expect_error(
+        tidy(dataset, NMRExperiment = c("does-not-exist-1", "does-not-exist-2")),
+        "None of the given NMRExperiment values"
+    )
+})
+
+test_that("tidy.nmr_dataset_1D's error/warning suggest some valid NMRExperiment values", {
+    dataset <- make_large_nmr_dataset_1D(3)
+    valid_examples <- paste(utils::head(names(dataset), 2), collapse = ", ")
+
+    expect_error(
+        tidy(dataset, NMRExperiment = "does-not-exist"),
+        valid_examples,
+        fixed = TRUE
+    )
+})
+
 ## plot_interactive / plot_webgl ----------------------------------------------
 
 test_that("plot_interactive writes an html file and a lib/ folder, and aborts on a pre-existing lib/ unless told to overwrite", {

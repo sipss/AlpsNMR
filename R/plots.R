@@ -346,6 +346,29 @@ tidy.nmr_dataset_1D <-
             sample_idx <- seq_along(NMRExperiment)
         } else {
             sample_idx <- match(NMRExperiment, names(x))
+            is_unknown <- is.na(sample_idx)
+            if (any(is_unknown)) {
+                valid_examples <- paste(utils::head(names(x), 2), collapse = ", ")
+                unknown_values <- paste(NMRExperiment[is_unknown], collapse = ", ")
+                if (all(is_unknown)) {
+                    rlang::abort(
+                        message = c(
+                            "None of the given NMRExperiment values were found in the dataset",
+                            "x" = glue::glue("Not found: {unknown_values}"),
+                            "i" = glue::glue("Some valid NMRExperiment values are: {valid_examples}")
+                        )
+                    )
+                }
+                cli::cli_warn(
+                    message = c(
+                        "!" = "Some NMRExperiment values were not found in the dataset and will be excluded",
+                        "x" = "Not found: {unknown_values}",
+                        "i" = "Some valid NMRExperiment values are: {valid_examples}"
+                    )
+                )
+                NMRExperiment <- NMRExperiment[!is_unknown]
+                sample_idx <- sample_idx[!is_unknown]
+            }
         }
         chemshift_in_range <- decimate_axis(
             xaxis = x[[axis_name]],
