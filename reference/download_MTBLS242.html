@@ -65,12 +65,20 @@ dataset from Gralka et al., 2015. DOI: <a href="https://doi.org/10.3945/ajcn.115
 
 
 <dl><dt id="arg-dest-dir">dest_dir<a class="anchor" aria-label="anchor" href="#arg-dest-dir"></a></dt>
-<dd><p>Directory where the dataset should be saved</p></dd>
+<dd><p>Directory where the dataset should be saved. Every freshly
+downloaded file is verified against the canonical SHA-256 checksums
+MetaboLights publishes for MTBLS242. As a fallback for when that manifest
+cannot be fetched, the SHA-256 of every downloaded file is also pinned to
+<code>&lt;dest_dir&gt;/SHA256SUMS</code> the first time it is saved, and re-verified on
+every later call that reuses a cached file, so local corruption or
+tampering between calls is detected either way.</p></dd>
 
 
 <dt id="arg-force">force<a class="anchor" aria-label="anchor" href="#arg-force"></a></dt>
 <dd><p>Logical. If <code>TRUE</code> we do not re-download files if they exist. The function does not check whether cached versions were
-downloaded with different <code>keep_only_*</code> arguments, so please use <code>force = TRUE</code> if you change the <code>keep_only_*</code> settings.</p></dd>
+downloaded with different <code>keep_only_*</code> arguments, so please use <code>force = TRUE</code> if you change the <code>keep_only_*</code> settings.
+<code>force = TRUE</code> also re-downloads and re-pins the checksum of every file, rather than
+verifying it against a previously pinned value.</p></dd>
 
 
 <dt id="arg-keep-only-cpmg-r">keep_only_CPMG_1r<a class="anchor" aria-label="anchor" href="#arg-keep-only-cpmg-r"></a></dt>
@@ -106,7 +114,7 @@ of disk space will be used.</p>
 <p>Note that we have experienced some sporadic timeouts from Metabolights,
 when downloading the dataset. If you get those timeouts simply re-run the
 download function and it will restart from where it stopped.</p>
-<p>Note as well, that we observed several files to have incorrect data:</p><ul><li><p>Obs4_0346s.zip is not present in the FTP server</p></li>
+<p>Note as well, that we observed several files to have incorrect data:</p><ul><li><p>Obs4_0346s.zip is not present on the server</p></li>
 <li><p>Obs0_0110s.zip and Obs1_0256s.zip incorrectly contain sample Obs1_0010s</p></li>
 </ul><p>This function removes all three samples from the samples annotations and
 doesn't download their data.</p>

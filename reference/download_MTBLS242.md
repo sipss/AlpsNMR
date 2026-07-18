@@ -21,14 +21,22 @@ download_MTBLS242(
 
 - dest_dir:
 
-  Directory where the dataset should be saved
+  Directory where the dataset should be saved. Every freshly downloaded
+  file is verified against the canonical SHA-256 checksums MetaboLights
+  publishes for MTBLS242. As a fallback for when that manifest cannot be
+  fetched, the SHA-256 of every downloaded file is also pinned to
+  `<dest_dir>/SHA256SUMS` the first time it is saved, and re-verified on
+  every later call that reuses a cached file, so local corruption or
+  tampering between calls is detected either way.
 
 - force:
 
   Logical. If `TRUE` we do not re-download files if they exist. The
   function does not check whether cached versions were downloaded with
   different `keep_only_*` arguments, so please use `force = TRUE` if you
-  change the `keep_only_*` settings.
+  change the `keep_only_*` settings. `force = TRUE` also re-downloads
+  and re-pins the checksum of every file, rather than verifying it
+  against a previously pinned value.
 
 - keep_only_CPMG_1r:
 
@@ -78,7 +86,7 @@ the download function and it will restart from where it stopped.
 
 Note as well, that we observed several files to have incorrect data:
 
-- Obs4_0346s.zip is not present in the FTP server
+- Obs4_0346s.zip is not present on the server
 
 - Obs0_0110s.zip and Obs1_0256s.zip incorrectly contain sample
   Obs1_0010s

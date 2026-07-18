@@ -67,6 +67,10 @@
 
 ### Other changes
 
+- [`download_MTBLS242()`](https://sipss.github.io/AlpsNMR/reference/download_MTBLS242.md):
+  validate downloaded files against MetaboLights’ published SHA-256
+  checksums for the MTBLS242 dataset
+  ([\#72](https://github.com/sipss/AlpsNMR/issues/72)).
 - Bumped several dependency version floors to roughly their versions
   from a year ago. Packages with a recent major release are pinned to
   the last minor of the previous major instead, to avoid forcing an
