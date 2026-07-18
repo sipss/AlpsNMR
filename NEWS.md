@@ -47,21 +47,8 @@
 
 ## Other changes
 
-- `download_MTBLS242()`: still downloads the dataset over FTP, as documented
-  by MetaboLights, but now verifies every freshly downloaded file against
-  the canonical SHA-256 checksums MetaboLights publishes for MTBLS242
-  (`<https_url>/HASHES/{metadata,data}_sha256.json`, fetched over HTTPS —
-  the only part of this fix that uses HTTPS, since MetaboLights does not
-  document that path as a supported way to download the data files
-  themselves), aborting with a clear error on mismatch instead of silently
-  accepting a corrupted or tampered file. As a fallback for when that
-  manifest can't be fetched, the SHA-256 of every downloaded file is also
-  pinned to `<dest_dir>/SHA256SUMS` the first time it is saved and
-  re-verified on every later call that reuses a cached file (#72). Also
-  fixes the sample data URLs, which 404'd against the current server layout
-  (missing a `FILES/` path segment) and metadata filename casing
-  (`s_mtbls242.txt` vs. the server's `s_MTBLS242.txt`).
-  Adds `digest` and `jsonlite` as new `Suggests` dependencies.
+- `download_MTBLS242()`: validate downloaded files against MetaboLights'
+  published SHA-256 checksums for the MTBLS242 dataset (#72).
 - Bumped several dependency version floors to roughly their versions from a
   year ago. Packages with a recent major release are pinned to the last
   minor of the previous major instead, to avoid forcing an upgrade:
