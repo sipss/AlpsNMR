@@ -38,6 +38,10 @@
 
 ## Bug fixes
 
+- `peaklist_fit_lorentzians()` (used by `nmr_detect_peaks(fit_lorentzians =
+  TRUE)`): its "Fitting lorentzians" progress bar was not gated behind the
+  same interactive/non-knitr check every other progress bar in the package
+  uses, so it always printed, including inside notebooks/vignettes.
 - `bp_kfold_VIP_analysis()`: fixed fold partitioning, which assigned samples
   to folds with a deterministic `x %% k` split instead of the intended random
   shuffle.
