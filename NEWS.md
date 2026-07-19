@@ -23,6 +23,18 @@
   can be selected, not just preop and 12 months. `timepoints = c("preop", "12
   months after surgery")` is the new default and reproduces the old
   `keep_only_preop_and_3months = TRUE` behavior.
+- `nmr_baseline_threshold_plot()`: `NMRExperiment = NULL` now means "every
+  sample" (paginated via new `nrow`/`ncol`/`page` arguments) instead of
+  silently subsampling to 10 random samples when there were more than 20.
+  `"all"` remains a synonym for `NULL`. `nrow`/`ncol` default to a snug grid
+  for small sample counts, or a fixed 3x3 (paginate with `page`) for 7 or
+  more.
+
+## New features
+
+- `nmr_baseline_threshold_plot()`: new `nrow`/`ncol`/`page` arguments paginate
+  the per-sample facets instead of cramming every sample onto one
+  illegible page.
 
 ## Bug fixes
 
