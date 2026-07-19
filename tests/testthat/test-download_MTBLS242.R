@@ -78,7 +78,6 @@ test_that("download_MTBLS242() rejects a zip archive with a path-traversal entry
             dest_dir = dest_dir,
             force = TRUE,
             keep_only_CPMG_1r = TRUE,
-            keep_only_preop_and_3months = TRUE,
             keep_only_complete_time_points = TRUE
         ),
         regexp = "zip-slip"
@@ -140,7 +139,6 @@ test_that("download_MTBLS242() extracts a benign zip archive normally", {
             dest_dir = dest_dir,
             force = TRUE,
             keep_only_CPMG_1r = TRUE,
-            keep_only_preop_and_3months = TRUE,
             keep_only_complete_time_points = TRUE
         )
     )
@@ -203,7 +201,6 @@ test_that("download_MTBLS242() verifies fresh downloads against MetaboLights' ca
             dest_dir = dest_dir,
             force = TRUE,
             keep_only_CPMG_1r = TRUE,
-            keep_only_preop_and_3months = TRUE,
             keep_only_complete_time_points = TRUE
         )
     )
@@ -248,7 +245,6 @@ test_that("download_MTBLS242() aborts a fresh download that doesn't match Metabo
             dest_dir = dest_dir,
             force = TRUE,
             keep_only_CPMG_1r = TRUE,
-            keep_only_preop_and_3months = TRUE,
             keep_only_complete_time_points = TRUE
         ),
         regexp = "published\\s+by MetaboLights"
@@ -304,7 +300,6 @@ test_that("download_MTBLS242() falls back to pinning local SHA-256 checksums whe
         dest_dir = dest_dir,
         force = TRUE,
         keep_only_CPMG_1r = TRUE,
-        keep_only_preop_and_3months = TRUE,
         keep_only_complete_time_points = TRUE
     )
     manifest_file <- file.path(dest_dir, "SHA256SUMS")
@@ -321,7 +316,6 @@ test_that("download_MTBLS242() falls back to pinning local SHA-256 checksums whe
             dest_dir = dest_dir,
             force = FALSE,
             keep_only_CPMG_1r = TRUE,
-            keep_only_preop_and_3months = TRUE,
             keep_only_complete_time_points = TRUE
         )
     )
@@ -334,7 +328,6 @@ test_that("download_MTBLS242() falls back to pinning local SHA-256 checksums whe
             dest_dir = dest_dir,
             force = FALSE,
             keep_only_CPMG_1r = TRUE,
-            keep_only_preop_and_3months = TRUE,
             keep_only_complete_time_points = TRUE
         ),
         regexp = "Checksum mismatch"

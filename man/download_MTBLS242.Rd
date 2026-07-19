@@ -8,7 +8,7 @@ download_MTBLS242(
   dest_dir = "MTBLS242",
   force = FALSE,
   keep_only_CPMG_1r = TRUE,
-  keep_only_preop_and_3months = TRUE,
+  timepoints = c("preop", "3 months after surgery"),
   keep_only_complete_time_points = TRUE
 )
 }
@@ -22,15 +22,20 @@ every later call that reuses a cached file, so local corruption or
 tampering between calls is detected either way.}
 
 \item{force}{Logical. If \code{TRUE} we do not re-download files if they exist. The function does not check whether cached versions were
-downloaded with different \verb{keep_only_*} arguments, so please use \code{force = TRUE} if you change the \verb{keep_only_*} settings.
+downloaded with different \verb{keep_only_*}/\code{timepoints} arguments, so please use \code{force = TRUE} if you change those settings.
 \code{force = TRUE} also re-downloads and re-pins the checksum of every file, rather than
-verifying it against a previously pinned value.}
+verifying it against a previously pinned value. If you only \emph{added} timepoints (kept every previously
+requested one), deleting \verb{<dest_dir>/sample_annotations.tsv} before calling again is enough to pick up
+the new timepoints without re-downloading previously cached samples.}
 
 \item{keep_only_CPMG_1r}{If \code{TRUE}, remove all other data beyond the CPMG real spectrum, which is enough for the tutorial}
 
-\item{keep_only_preop_and_3months}{If \code{TRUE}, keep only the preoperatory and the "three months after surgery" time points, enough for the tutorial}
+\item{timepoints}{Either \code{NULL} to keep every timepoint, or a character vector with the
+\code{TimePoint} values to keep (a subset of \code{"preop"}, \code{"3 months after surgery"},
+\code{"6 months after surgery"}, \code{"9 months after surgery"}, \code{"12 months after surgery"}).
+Defaults to \code{c("preop", "3 months after surgery")}, enough for the tutorial.}
 
-\item{keep_only_complete_time_points}{If \code{TRUE}, remove samples that do not appear on all timepoints. Useful for the tutorial.}
+\item{keep_only_complete_time_points}{If \code{TRUE}, remove samples that do not appear on all of the kept timepoints. Useful for the tutorial.}
 }
 \value{
 Invisibly, the annotations. See the example for how to download the
@@ -42,21 +47,21 @@ dataset from Gralka et al., 2015. DOI: \doi{10.3945/ajcn.115.110536}.
 }
 \details{
 Besides the destination directory, this function
-includes three logical parameters to limit the amount of downloaded/saved data.
-To run the tutorial workflow:
+includes parameters to limit the amount of downloaded/saved data.
+To run the tutorial workflow with a two-timepoint comparison:
 \itemize{
-\item only the "preop" and "three months" timepoints are used,
-\item only subjects measured in \emph{both} preop and three months time points are used
+\item only the requested \code{timepoints} (e.g. "preop" and "3 months after surgery")
+are used,
+\item only subjects measured in \emph{all} of the requested \code{timepoints} are used,
 \item only the CPMG samples are used.
 }
 
-If you want to run the tutorial, you can set those filters to \code{TRUE}. Then, roughly
-800MB will be downloaded, and 77MB of disk space will be used, since for each
-downloaded sample we remove all the data but the CPMG.
-
-If you set those filters to \code{FALSE}, roughly 1.8GB of data will be
-downloaded (since we have more timepoints to download) and 1.8GB
-of disk space will be used.
+The full study has five timepoints: \code{"preop"}, \code{"3 months after surgery"},
+\code{"6 months after surgery"}, \code{"9 months after surgery"}, and
+\code{"12 months after surgery"}. Restricting \code{timepoints} to two of them keeps
+the download small (roughly 800MB downloaded, 77MB on disk with
+\code{keep_only_CPMG_1r = TRUE}). Passing \code{timepoints = NULL} downloads every
+timepoint (roughly 1.8GB downloaded and on disk).
 
 Note that we have experienced some sporadic timeouts from Metabolights,
 when downloading the dataset. If you get those timeouts simply re-run the
@@ -75,7 +80,7 @@ doesn't download their data.
 \dontrun{
   download_MTBLS242("./MTBLS242")
   annot <- readr::read_tsv(annotations_destfile)
-  
+
   dataset <- nmr_read_samples(annot$filename)
   dataset <- nmr_meta_add(dataset, annot)
   dataset
