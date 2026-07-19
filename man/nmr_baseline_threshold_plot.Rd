@@ -7,8 +7,11 @@
 nmr_baseline_threshold_plot(
   nmr_dataset,
   thresholds,
-  NMRExperiment = "all",
+  NMRExperiment = NULL,
   chemshift_range = NULL,
+  nrow = NULL,
+  ncol = NULL,
+  page = 1,
   ...
 )
 }
@@ -17,9 +20,18 @@ nmr_baseline_threshold_plot(
 
 \item{thresholds}{A named vector. The values are baseline thresholds. The names are NMRExperiments.}
 
-\item{NMRExperiment}{The NMRExperiments to plot (Use \code{"all"} to plot all of them)}
+\item{NMRExperiment}{The NMRExperiments to plot. \code{NULL} (the default) plots every sample
+(paginated via \code{nrow}/\code{ncol}/\code{page}); \code{"all"} is a synonym for \code{NULL}; or pass a character
+vector to filter to a specific subset of samples.}
 
 \item{chemshift_range}{The range to plot, as a first check use the \code{range_without_peaks} from \link{nmr_baseline_threshold}}
+
+\item{nrow, ncol}{Number of rows/columns of facets per page. \code{NULL} (the default) picks a
+snug grid for the number of samples requested: 1x\code{n} for fewer than 4 samples, 2x2 for 4,
+2x3 for 5-6, and a fixed 3x3 (paginated via \code{page}) for 7 or more.}
+
+\item{page}{Which page of facets to plot (1-indexed). Requesting a page beyond the number
+available is an error.}
 
 \item{...}{arguments passed to \link[ggplot2:aes]{ggplot2::aes} (or to \link[ggplot2:aes_string]{ggplot2::aes_string}, being deprecated).}
 }
@@ -27,8 +39,9 @@ nmr_baseline_threshold_plot(
 A plot.
 }
 \description{
-If you have a lot of samples you can make the plot window bigger (or
-use "\verb{ ```\{r fig.height=10, fig.width=10\}}" in notebooks), or choose some NMRExperiments.
+With many samples, a single page can't legibly show one facet per sample;
+\code{nrow}/\code{ncol}/\code{page} paginate the facets instead of cramming (or silently
+subsampling) them all onto one page.
 }
 \examples{
 
