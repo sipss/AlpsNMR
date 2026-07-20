@@ -29,6 +29,15 @@
   `"all"` remains a synonym for `NULL`. `nrow`/`ncol` default to a snug grid
   for small sample counts, or a fixed 3x3 (paginate with `page`) for 7 or
   more.
+- `bp_kfold_VIP_analysis()`: `important_vips`/`relevant_vips` are now derived
+  by pooling every fold's raw bootstrap-permutation VIP differences and
+  applying Afanador, Tran & Buydens (2013)'s mean/SD/CI procedure once on the
+  pooled replicates, instead of classifying each fold independently and
+  intersecting the resulting feature sets. Under the old intersection rule, a
+  single fold's estimate falling just short of the "important" cut-off vetoed
+  a feature even if every other fold flagged it as important; pooling
+  combines the evidence before any thresholding happens. Selected feature
+  sets will generally differ from previous versions.
 
 ## New features
 

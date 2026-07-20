@@ -1,3 +1,69 @@
+#' Summarize bootstrap-permutation VIP differences into a per-feature CI and importance call
+#'
+#' Implements Afanador, Tran & Buydens (2013)'s normalization and importance
+#' guidelines (Section 2.4, step 6): each feature's difference vector
+#' (bootstrapped VIP minus permuted-bootstrapped VIP, across replicates) is
+#' standardized to its own standard deviation, and the mean and 95%
+#' confidence interval of those standardized differences are used to classify
+#' the feature (lower-bound > `t_{1-alpha/2,n-1}` = important; > 0 = merely
+#' relevant/marginally important; otherwise not important).
+#'
+#' `pls_vip_score_diff`'s replicates can be a single fold's bootstrap
+#' iterations, or several folds' bootstrap iterations pooled together
+#' (`bp_kfold_VIP_analysis()` does the latter, combining every fold's raw
+#' differences before this single thresholding step, instead of thresholding
+#' within each fold and then intersecting the resulting feature sets).
+#'
+#' @param pls_vip_score_diff A features x replicates matrix (`dimnames` gives
+#'   feature names in rows) of `pls_vip - pls_vip_perm` differences.
+#' @param n_samples Number of training samples backing the difference vector,
+#'   used for the `t_{1-alpha/2,n-1}` quantile (n = training samples, not the
+#'   number of replicates, per the paper).
+#' @return A list with `boots_vip`, `boots_vip_sd`, `error`, `lower_bound`,
+#'   `upper_bound` (each a one-column matrix over features, `dimnames` giving
+#'   feature names), and `important_vips`/`relevant_vips` (character vectors
+#'   of feature names).
+#' @noRd
+summarize_vip_differences <- function(pls_vip_score_diff, n_samples) {
+    names <- rownames(pls_vip_score_diff)
+    num_features <- nrow(pls_vip_score_diff)
+    n_replicates <- ncol(pls_vip_score_diff)
+
+    boots_vip <- matrix(nrow = num_features, dimnames = list(names))
+    boots_vip_sd <- matrix(nrow = num_features, dimnames = list(names))
+    error <- matrix(nrow = num_features, dimnames = list(names))
+    lower_bound <- matrix(nrow = num_features, dimnames = list(names))
+    upper_bound <- matrix(nrow = num_features, dimnames = list(names))
+    for (k in seq_len(num_features)) {
+        element <- pls_vip_score_diff[k, ] / sd(pls_vip_score_diff[k, ])
+        boots_vip[k] <- sum(element) / n_replicates
+        boots_vip_sd[k] <- sqrt(sum((element - boots_vip[k])^2) / (n_replicates - 1))
+        error[k] <- qt(0.975, df = n_samples - 1) * boots_vip_sd[k]
+        lower_bound[k] <- boots_vip[k] - error[k]
+        upper_bound[k] <- boots_vip[k] + error[k]
+    }
+
+    # The "important" threshold is the same t_{1-alpha/2, n-1} quantile used
+    # to build the confidence interval above (n = number of training
+    # samples, not the number of replicates): a variable is "important" when
+    # its entire two-sided (1-alpha) confidence interval lies above that
+    # quantile, and merely "marginally important" (relevant_vips) when its
+    # lower bound clears zero.
+    important_vips <- names[lower_bound > qt(0.975, df = n_samples - 1)]
+    relevant_vips <- names[lower_bound > 0]
+
+    list(
+        boots_vip = boots_vip,
+        boots_vip_sd = boots_vip_sd,
+        error = error,
+        lower_bound = lower_bound,
+        upper_bound = upper_bound,
+        important_vips = important_vips,
+        relevant_vips = relevant_vips
+    )
+}
+
+
 #' Bootstrap and permutation over PLS-VIP
 #'
 #' Bootstrap and permutation over PLS-VIP on AlpsNMR can be performed on both
@@ -276,31 +342,17 @@ bp_VIP_analysis <- function(dataset,
     pls_perm_models <- purrr::map(res, "model_perm")
     CR <- purrr::map(res, "CR")
 
-    # Normalization of the difference vector for each variable to
-    # its corresponding standard deviation and construct
-    # 95% confidence intervals around the differences
-    boots_vip <- matrix(nrow = num_features, dimnames = list(names))
-    boots_vip_sd <- matrix(nrow = num_features, dimnames = list(names))
-    error <- matrix(nrow = num_features, dimnames = list(names))
-    lower_bound <- matrix(nrow = num_features, dimnames = list(names))
-    upper_bound <- matrix(nrow = num_features, dimnames = list(names))
-    for (k in seq_len(num_features)) {
-        element <- pls_vip_score_diff[k, ] / sd(pls_vip_score_diff[k, ])
-        boots_vip[k] <- sum(element) / nbootstrap
-        boots_vip_sd[k] <- sqrt(sum((element - boots_vip[k])^2) / (nbootstrap - 1))
-        error[k] <- qt(0.975, df = n_samples - 1) * boots_vip_sd[k]
-        lower_bound[k] <- boots_vip[k] - error[k]
-        upper_bound[k] <- boots_vip[k] + error[k]
-    }
-
-    # The "important" threshold is the same t_{1-alpha/2, n-1} quantile used
-    # to build the confidence interval above (n = number of training
-    # samples, not the number of bootstrap datasets): a variable is
-    # "important" when its entire two-sided (1-alpha) confidence interval
-    # lies above that quantile, and merely "marginally important"
-    # (relevant_vips) when its lower bound clears zero.
-    important_vips <- names[lower_bound > qt(0.975, df = n_samples - 1)]
-    relevant_vips <- names[lower_bound > 0]
+    # Normalization of the difference vector for each variable to its
+    # corresponding standard deviation, construction of 95% confidence
+    # intervals around the differences, and the importance guidelines
+    # (Afanador et al. 2013, Section 2.4 step 6). See summarize_vip_differences().
+    vip_summary <- summarize_vip_differences(pls_vip_score_diff, n_samples = n_samples)
+    boots_vip <- vip_summary$boots_vip
+    error <- vip_summary$error
+    lower_bound <- vip_summary$lower_bound
+    upper_bound <- vip_summary$upper_bound
+    important_vips <- vip_summary$important_vips
+    relevant_vips <- vip_summary$relevant_vips
 
     # Checking performance
     # Fit PLS model
@@ -354,6 +406,16 @@ bp_VIP_analysis <- function(dataset,
 #' Use of the bootstrap and permutation methods for a more robust
 #' variable importance in the projection metric for partial least
 #' squares regression, in a k-fold cross validation
+#'
+#' `important_vips` and `relevant_vips` are derived by pooling every fold's
+#' raw bootstrap-permutation VIP differences into a single collection of
+#' replicates and applying Afanador, Tran & Buydens (2013)'s own mean/SD/CI
+#' procedure to that pooled collection exactly once (see
+#' [bp_VIP_analysis()]), rather than by classifying each fold on its own and
+#' intersecting the resulting feature sets: a single fold's estimate falling
+#' just short of the "important" cut-off no longer veto's a feature that
+#' every other fold flagged as important, since the folds' evidence is
+#' combined before any thresholding happens.
 #'
 #' @name bp_kfold_VIP_analysis
 #' @param dataset An [nmr_dataset_family] object
@@ -483,24 +545,40 @@ bp_kfold_VIP_analysis <- function(dataset,
         ncomp = ncomp, nbootstrap = nbootstrap
     )
 
-    # Mean of the vips of the different folds for the plot
-    means <- purrr::map(results, "pls_vip_means")
-    # means <- sapply(results, "[", "pls_vip_means")
-    names_order <- sort(rownames(means[[1]]))
-    ordered_means <- matrix(nrow = k, ncol = length(names_order), dimnames = list(NULL, names_order))
-    for (i in seq_len(k)) {
-        ordered_means[i, ] <- means[[i]][order(rownames(means[[i]]))]
-    }
-    ordered_means <- colSums(ordered_means) / k
-    vip_means <- ordered_means[order(ordered_means, decreasing = TRUE)]
-    error <- results[[1]]$error
-    # `error` (and hence the importance threshold line below) is taken from the
-    # first fold, so the cut-off must use that fold's training-sample count.
-    n_samples_fold1 <- length(k_fold_index[[1]])
+    # Pool every fold's raw bootstrap-permutation VIP differences into a
+    # single features x (k * nbootstrap) matrix, then apply Afanador et al.
+    # (2013)'s own mean/SD/CI procedure (summarize_vip_differences()) exactly
+    # once, on the pooled replicates, instead of thresholding within each
+    # fold first and then intersecting the resulting important/relevant
+    # feature sets. With an intersection, a single fold falling just short of
+    # the "important" bar veto'd a feature entirely, even if every other
+    # fold cleared it; pooling combines the evidence before any thresholding
+    # happens, matching how the paper itself combines all of its bootstrap
+    # replicates before applying a single threshold.
+    #
+    # bp_VIP_analysis() returns each fold's pls_vip_score_diff reordered by
+    # that fold's own importance ranking, so rows must be realigned by
+    # feature name (not position) before pooling -- row i of one fold's
+    # matrix is not necessarily the same feature as row i of another's.
+    names_order <- rownames(results[[1]]$pls_vip_score_diff)
+    pooled_diff <- do.call(cbind, lapply(results, function(r) {
+        r$pls_vip_score_diff[names_order, , drop = FALSE]
+    }))
 
-    # Selection based on the means (deprecated, now ussing intersection of the vips)
-    # important_vips <- vip_means[vip_means-2*error > 0]
-    # relevant_vips <- vip_means[vip_means-error > 0]
+    # `n_samples` for the paper's t_{1-alpha/2,n-1} quantile is the training
+    # sample size, not the number of (pooled) bootstrap replicates. Folds
+    # have (nearly) equal training sizes by construction (`rep_len()` above
+    # spreads samples/groups across folds as evenly as possible), so the
+    # first fold's size is used as a representative value.
+    n_samples_fold1 <- length(k_fold_index[[1]])
+    pooled_summary <- summarize_vip_differences(pooled_diff, n_samples = n_samples_fold1)
+    boots_vip_vec <- stats::setNames(as.numeric(pooled_summary$boots_vip), rownames(pooled_summary$boots_vip))
+    error_vec <- stats::setNames(as.numeric(pooled_summary$error), rownames(pooled_summary$error))
+    vip_order <- order(boots_vip_vec, decreasing = TRUE)
+    vip_means <- boots_vip_vec[vip_order]
+    error <- error_vec[vip_order]
+    important_vips <- pooled_summary$important_vips
+    relevant_vips <- pooled_summary$relevant_vips
 
     ## Wilcoxon test
     num_var <- dim(results[[1]]$pls_vip)[1]
@@ -539,10 +617,9 @@ bp_kfold_VIP_analysis <- function(dataset,
         ggplot2::labs(x = "Variables", y = "Scores") +
         ggplot2::theme_bw()
 
-    # Reporting the intersection of the vips of the different folds
     list(
-        important_vips = Reduce(intersect, purrr::map(results, "important_vips")),
-        relevant_vips = Reduce(intersect, purrr::map(results, "relevant_vips")),
+        important_vips = important_vips,
+        relevant_vips = relevant_vips,
         wilcoxon_vips = unique(unlist(wt_vips)),
         vip_means = vip_means,
         vip_score_plot = p,

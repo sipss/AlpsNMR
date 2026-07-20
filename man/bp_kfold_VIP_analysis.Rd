@@ -53,6 +53,16 @@ Bootstrap and permutation over PLS-VIP on AlpsNMR can be performed on both
 Use of the bootstrap and permutation methods for a more robust
 variable importance in the projection metric for partial least
 squares regression, in a k-fold cross validation
+
+\code{important_vips} and \code{relevant_vips} are derived by pooling every fold's
+raw bootstrap-permutation VIP differences into a single collection of
+replicates and applying Afanador, Tran & Buydens (2013)'s own mean/SD/CI
+procedure to that pooled collection exactly once (see
+\code{\link[=bp_VIP_analysis]{bp_VIP_analysis()}}), rather than by classifying each fold on its own and
+intersecting the resulting feature sets: a single fold's estimate falling
+just short of the "important" cut-off no longer veto's a feature that
+every other fold flagged as important, since the folds' evidence is
+combined before any thresholding happens.
 }
 \examples{
 # Data analysis for a table of integrated peaks
