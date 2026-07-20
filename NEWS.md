@@ -42,6 +42,11 @@
   TRUE)`): its "Fitting lorentzians" progress bar was not gated behind the
   same interactive/non-knitr check every other progress bar in the package
   uses, so it always printed, including inside notebooks/vignettes.
+- `nmr_identify_regions_blood()` / `nmr_identify_regions_urine()` /
+  `nmr_identify_regions_cell()`: each `ppm_to_assign` query always
+  contributed exactly `num_proposed_compounds` rows, padding with `NA` when
+  fewer candidate metabolites were found within tolerance; those `NA`-only
+  rows are now dropped instead of returned.
 - `bp_kfold_VIP_analysis()`: fixed fold partitioning, which assigned samples
   to folds with a deterministic `x %% k` split instead of the intended random
   shuffle.
