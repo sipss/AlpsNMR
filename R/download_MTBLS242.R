@@ -47,7 +47,7 @@
 #' @param timepoints Either `NULL` to keep every timepoint, or a character vector with the
 #' `TimePoint` values to keep (a subset of `"preop"`, `"3 months after surgery"`,
 #' `"6 months after surgery"`, `"9 months after surgery"`, `"12 months after surgery"`).
-#' Defaults to `c("preop", "3 months after surgery")`, enough for the tutorial.
+#' Defaults to `c("preop", "12 months after surgery")`, enough for the tutorial.
 #' @param keep_only_complete_time_points If `TRUE`, remove samples that do not appear on all of the kept timepoints. Useful for the tutorial.
 #'
 #' @return Invisibly, the annotations. See the example for how to download the
