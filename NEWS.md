@@ -17,6 +17,12 @@
   `c(9.5, 10)` ppm either; either it or `baselineThresh` must now be given,
   or the call aborts with a clear message instead of failing deep inside
   with a confusing one (#66).
+- `download_MTBLS242()`: `keep_only_preop_and_3months` (logical) replaced by
+  `timepoints` (a character vector of `TimePoint` values to keep, or `NULL`
+  for every timepoint), so any two (or more) of the study's five timepoints
+  can be selected, not just preop and 12 months. `timepoints = c("preop", "12
+  months after surgery")` is the new default and reproduces the old
+  `keep_only_preop_and_3months = TRUE` behavior.
 
 ## Bug fixes
 
