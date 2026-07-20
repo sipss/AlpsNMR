@@ -63,6 +63,8 @@
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li>
+<code><a href="../reference/peaklist_fit_lorentzians.html">peaklist_fit_lorentzians()</a></code> (used by <code>nmr_detect_peaks(fit_lorentzians = TRUE)</code>): its “Fitting lorentzians” progress bar was not gated behind the same interactive/non-knitr check every other progress bar in the package uses, so it always printed, including inside notebooks/vignettes.</li>
+<li>
 <code><a href="../reference/bp_kfold_VIP_analysis.html">bp_kfold_VIP_analysis()</a></code>: fixed fold partitioning, which assigned samples to folds with a deterministic <code>x %% k</code> split instead of the intended random shuffle.</li>
 <li>
 <code><a href="../reference/bp_VIP_analysis.html">bp_VIP_analysis()</a></code>: a degenerate (single-class) bootstrap resample is now redrawn instead of being patched with a fixed, non-random replacement, which biased a fraction of the bootstrap replicates.</li>
