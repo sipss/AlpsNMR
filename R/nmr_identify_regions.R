@@ -44,6 +44,7 @@ nmr_identify_regions_blood <- function(ppm_to_assign, num_proposed_compounds = 3
     # colnames(counts) <- c("Metabolite", "Counts")
     # output_assignation_list <- merge(output_assignation_list,counts, by = "Metabolite")
     output_assignation_list <- output_assignation_list[order(output_assignation_list$ppm_to_assign, -output_assignation_list$Blood_concentration, -output_assignation_list$n_reported_in_Blood), ]
+    output_assignation_list <- output_assignation_list[!is.na(output_assignation_list$Metabolite), , drop = FALSE]
     return(output_assignation_list)
 }
 
@@ -106,6 +107,7 @@ nmr_identify_regions_urine <- function(ppm_to_assign, num_proposed_compounds = 5
     # colnames(counts) <- c("Metabolite", "Counts")
     # output_assignation_list <- merge(output_assignation_list,counts, by = "Metabolite")
     output_assignation_list <- output_assignation_list[order(output_assignation_list$ppm_to_assign, -output_assignation_list$Urine_concentration, -output_assignation_list$n_reported_in_Urine), ]
+    output_assignation_list <- output_assignation_list[!is.na(output_assignation_list$Metabolite), , drop = FALSE]
     return(output_assignation_list)
 }
 
@@ -162,6 +164,7 @@ nmr_identify_regions_cell <- function(ppm_to_assign, num_proposed_compounds = 3,
     }
     output_assignation_list$ppm_to_assign <- rep(ppm_to_assign, each = num_proposed_compounds)
     output_assignation_list <- output_assignation_list[order(output_assignation_list$ppm_to_assign), ]
+    output_assignation_list <- output_assignation_list[!is.na(output_assignation_list$Metabolite), , drop = FALSE]
     return(output_assignation_list)
 }
 
