@@ -8,7 +8,7 @@ download_MTBLS242(
   dest_dir = "MTBLS242",
   force = FALSE,
   keep_only_CPMG_1r = TRUE,
-  timepoints = c("preop", "3 months after surgery"),
+  timepoints = c("preop", "12 months after surgery"),
   keep_only_complete_time_points = TRUE
 )
 }
@@ -33,7 +33,7 @@ the new timepoints without re-downloading previously cached samples.}
 \item{timepoints}{Either \code{NULL} to keep every timepoint, or a character vector with the
 \code{TimePoint} values to keep (a subset of \code{"preop"}, \code{"3 months after surgery"},
 \code{"6 months after surgery"}, \code{"9 months after surgery"}, \code{"12 months after surgery"}).
-Defaults to \code{c("preop", "3 months after surgery")}, enough for the tutorial.}
+Defaults to \code{c("preop", "12 months after surgery")}, enough for the tutorial.}
 
 \item{keep_only_complete_time_points}{If \code{TRUE}, remove samples that do not appear on all of the kept timepoints. Useful for the tutorial.}
 }
