@@ -101,9 +101,18 @@ models_stability_plot_plsda <- function(model) {
         ggplot2::geom_tile() +
         ggplot2::coord_equal() +
         ggplot2::theme_bw() +
-        ggplot2::scale_fill_distiller(
-            palette = "Blues",
-            direction = 1,
+        ggplot2::scale_fill_gradient2(
+            low = "#08519C",
+            mid = "white",
+            high = "#08519C",
+            midpoint = 0,
+            limits = c(-1, 1),
+            # A self dot-product of a (near-)unit loading vector can come out
+            # as e.g. 1.0000000000000002 due to floating-point rounding,
+            # which falls just outside `limits`; squish (clamp to the
+            # nearest limit) instead of the default censor (drop to NA,
+            # rendered as na.value), or such cells silently turn white.
+            oob = scales::squish,
             na.value = "white"
         ) +
         ggplot2::guides(fill = "none") + # removing legend for `fill`
@@ -111,7 +120,12 @@ models_stability_plot_plsda <- function(model) {
         ggplot2::geom_text(
             ggplot2::aes(
                 label = round(.data[["value"]], digits = 2),
-                color = ifelse(.data[["value"]] > 0.5, 1, 0)
+                # A latent variable's sign is arbitrary, so a loading
+                # correlation of -1 is drawn in the same dark blue as +1
+                # (see scale_fill_gradient2() above); the label color must
+                # therefore switch on |value|, not value, to stay legible
+                # against strongly negative tiles too.
+                color = ifelse(abs(.data[["value"]]) > 0.5, 1, 0)
             ),
             size = 2.5,
             show.legend = FALSE
@@ -229,9 +243,18 @@ models_stability_plot_bootstrap <- function(bp_results) {
         ggplot2::geom_tile() +
         ggplot2::coord_equal() +
         ggplot2::theme_bw() +
-        ggplot2::scale_fill_distiller(
-            palette = "Blues",
-            direction = 1,
+        ggplot2::scale_fill_gradient2(
+            low = "#08519C",
+            mid = "white",
+            high = "#08519C",
+            midpoint = 0,
+            limits = c(-1, 1),
+            # A self dot-product of a (near-)unit loading vector can come out
+            # as e.g. 1.0000000000000002 due to floating-point rounding,
+            # which falls just outside `limits`; squish (clamp to the
+            # nearest limit) instead of the default censor (drop to NA,
+            # rendered as na.value), or such cells silently turn white.
+            oob = scales::squish,
             na.value = "white"
         ) +
         ggplot2::guides(fill = "none") + # removing legend for `fill`
@@ -239,7 +262,12 @@ models_stability_plot_bootstrap <- function(bp_results) {
         ggplot2::geom_text(
             ggplot2::aes(
                 label = round(.data[["value"]], digits = 2),
-                color = ifelse(.data[["value"]] > 0.5, 1, 0)
+                # A latent variable's sign is arbitrary, so a loading
+                # correlation of -1 is drawn in the same dark blue as +1
+                # (see scale_fill_gradient2() above); the label color must
+                # therefore switch on |value|, not value, to stay legible
+                # against strongly negative tiles too.
+                color = ifelse(abs(.data[["value"]]) > 0.5, 1, 0)
             ),
             size = 2.5,
             show.legend = FALSE

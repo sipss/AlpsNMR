@@ -47,6 +47,17 @@
   contributed exactly `num_proposed_compounds` rows, padding with `NA` when
   fewer candidate metabolites were found within tolerance; those `NA`-only
   rows are now dropped instead of returned.
+- `models_stability_plot_plsda()` / `models_stability_plot_bootstrap()`: the
+  loadings-correlation heatmap now uses a fixed, sign-agnostic color scale
+  (-1 and +1 both render as the same dark blue, 0 as white; a latent
+  variable's sign is arbitrary, so -1 and +1 indicate equally strong
+  agreement) instead of a plain sequential palette that auto-scaled to
+  whatever range the data happened to have. Also fixes self-correlation
+  cells (expected to be exactly 1) intermittently rendering as blank/white:
+  a loading vector's self dot-product can come out as e.g.
+  `1.0000000000000002` due to floating-point rounding, which fell just
+  outside the (`-1`, `1`) scale limits and was dropped to `NA` by ggplot2's
+  default out-of-bounds handling; now clamped to the nearest limit instead.
 - `bp_kfold_VIP_analysis()`: fixed fold partitioning, which assigned samples
   to folds with a deterministic `x %% k` split instead of the intended random
   shuffle.
