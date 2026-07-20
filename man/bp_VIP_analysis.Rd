@@ -4,7 +4,14 @@
 \alias{bp_VIP_analysis}
 \title{Bootstrap and permutation over PLS-VIP}
 \usage{
-bp_VIP_analysis(dataset, train_index, y_column, ncomp, nbootstrap = 300)
+bp_VIP_analysis(
+  dataset,
+  train_index,
+  y_column,
+  identity_column = NULL,
+  ncomp,
+  nbootstrap = 300
+)
 }
 \arguments{
 \item{dataset}{An \link{nmr_dataset_family} object}
@@ -13,6 +20,15 @@ bp_VIP_analysis(dataset, train_index, y_column, ncomp, nbootstrap = 300)
 
 \item{y_column}{A string with the name of the y column (present in the
 metadata of the dataset)}
+
+\item{identity_column}{\code{NULL} or a string with the name of the identity column
+(present in the metadata of the dataset). When given, bootstrap resamples
+are drawn by resampling whole \code{identity_column} groups (e.g. subjects)
+with replacement, rather than individual rows, so that every repeated
+measurement of a resampled subject is kept together, and a multilevel
+(repeated-measures) \code{plsda} model is fitted (see \link[mixOmics:plsda]{mixOmics::plsda}'s
+\code{multilevel} argument), matching what \code{\link[=nmr_data_analysis]{nmr_data_analysis()}} does for the
+same \code{identity_column}.}
 
 \item{ncomp}{number of components used in the plsda models}
 

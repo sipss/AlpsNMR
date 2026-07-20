@@ -170,7 +170,7 @@ get_test_accuracy <- function(model, x_test, y_test) {
 }
 
 
-train_models_with_only_vip_features <- function(x_train, y_train, x_test, y_test, ncomp, important_vips, relevant_vips) {
+train_models_with_only_vip_features <- function(x_train, y_train, x_test, y_test, ncomp, important_vips, relevant_vips, identity_train = NULL) {
     # important_vips is a more stringent subset of relevant_vips
     if (length(important_vips) == 0) {
         cli::cli_warn(
@@ -219,7 +219,7 @@ train_models_with_only_vip_features <- function(x_train, y_train, x_test, y_test
     vips_model <- plsda_build(
         x = x_train_reduced,
         y = y_train,
-        identity = NULL,
+        identity = identity_train,
         ncomp = ncomp
     )
     
