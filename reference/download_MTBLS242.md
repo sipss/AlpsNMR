@@ -12,7 +12,7 @@ download_MTBLS242(
   dest_dir = "MTBLS242",
   force = FALSE,
   keep_only_CPMG_1r = TRUE,
-  keep_only_preop_and_3months = TRUE,
+  timepoints = c("preop", "12 months after surgery"),
   keep_only_complete_time_points = TRUE
 )
 ```
@@ -33,25 +33,32 @@ download_MTBLS242(
 
   Logical. If `TRUE` we do not re-download files if they exist. The
   function does not check whether cached versions were downloaded with
-  different `keep_only_*` arguments, so please use `force = TRUE` if you
-  change the `keep_only_*` settings. `force = TRUE` also re-downloads
-  and re-pins the checksum of every file, rather than verifying it
-  against a previously pinned value.
+  different `keep_only_*`/`timepoints` arguments, so please use
+  `force = TRUE` if you change those settings. `force = TRUE` also
+  re-downloads and re-pins the checksum of every file, rather than
+  verifying it against a previously pinned value. If you only *added*
+  timepoints (kept every previously requested one), deleting
+  `<dest_dir>/sample_annotations.tsv` before calling again is enough to
+  pick up the new timepoints without re-downloading previously cached
+  samples.
 
 - keep_only_CPMG_1r:
 
   If `TRUE`, remove all other data beyond the CPMG real spectrum, which
   is enough for the tutorial
 
-- keep_only_preop_and_3months:
+- timepoints:
 
-  If `TRUE`, keep only the preoperatory and the "three months after
-  surgery" time points, enough for the tutorial
+  Either `NULL` to keep every timepoint, or a character vector with the
+  `TimePoint` values to keep (a subset of `"preop"`,
+  `"3 months after surgery"`, `"6 months after surgery"`,
+  `"9 months after surgery"`, `"12 months after surgery"`). Defaults to
+  `c("preop", "12 months after surgery")`, enough for the tutorial.
 
 - keep_only_complete_time_points:
 
-  If `TRUE`, remove samples that do not appear on all timepoints. Useful
-  for the tutorial.
+  If `TRUE`, remove samples that do not appear on all of the kept
+  timepoints. Useful for the tutorial.
 
 ## Value
 
@@ -60,25 +67,25 @@ annotations and create a dataset from the downloaded files.
 
 ## Details
 
-Besides the destination directory, this function includes three logical
-parameters to limit the amount of downloaded/saved data. To run the
-tutorial workflow:
+Besides the destination directory, this function includes parameters to
+limit the amount of downloaded/saved data. To run the tutorial workflow
+with a two-timepoint comparison:
 
-- only the "preop" and "three months" timepoints are used,
+- only the requested `timepoints` (e.g. "preop" and "12 months after
+  surgery") are used,
 
-- only subjects measured in *both* preop and three months time points
-  are used
+- only subjects measured in *all* of the requested `timepoints` are
+  used,
 
 - only the CPMG samples are used.
 
-If you want to run the tutorial, you can set those filters to `TRUE`.
-Then, roughly 800MB will be downloaded, and 77MB of disk space will be
-used, since for each downloaded sample we remove all the data but the
-CPMG.
-
-If you set those filters to `FALSE`, roughly 1.8GB of data will be
-downloaded (since we have more timepoints to download) and 1.8GB of disk
-space will be used.
+The full study has five timepoints: `"preop"`,
+`"3 months after surgery"`, `"6 months after surgery"`,
+`"9 months after surgery"`, and `"12 months after surgery"`. Restricting
+`timepoints` to two of them keeps the download small (roughly 800MB
+downloaded, 77MB on disk with `keep_only_CPMG_1r = TRUE`). Passing
+`timepoints = NULL` downloads every timepoint (roughly 1.8GB downloaded
+and on disk).
 
 Note that we have experienced some sporadic timeouts from Metabolights,
 when downloading the dataset. If you get those timeouts simply re-run
@@ -100,7 +107,7 @@ doesn't download their data.
 if (FALSE) { # \dontrun{
   download_MTBLS242("./MTBLS242")
   annot <- readr::read_tsv(annotations_destfile)
-  
+
   dataset <- nmr_read_samples(annot$filename)
   dataset <- nmr_meta_add(dataset, annot)
   dataset

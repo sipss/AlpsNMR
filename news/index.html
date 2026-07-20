@@ -50,6 +50,8 @@
 <code><a href="../reference/nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code> / <code><a href="../reference/nmr_baseline_threshold_plot.html">nmr_baseline_threshold_plot()</a></code>: <code>range_without_peaks</code> / <code>chemshift_range</code> no longer default to <code>c(9.5, 10)</code> ppm; must now be given explicitly.</li>
 <li>
 <code><a href="../reference/nmr_detect_peaks.html">nmr_detect_peaks()</a></code>: <code>range_without_peaks</code> no longer defaults to <code>c(9.5, 10)</code> ppm either; either it or <code>baselineThresh</code> must now be given, or the call aborts with a clear message instead of failing deep inside with a confusing one (<a href="https://github.com/sipss/AlpsNMR/issues/66" class="external-link">#66</a>).</li>
+<li>
+<code><a href="../reference/download_MTBLS242.html">download_MTBLS242()</a></code>: <code>keep_only_preop_and_3months</code> (logical) replaced by <code>timepoints</code> (a character vector of <code>TimePoint</code> values to keep, or <code>NULL</code> for every timepoint), so any two (or more) of the study’s five timepoints can be selected, not just preop and 12 months. <code>timepoints = c("preop", "12 months after surgery")</code> is the new default and reproduces the old <code>keep_only_preop_and_3months = TRUE</code> behavior.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>

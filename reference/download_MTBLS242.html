@@ -55,7 +55,7 @@ dataset from Gralka et al., 2015. DOI: <a href="https://doi.org/10.3945/ajcn.115
 <span>  dest_dir <span class="op">=</span> <span class="st">"MTBLS242"</span>,</span>
 <span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  keep_only_CPMG_1r <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  keep_only_preop_and_3months <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  timepoints <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"preop"</span>, <span class="st">"12 months after surgery"</span><span class="op">)</span>,</span>
 <span>  keep_only_complete_time_points <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -76,21 +76,26 @@ tampering between calls is detected either way.</p></dd>
 
 <dt id="arg-force">force<a class="anchor" aria-label="anchor" href="#arg-force"></a></dt>
 <dd><p>Logical. If <code>TRUE</code> we do not re-download files if they exist. The function does not check whether cached versions were
-downloaded with different <code>keep_only_*</code> arguments, so please use <code>force = TRUE</code> if you change the <code>keep_only_*</code> settings.
+downloaded with different <code>keep_only_*</code>/<code>timepoints</code> arguments, so please use <code>force = TRUE</code> if you change those settings.
 <code>force = TRUE</code> also re-downloads and re-pins the checksum of every file, rather than
-verifying it against a previously pinned value.</p></dd>
+verifying it against a previously pinned value. If you only <em>added</em> timepoints (kept every previously
+requested one), deleting <code>&lt;dest_dir&gt;/sample_annotations.tsv</code> before calling again is enough to pick up
+the new timepoints without re-downloading previously cached samples.</p></dd>
 
 
 <dt id="arg-keep-only-cpmg-r">keep_only_CPMG_1r<a class="anchor" aria-label="anchor" href="#arg-keep-only-cpmg-r"></a></dt>
 <dd><p>If <code>TRUE</code>, remove all other data beyond the CPMG real spectrum, which is enough for the tutorial</p></dd>
 
 
-<dt id="arg-keep-only-preop-and-months">keep_only_preop_and_3months<a class="anchor" aria-label="anchor" href="#arg-keep-only-preop-and-months"></a></dt>
-<dd><p>If <code>TRUE</code>, keep only the preoperatory and the "three months after surgery" time points, enough for the tutorial</p></dd>
+<dt id="arg-timepoints">timepoints<a class="anchor" aria-label="anchor" href="#arg-timepoints"></a></dt>
+<dd><p>Either <code>NULL</code> to keep every timepoint, or a character vector with the
+<code>TimePoint</code> values to keep (a subset of <code>"preop"</code>, <code>"3 months after surgery"</code>,
+<code>"6 months after surgery"</code>, <code>"9 months after surgery"</code>, <code>"12 months after surgery"</code>).
+Defaults to <code>c("preop", "12 months after surgery")</code>, enough for the tutorial.</p></dd>
 
 
 <dt id="arg-keep-only-complete-time-points">keep_only_complete_time_points<a class="anchor" aria-label="anchor" href="#arg-keep-only-complete-time-points"></a></dt>
-<dd><p>If <code>TRUE</code>, remove samples that do not appear on all timepoints. Useful for the tutorial.</p></dd>
+<dd><p>If <code>TRUE</code>, remove samples that do not appear on all of the kept timepoints. Useful for the tutorial.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -101,16 +106,17 @@ annotations and create a dataset from the downloaded files.</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Besides the destination directory, this function
-includes three logical parameters to limit the amount of downloaded/saved data.
-To run the tutorial workflow:</p><ul><li><p>only the "preop" and "three months" timepoints are used,</p></li>
-<li><p>only subjects measured in <em>both</em> preop and three months time points are used</p></li>
+includes parameters to limit the amount of downloaded/saved data.
+To run the tutorial workflow with a two-timepoint comparison:</p><ul><li><p>only the requested <code>timepoints</code> (e.g. "preop" and "12 months after surgery")
+are used,</p></li>
+<li><p>only subjects measured in <em>all</em> of the requested <code>timepoints</code> are used,</p></li>
 <li><p>only the CPMG samples are used.</p></li>
-</ul><p>If you want to run the tutorial, you can set those filters to <code>TRUE</code>. Then, roughly
-800MB will be downloaded, and 77MB of disk space will be used, since for each
-downloaded sample we remove all the data but the CPMG.</p>
-<p>If you set those filters to <code>FALSE</code>, roughly 1.8GB of data will be
-downloaded (since we have more timepoints to download) and 1.8GB
-of disk space will be used.</p>
+</ul><p>The full study has five timepoints: <code>"preop"</code>, <code>"3 months after surgery"</code>,
+<code>"6 months after surgery"</code>, <code>"9 months after surgery"</code>, and
+<code>"12 months after surgery"</code>. Restricting <code>timepoints</code> to two of them keeps
+the download small (roughly 800MB downloaded, 77MB on disk with
+<code>keep_only_CPMG_1r = TRUE</code>). Passing <code>timepoints = NULL</code> downloads every
+timepoint (roughly 1.8GB downloaded and on disk).</p>
 <p>Note that we have experienced some sporadic timeouts from Metabolights,
 when downloading the dataset. If you get those timeouts simply re-run the
 download function and it will restart from where it stopped.</p>
@@ -125,7 +131,7 @@ doesn't download their data.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span>  <span class="fu">download_MTBLS242</span><span class="op">(</span><span class="st">"./MTBLS242"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">annot</span> <span class="op">&lt;-</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu">read_tsv</span><span class="op">(</span><span class="va">annotations_destfile</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_read_samples.html">nmr_read_samples</a></span><span class="op">(</span><span class="va">annot</span><span class="op">$</span><span class="va">filename</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="nmr_meta_add.html">nmr_meta_add</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="va">annot</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">dataset</span></span></span>
