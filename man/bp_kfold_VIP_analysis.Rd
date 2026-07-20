@@ -4,13 +4,28 @@
 \alias{bp_kfold_VIP_analysis}
 \title{K-fold bootstrap and permutation over PLS-VIP}
 \usage{
-bp_kfold_VIP_analysis(dataset, y_column, k = 4, ncomp = 3, nbootstrap = 300)
+bp_kfold_VIP_analysis(
+  dataset,
+  y_column,
+  identity_column = NULL,
+  k = 4,
+  ncomp = 3,
+  nbootstrap = 300
+)
 }
 \arguments{
 \item{dataset}{An \link{nmr_dataset_family} object}
 
 \item{y_column}{A string with the name of the y column (present in the
 metadata of the dataset)}
+
+\item{identity_column}{\code{NULL} or a string with the name of the identity column
+(present in the metadata of the dataset). When given, whole
+\code{identity_column} groups (e.g. subjects) are assigned to the same fold
+together, instead of assigning individual samples to folds, and the
+bootstrap models fitted within each fold use a multilevel \code{plsda} (see
+\code{\link[=bp_VIP_analysis]{bp_VIP_analysis()}}), matching what \code{\link[=nmr_data_analysis]{nmr_data_analysis()}} does for the
+same \code{identity_column}.}
 
 \item{k}{Number of folds, recomended between 4 to 10}
 

@@ -12,6 +12,14 @@
 #' @param train_index set of index used to generate the bootstrap datasets
 #' @param y_column A string with the name of the y column (present in the
 #'    metadata of the dataset)
+#' @param identity_column `NULL` or a string with the name of the identity column
+#'    (present in the metadata of the dataset). When given, bootstrap resamples
+#'    are drawn by resampling whole `identity_column` groups (e.g. subjects)
+#'    with replacement, rather than individual rows, so that every repeated
+#'    measurement of a resampled subject is kept together, and a multilevel
+#'    (repeated-measures) `plsda` model is fitted (see [mixOmics::plsda]'s
+#'    `multilevel` argument), matching what [nmr_data_analysis()] does for the
+#'    same `identity_column`.
 #' @param ncomp number of components used in the plsda models
 #' @param nbootstrap number of bootstrap dataset
 #' @return A list with the following elements:
@@ -101,6 +109,7 @@
 bp_VIP_analysis <- function(dataset,
     train_index,
     y_column,
+    identity_column = NULL,
     ncomp,
     nbootstrap = 300) {
 
@@ -113,6 +122,13 @@ bp_VIP_analysis <- function(dataset,
     # For check performance
     x_test <- x_all[-train_index, , drop = FALSE]
     y_test <- y_all[-train_index]
+
+    if (!is.null(identity_column)) {
+        identity_all <- nmr_meta_get_column(dataset, column = identity_column)
+        identity_train <- identity_all[train_index]
+    } else {
+        identity_train <- NULL
+    }
 
     if (length(unique(y_train)) == 1) {
         stop("Only one class in train set, please increase number of samples")
@@ -142,7 +158,7 @@ bp_VIP_analysis <- function(dataset,
     # Bootstrap with replacement nbootstraps datasets
     res <- BiocParallel::bplapply(
         seq_len(nbootstrap),
-        function(i, x_train, y_train, ncomp) {
+        function(i, x_train, y_train, identity_train, ncomp) {
             num_features <- ncol(x_train)
             # A bootstrap resample can happen to draw only one class (plsda
             # models require at least two); when that happens, redraw rather
@@ -150,13 +166,35 @@ bp_VIP_analysis <- function(dataset,
             # would bias every degenerate resample towards the same fixed
             # (first-encountered) replacement sample instead of leaving the
             # resample an unbiased draw with replacement.
-            repeat {
-                index <- sample(seq_len(nrow(x_train)), nrow(x_train), replace = TRUE)
-                x_train_boots <- x_train[index, ]
-                y_train_boots <- y_train[index]
-                if (length(unique(y_train_boots)) > 1) {
-                    break
+            if (is.null(identity_train)) {
+                repeat {
+                    index <- sample(seq_len(nrow(x_train)), nrow(x_train), replace = TRUE)
+                    x_train_boots <- x_train[index, ]
+                    y_train_boots <- y_train[index]
+                    if (length(unique(y_train_boots)) > 1) {
+                        break
+                    }
                 }
+                identity_train_boots <- NULL
+            } else {
+                # Resample whole identity_train groups (e.g. subjects) with
+                # replacement, instead of individual rows, so that every
+                # repeated measurement of a resampled subject stays together
+                # (required for a multilevel plsda model).
+                groups <- unique(identity_train)
+                repeat {
+                    drawn_groups <- sample(groups, length(groups), replace = TRUE)
+                    index <- unlist(
+                        lapply(drawn_groups, function(g) which(identity_train == g)),
+                        use.names = FALSE
+                    )
+                    x_train_boots <- x_train[index, ]
+                    y_train_boots <- y_train[index]
+                    if (length(unique(y_train_boots)) > 1) {
+                        break
+                    }
+                }
+                identity_train_boots <- identity_train[index]
             }
 
             # Rename rownames, because if they are repeated, plsda fails
@@ -167,15 +205,19 @@ bp_VIP_analysis <- function(dataset,
                 plsda_build(
                     x = x_train_boots,
                     y = y_train_boots,
-                    identity = NULL,
+                    identity = identity_train_boots,
                     ncomp = ncomp
                 )
             # VIPs per component extraction. mixOmics::vip() already returns,
             # in column h, the cumulative VIP (Eq. 9 of Afanador et al. 2013)
             # computed over components 1..h, so the last column (h = ncomp)
-            # is the VIP of the fitted model.
+            # is the VIP of the fitted model. Indexed by the model's actual
+            # fitted ncomp (model$ncomp), not the requested ncomp: mixOmics can
+            # silently fit fewer components than requested on degenerate data
+            # (e.g. a resample with a near-constant feature), in which case
+            # plsda_vip()'s matrix has fewer than `ncomp` columns.
             pls_vip_comps <- plsda_vip(model)
-            pls_vip <- pls_vip_comps[, ncomp]
+            pls_vip <- pls_vip_comps[, model$ncomp]
             # Measure the classification rate (CR) of the bootstrap model
             CR <- get_test_accuracy(model, x_test, y_test)
 
@@ -196,14 +238,15 @@ bp_VIP_analysis <- function(dataset,
                     plsda_build(
                         x = x_train_boots_perm,
                         y = y_train_boots,
-                        identity = NULL,
+                        identity = identity_train_boots,
                         ncomp = ncomp
                     )
                 # VIPs per component extraction (see note above: take the
                 # cumulative VIP through component ncomp, not a re-aggregation
-                # across components).
+                # across components, and index by the model's actual fitted
+                # ncomp).
                 pls_vip_comps_perm <- plsda_vip(model_perm)
-                pls_vip_perm_score[j] <- pls_vip_comps_perm[j, ncomp]
+                pls_vip_perm_score[j] <- pls_vip_comps_perm[j, model_perm$ncomp]
             }
 
             # bootsrapped and randomly permuted difference
@@ -220,6 +263,7 @@ bp_VIP_analysis <- function(dataset,
         },
         x_train = x_train,
         y_train = y_train,
+        identity_train = identity_train,
         ncomp = ncomp
     )
     pls_vip <- do.call(cbind, purrr::map(res, "pls_vip"))
@@ -264,15 +308,16 @@ bp_VIP_analysis <- function(dataset,
         plsda_build(
             x = x_train,
             y = y_train,
-            identity = NULL,
+            identity = identity_train,
             ncomp = ncomp
         )
     # Measure the classification rate (CR) of the fold
     general_CR <- get_test_accuracy(general_model, x_test, y_test)
-    
+
     vips_results <- train_models_with_only_vip_features(
         x_train, y_train, x_test, y_test,
-        ncomp, important_vips, relevant_vips
+        ncomp, important_vips, relevant_vips,
+        identity_train = identity_train
     )
     vips_model <- vips_results$vips_model
     vips_CR <- vips_results$vips_CR
@@ -314,6 +359,13 @@ bp_VIP_analysis <- function(dataset,
 #' @param dataset An [nmr_dataset_family] object
 #' @param y_column A string with the name of the y column (present in the
 #'    metadata of the dataset)
+#' @param identity_column `NULL` or a string with the name of the identity column
+#'    (present in the metadata of the dataset). When given, whole
+#'    `identity_column` groups (e.g. subjects) are assigned to the same fold
+#'    together, instead of assigning individual samples to folds, and the
+#'    bootstrap models fitted within each fold use a multilevel `plsda` (see
+#'    [bp_VIP_analysis()]), matching what [nmr_data_analysis()] does for the
+#'    same `identity_column`.
 #' @param k Number of folds, recomended between 4 to 10
 #' @param ncomp number of components for the bootstrap models
 #' @param nbootstrap number of bootstrap dataset
@@ -375,6 +427,7 @@ bp_VIP_analysis <- function(dataset,
 #'
 bp_kfold_VIP_analysis <- function(dataset,
     y_column,
+    identity_column = NULL,
     k = 4,
     ncomp = 3,
     nbootstrap = 300) {
@@ -396,7 +449,18 @@ bp_kfold_VIP_analysis <- function(dataset,
     # held out as the test set, so k_fold_index[[i]] is its training set (every
     # sample not in fold i).
     n_all <- length(y_all)
-    fold_of_sample <- sample(rep_len(seq_len(k), n_all))
+    if (is.null(identity_column)) {
+        fold_of_sample <- sample(rep_len(seq_len(k), n_all))
+    } else {
+        # Assign whole identity_column groups (e.g. subjects) to folds
+        # together, so that no group is ever split across a fold's train and
+        # test sides.
+        identity_all <- as.factor(nmr_meta_get_column(dataset, column = identity_column))
+        groups <- levels(identity_all)
+        fold_of_group <- sample(rep_len(seq_len(k), length(groups)))
+        names(fold_of_group) <- groups
+        fold_of_sample <- unname(fold_of_group[as.character(identity_all)])
+    }
     k_fold_index <- list()
     for (i in seq_len(k)) {
         k_fold_index[[i]] <- which(fold_of_sample != i)
@@ -405,16 +469,17 @@ bp_kfold_VIP_analysis <- function(dataset,
     # bp_VIP_analysis is already parallellized.
     results <- lapply(
         k_fold_index, function(index, dataset = dataset, y_column = y_column,
-    ncomp = ncomp, nbootstrap = nbootstrap) {
+    identity_column = identity_column, ncomp = ncomp, nbootstrap = nbootstrap) {
             bp_VIP_analysis(
                 dataset,
                 index,
                 y_column = y_column,
+                identity_column = identity_column,
                 ncomp = ncomp,
                 nbootstrap = nbootstrap
             )
         },
-        dataset = dataset, y_column = y_column,
+        dataset = dataset, y_column = y_column, identity_column = identity_column,
         ncomp = ncomp, nbootstrap = nbootstrap
     )
 
