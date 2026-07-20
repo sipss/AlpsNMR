@@ -1,8 +1,8 @@
 # Plot the baseline thresholds
 
-If you have a lot of samples you can make the plot window bigger (or use
-"````  ```{r fig.height=10, fig.width=10} ````" in notebooks), or choose
-some NMRExperiments.
+With many samples, a single page can't legibly show one facet per
+sample; `nrow`/`ncol`/`page` paginate the facets instead of cramming (or
+silently subsampling) them all onto one page.
 
 ## Usage
 
@@ -10,8 +10,11 @@ some NMRExperiments.
 nmr_baseline_threshold_plot(
   nmr_dataset,
   thresholds,
-  NMRExperiment = "all",
+  NMRExperiment = NULL,
   chemshift_range = NULL,
+  nrow = NULL,
+  ncol = NULL,
+  page = 1,
   ...
 )
 ```
@@ -31,12 +34,26 @@ nmr_baseline_threshold_plot(
 
 - NMRExperiment:
 
-  The NMRExperiments to plot (Use `"all"` to plot all of them)
+  The NMRExperiments to plot. `NULL` (the default) plots every sample
+  (paginated via `nrow`/`ncol`/`page`); `"all"` is a synonym for `NULL`;
+  or pass a character vector to filter to a specific subset of samples.
 
 - chemshift_range:
 
   The range to plot, as a first check use the `range_without_peaks` from
   [nmr_baseline_threshold](https://sipss.github.io/AlpsNMR/reference/nmr_baseline_threshold.md)
+
+- nrow, ncol:
+
+  Number of rows/columns of facets per page. `NULL` (the default) picks
+  a snug grid for the number of samples requested: 1x`n` for fewer than
+  4 samples, 2x2 for 4, 2x3 for 5-6, and a fixed 3x3 (paginated via
+  `page`) for 7 or more.
+
+- page:
+
+  Which page of facets to plot (1-indexed). Requesting a page beyond the
+  number available is an error.
 
 - ...:
 
