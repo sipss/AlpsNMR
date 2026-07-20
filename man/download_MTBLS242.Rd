@@ -50,7 +50,7 @@ Besides the destination directory, this function
 includes parameters to limit the amount of downloaded/saved data.
 To run the tutorial workflow with a two-timepoint comparison:
 \itemize{
-\item only the requested \code{timepoints} (e.g. "preop" and "3 months after surgery")
+\item only the requested \code{timepoints} (e.g. "preop" and "12 months after surgery")
 are used,
 \item only subjects measured in \emph{all} of the requested \code{timepoints} are used,
 \item only the CPMG samples are used.
