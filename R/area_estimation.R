@@ -172,7 +172,7 @@ peaklist_fit_lorentzians <- function(peak_data,
     x <- nmr_dataset$axis
     sindex_prev <- -1
     all_errors <- list(peak_id = character(0L), error_msg = character(0L))
-    pb <- progress_bar_new(name = "Fitting lorentzians", total = nrow(peak_data))
+    pb <- if (show_progress_bar(TRUE)) progress_bar_new(name = "Fitting lorentzians", total = nrow(peak_data)) else NULL
 
     nmr_exp_to_sample_idx <- purrr::set_names(
         seq_len(nmr_dataset$num_samples),
