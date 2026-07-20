@@ -53,6 +53,15 @@
   lorentzians” progress bar was not gated behind the same
   interactive/non-knitr check every other progress bar in the package
   uses, so it always printed, including inside notebooks/vignettes.
+- [`nmr_identify_regions_blood()`](https://sipss.github.io/AlpsNMR/reference/nmr_identify_regions_blood.md)
+  /
+  [`nmr_identify_regions_urine()`](https://sipss.github.io/AlpsNMR/reference/nmr_identify_regions_urine.md)
+  /
+  [`nmr_identify_regions_cell()`](https://sipss.github.io/AlpsNMR/reference/nmr_identify_regions_cell.md):
+  each `ppm_to_assign` query always contributed exactly
+  `num_proposed_compounds` rows, padding with `NA` when fewer candidate
+  metabolites were found within tolerance; those `NA`-only rows are now
+  dropped instead of returned.
 - [`bp_kfold_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_kfold_VIP_analysis.md):
   fixed fold partitioning, which assigned samples to folds with a
   deterministic `x %% k` split instead of the intended random shuffle.
