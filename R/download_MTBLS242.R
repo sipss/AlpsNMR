@@ -66,7 +66,7 @@
 download_MTBLS242 <- function(
         dest_dir = "MTBLS242", force = FALSE,
         keep_only_CPMG_1r = TRUE,
-        timepoints = c("preop", "3 months after surgery"),
+        timepoints = c("preop", "12 months after surgery"),
         keep_only_complete_time_points = TRUE
     ) {
     require_pkgs(pkg = c("curl", "zip", "digest", "jsonlite"))
