@@ -6,7 +6,7 @@
 #' Besides the destination directory, this function
 #' includes parameters to limit the amount of downloaded/saved data.
 #' To run the tutorial workflow with a two-timepoint comparison:
-#' - only the requested `timepoints` (e.g. "preop" and "3 months after surgery")
+#' - only the requested `timepoints` (e.g. "preop" and "12 months after surgery")
 #'   are used,
 #' - only subjects measured in *all* of the requested `timepoints` are used,
 #' - only the CPMG samples are used.
