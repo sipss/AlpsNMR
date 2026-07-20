@@ -91,19 +91,27 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = NULL, meth
 
 #' Plot the baseline thresholds
 #'
-#' If you have a lot of samples you can make the plot window bigger (or
-#' use "` ```{r fig.height=10, fig.width=10}`" in notebooks), or choose some NMRExperiments.
+#' With many samples, a single page can't legibly show one facet per sample;
+#' `nrow`/`ncol`/`page` paginate the facets instead of cramming (or silently
+#' subsampling) them all onto one page.
 #'
 #' @inheritParams plot.nmr_dataset_1D
 #' @param nmr_dataset An [nmr_dataset_1D] object
 #' @param thresholds A named vector. The values are baseline thresholds. The names are NMRExperiments.
-#' @param NMRExperiment The NMRExperiments to plot (Use `"all"` to plot all of them)
+#' @param NMRExperiment The NMRExperiments to plot. `NULL` (the default) plots every sample
+#'    (paginated via `nrow`/`ncol`/`page`); `"all"` is a synonym for `NULL`; or pass a character
+#'    vector to filter to a specific subset of samples.
 #' @param chemshift_range The range to plot, as a first check use the `range_without_peaks` from [nmr_baseline_threshold]
+#' @param nrow,ncol Number of rows/columns of facets per page. `NULL` (the default) picks a
+#'    snug grid for the number of samples requested: 1x`n` for fewer than 4 samples, 2x2 for 4,
+#'    2x3 for 5-6, and a fixed 3x3 (paginated via `page`) for 7 or more.
+#' @param page Which page of facets to plot (1-indexed). Requesting a page beyond the number
+#'    available is an error.
 #'
 #' @return A plot.
 #' @export
 #' @examples
-#' 
+#'
 #' ppm_axis <- seq(from = 0, to = 10, length.out = 1000)
 #' data_1r <- matrix(runif(1000, 0, 10), nrow = 1) + 100
 #' dataset_1D <- new_nmr_dataset_1D(
@@ -113,7 +121,8 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = NULL, meth
 #' )
 #' bl_threshold <- nmr_baseline_threshold(dataset_1D, range_without_peaks = c(9.5,10))
 #' nmr_baseline_threshold_plot(dataset_1D, bl_threshold, chemshift_range = c(9.5, 10))
-nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment = "all", chemshift_range = NULL, ...) {
+nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment = NULL, chemshift_range = NULL,
+    nrow = NULL, ncol = NULL, page = 1, ...) {
     if (is.null(chemshift_range)) {
         cli::cli_abort(
             message = c(
@@ -123,22 +132,43 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
             )
         )
     }
-    if (is.null(NMRExperiment)) {
-        if (nmr_dataset$num_samples > 20) {
-            NMRExperiment <- sample(names(nmr_dataset), size = 10)
-        } else {
-            NMRExperiment <- names(nmr_dataset)
-        }
-    } else if (identical(NMRExperiment, "all")) {
+    if (is.null(NMRExperiment) || identical(NMRExperiment, "all")) {
         NMRExperiment <- names(nmr_dataset)
     }
+    num_samples <- length(NMRExperiment)
+    if (is.null(nrow) && is.null(ncol)) {
+        if (num_samples >= 7) {
+            nrow <- 3
+            ncol <- 3
+        } else if (num_samples %in% c(5, 6)) {
+            nrow <- 2
+            ncol <- 3
+        } else if (num_samples == 4) {
+            nrow <- 2
+            ncol <- 2
+        } else {
+            nrow <- 1
+            ncol <- max(num_samples, 1)
+        }
+    }
+    samples_per_page <- nrow * ncol
+    total_pages <- max(ceiling(num_samples / samples_per_page), 1)
+    if (page < 1 || page > total_pages) {
+        cli::cli_abort(
+            message = c(
+                "page ({page}) is out of bounds",
+                "i" = "There {cli::qty(total_pages)} {?is/are} {total_pages} page{?s} for {num_samples} sample{?s} with nrow = {nrow}, ncol = {ncol} ({samples_per_page} per page)."
+            )
+        )
+    }
+    page_start <- (page - 1) * samples_per_page + 1
+    page_end <- min(page * samples_per_page, num_samples)
+    NMRExperiment <- NMRExperiment[page_start:page_end]
     if (length(thresholds) == 1L) {
         thresholds <- rep(thresholds, length = length(NMRExperiment))
         names(thresholds) <- NMRExperiment
     }
-    if (!identical(NMRExperiment, "all")) {
-        thresholds <- thresholds[NMRExperiment]
-    }
+    thresholds <- thresholds[NMRExperiment]
 
     is_aes_string <- is_using_aes_string(...)
     
@@ -173,11 +203,13 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
         return(
             nmr_baseline_threshold_plot_aes_string(
                 to_plot,
-                to_plot_baseline, 
-                to_plot_threshold, 
+                to_plot_baseline,
+                to_plot_threshold,
                 chemshift_range,
-                ymax, 
+                ymax,
                 NMRExperiment,
+                nrow = nrow,
+                ncol = ncol,
                 ...
             )
         )
@@ -210,13 +242,13 @@ nmr_baseline_threshold_plot <- function(nmr_dataset, thresholds, NMRExperiment =
         ggplot2::labs(x = "Chemical Shift (ppm)", y = "Intensity (a.u.)") +
         ggplot2::scale_x_reverse(limits = rev(chemshift_range[seq_len(2)])) +
         ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si("")), limits = c(0, ymax)) +
-        ggplot2::facet_wrap(~ factor(NMRExperiment, levels = unique(NMRExperiment))) +
+        ggplot2::facet_wrap(~ factor(NMRExperiment, levels = unique(NMRExperiment)), nrow = nrow, ncol = ncol) +
         ggplot2::theme(legend.position = "none")
     gplt
 }
 
 # deprecated
-nmr_baseline_threshold_plot_aes_string <- function(to_plot, to_plot_baseline, to_plot_threshold, chemshift_range, ymax, NMRExperiment, ...) {
+nmr_baseline_threshold_plot_aes_string <- function(to_plot, to_plot_baseline, to_plot_threshold, chemshift_range, ymax, NMRExperiment, nrow = NULL, ncol = NULL, ...) {
     dotdotdot_aes <- list(...)
     fixed_aes <- list(
         x = "chemshift",
@@ -243,7 +275,7 @@ nmr_baseline_threshold_plot_aes_string <- function(to_plot, to_plot_baseline, to
         ggplot2::labs(x = "Chemical Shift (ppm)", y = "Intensity (a.u.)") +
         ggplot2::scale_x_reverse(limits = rev(chemshift_range[seq_len(2)])) +
         ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si("")), limits = c(0, ymax)) +
-        ggplot2::facet_wrap(~ factor(NMRExperiment, levels = unique(NMRExperiment))) +
+        ggplot2::facet_wrap(~ factor(NMRExperiment, levels = unique(NMRExperiment)), nrow = nrow, ncol = ncol) +
         ggplot2::theme(legend.position = "none")
     gplt
 }
