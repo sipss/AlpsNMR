@@ -59,6 +59,8 @@
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
 <ul><li>
 <code><a href="../reference/nmr_baseline_threshold_plot.html">nmr_baseline_threshold_plot()</a></code>: new <code>nrow</code>/<code>ncol</code>/<code>page</code> arguments paginate the per-sample facets instead of cramming every sample onto one illegible page.</li>
+<li>
+<code><a href="../reference/bp_VIP_analysis.html">bp_VIP_analysis()</a></code> / <code><a href="../reference/bp_kfold_VIP_analysis.html">bp_kfold_VIP_analysis()</a></code>: new optional <code>identity_column</code> argument. When given, fold assignment and bootstrap resampling keep every <code>identity_column</code> group (e.g. a subject’s repeated measurements) together, and the fitted <code>plsda</code> models become multilevel, matching what <code><a href="../reference/nmr_data_analysis.html">nmr_data_analysis()</a></code> already did for the same <code>identity_column</code>. Opt-in and backward compatible (defaults to <code>NULL</code>, reproducing the previous behavior).</li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
@@ -68,6 +70,8 @@
 <code><a href="../reference/nmr_identify_regions_blood.html">nmr_identify_regions_blood()</a></code> / <code><a href="../reference/nmr_identify_regions_urine.html">nmr_identify_regions_urine()</a></code> / <code><a href="../reference/nmr_identify_regions_cell.html">nmr_identify_regions_cell()</a></code>: each <code>ppm_to_assign</code> query always contributed exactly <code>num_proposed_compounds</code> rows, padding with <code>NA</code> when fewer candidate metabolites were found within tolerance; those <code>NA</code>-only rows are now dropped instead of returned.</li>
 <li>
 <code><a href="../reference/models_stability_plot_plsda.html">models_stability_plot_plsda()</a></code> / <code><a href="../reference/models_stability_plot_bootstrap.html">models_stability_plot_bootstrap()</a></code>: the loadings-correlation heatmap now uses a fixed, sign-agnostic color scale (-1 and +1 both render as the same dark blue, 0 as white; a latent variable’s sign is arbitrary, so -1 and +1 indicate equally strong agreement) instead of a plain sequential palette that auto-scaled to whatever range the data happened to have. Also fixes self-correlation cells (expected to be exactly 1) intermittently rendering as blank/white: a loading vector’s self dot-product can come out as e.g. <code>1.0000000000000002</code> due to floating-point rounding, which fell just outside the (<code>-1</code>, <code>1</code>) scale limits and was dropped to <code>NA</code> by ggplot2’s default out-of-bounds handling; now clamped to the nearest limit instead.</li>
+<li>
+<code><a href="../reference/bp_VIP_analysis.html">bp_VIP_analysis()</a></code>: VIP scores were indexed by the <em>requested</em> <code>ncomp</code> rather than the fitted model’s actual <code>model$ncomp</code>; on data where <code>mixOmics</code> silently fits fewer components than requested (e.g. a degenerate bootstrap resample), this caused <code>subscript out of bounds</code>.</li>
 <li>
 <code><a href="../reference/bp_kfold_VIP_analysis.html">bp_kfold_VIP_analysis()</a></code>: fixed fold partitioning, which assigned samples to folds with a deterministic <code>x %% k</code> split instead of the intended random shuffle.</li>
 <li>

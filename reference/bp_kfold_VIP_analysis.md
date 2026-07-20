@@ -10,7 +10,14 @@ peak tables.
 ## Usage
 
 ``` r
-bp_kfold_VIP_analysis(dataset, y_column, k = 4, ncomp = 3, nbootstrap = 300)
+bp_kfold_VIP_analysis(
+  dataset,
+  y_column,
+  identity_column = NULL,
+  k = 4,
+  ncomp = 3,
+  nbootstrap = 300
+)
 ```
 
 ## Arguments
@@ -25,6 +32,18 @@ bp_kfold_VIP_analysis(dataset, y_column, k = 4, ncomp = 3, nbootstrap = 300)
 
   A string with the name of the y column (present in the metadata of the
   dataset)
+
+- identity_column:
+
+  `NULL` or a string with the name of the identity column (present in
+  the metadata of the dataset). When given, whole `identity_column`
+  groups (e.g. subjects) are assigned to the same fold together, instead
+  of assigning individual samples to folds, and the bootstrap models
+  fitted within each fold use a multilevel `plsda` (see
+  [`bp_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_VIP_analysis.md)),
+  matching what
+  [`nmr_data_analysis()`](https://sipss.github.io/AlpsNMR/reference/nmr_data_analysis.md)
+  does for the same `identity_column`.
 
 - k:
 

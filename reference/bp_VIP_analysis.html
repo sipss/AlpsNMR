@@ -48,7 +48,14 @@ nmr_dataset_1D full spectra as well as nmr_dataset_peak_table peak tables."></he
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bp_VIP_analysis</span><span class="op">(</span><span class="va">dataset</span>, <span class="va">train_index</span>, <span class="va">y_column</span>, <span class="va">ncomp</span>, nbootstrap <span class="op">=</span> <span class="fl">300</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bp_VIP_analysis</span><span class="op">(</span></span>
+<span>  <span class="va">dataset</span>,</span>
+<span>  <span class="va">train_index</span>,</span>
+<span>  <span class="va">y_column</span>,</span>
+<span>  identity_column <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">ncomp</span>,</span>
+<span>  nbootstrap <span class="op">=</span> <span class="fl">300</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -66,6 +73,17 @@ nmr_dataset_1D full spectra as well as nmr_dataset_peak_table peak tables."></he
 <dt id="arg-y-column">y_column<a class="anchor" aria-label="anchor" href="#arg-y-column"></a></dt>
 <dd><p>A string with the name of the y column (present in the
 metadata of the dataset)</p></dd>
+
+
+<dt id="arg-identity-column">identity_column<a class="anchor" aria-label="anchor" href="#arg-identity-column"></a></dt>
+<dd><p><code>NULL</code> or a string with the name of the identity column
+(present in the metadata of the dataset). When given, bootstrap resamples
+are drawn by resampling whole <code>identity_column</code> groups (e.g. subjects)
+with replacement, rather than individual rows, so that every repeated
+measurement of a resampled subject is kept together, and a multilevel
+(repeated-measures) <code>plsda</code> model is fitted (see <a href="https://rdrr.io/pkg/mixOmics/man/plsda.html" class="external-link">mixOmics::plsda</a>'s
+<code>multilevel</code> argument), matching what <code><a href="nmr_data_analysis.html">nmr_data_analysis()</a></code> does for the
+same <code>identity_column</code>.</p></dd>
 
 
 <dt id="arg-ncomp">ncomp<a class="anchor" aria-label="anchor" href="#arg-ncomp"></a></dt>

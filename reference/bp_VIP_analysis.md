@@ -10,7 +10,14 @@ peak tables.
 ## Usage
 
 ``` r
-bp_VIP_analysis(dataset, train_index, y_column, ncomp, nbootstrap = 300)
+bp_VIP_analysis(
+  dataset,
+  train_index,
+  y_column,
+  identity_column = NULL,
+  ncomp,
+  nbootstrap = 300
+)
 ```
 
 ## Arguments
@@ -29,6 +36,19 @@ bp_VIP_analysis(dataset, train_index, y_column, ncomp, nbootstrap = 300)
 
   A string with the name of the y column (present in the metadata of the
   dataset)
+
+- identity_column:
+
+  `NULL` or a string with the name of the identity column (present in
+  the metadata of the dataset). When given, bootstrap resamples are
+  drawn by resampling whole `identity_column` groups (e.g. subjects)
+  with replacement, rather than individual rows, so that every repeated
+  measurement of a resampled subject is kept together, and a multilevel
+  (repeated-measures) `plsda` model is fitted (see
+  [mixOmics::plsda](https://rdrr.io/pkg/mixOmics/man/plsda.html)'s
+  `multilevel` argument), matching what
+  [`nmr_data_analysis()`](https://sipss.github.io/AlpsNMR/reference/nmr_data_analysis.md)
+  does for the same `identity_column`.
 
 - ncomp:
 

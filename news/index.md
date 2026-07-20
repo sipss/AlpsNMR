@@ -45,6 +45,16 @@
 - [`nmr_baseline_threshold_plot()`](https://sipss.github.io/AlpsNMR/reference/nmr_baseline_threshold_plot.md):
   new `nrow`/`ncol`/`page` arguments paginate the per-sample facets
   instead of cramming every sample onto one illegible page.
+- [`bp_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_VIP_analysis.md)
+  /
+  [`bp_kfold_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_kfold_VIP_analysis.md):
+  new optional `identity_column` argument. When given, fold assignment
+  and bootstrap resampling keep every `identity_column` group (e.g. a
+  subject’s repeated measurements) together, and the fitted `plsda`
+  models become multilevel, matching what
+  [`nmr_data_analysis()`](https://sipss.github.io/AlpsNMR/reference/nmr_data_analysis.md)
+  already did for the same `identity_column`. Opt-in and backward
+  compatible (defaults to `NULL`, reproducing the previous behavior).
 
 ### Bug fixes
 
@@ -76,6 +86,11 @@
   fell just outside the (`-1`, `1`) scale limits and was dropped to `NA`
   by ggplot2’s default out-of-bounds handling; now clamped to the
   nearest limit instead.
+- [`bp_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_VIP_analysis.md):
+  VIP scores were indexed by the *requested* `ncomp` rather than the
+  fitted model’s actual `model$ncomp`; on data where `mixOmics` silently
+  fits fewer components than requested (e.g. a degenerate bootstrap
+  resample), this caused `subscript out of bounds`.
 - [`bp_kfold_VIP_analysis()`](https://sipss.github.io/AlpsNMR/reference/bp_kfold_VIP_analysis.md):
   fixed fold partitioning, which assigned samples to folds with a
   deterministic `x %% k` split instead of the intended random shuffle.
