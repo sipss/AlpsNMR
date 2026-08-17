@@ -123,7 +123,7 @@ jobs:
 
       - name: Restore R package cache
         if: "!contains(github.event.head_commit.message, '/nocache') && runner.os != 'Linux'"
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_${{ env.BIOC_VERSION }}-r-${{ env.R_VERSION }}-${{ hashFiles('.github/depends.Rds') }}
@@ -131,7 +131,7 @@ jobs:
 
       - name: Cache R packages on Linux
         if: "!contains(github.event.head_commit.message, '/nocache') && runner.os == 'Linux' "
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: /home/runner/work/_temp/Library
           key: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_${{ env.BIOC_VERSION }}-r-${{ env.R_VERSION }}-${{ hashFiles('.github/depends.Rds') }}
