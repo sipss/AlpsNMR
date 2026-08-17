@@ -40,7 +40,7 @@ env:
   pkgdown_repo: 'sipss/AlpsNMR'
   uses_latex: true
   has_RUnit: 'false'
-  cache-version: 'cache-v4'
+  cache-version: 'cache-v5'
   run_docker: 'false'
 
 jobs:
