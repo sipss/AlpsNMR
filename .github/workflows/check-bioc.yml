@@ -171,6 +171,12 @@ jobs:
           ## Edit below if you have any Windows system dependencies
         shell: Rscript {0}
 
+      - name: Diagnose Rfast/TBB (pristine image state)
+        if: runner.os == 'Linux'
+        run: |
+          echo "DIAG_STAGE=pristine" > /tmp/diag_stage
+          Rscript .github/diag-rfast-tbb.R || true
+
       - name: Install BiocManager
         run: |
           message(paste('****', Sys.time(), 'installing BiocManager ****'))
@@ -232,6 +238,12 @@ jobs:
         continue-on-error: true
         shell: Rscript {0}
 
+      - name: Diagnose Rfast/TBB (deps1 state)
+        if: runner.os == 'Linux'
+        run: |
+          echo "DIAG_STAGE=deps1" > /tmp/diag_stage
+          Rscript .github/diag-rfast-tbb.R || true
+
       - name: Install BiocStyle fork (pandoc and pkgdown compatibility fixes)
         run: |
           ## zeehio/BiocStyle@my-fixes carries two fixes not yet upstream:
@@ -283,6 +295,12 @@ jobs:
           ## covers both the pandoc and pkgdown fixes now).
           remotes::install_cran("pkgdown")
         shell: Rscript {0}
+
+      - name: Diagnose Rfast/TBB (post-install state)
+        if: runner.os == 'Linux'
+        run: |
+          echo "DIAG_STAGE=post-install" > /tmp/diag_stage
+          Rscript .github/diag-rfast-tbb.R || true
 
       - name: Session info
         run: |
