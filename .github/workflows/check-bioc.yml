@@ -59,19 +59,8 @@ jobs:
               conf_name: 'ubuntu',
               r: '4.6',
               bioc: '3.23',
-              cont: "bioconductor/bioconductor_docker:RELEASE_3_23",
-              rspm: "https://packagemanager.rstudio.com/cran/__linux__/noble/latest"
+              cont: "bioconductor/bioconductor_docker:RELEASE_3_23"
             }
-          #- {
-          #    os: ubuntu-latest,
-          #    conf_name: 'ubuntu-r4.1',
-          #    r: '4.1',
-          #    bioc: '3.14',
-          #    cont: "bioconductor/bioconductor_docker:RELEASE_3_14",
-          #    rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/2022-04-21"
-          #  }
-          #- { os: macOS-latest, r: '4.2', bioc: '3.16'}
-          #- { os: windows-latest, r: '4.2', bioc: '3.16'}
           ## Check https://github.com/r-lib/actions/tree/master/examples
           ## for examples using the http-user-agent
     env:
@@ -79,7 +68,6 @@ jobs:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       R_VERSION: ${{ matrix.config.r }}
       BIOC_VERSION: ${{ matrix.config.bioc }}
-      RSPM: ${{ matrix.config.rspm }}
       NOT_CRAN: true
       TZ: UTC
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -95,6 +83,14 @@ jobs:
         run: |
           mkdir /__w/_temp/Library
           echo ".libPaths('/__w/_temp/Library')" > ~/.Rprofile
+
+      - name: Setup Posit Public Package Manager
+        if: runner.os == 'Linux'
+        run: |
+          echo 'options(BioC_mirror = "https://p3m.dev/bioconductor/__linux__/noble/latest")' >> ~/.Rprofile
+          echo 'options(BIOCONDUCTOR_CONFIG_FILE = "https://p3m.dev/bioconductor/latest/config.yaml")' >> ~/.Rprofile
+          echo 'Sys.setenv("R_BIOC_VERSION" = "3.23")' >> ~/.Rprofile
+          echo 'options(repos = c(CRAN = "https://p3m.dev/cran/__linux__/noble/latest"))' >> ~/.Rprofile
 
       ## Most of these steps are the same as the ones in
       ## https://github.com/r-lib/actions/blob/master/examples/check-standard.yaml
@@ -133,7 +129,7 @@ jobs:
         if: "!contains(github.event.head_commit.message, '/nocache') && runner.os == 'Linux' "
         uses: actions/cache@v6
         with:
-          path: /home/runner/work/_temp/Library
+          path: /__w/_temp/Library
           key: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_${{ env.BIOC_VERSION }}-r-${{ env.R_VERSION }}-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ env.cache-version }}-${{ runner.os }}-biocversion-RELEASE_${{ env.BIOC_VERSION }}-r-${{ env.R_VERSION }}-
 
@@ -193,43 +189,13 @@ jobs:
           tinytex::tlmgr_install("pdfcrop")
         shell: Rscript {0}
 
-      - name: Install dependencies pass 1
+      - name: Install dependencies
         run: |
-          ## Try installing the package dependencies in steps. First the local
-          ## dependencies, then any remaining dependencies to avoid the
-          ## issues described at
-          ## https://stat.ethz.ch/pipermail/bioc-devel/2020-April/016675.html
-          ## https://github.com/r-lib/remotes/issues/296
-          ## Ideally, all dependencies should get installed in the first pass.
-
-          ## Set the repos source depending on the OS
-          ## Alternatively use https://storage.googleapis.com/bioconductor_docker/packages/
-          ## though based on https://bit.ly/bioc2021-package-binaries
-          ## the Azure link will be the main one going forward.
-          if(
-              .Platform$OS.type == "unix" && Sys.info()["sysname"] != "Darwin"
-          ) {
-              gha_repos <- c(
-              "AnVIL" = sprintf("https://bioconductordocker.blob.core.windows.net/packages/%s/bioc", BiocManager::version()),
-              BiocManager::repositories()
-              )
-              gha_repos["CRAN"] <- Sys.getenv("RSPM") 
-          }  else {
-              gha_repos <- BiocManager::repositories()
-          }
-
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
-          install.packages(c("rcmdcheck", "BiocCheck"), repos = gha_repos)
-
-          ## Pass #1 at installing dependencies
-          ## This pass uses AnVIL-powered fast binaries
-          ## details at https://github.com/nturaga/bioc2021-bioconductor-binaries
-          ## The speed gains only apply to the docker builds.
+          BiocManager::install(c("rcmdcheck", "BiocCheck"))
           message(paste('****', Sys.time(), 'pass number 1 at installing dependencies: local dependencies ****'))
-          options(install.packages.check.source = "no")
-          remotes::install_local(dependencies = TRUE, repos = gha_repos, build_vignettes = FALSE, upgrade = TRUE)
-        continue-on-error: true
+          remotes::install_local(dependencies = TRUE, build_vignettes = FALSE, upgrade = TRUE)
         shell: Rscript {0}
 
       - name: Install BiocStyle fork (pandoc and pkgdown compatibility fixes)
@@ -248,18 +214,6 @@ jobs:
           ## already-installed package alone once its version satisfies the
           ## requirement, so this doesn't need to be re-installed later.
           remotes::install_github("zeehio/BiocStyle@fix-pandoc-382-counter", force = TRUE)
-        shell: Rscript {0}
-
-      - name: Install dependencies pass 2
-        run: |
-          ## Pass #2 at installing dependencies
-          ## This pass does not use AnVIL and will thus update any packages
-          ## that have seen been updated in Bioconductor
-          message(paste('****', Sys.time(), 'pass number 2 at installing dependencies: any remaining dependencies ****'))
-          options(install.packages.check.source = "no")
-          gha_repos <- BiocManager::repositories()
-          gha_repos["CRAN"] <- Sys.getenv("RSPM")
-          remotes::install_local(dependencies = TRUE, repos = gha_repos, build_vignettes = TRUE, upgrade = TRUE, force = TRUE)
         shell: Rscript {0}
 
       - name: Install BiocGenerics
@@ -369,7 +323,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: 
+          repository:
           tag_with_ref: true
           tag_with_sha: true
           tags: latest
