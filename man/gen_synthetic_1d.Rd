@@ -73,7 +73,7 @@ sig <- AlpsNMR:::gen_synthetic_1d(n = 500, seed = 1)
 plot(sig$y, type = "l")
 lines(sig$baseline, col = "red")
 
-result <- psalsa(sig$y, lambda = 1e6)
+result <- AlpsNMR:::psalsa(sig$y, lambda = 1e6)
 lines(result$baseline, col = "blue", lty = 2)
 
 }
