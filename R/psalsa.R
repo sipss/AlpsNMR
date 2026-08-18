@@ -57,7 +57,7 @@
 #' peak <- 80 * exp(-((x - 120)^2) / (2 * 4^2))
 #' y <- baseline + peak
 #'
-#' result <- psalsa(y)
+#' result <- AlpsNMR:::psalsa(y)
 #' plot(y, type = "l")
 #' lines(result$baseline, col = "red")
 #'

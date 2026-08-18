@@ -69,7 +69,7 @@ tuning pool, matched to the characteristics of a real example spectrum;
 called directly, it is a standalone generator.
 }
 \examples{
-sig <- gen_synthetic_1d(n = 500, seed = 1)
+sig <- AlpsNMR:::gen_synthetic_1d(n = 500, seed = 1)
 plot(sig$y, type = "l")
 lines(sig$baseline, col = "red")
 
