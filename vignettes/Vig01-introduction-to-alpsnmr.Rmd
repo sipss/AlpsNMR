@@ -241,10 +241,13 @@ plot(dataset, chemshift_range = c(1.37, 2.5))
 plot(dataset, chemshift_range = c(3.5,3.8))
 ```
 
-Estimate the baseline:
+Estimate the baseline. `nmr_baseline_estimation()` uses the PSALSA algorithm
+and by default automatically tunes its `lambda`/`p`/`k` parameters with
+`tune_psalsa()`; pass explicit numbers instead of `"auto"` for any of them to
+skip tuning that parameter (see `?nmr_baseline_estimation` and `?psalsa`):
 
 ```{r}
-dataset <- nmr_baseline_estimation(dataset, lambda = 9, p = 0.01)
+dataset <- nmr_baseline_estimation(dataset)
 ```
 
 

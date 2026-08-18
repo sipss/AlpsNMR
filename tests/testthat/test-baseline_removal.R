@@ -4,7 +4,11 @@ test_that("nmr_baseline_removal works", {
         data_1r = matrix(c(1, 2, 2, 1), nrow = 1),
         metadata = list(external = data.frame(NMRExperiment = "10"))
     )
-    dataset <- nmr_baseline_removal(dataset, lambda = 4, p = 0.02)
+    # nmr_baseline_removal() is deprecated (rate-limited cli::cli_warn(),
+    # .frequency = "regularly"), so whether it actually fires here depends on
+    # whether some earlier test in the same R session already triggered it;
+    # suppress it rather than asserting on it either way.
+    dataset <- suppressWarnings(nmr_baseline_removal(dataset, lambda = 4, p = 0.02))
     expect_true(is.matrix(dataset[["data_1r"]]))
 })
 

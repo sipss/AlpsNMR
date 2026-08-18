@@ -61,6 +61,7 @@ BugReports: https://github.com/sipss/AlpsNMR/issues
 LazyData: FALSE
 Depends: R (>= 4.2)
 Imports:
+ Matrix,
  utils,
  generics (>= 0.1.4),
  graphics,
@@ -116,4 +117,4 @@ biocViews: Software, Preprocessing, Visualization, Classification,
            Cheminformatics, Metabolomics, DataImport
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0

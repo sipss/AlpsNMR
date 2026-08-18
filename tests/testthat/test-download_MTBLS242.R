@@ -72,14 +72,18 @@ test_that("download_MTBLS242() rejects a zip archive with a path-traversal entry
     )
 
     # download_MTBLS242() (with its inline zip-slip check) must refuse to
-    # extract the malicious archive.
+    # extract the malicious archive. HASHES/*.json requests are deliberately
+    # left unmocked (see above), so this also triggers the same expected,
+    # benign "could not fetch canonical checksums" warning covered in the
+    # local-fallback test below; suppress it here since it isn't what this
+    # test is about, and R CMD check treats leaked warnings as failures.
     expect_error(
-        download_MTBLS242(
+        suppressWarnings(download_MTBLS242(
             dest_dir = dest_dir,
             force = TRUE,
             keep_only_CPMG_1r = TRUE,
             keep_only_complete_time_points = TRUE
-        ),
+        )),
         regexp = "zip-slip"
     )
 
@@ -134,13 +138,18 @@ test_that("download_MTBLS242() extracts a benign zip archive normally", {
         .package = "AlpsNMR"
     )
 
+    # HASHES/*.json requests are deliberately left unmocked (see above), so
+    # this also triggers the same expected, benign "could not fetch
+    # canonical checksums" warning covered in the local-fallback test below;
+    # suppress it here since it isn't what this test is about, and R CMD
+    # check treats leaked warnings as failures.
     expect_no_error(
-        download_MTBLS242(
+        suppressWarnings(download_MTBLS242(
             dest_dir = dest_dir,
             force = TRUE,
             keep_only_CPMG_1r = TRUE,
             keep_only_complete_time_points = TRUE
-        )
+        ))
     )
     expect_true(file.exists(file.path(dst_rootdir, "Obs0_0001s.zip")))
 })
@@ -295,12 +304,20 @@ test_that("download_MTBLS242() falls back to pinning local SHA-256 checksums whe
     )
 
     # First download: the canonical manifest fetch fails (not mocked) and
-    # checksums get pinned locally to SHA256SUMS instead.
-    download_MTBLS242(
-        dest_dir = dest_dir,
-        force = TRUE,
-        keep_only_CPMG_1r = TRUE,
-        keep_only_complete_time_points = TRUE
+    # checksums get pinned locally to SHA256SUMS instead. Every call to
+    # download_MTBLS242() tries the canonical manifest fetch first, so this
+    # expected, benign warning would otherwise leak out of every call in this
+    # test and get flagged as a failure by CI (rcmdcheck's error_on =
+    # "warning"); assert it once here and suppress it below, where it isn't
+    # what's under test.
+    expect_warning(
+        download_MTBLS242(
+            dest_dir = dest_dir,
+            force = TRUE,
+            keep_only_CPMG_1r = TRUE,
+            keep_only_complete_time_points = TRUE
+        ),
+        regexp = "Could not fetch the SHA-256 checksums"
     )
     manifest_file <- file.path(dest_dir, "SHA256SUMS")
     expect_true(file.exists(manifest_file))
@@ -312,24 +329,24 @@ test_that("download_MTBLS242() falls back to pinning local SHA-256 checksums whe
     # A subsequent call that reuses the cached file (force = FALSE) must
     # verify it against the pinned checksum without error or re-download.
     expect_no_error(
-        download_MTBLS242(
+        suppressWarnings(download_MTBLS242(
             dest_dir = dest_dir,
             force = FALSE,
             keep_only_CPMG_1r = TRUE,
             keep_only_complete_time_points = TRUE
-        )
+        ))
     )
 
     # Tampering with (or corrupting) the cached sample zip after it was
     # pinned must be caught and refused, not silently used.
     writeBin(as.raw(c(0, 1, 2, 3)), sample_zip)
     expect_error(
-        download_MTBLS242(
+        suppressWarnings(download_MTBLS242(
             dest_dir = dest_dir,
             force = FALSE,
             keep_only_CPMG_1r = TRUE,
             keep_only_complete_time_points = TRUE
-        ),
+        )),
         regexp = "Checksum mismatch"
     )
 })
