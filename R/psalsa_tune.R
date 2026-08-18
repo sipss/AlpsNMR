@@ -41,8 +41,7 @@
 #'   If `y` is a list, `baseline` and `corrected` are lists (one element per
 #'   input spectrum, using the same tuned `lambda`/`p`/`k` for all of them).
 #'
-#' @seealso [psalsa()], the function being tuned. [tune_psalsa2d()] for the 2D
-#'   version.
+#' @seealso [psalsa()], the function being tuned.
 #'
 #' @examples
 #' x <- seq_len(300)
