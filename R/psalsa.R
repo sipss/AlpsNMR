@@ -153,3 +153,12 @@ psalsa_core <- function(y, smoother, p = 0.001, k = -1, maxit = 25, k_epsilon = 
 
   s
 }
+
+diff2_penalty <- function(n) {
+  d2 <- Matrix::bandSparse(
+    n - 2, n,
+    k = c(0, 1, 2),
+    diagonals = list(rep(1, n - 2), rep(-2, n - 2), rep(1, n - 2))
+  )
+  Matrix::crossprod(d2)
+}
