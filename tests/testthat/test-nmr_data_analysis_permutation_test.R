@@ -32,7 +32,16 @@ test_that("permutation_test_model returns an nPerm x 1 matrix of AUCs on label-p
 
     expect_true(is.matrix(permMatrix))
     expect_equal(dim(permMatrix), c(nPerm, 1))
-    expect_true(all(permMatrix >= 0 & permMatrix <= 1))
+    # random_subsampling() (used by split_double_cv() under the hood) does not
+    # stratify by the outcome column, so with a sample this small a permuted
+    # label vector can legitimately land a test fold with only one class in
+    # it (e.g. all class B, none of class A). AUC is mathematically undefined
+    # for a single-class test set, so mixOmics::auroc() returns NaN there --
+    # that's an expected outcome of the split, not a computation error, and
+    # nmr_data_analysis()'s own choose_best_nlv_impl() already anticipates
+    # and handles NA/NaN AUCs elsewhere. Any *non-missing* entry must still
+    # be a valid AUC in [0, 1].
+    expect_true(all(is.na(permMatrix) | (permMatrix >= 0 & permMatrix <= 1)))
 })
 
 test_that("permutation_test_model permutes the y_column and leaves the rest of the dataset untouched", {
