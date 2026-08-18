@@ -10,7 +10,10 @@ prepare_dataset <- function() {
     dataset <- nmr_read_samples(sample_names = zip_files)
     dataset <- nmr_meta_add(dataset, metadata = exp_subj_id, by = "NMRExperiment")
     dataset <- nmr_interpolate_1D(dataset, axis = c(min = 3.7, max = 4.5, by = 2.3E-4))
-    dataset <- nmr_baseline_removal(dataset, lambda = 6, p = 0.01)
+    # nmr_baseline_removal() is deprecated (rate-limited cli::cli_warn(),
+    # .frequency = "regularly"); suppress it here since it isn't what this
+    # test is about, and its emission isn't reliable within a single session.
+    dataset <- suppressWarnings(nmr_baseline_removal(dataset, lambda = 6, p = 0.01))
     dataset <- nmr_normalize(dataset, method = "area")
 
     metadata <- nmr_meta_get(dataset, groups = "external")

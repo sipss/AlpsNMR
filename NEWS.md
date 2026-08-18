@@ -96,6 +96,8 @@
 
 ## Other changes
 
+- `nmr_baseline_removal()` is deprecated and will be removed in early 2027.
+  Use `nmr_baseline_estimation()` instead.
 - `download_MTBLS242()`: validate downloaded files against MetaboLights'
   published SHA-256 checksums for the MTBLS242 dataset (#72).
 - Bumped several dependency version floors to roughly their versions from a

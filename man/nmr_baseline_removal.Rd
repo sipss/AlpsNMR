@@ -21,6 +21,13 @@ The same \link{nmr_dataset_1D} object after baseline removal.
 \description{
 Removes the baseline on an \link{nmr_dataset_1D} object, using \link[baseline:baseline.als]{baseline::baseline.als}.
 }
+\details{
+\strong{Deprecated}: \code{nmr_baseline_removal()} will be removed in early 2027.
+Use \code{\link[=nmr_baseline_estimation]{nmr_baseline_estimation()}} instead: it estimates the baseline without
+overwriting \code{data_1r}, and downstream functions (e.g.
+\code{\link[=nmr_baseline_threshold]{nmr_baseline_threshold()}}, \code{\link[=nmr_detect_peaks]{nmr_detect_peaks()}}) pick it up automatically
+when present.
+}
 \examples{
 dataset_1D <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
 dataset_no_base_line <- nmr_baseline_removal(dataset_1D, lambda = 6, p = 0.01)

@@ -2,6 +2,12 @@
 #'
 #' Removes the baseline on an [nmr_dataset_1D] object, using [baseline::baseline.als].
 #'
+#' **Deprecated**: `nmr_baseline_removal()` will be removed in early 2027.
+#' Use [nmr_baseline_estimation()] instead: it estimates the baseline without
+#' overwriting `data_1r`, and downstream functions (e.g.
+#' [nmr_baseline_threshold()], [nmr_detect_peaks()]) pick it up automatically
+#' when present.
+#'
 #' @family baseline removal functions
 #' @seealso [baseline::baseline.als]
 #' @param nmr_dataset An [nmr_dataset_1D].
@@ -17,6 +23,14 @@ nmr_baseline_removal <- function(nmr_dataset,
     lambda = 6,
     p = 0.05,
     maxit = 20) {
+    cli::cli_warn(
+        c(
+            "!" = "{.fn nmr_baseline_removal} is deprecated and will be removed in early 2027.",
+            "i" = "Use {.fn nmr_baseline_estimation} instead."
+        ),
+        .frequency = "regularly",
+        .frequency_id = "nmr_baseline_removal_deprecated",
+    )
     results <- baseline::baseline(
         nmr_dataset$data_1r,
         method = "als",
