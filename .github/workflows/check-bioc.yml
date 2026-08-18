@@ -199,7 +199,7 @@ jobs:
         run: |
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
-          BiocMqnager::install(c("rcmdcheck", "BiocCheck"))
+          BiocManager::install(c("rcmdcheck", "BiocCheck"))
 
           ## Pass #1 at installing dependencies
           ## This pass uses AnVIL-powered fast binaries
