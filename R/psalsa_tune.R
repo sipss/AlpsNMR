@@ -51,7 +51,7 @@
 #' set.seed(1)
 #' y <- baseline + peaks + rnorm(length(x), 0, 0.5)
 #'
-#' result <- tune_psalsa(y)
+#' result <- AlpsNMR:::tune_psalsa(y)
 #' plot(y, type = "l")
 #' lines(result$baseline, col = "red")
 #'
