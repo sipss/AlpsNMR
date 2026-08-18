@@ -61,6 +61,7 @@ BugReports: https://github.com/sipss/AlpsNMR/issues
 LazyData: FALSE
 Depends: R (>= 4.2)
 Imports:
+ Matrix,
  utils,
  generics (>= 0.1.4),
  graphics,
