@@ -29,6 +29,17 @@
   `"all"` remains a synonym for `NULL`. `nrow`/`ncol` default to a snug grid
   for small sample counts, or a fixed 3x3 (paginate with `page`) for 7 or
   more.
+- `nmr_baseline_estimation()`: now estimates the baseline with `psalsa()`
+  (PSALSA) instead of `baseline::baseline.als()` (ALS), and gains a new `k`
+  argument (PSALSA's peak height parameter). `lambda`, `p`, `k` and `maxit`
+  all now default to `"auto"`: whenever any of `lambda`/`p`/`k` is `"auto"`,
+  `tune_psalsa()` is run once across every sample in the dataset to pick
+  values for them automatically; pass an explicit number instead to bypass
+  tuning for that parameter. `maxit = "auto"` uses `psalsa()`'s own default,
+  since `tune_psalsa()` does not tune it. Existing calls passing ALS-scale
+  `lambda`/`p` values (e.g. `lambda = 9, p = 0.01`) must be updated, since
+  those values mean something very different for PSALSA (`lambda` is
+  typically `1e5`-`1e8`).
 
 ## New features
 
