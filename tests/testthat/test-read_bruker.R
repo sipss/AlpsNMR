@@ -123,10 +123,17 @@ test_that("read_bin_data() reports the file-open error when the file does not ex
     nonexistent_file <- tempfile(pattern = "does-not-exist-")
     expect_false(file.exists(nonexistent_file))
 
-    err <- tryCatch(
+    # file(file_name, "rb") lazily creates the connection object without
+    # erroring; the actual open() attempt (and its "cannot open file"
+    # warning) only happens on the first read below, and that warning isn't
+    # caught by read_bin_data()'s own tryCatch (no warning handler there) or
+    # by the error-only tryCatch here, so it would otherwise leak out of the
+    # test and get flagged as a failure by CI (rcmdcheck's error_on =
+    # "warning").
+    err <- suppressWarnings(tryCatch(
         read_bin_data(nonexistent_file, endian = "little"),
         error = function(e) e
-    )
+    ))
     expect_s3_class(err, "error")
     expect_false(grepl("object 'con' not found", conditionMessage(err), fixed = TRUE))
     expect_true(grepl("cannot open", conditionMessage(err), fixed = TRUE))
