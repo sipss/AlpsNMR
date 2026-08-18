@@ -107,6 +107,12 @@ nmr_baseline_estimation <- function(nmr_dataset,
     }
     result <- do.call(psalsa, psalsa_args)
 
-    nmr_dataset$data_1r_baseline <- result$baseline
+    data_1r_baseline <- result$baseline
+    attr(data_1r_baseline, "psalsa_params") <- list(
+        lambda = lambda,
+        p = p,
+        k = k
+    )
+    nmr_dataset$data_1r_baseline <- data_1r_baseline
     nmr_dataset
 }
