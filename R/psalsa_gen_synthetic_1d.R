@@ -47,7 +47,7 @@
 #' plot(sig$y, type = "l")
 #' lines(sig$baseline, col = "red")
 #'
-#' result <- psalsa(sig$y, lambda = 1e6)
+#' result <- AlpsNMR:::psalsa(sig$y, lambda = 1e6)
 #' lines(result$baseline, col = "blue", lty = 2)
 #'
 gen_synthetic_1d <- function(n = 1000, density = 0.02, fwhm_range = c(10, 30), csnr = 0.03,
