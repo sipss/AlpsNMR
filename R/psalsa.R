@@ -37,6 +37,7 @@
 #'   the data's own range (rather than a fixed absolute value) so the floor
 #'   stays proportionate regardless of the signal's amplitude.
 #'
+#' @family baseline removal functions
 #' @return A list with two elements, each with the same dimensions as
 #'   `spectra`:
 #'   \describe{

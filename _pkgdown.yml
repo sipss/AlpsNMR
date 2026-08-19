@@ -138,6 +138,9 @@ reference:
   contents:
   - nmr_baseline_removal
   - nmr_baseline_estimation
+  - psalsa
+  - tune_psalsa
+  - gen_synthetic_1d
 - title: "Peak detection"
   desc: >
     Functions to detect peaks and visualize the resulting peak lists

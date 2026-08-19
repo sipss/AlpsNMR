@@ -29,6 +29,7 @@
 #'   count is capped so the average spacing between peaks is at least
 #'   `min_spacing_mult` times the widest FWHM in `fwhm_range`.
 #'
+#' @family baseline removal functions
 #' @return A list with:
 #'   \describe{
 #'     \item{`y`}{the synthetic signal, `baseline + peaks + noise`.}

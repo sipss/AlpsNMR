@@ -30,6 +30,7 @@
 #'   iterations.
 #' @param optim_reltol [stats::optim()] relative convergence tolerance.
 #'
+#' @family baseline removal functions
 #' @return If `y` is a single numeric vector, a list with:
 #'   \describe{
 #'     \item{`baseline`, `corrected`}{as in [psalsa()], for `y` with the tuned
