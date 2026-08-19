@@ -22,24 +22,22 @@ nmr_baseline_estimation_plot(
 pass a handful of NMRExperiments.}
 
 \item{chemshift_range}{Either a numeric vector of length 2 (a single ppm
-range to plot), or a named list of such vectors to plot several regions
-side by side, one facet column per region, named after the list names.}
+range to plot), or a named list of such vectors to plot several regions,
+one facet per region, named after the list names.}
 
-\item{nrow, ncol}{Number of NMRExperiments (facet rows) and regions (facet
-columns) to show per page. \code{NULL} (the default) shows every requested
-NMRExperiment (\code{nrow}) and every requested region (\code{ncol}) on a single
-page; set either to paginate that dimension instead of cramming (or
-silently subsampling) everything onto one page.}
+\item{nrow, ncol}{Number of rows/columns of region facets per page. \code{NULL}
+(the default) picks a snug grid for the number of regions requested:
+1x\code{n} for fewer than 4 regions, 2x2 for 4, 2x3 for 5-6, and a fixed 3x3
+(paginated via \code{page}) for 7 or more.}
 
-\item{page}{Which page to plot (1-indexed). Pages are laid out with
-NMRExperiment pages varying fastest, then region pages. Requesting a
+\item{page}{Which page of region facets to plot (1-indexed). Requesting a
 page beyond the number available is an error.}
 }
 \value{
-A ggplot2 plot: one facet row per \code{NMRExperiment} and, when more
-than one region is requested, one facet column per \code{chemshift_range}
-region. The original signal is drawn as a solid line and the estimated
-baseline as a dashed line, both coloured by \code{NMRExperiment}.
+A ggplot2 plot with one facet per \code{chemshift_range} region
+(\code{ggplot2::facet_wrap()}); every requested \code{NMRExperiment} is overlaid
+within each facet. The original signal is drawn as a solid line and the
+estimated baseline as a dashed line, both coloured by \code{NMRExperiment}.
 }
 \description{
 Plots a few samples' original spectra together with their estimated
