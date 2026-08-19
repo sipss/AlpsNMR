@@ -58,6 +58,7 @@ dataset_1D <- nmr_baseline_estimation(dataset_1D)
 \code{\link[=psalsa]{psalsa()}}, \code{\link[=tune_psalsa]{tune_psalsa()}}
 
 Other baseline removal functions:
+\code{\link[=nmr_baseline_estimation_plot]{nmr_baseline_estimation_plot()}},
 \code{\link[=nmr_baseline_removal]{nmr_baseline_removal()}}
 }
 \concept{baseline removal functions}

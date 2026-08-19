@@ -116,3 +116,134 @@ nmr_baseline_estimation <- function(nmr_dataset,
     nmr_dataset$data_1r_baseline <- data_1r_baseline
     nmr_dataset
 }
+
+
+#' Plot the estimated baseline against the original signal
+#'
+#' Plots a few samples' original spectra together with their estimated
+#' baseline (see [nmr_baseline_estimation()]), so the baseline estimate can
+#' be visually inspected against the signal it was estimated from.
+#'
+#' @family baseline removal functions
+#' @seealso [nmr_baseline_estimation()]
+#' @param nmr_dataset An [nmr_dataset_1D] with a `data_1r_baseline` element
+#'   (i.e. after calling [nmr_baseline_estimation()]).
+#' @param NMRExperiment A character vector with the NMRExperiments to plot.
+#'   `NULL` (the default) or `"all"` plots every sample; for a legible plot,
+#'   pass a handful of NMRExperiments.
+#' @param chemshift_range Either a numeric vector of length 2 (a single ppm
+#'   range to plot), or a named list of such vectors to plot several regions
+#'   side by side, one facet column per region, named after the list names.
+#' @return A ggplot2 plot: one facet row per `NMRExperiment` and, when more
+#'   than one region is requested, one facet column per `chemshift_range`
+#'   region. The original signal is drawn as a solid line and the estimated
+#'   baseline as a dashed line, both coloured by `NMRExperiment`.
+#' @export
+#' @examples
+#' dataset_1D <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
+#' dataset_1D <- nmr_baseline_estimation(dataset_1D, lambda = 6, p = 0.05)
+#' nmr_baseline_estimation_plot(
+#'     dataset_1D,
+#'     NMRExperiment = names(dataset_1D)[1:2],
+#'     chemshift_range = list(Region1 = c(1.2, 1.4), Region2 = c(3.4, 3.6))
+#' )
+#'
+nmr_baseline_estimation_plot <- function(nmr_dataset, NMRExperiment = NULL, chemshift_range = NULL) {
+    if (!"data_1r_baseline" %in% names(unclass(nmr_dataset))) {
+        cli::cli_abort(
+            message = c(
+                "nmr_dataset has no estimated baseline",
+                "i" = "Run {.fn nmr_baseline_estimation} on it first."
+            )
+        )
+    }
+    if (is.null(chemshift_range)) {
+        cli::cli_abort(
+            message = c(
+                "chemshift_range must be given",
+                "i" = "Pass a numeric vector of length 2 (a single ppm range), or a named list of such vectors for several regions."
+            )
+        )
+    }
+    if (is.numeric(chemshift_range)) {
+        chemshift_range <- list(chemshift_range)
+    }
+    if (is.null(names(chemshift_range)) || !all(nzchar(names(chemshift_range)))) {
+        names(chemshift_range) <- paste0("Region ", seq_along(chemshift_range))
+    }
+    axis_range <- range(nmr_dataset$axis)
+    for (region_name in names(chemshift_range)) {
+        region_i <- chemshift_range[[region_name]]
+        if (length(region_i) != 2) {
+            cli::cli_abort("Each chemshift_range must have length 2")
+        }
+        if (max(region_i) < axis_range[1] || min(region_i) > axis_range[2]) {
+            cli::cli_abort(
+                message = c(
+                    "chemshift_range {.val {region_name}} = [{min(region_i)}, {max(region_i)}] ppm falls outside the dataset's axis range",
+                    "i" = "The dataset's axis spans [{axis_range[1]}, {axis_range[2]}] ppm."
+                )
+            )
+        }
+    }
+
+    if (is.null(NMRExperiment) || identical(NMRExperiment, "all")) {
+        NMRExperiment <- names(nmr_dataset)
+    }
+
+    regions_data <- purrr::imap(chemshift_range, function(range_i, region_name) {
+        signal <- tidy(
+            nmr_dataset,
+            chemshift_range = range_i,
+            NMRExperiment = NMRExperiment,
+            matrix_name = "data_1r"
+        )
+        signal$type <- "Signal"
+        baseline <- tidy(
+            nmr_dataset,
+            chemshift_range = range_i,
+            NMRExperiment = NMRExperiment,
+            matrix_name = "data_1r_baseline"
+        )
+        baseline$type <- "Baseline"
+        region_df <- rbind(signal, baseline)
+        region_df$region <- region_name
+        region_df
+    })
+    to_plot <- dplyr::bind_rows(regions_data)
+    to_plot$NMRExperiment <- factor(to_plot$NMRExperiment, levels = intersect(NMRExperiment, unique(to_plot$NMRExperiment)))
+    to_plot$region <- factor(to_plot$region, levels = names(chemshift_range))
+    to_plot$type <- factor(to_plot$type, levels = c("Signal", "Baseline"))
+
+    gplt <- ggplot2::ggplot(
+        to_plot,
+        ggplot2::aes(
+            x = .data$chemshift,
+            y = .data$intensity,
+            colour = .data$NMRExperiment,
+            linetype = .data$type,
+            group = interaction(.data$NMRExperiment, .data$type)
+        )
+    ) +
+        ggplot2::geom_line() +
+        ggplot2::scale_linetype_manual(values = c(Signal = "solid", Baseline = "dashed"), name = NULL) +
+        ggplot2::labs(x = "Chemical Shift (ppm)", y = "Intensity (a.u.)", colour = "NMRExperiment") +
+        ggplot2::scale_x_reverse() +
+        ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si("")))
+
+    if (length(chemshift_range) > 1) {
+        gplt <- gplt +
+            ggplot2::facet_grid(
+                rows = ggplot2::vars(.data$NMRExperiment),
+                cols = ggplot2::vars(.data$region),
+                scales = "free_x"
+            )
+    } else {
+        gplt <- gplt +
+            ggplot2::facet_grid(
+                rows = ggplot2::vars(.data$NMRExperiment),
+                scales = "free_x"
+            )
+    }
+    gplt
+}
