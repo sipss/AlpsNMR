@@ -247,7 +247,16 @@ Functions to remove or estimate the baseline
   :
 
   Estimate the baseline on an nmr_dataset_1D object, using
-  [baseline::baseline.als](https://rdrr.io/pkg/baseline/man/baseline.als.html).
+  [`psalsa()`](https://sipss.github.io/AlpsNMR/reference/psalsa.md)
+
+- [`psalsa()`](https://sipss.github.io/AlpsNMR/reference/psalsa.md) :
+  Baseline estimation with Peaked Signal's Asymmetric Least Squares
+
+- [`tune_psalsa()`](https://sipss.github.io/AlpsNMR/reference/tune_psalsa.md)
+  : Tune PSALSA parameters from one or more example spectra
+
+- [`gen_synthetic_1d()`](https://sipss.github.io/AlpsNMR/reference/gen_synthetic_1d.md)
+  : Generate a synthetic 1D signal with known ground truth
 
 ## Peak detection
 

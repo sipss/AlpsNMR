@@ -39,6 +39,25 @@
   random samples when there were more than 20. `"all"` remains a synonym
   for `NULL`. `nrow`/`ncol` default to a snug grid for small sample
   counts, or a fixed 3x3 (paginate with `page`) for 7 or more.
+- [`nmr_baseline_estimation()`](https://sipss.github.io/AlpsNMR/reference/nmr_baseline_estimation.md):
+  now estimates the baseline with
+  [`psalsa()`](https://sipss.github.io/AlpsNMR/reference/psalsa.md)
+  (PSALSA) instead of
+  [`baseline::baseline.als()`](https://rdrr.io/pkg/baseline/man/baseline.als.html)
+  (ALS), and gains a new `k` argument (PSALSA’s peak height parameter).
+  `lambda`, `p`, `k` and `maxit` all now default to `"auto"`: whenever
+  any of `lambda`/`p`/`k` is `"auto"`,
+  [`tune_psalsa()`](https://sipss.github.io/AlpsNMR/reference/tune_psalsa.md)
+  is run once across every sample in the dataset to pick values for them
+  automatically; pass an explicit number instead to bypass tuning for
+  that parameter. `maxit = "auto"` uses
+  [`psalsa()`](https://sipss.github.io/AlpsNMR/reference/psalsa.md)’s
+  own default, since
+  [`tune_psalsa()`](https://sipss.github.io/AlpsNMR/reference/tune_psalsa.md)
+  does not tune it. Existing calls passing ALS-scale `lambda`/`p` values
+  (e.g. `lambda = 9, p = 0.01`) must be updated, since those values mean
+  something very different for PSALSA (`lambda` is typically
+  `1e5`-`1e8`).
 
 ### New features
 
@@ -130,6 +149,10 @@
 
 ### Other changes
 
+- [`nmr_baseline_removal()`](https://sipss.github.io/AlpsNMR/reference/nmr_baseline_removal.md)
+  is deprecated and will be removed in early 2027. Use
+  [`nmr_baseline_estimation()`](https://sipss.github.io/AlpsNMR/reference/nmr_baseline_estimation.md)
+  instead.
 - [`download_MTBLS242()`](https://sipss.github.io/AlpsNMR/reference/download_MTBLS242.md):
   validate downloaded files against MetaboLights’ published SHA-256
   checksums for the MTBLS242 dataset

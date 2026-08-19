@@ -35,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Baseline Removal NMR</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/nmr_baseline_removal.R" class="external-link"><code>R/nmr_baseline_removal.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sipss/AlpsNMR/blob/devel/R/nmr_baseline_estimation.R" class="external-link"><code>R/nmr_baseline_estimation.R</code></a></small>
       <div class="d-none name"><code>nmr_baseline_removal.Rd</code></div>
     </div>
 
@@ -73,6 +73,14 @@
     <p>The same <a href="nmr_dataset_1D.html">nmr_dataset_1D</a> object after baseline removal.</p>
     </div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p><strong>Deprecated</strong>: <code>nmr_baseline_removal()</code> will be removed in early 2027.
+Use <code><a href="nmr_baseline_estimation.html">nmr_baseline_estimation()</a></code> instead: it estimates the baseline without
+overwriting <code>data_1r</code>, and downstream functions (e.g.
+<code><a href="nmr_baseline_threshold.html">nmr_baseline_threshold()</a></code>, <code><a href="nmr_detect_peaks.html">nmr_detect_peaks()</a></code>) pick it up automatically
+when present.</p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><a href="https://rdrr.io/pkg/baseline/man/baseline.als.html" class="external-link">baseline::baseline.als</a></p>
 <p>Other baseline removal functions:
@@ -83,6 +91,9 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dataset_1D</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_and_save_functions.html">nmr_dataset_load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"nmr_dataset.rds"</span>, package <span class="op">=</span> <span class="st">"AlpsNMR"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dataset_no_base_line</span> <span class="op">&lt;-</span> <span class="fu">nmr_baseline_removal</span><span class="op">(</span><span class="va">dataset_1D</span>, lambda <span class="op">=</span> <span class="fl">6</span>, p <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span><span style="color: #BBBB00;">!</span> `nmr_baseline_removal()` is deprecated and will be removed in early 2027.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Use `nmr_baseline_estimation()` instead.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

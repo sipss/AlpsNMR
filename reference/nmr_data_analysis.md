@@ -137,16 +137,16 @@ model$outer_cv_results_digested$auroc
 #> # A tibble: 3 × 3
 #>   cv_outer_iteration ncomp   auc
 #>                <int> <int> <dbl>
-#> 1                  1     1 0.933
-#> 2                  2     1 0.875
-#> 3                  3     2 1    
+#> 1                  1     1 0.733
+#> 2                  2     1 0.5  
+#> 3                  3     1 0.6  
 ## Rank Product of the Variable Importance in the Projection
 ## (Lower means more important)
 sort(model$outer_cv_results_digested$vip_rankproducts)
-#>     Peak2     Peak6    Peak17    Peak11     Peak3    Peak14    Peak20    Peak12 
-#>  1.259921  1.587401  3.556893  5.646216  6.316360  7.651725  8.962809  9.049114 
-#>     Peak9    Peak19    Peak15     Peak1     Peak4     Peak5     Peak7    Peak13 
-#>  9.165656  9.654894 11.100998 11.686316 12.091887 12.428930 12.632719 13.782348 
-#>    Peak16    Peak18    Peak10     Peak8 
-#> 13.924767 14.227573 14.986655 17.324782 
+#>     Peak2     Peak6    Peak16     Peak1    Peak11     Peak7    Peak13    Peak18 
+#>  2.000000  2.080084  2.620741  3.107233  4.308869  5.768998  7.958114  9.491220 
+#>    Peak14     Peak8    Peak12     Peak3    Peak20     Peak9    Peak17    Peak19 
+#>  9.813199 11.292432 11.617571 12.324480 12.557072 13.782348 13.959064 14.851875 
+#>     Peak4     Peak5    Peak10    Peak15 
+#> 15.036946 15.740609 16.108636 17.621736 
 ```

@@ -421,11 +421,11 @@ sessionInfo()
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] gtable_0.3.6        ellipse_0.5.0       xfun_0.60          
-    ##  [4] bslib_0.11.0        ggplot2_4.0.3       htmlwidgets_1.6.4  
-    ##  [7] ggrepel_0.9.8       lattice_0.22-9      vctrs_0.7.3        
+    ##  [4] bslib_0.12.0        ggplot2_4.0.3       htmlwidgets_1.6.4  
+    ##  [7] ggrepel_0.9.8       lattice_0.23-1      vctrs_0.7.3        
     ## [10] tools_4.6.1         generics_0.1.4      parallel_4.6.1     
     ## [13] tibble_3.3.1        rARPACK_0.11-0      pkgconfig_2.0.3    
-    ## [16] Matrix_1.7-5        RColorBrewer_1.1-3  S7_0.2.2           
+    ## [16] Matrix_1.7-6        RColorBrewer_1.1-3  S7_0.2.2           
     ## [19] desc_1.4.3          mixOmics_6.36.0     lifecycle_1.0.5    
     ## [22] compiler_4.6.1      farver_2.1.2        stringr_1.6.0      
     ## [25] textshaping_1.0.5   codetools_0.2-20    htmltools_0.5.9    
@@ -433,7 +433,7 @@ sessionInfo()
     ## [31] pkgdown_2.2.1       jquerylib_0.1.4     tidyr_1.3.2        
     ## [34] MASS_7.3-66         BiocParallel_1.46.0 cachem_1.1.0       
     ## [37] RSpectra_0.16-2     tidyselect_1.2.1    digest_0.6.39      
-    ## [40] stringi_1.8.7       reshape2_1.4.5      purrr_1.2.2        
+    ## [40] stringi_1.8.9       reshape2_1.4.5      purrr_1.2.2        
     ## [43] bookdown_0.47       labeling_0.4.3      fastmap_1.2.0      
     ## [46] grid_4.6.1          cli_3.6.6           magrittr_2.0.5     
     ## [49] utf8_1.2.6          corpcor_1.6.10      withr_3.0.3        

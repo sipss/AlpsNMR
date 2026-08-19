@@ -332,6 +332,9 @@ And after:
 ``` r
 
 dataset = nmr_baseline_removal(dataset, lambda = 6, p = 0.01)
+#> Warning: ! `nmr_baseline_removal()` is deprecated and will be removed in early 2027.
+#> ℹ Use `nmr_baseline_estimation()` instead.
+#> This warning is displayed once every 8 hours.
 plot(dataset, chemshift_range = c(3.5,3.8))
 ```
 
@@ -960,7 +963,7 @@ sessionInfo()
 #> loaded via a namespace (and not attached):
 #>   [1] tidyselect_1.2.1       dplyr_1.2.1            farver_2.1.2          
 #>   [4] S7_0.2.2               fastmap_1.2.0          MassSpecWavelet_1.78.2
-#>   [7] digest_0.6.39          lifecycle_1.0.5        cluster_2.1.8.2       
+#>   [7] digest_0.6.39          lifecycle_1.0.5        cluster_2.1.8.3       
 #>  [10] magrittr_2.0.5         compiler_4.6.1         rngtools_1.5.2        
 #>  [13] doSNOW_1.0.20          rlang_1.3.0            sass_0.4.10           
 #>  [16] tools_4.6.1            igraph_2.3.3           utf8_1.2.6            
@@ -973,23 +976,23 @@ sessionInfo()
 #>  [37] scales_1.4.0           MASS_7.3-66            signal_1.8-1          
 #>  [40] cli_3.6.6              mvtnorm_1.4-2          ellipse_0.5.0         
 #>  [43] rmarkdown_2.31         crayon_1.5.3           ragg_1.5.2            
-#>  [46] generics_0.1.4         otel_0.2.0             RcppParallel_5.1.11-2 
+#>  [46] generics_0.1.4         otel_0.2.0             RcppParallel_6.2.0    
 #>  [49] RSpectra_0.16-2        httr_1.4.8             reshape2_1.4.5        
 #>  [52] readxl_1.5.0           cachem_1.1.0           stringr_1.6.0         
 #>  [55] rvest_1.0.5            parallel_4.6.1         impute_1.86.0         
 #>  [58] BiocManager_1.30.27    cellranger_1.1.0       matrixStats_1.5.0     
-#>  [61] vctrs_0.7.3            Matrix_1.7-5           jsonlite_2.0.0        
+#>  [61] vctrs_0.7.3            Matrix_1.7-6           jsonlite_2.0.0        
 #>  [64] speaq_2.7.0            SparseM_1.84-2         bookdown_0.47         
 #>  [67] ggrepel_0.9.8          baseline_1.3-7         systemfonts_1.3.2     
 #>  [70] foreach_1.5.2          tidyr_1.3.2            jquerylib_0.1.4       
 #>  [73] snow_0.4-4             missForest_1.6.1       glue_1.8.1            
 #>  [76] pkgdown_2.2.1          codetools_0.2-20       mixOmics_6.36.0       
-#>  [79] stringi_1.8.7          gtable_0.3.6           tibble_3.3.1          
+#>  [79] stringi_1.8.9          gtable_0.3.6           tibble_3.3.1          
 #>  [82] pillar_1.11.1          htmltools_0.5.9        randomForest_4.7-1.2  
 #>  [85] R6_2.6.1               Rdpack_2.6.6           zigg_0.0.2            
-#>  [88] textshaping_1.0.5      evaluate_1.0.5         lattice_0.22-9        
+#>  [88] textshaping_1.0.5      evaluate_1.0.5         lattice_0.23-1        
 #>  [91] rbibutils_2.4.1        Rfast_2.1.5.2          corpcor_1.6.10        
-#>  [94] bslib_0.11.0           Rcpp_1.1.2             gridExtra_2.3.1       
+#>  [94] bslib_0.12.0           Rcpp_1.1.2             gridExtra_2.3.1       
 #>  [97] ranger_0.18.0          xfun_0.60              fs_2.1.0              
 #> [100] pkgconfig_2.0.3
 ```

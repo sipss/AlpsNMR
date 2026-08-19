@@ -31,6 +31,7 @@
 <url><loc>https://sipss.github.io/AlpsNMR/reference/format.nmr_dataset.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/format.nmr_dataset_1D.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/format.nmr_dataset_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/gen_synthetic_1d.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/get_integration_with_metadata.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/hmdb.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/index.html</loc></url>
@@ -111,6 +112,7 @@
 <url><loc>https://sipss.github.io/AlpsNMR/reference/print.nmr_dataset.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/print.nmr_dataset_1D.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/print.nmr_dataset_peak_table.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/psalsa.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/random_subsampling.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/read_bruker_pdata.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/reexports.html</loc></url>
@@ -122,6 +124,7 @@
 <url><loc>https://sipss.github.io/AlpsNMR/reference/tidy.nmr_dataset_1D.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/to_ASICS.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/to_ChemoSpec.html</loc></url>
+<url><loc>https://sipss.github.io/AlpsNMR/reference/tune_psalsa.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/validate_nmr_dataset.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/validate_nmr_dataset_family.html</loc></url>
 <url><loc>https://sipss.github.io/AlpsNMR/reference/validate_nmr_dataset_peak_table.html</loc></url>
