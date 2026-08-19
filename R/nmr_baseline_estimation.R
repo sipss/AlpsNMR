@@ -134,6 +134,14 @@ nmr_baseline_estimation <- function(nmr_dataset,
 #' @param chemshift_range Either a numeric vector of length 2 (a single ppm
 #'   range to plot), or a named list of such vectors to plot several regions
 #'   side by side, one facet column per region, named after the list names.
+#' @param nrow,ncol Number of NMRExperiments (facet rows) and regions (facet
+#'   columns) to show per page. `NULL` (the default) shows every requested
+#'   NMRExperiment (`nrow`) and every requested region (`ncol`) on a single
+#'   page; set either to paginate that dimension instead of cramming (or
+#'   silently subsampling) everything onto one page.
+#' @param page Which page to plot (1-indexed). Pages are laid out with
+#'   NMRExperiment pages varying fastest, then region pages. Requesting a
+#'   page beyond the number available is an error.
 #' @return A ggplot2 plot: one facet row per `NMRExperiment` and, when more
 #'   than one region is requested, one facet column per `chemshift_range`
 #'   region. The original signal is drawn as a solid line and the estimated
@@ -148,7 +156,8 @@ nmr_baseline_estimation <- function(nmr_dataset,
 #'     chemshift_range = list(Region1 = c(1.2, 1.4), Region2 = c(3.4, 3.6))
 #' )
 #'
-nmr_baseline_estimation_plot <- function(nmr_dataset, NMRExperiment = NULL, chemshift_range = NULL) {
+nmr_baseline_estimation_plot <- function(nmr_dataset, NMRExperiment = NULL, chemshift_range = NULL,
+    nrow = NULL, ncol = NULL, page = 1) {
     if (!"data_1r_baseline" %in% names(unclass(nmr_dataset))) {
         cli::cli_abort(
             message = c(
@@ -190,6 +199,35 @@ nmr_baseline_estimation_plot <- function(nmr_dataset, NMRExperiment = NULL, chem
     if (is.null(NMRExperiment) || identical(NMRExperiment, "all")) {
         NMRExperiment <- names(nmr_dataset)
     }
+
+    num_samples <- length(NMRExperiment)
+    num_regions <- length(chemshift_range)
+    if (is.null(nrow)) {
+        nrow <- num_samples
+    }
+    if (is.null(ncol)) {
+        ncol <- num_regions
+    }
+    num_sample_pages <- max(ceiling(num_samples / nrow), 1)
+    num_region_pages <- max(ceiling(num_regions / ncol), 1)
+    total_pages <- num_sample_pages * num_region_pages
+    if (page < 1 || page > total_pages) {
+        cli::cli_abort(
+            message = c(
+                "page ({page}) is out of bounds",
+                "i" = "There {cli::qty(total_pages)} {?is/are} {total_pages} page{?s} for {num_samples} NMRExperiment{?s} and {num_regions} region{?s} with nrow = {nrow}, ncol = {ncol} ({nrow * ncol} facets per page)."
+            )
+        )
+    }
+    # NMRExperiment pages vary fastest, then region pages.
+    sample_page <- ((page - 1) %% num_sample_pages) + 1
+    region_page <- ((page - 1) %/% num_sample_pages) + 1
+    sample_start <- (sample_page - 1) * nrow + 1
+    sample_end <- min(sample_page * nrow, num_samples)
+    NMRExperiment <- NMRExperiment[sample_start:sample_end]
+    region_start <- (region_page - 1) * ncol + 1
+    region_end <- min(region_page * ncol, num_regions)
+    chemshift_range <- chemshift_range[region_start:region_end]
 
     regions_data <- purrr::imap(chemshift_range, function(range_i, region_name) {
         signal <- tidy(

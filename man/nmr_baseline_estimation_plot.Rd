@@ -7,7 +7,10 @@
 nmr_baseline_estimation_plot(
   nmr_dataset,
   NMRExperiment = NULL,
-  chemshift_range = NULL
+  chemshift_range = NULL,
+  nrow = NULL,
+  ncol = NULL,
+  page = 1
 )
 }
 \arguments{
@@ -21,6 +24,16 @@ pass a handful of NMRExperiments.}
 \item{chemshift_range}{Either a numeric vector of length 2 (a single ppm
 range to plot), or a named list of such vectors to plot several regions
 side by side, one facet column per region, named after the list names.}
+
+\item{nrow, ncol}{Number of NMRExperiments (facet rows) and regions (facet
+columns) to show per page. \code{NULL} (the default) shows every requested
+NMRExperiment (\code{nrow}) and every requested region (\code{ncol}) on a single
+page; set either to paginate that dimension instead of cramming (or
+silently subsampling) everything onto one page.}
+
+\item{page}{Which page to plot (1-indexed). Pages are laid out with
+NMRExperiment pages varying fastest, then region pages. Requesting a
+page beyond the number available is an error.}
 }
 \value{
 A ggplot2 plot: one facet row per \code{NMRExperiment} and, when more
