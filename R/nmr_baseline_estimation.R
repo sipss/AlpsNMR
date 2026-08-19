@@ -267,6 +267,6 @@ nmr_baseline_estimation_plot <- function(nmr_dataset, NMRExperiment = NULL, chem
         ggplot2::labs(x = "Chemical Shift (ppm)", y = "Intensity (a.u.)", colour = "NMRExperiment") +
         ggplot2::scale_x_reverse() +
         ggplot2::scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_si(""))) +
-        ggplot2::facet_wrap(~ .data$region, nrow = nrow, ncol = ncol, scales = "free_x")
+        ggplot2::facet_wrap(~ .data$region, nrow = nrow, ncol = ncol, scales = "free")
     gplt
 }
