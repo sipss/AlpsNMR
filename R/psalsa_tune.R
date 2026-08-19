@@ -21,8 +21,9 @@
 #' @param y A numeric vector with one example spectrum, or a list of numeric
 #'   vectors with several example spectra (their characteristics are pooled
 #'   together before tuning). Lists of differing lengths are supported.
-#' @param peak_shape Either `"gaussian"` or `"gex"` (an asymmetric,
-#'   exponentially-modified peak shape typical of chromatography). Peak shape
+#' @param peak_shape One of `"gaussian"`, `"gex"` (an asymmetric,
+#'   exponentially-modified peak shape typical of chromatography), or
+#'   `"lorentzian"` (the peak shape typical of NMR spectra). Peak shape
 #'   is often known from the instrument/technique used to acquire `y`, so it
 #'   is left as an explicit argument rather than inferred from the data.
 #' @param n_synthetic Number of synthetic spectra generated for the search.
@@ -55,7 +56,7 @@
 #' plot(y, type = "l")
 #' lines(result$baseline, col = "red")
 #'
-tune_psalsa <- function(y, peak_shape = c("gaussian", "gex"), n_synthetic = 10,
+tune_psalsa <- function(y, peak_shape = c("gaussian", "gex", "lorentzian"), n_synthetic = 10,
                          optim_maxit = 150, optim_reltol = 1e-6) {
   peak_shape <- match.arg(peak_shape)
   y_list <- if (is.list(y)) y else list(y)

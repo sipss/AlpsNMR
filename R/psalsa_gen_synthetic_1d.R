@@ -15,8 +15,10 @@
 #' @param csnr Noise scale, roughly the noise standard deviation as a
 #'   fraction of the signal amplitude `A`. `0` gives an exactly noise-free
 #'   signal.
-#' @param peak_shape Either `"gaussian"` or `"gex"` (an asymmetric,
-#'   exponentially-modified peak shape typical of chromatography).
+#' @param peak_shape One of `"gaussian"`, `"gex"` (an asymmetric,
+#'   exponentially-modified peak shape typical of chromatography), or
+#'   `"lorentzian"` (the peak shape typical of NMR spectra; the same
+#'   Cauchy/Lorentzian used by [peaklist_fit_lorentzians()]).
 #' @param A Amplitude scale for both the baseline and the peaks.
 #' @param seed Random seed, for reproducibility.
 #' @param cap_density If `TRUE` (the default), reduces the peak count so
@@ -51,7 +53,7 @@
 #' lines(result$baseline, col = "blue", lty = 2)
 #'
 gen_synthetic_1d <- function(n = 1000, density = 0.02, fwhm_range = c(10, 30), csnr = 0.03,
-                              peak_shape = c("gaussian", "gex"),
+                              peak_shape = c("gaussian", "gex", "lorentzian"),
                               A = 1, seed = 1, cap_density = TRUE, min_spacing_mult = 2) {
   peak_shape <- match.arg(peak_shape)
   set.seed(seed)
@@ -71,6 +73,8 @@ gen_synthetic_1d <- function(n = 1000, density = 0.02, fwhm_range = c(10, 30), c
     fw <- stats::runif(1, fwhm_range[1], fwhm_range[2])
     pk_j <- if (peak_shape == "gaussian") {
       gauss_peak_1d(x, centers[j], fw, h[j])
+    } else if (peak_shape == "lorentzian") {
+      lorentz_peak_1d(x, centers[j], fw, h[j])
     } else {
       a <- stats::runif(1, 0.5, 2); b <- stats::runif(1, 5, 8)
       gex_peak_1d(x, centers[j] - fw / 2, centers[j] + fw / 2, h[j], a, b)
@@ -106,4 +110,14 @@ gex_peak_1d <- function(x, t0, tm, h, a, b) {
 gauss_peak_1d <- function(x, center, fwhm, h) {
   sigma <- fwhm / (2 * sqrt(2 * log(2)))
   h * exp(-((x - center)^2) / (2 * sigma^2))
+}
+
+## Height/fwhm-parametrized wrapper around the package's canonical
+## lorentzian() (area_estimation.R, also used by peaklist_fit_lorentzians()):
+## gamma there is the half-width-at-half-maximum, so fwhm = 2*gamma, and A is
+## chosen so the peak's value at its center equals h (A/(pi*gamma) = h).
+#' @noRd
+lorentz_peak_1d <- function(x, center, fwhm, h) {
+  gamma <- fwhm / 2
+  lorentzian(x, x0 = center, gamma = gamma, A = h * pi * gamma)
 }

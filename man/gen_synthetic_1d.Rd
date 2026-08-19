@@ -9,7 +9,7 @@ gen_synthetic_1d(
   density = 0.02,
   fwhm_range = c(10, 30),
   csnr = 0.03,
-  peak_shape = c("gaussian", "gex"),
+  peak_shape = c("gaussian", "gex", "lorentzian"),
   A = 1,
   seed = 1,
   cap_density = TRUE,
@@ -29,8 +29,10 @@ points) is drawn uniformly from this range.}
 fraction of the signal amplitude \code{A}. \code{0} gives an exactly noise-free
 signal.}
 
-\item{peak_shape}{Either \code{"gaussian"} or \code{"gex"} (an asymmetric,
-exponentially-modified peak shape typical of chromatography).}
+\item{peak_shape}{One of \code{"gaussian"}, \code{"gex"} (an asymmetric,
+exponentially-modified peak shape typical of chromatography), or
+\code{"lorentzian"} (the peak shape typical of NMR spectra; the same
+Cauchy/Lorentzian used by \code{\link[=peaklist_fit_lorentzians]{peaklist_fit_lorentzians()}}).}
 
 \item{A}{Amplitude scale for both the baseline and the peaks.}
 
