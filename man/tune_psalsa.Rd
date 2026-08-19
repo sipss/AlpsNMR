@@ -6,7 +6,7 @@
 \usage{
 tune_psalsa(
   y,
-  peak_shape = c("gaussian", "gex", "lorentzian"),
+  peak_shape = c("lorentzian", "gaussian", "gex"),
   n_synthetic = 10,
   optim_maxit = 150,
   optim_reltol = 1e-06
@@ -17,9 +17,9 @@ tune_psalsa(
 vectors with several example spectra (their characteristics are pooled
 together before tuning). Lists of differing lengths are supported.}
 
-\item{peak_shape}{One of \code{"gaussian"}, \code{"gex"} (an asymmetric,
-exponentially-modified peak shape typical of chromatography), or
-\code{"lorentzian"} (the peak shape typical of NMR spectra). Peak shape
+\item{peak_shape}{One of \code{"lorentzian"} (the default; the peak shape
+typical of NMR spectra), \code{"gaussian"}, or \code{"gex"} (an asymmetric,
+exponentially-modified peak shape typical of chromatography). Peak shape
 is often known from the instrument/technique used to acquire \code{y}, so it
 is left as an explicit argument rather than inferred from the data.}
 

@@ -15,10 +15,10 @@
 #' @param csnr Noise scale, roughly the noise standard deviation as a
 #'   fraction of the signal amplitude `A`. `0` gives an exactly noise-free
 #'   signal.
-#' @param peak_shape One of `"gaussian"`, `"gex"` (an asymmetric,
-#'   exponentially-modified peak shape typical of chromatography), or
-#'   `"lorentzian"` (the peak shape typical of NMR spectra; the same
-#'   Cauchy/Lorentzian used by [peaklist_fit_lorentzians()]).
+#' @param peak_shape One of `"lorentzian"` (the default; the peak shape
+#'   typical of NMR spectra, the same Cauchy/Lorentzian used by
+#'   [peaklist_fit_lorentzians()]), `"gaussian"`, or `"gex"` (an asymmetric,
+#'   exponentially-modified peak shape typical of chromatography).
 #' @param A Amplitude scale for both the baseline and the peaks.
 #' @param seed Random seed, for reproducibility.
 #' @param cap_density If `TRUE` (the default), reduces the peak count so
@@ -53,7 +53,7 @@
 #' lines(result$baseline, col = "blue", lty = 2)
 #'
 gen_synthetic_1d <- function(n = 1000, density = 0.02, fwhm_range = c(10, 30), csnr = 0.03,
-                              peak_shape = c("gaussian", "gex", "lorentzian"),
+                              peak_shape = c("lorentzian", "gaussian", "gex"),
                               A = 1, seed = 1, cap_density = TRUE, min_spacing_mult = 2) {
   peak_shape <- match.arg(peak_shape)
   set.seed(seed)
