@@ -96,12 +96,12 @@ psalsa_one <- function(y, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsil
 #' Smooths a vector `y` with per-element weights `w` by solving the penalised
 #' least-squares system `(diag(w) + penalty) s = w * y`, where `penalty` is the
 #' pre-built second-order difference penalty (`lambda * t(D2) %*% D2`, see
-#' [diff2_penalty()]) -- the classic second-order Whittaker smoother, solved
+#' `diff2_penalty()`) -- the classic second-order Whittaker smoother, solved
 #' directly via sparse Cholesky. Used both by [psalsa()] directly and, along
-#' the processing axis, by [psalsa2d()].
+#' the processing axis, by `psalsa2d()`.
 #'
 #' @param y Numeric vector to smooth.
-#' @param penalty Sparse penalty matrix (`lambda`-scaled) from [diff2_penalty()].
+#' @param penalty Sparse penalty matrix (`lambda`-scaled) from `diff2_penalty()`.
 #' @param w Numeric vector of weights, same length as `y`.
 #' @return A numeric vector with the smoothed signal.
 #' @noRd
@@ -112,7 +112,7 @@ whit1d <- function(y, penalty, w) {
 
 #' PSALSA asymmetric reweighting core
 #'
-#' Shared iteration used by both the 1D ([psalsa()]) and 2D ([psalsa2d()])
+#' Shared iteration used by both the 1D ([psalsa()]) and 2D (`psalsa2d()`)
 #' baseline estimators. The only difference between the two is the smoother, so
 #' it is passed in as a function `smoother(y, w)` that returns the smoothed
 #' signal (of the same shape as `y`) for the weight array `w`. Because every
