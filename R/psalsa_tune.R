@@ -219,15 +219,38 @@ peak_is_isolated_1d <- function(peak_info) {
   iso
 }
 
-## Peak-area recovery: for each peak in peak_info, integrates the baseline-
-## corrected signal (y - z_est) over that peak's own window and compares to
-## its true area.
+## Peak-area recovery via fractional attribution. A hard lo:hi window
+## (summing the baseline-corrected signal over just that peak's own window)
+## double-counts/misattributes area wherever peaks overlap, and has to
+## exclude overlapping peaks entirely to stay valid -- see
+## peak_is_isolated_1d(). Since these are SYNTHETIC peaks, we know each
+## peak's own true contribution at every point (peaks_total is the exact sum
+## of every peak alone, no baseline/noise), so instead of a hard window we
+## split the corrected signal at each point in proportion to how much each
+## peak TRULY contributes there:
+##   w_i(x) = pk_i(x) / peaks_total(x)
+##   est_area_i = sum_x w_i(x) * corrected(x)
+## Where a peak is genuinely isolated, w_i is 1 inside its window and 0
+## outside, so this reduces exactly to the old sum(corrected[lo:hi]) there --
+## strictly more general, not a different method for the isolated case.
+## peaks_total(x) >= pk_i(x) > 0 for every x inside that peak's own lo:hi
+## (lo:hi is defined as exactly where pk_i itself exceeds 1e-3*height, and
+## peaks stack additively with non-negative shapes), so no zero-division
+## guard is needed.
 #' @noRd
-peak_area_errors_1d <- function(y, z_est, peak_info) {
+peak_area_errors_1d <- function(y, z_est, peak_info, peaks_total, peak_shape) {
   if (is.null(peak_info) || nrow(peak_info) == 0) return(peak_info)
   corrected <- as.vector(y) - as.vector(z_est)
+  peaks_total <- as.vector(peaks_total)
   est_area <- vapply(seq_len(nrow(peak_info)), function(i) {
-    sum(corrected[peak_info$lo[i]:peak_info$hi[i]])
+    idx <- peak_info$lo[i]:peak_info$hi[i]
+    pk_i <- reconstruct_peak_1d(
+      x = idx, peak_shape = peak_shape,
+      height = peak_info$height[i], fwhm = peak_info$fwhm[i], center = peak_info$center[i],
+      a = peak_info$a[i], b = peak_info$b[i]
+    )
+    w_i <- pk_i / peaks_total[idx]
+    sum(w_i * corrected[idx])
   }, numeric(1))
   pct_err <- 100 * (est_area - peak_info$area) / peak_info$area
   cbind(peak_info, est_area = est_area, pct_error = pct_err, abs_pct_error = abs(pct_err),
@@ -235,14 +258,16 @@ peak_area_errors_1d <- function(y, z_est, peak_info) {
 }
 
 ## Small/medium/large tiers by true peak area, using cut points computed once
-## from the pool's own isolated-peak population, so tiers are comparable
-## across the different synthetic signals scored by the same tuning run.
+## from the pool's WHOLE peak population (not just isolated peaks -- now that
+## peak_area_errors_1d() can score overlapping peaks too, there's no reason
+## to leave them out of the tier boundaries), so tiers are comparable across
+## the different synthetic signals scored by the same tuning run.
 #' @noRd
 compute_peak_size_breaks_1d <- function(signals) {
   areas <- unlist(lapply(signals, function(s) {
     pi <- s$peak_info
     if (is.null(pi) || nrow(pi) == 0) return(NULL)
-    pi$area[peak_is_isolated_1d(pi)]
+    pi$area
   }))
   stats::quantile(areas, c(1 / 3, 2 / 3), na.rm = TRUE)
 }
@@ -255,7 +280,8 @@ classify_peak_size_1d <- function(area, breaks) {
 ## RMSE (as a percentage of scale) restricted to points where the peak
 ## contribution is small relative to noise (peaks < 0.5*sigma) -- the
 ## baseline is directly observable there, so this is a useful fallback
-## objective when the pool has too few isolated peaks for peak-area scoring.
+## objective when the pool has too few peaks (of any kind) for size-tiered
+## peak-area scoring, or when the size tiers themselves are degenerate.
 #' @noRd
 floor_rmse_1d <- function(est, truth, peaks, sigma, scale) {
   mask <- as.vector(peaks) < 0.5 * as.vector(sigma)
@@ -327,9 +353,9 @@ tune_psalsa_params_1d <- function(pool, p_max = 0.05, p_weight = 0.4, lambda_k_w
                                    theta0 = c(log(1e7), stats::qlogis(0.001 / p_max), log(15)),
                                    optim_maxit = 150, optim_reltol = 1e-6) {
   size_breaks <- compute_peak_size_breaks_1d(pool)
-  n_iso <- sum(vapply(pool, function(sig) sum(peak_is_isolated_1d(sig$peak_info)), integer(1)))
+  n_total <- sum(vapply(pool, function(sig) nrow(sig$peak_info), integer(1)))
   use_peak_area <- all(is.finite(size_breaks)) &&
-    length(unique(c(-Inf, size_breaks, Inf))) == 4 && n_iso >= 15
+    length(unique(c(-Inf, size_breaks, Inf))) == 4 && n_total >= 15
 
   regularization <- function(theta) {
     p_weight * (theta[2] - theta0[2])^2 + lambda_k_weight * ((theta[1] - theta0[1])^2 + (theta[3] - theta0[3])^2)
@@ -343,13 +369,13 @@ tune_psalsa_params_1d <- function(pool, p_max = 0.05, p_weight = 0.4, lambda_k_w
         z <- tryCatch(as.vector(psalsa(sig$y, lambda = lambda, p = p, k = k_mult * noise_est_1d(sig$y))$baseline),
                       error = function(e) NULL)
         if (is.null(z) || any(!is.finite(z))) next
-        pae <- peak_area_errors_1d(sig$y, z, sig$peak_info)
+        pae <- peak_area_errors_1d(sig$y, z, sig$peak_info, sig$peaks, sig$peak_shape)
         pae_rows[[length(pae_rows) + 1]] <- cbind(pae, size_tier = classify_peak_size_1d(pae$area, size_breaks))
       }
       if (!length(pae_rows)) return(1e6)
-      iso <- do.call(rbind, pae_rows); iso <- iso[iso$isolated, ]
+      all_pae <- do.call(rbind, pae_rows)
       tier_means <- sapply(c("small", "medium", "large"), function(tr) {
-        sub <- iso[iso$size_tier == tr & !is.na(iso$size_tier), ]
+        sub <- all_pae[all_pae$size_tier == tr & !is.na(all_pae$size_tier), ]
         if (nrow(sub) < 2) return(NA_real_)
         mean(pmin(sub$abs_pct_error, 1000))
       })

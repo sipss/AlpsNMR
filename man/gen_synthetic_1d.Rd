@@ -58,8 +58,14 @@ A list with:
 deviation used to generate \code{noise}.}
 \item{\code{peak_info}}{a data frame with one row per individual peak:
 \code{height}, \code{fwhm}, \code{center}, the index window \code{lo}:\code{hi} where that
-peak alone exceeds 0.1\% of its own height, and \code{area} (its exact
-true area, \code{sum()} of that peak's own values over the full signal).}
+peak alone exceeds 0.1\% of its own height, \code{area} (its exact
+true area, \code{sum()} of that peak's own values over the full signal),
+and \code{a}/\code{b} (the \code{"gex"} shape parameters, \code{NA} for other shapes) --
+enough to exactly reconstruct that one peak's own curve later, e.g.
+via \code{\link[=reconstruct_peak_1d]{reconstruct_peak_1d()}}, without storing a dense per-peak
+matrix.}
+\item{\code{peak_shape}}{the \code{peak_shape} used, needed alongside
+\code{peak_info} to reconstruct individual peaks.}
 }
 }
 \description{

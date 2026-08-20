@@ -39,8 +39,14 @@
 #'       deviation used to generate `noise`.}
 #'     \item{`peak_info`}{a data frame with one row per individual peak:
 #'       `height`, `fwhm`, `center`, the index window `lo`:`hi` where that
-#'       peak alone exceeds 0.1% of its own height, and `area` (its exact
-#'       true area, `sum()` of that peak's own values over the full signal).}
+#'       peak alone exceeds 0.1% of its own height, `area` (its exact
+#'       true area, `sum()` of that peak's own values over the full signal),
+#'       and `a`/`b` (the `"gex"` shape parameters, `NA` for other shapes) --
+#'       enough to exactly reconstruct that one peak's own curve later, e.g.
+#'       via [reconstruct_peak_1d()], without storing a dense per-peak
+#'       matrix.}
+#'     \item{`peak_shape`}{the `peak_shape` used, needed alongside
+#'       `peak_info` to reconstruct individual peaks.}
 #'   }
 #'
 #'
@@ -71,20 +77,21 @@ gen_synthetic_1d <- function(n = 1000, density = 0.02, fwhm_range = c(10, 30), c
   peaks <- numeric(n); peak_rows <- vector("list", npk)
   for (j in seq_len(npk)) {
     fw <- stats::runif(1, fwhm_range[1], fwhm_range[2])
+    a_j <- NA_real_; b_j <- NA_real_
     pk_j <- if (peak_shape == "gaussian") {
       gauss_peak_1d(x, centers[j], fw, h[j])
     } else if (peak_shape == "lorentzian") {
       lorentz_peak_1d(x, centers[j], fw, h[j])
     } else {
-      a <- stats::runif(1, 0.5, 2); b <- stats::runif(1, 5, 8)
-      gex_peak_1d(x, centers[j] - fw / 2, centers[j] + fw / 2, h[j], a, b)
+      a_j <- stats::runif(1, 0.5, 2); b_j <- stats::runif(1, 5, 8)
+      gex_peak_1d(x, centers[j] - fw / 2, centers[j] + fw / 2, h[j], a_j, b_j)
     }
     peaks <- peaks + pk_j
     above <- which(pk_j > 1e-3 * h[j])
     lo <- if (length(above)) min(above) else max(1, round(centers[j]))
     hi <- if (length(above)) max(above) else min(n, round(centers[j]))
     peak_rows[[j]] <- data.frame(idx = j, height = h[j], fwhm = fw, center = centers[j],
-                                  lo = lo, hi = hi, area = sum(pk_j))
+                                  lo = lo, hi = hi, area = sum(pk_j), a = a_j, b = b_j)
   }
   peak_info <- do.call(rbind, peak_rows)
 
@@ -92,7 +99,7 @@ gen_synthetic_1d <- function(n = 1000, density = 0.02, fwhm_range = c(10, 30), c
   noise <- if (csnr == 0) numeric(n) else stats::rnorm(n, 0, 1) * sigma
 
   list(y = baseline + peaks + noise, baseline = baseline, peaks = peaks, noise = noise,
-       sigma = sigma, peak_info = peak_info)
+       sigma = sigma, peak_info = peak_info, peak_shape = peak_shape)
 }
 
 ## Exponentially-modified peak shape (asymmetric rise, exponential tail),
@@ -120,4 +127,30 @@ gauss_peak_1d <- function(x, center, fwhm, h) {
 lorentz_peak_1d <- function(x, center, fwhm, h) {
   gamma <- fwhm / 2
   lorentzian(x, x0 = center, gamma = gamma, A = h * pi * gamma)
+}
+
+#' Reconstruct one synthetic peak's own curve from its `peak_info` row
+#'
+#' Exactly reproduces one peak's own contribution (no baseline, no noise, no
+#' other peaks) over `x`, using the same shape function [gen_synthetic_1d()]
+#' used to build it in the first place. Used to fractionally attribute a
+#' baseline-corrected *overlapping* region between the peaks that share it,
+#' rather than requiring peaks to be isolated to score their area recovery
+#' at all -- see [peak_area_errors_1d()].
+#'
+#' @param x Points to evaluate the peak at (typically just its own `lo:hi`
+#'   window, not the full signal).
+#' @param peak_shape As in [gen_synthetic_1d()].
+#' @param height,fwhm,center As in one row of `peak_info`.
+#' @param a,b The `"gex"` shape parameters (ignored for other shapes).
+#' @return A numeric vector the same length as `x`.
+#' @noRd
+reconstruct_peak_1d <- function(x, peak_shape, height, fwhm, center, a = NA_real_, b = NA_real_) {
+  if (peak_shape == "gaussian") {
+    gauss_peak_1d(x, center, fwhm, height)
+  } else if (peak_shape == "lorentzian") {
+    lorentz_peak_1d(x, center, fwhm, height)
+  } else {
+    gex_peak_1d(x, center - fwhm / 2, center + fwhm / 2, height, a, b)
+  }
 }
