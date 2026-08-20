@@ -42,9 +42,8 @@
 #'       peak alone exceeds 0.1% of its own height, `area` (its exact
 #'       true area, `sum()` of that peak's own values over the full signal),
 #'       and `a`/`b` (the `"gex"` shape parameters, `NA` for other shapes) --
-#'       enough to exactly reconstruct that one peak's own curve later, e.g.
-#'       via [reconstruct_peak_1d()], without storing a dense per-peak
-#'       matrix.}
+#'       enough to exactly reconstruct that one peak's own curve later,
+#'       without storing a dense per-peak matrix.}
 #'     \item{`peak_shape`}{the `peak_shape` used, needed alongside
 #'       `peak_info` to reconstruct individual peaks.}
 #'   }
@@ -136,7 +135,7 @@ lorentz_peak_1d <- function(x, center, fwhm, h) {
 #' used to build it in the first place. Used to fractionally attribute a
 #' baseline-corrected *overlapping* region between the peaks that share it,
 #' rather than requiring peaks to be isolated to score their area recovery
-#' at all -- see [peak_area_errors_1d()].
+#' at all -- see `peak_area_errors_1d()` in `psalsa_tune.R`.
 #'
 #' @param x Points to evaluate the peak at (typically just its own `lo:hi`
 #'   window, not the full signal).
