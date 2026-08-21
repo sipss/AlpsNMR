@@ -12,6 +12,7 @@ peaklist_accept_peaks(
   area_max = Inf,
   ppm_min = -Inf,
   ppm_max = Inf,
+  accept_inflections = TRUE,
   keep_rejected = TRUE,
   verbose = FALSE
 )
@@ -30,6 +31,14 @@ peaklist_accept_peaks(
 \item{ppm_min}{The peak apex must be above this value}
 
 \item{ppm_max}{The peak apex must be below this value}
+
+\item{accept_inflections}{If \code{FALSE}, also rejects peaks whose apex is not a genuine local
+maximum of the raw signal within its own fitted window (\code{ppm_infl_min}-\code{ppm_infl_max}) --
+typically shoulder points detected on the flank of a much larger neighbouring peak in
+crowded regions, rather than peaks of their own. \code{TRUE} (the default) keeps the previous
+behaviour, where these are accepted like any other peak. A peak whose window is too small
+or malformed to judge is rejected when \code{accept_inflections = FALSE}, since it can't be
+confirmed to be a genuine peak.}
 
 \item{keep_rejected}{If \code{FALSE}, removes those peaks that do not satisfy the criteria and remove the accepted column (since all would be accepted)}
 
