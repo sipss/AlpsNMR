@@ -237,13 +237,20 @@ callDetectSpecPeaks <- function(...) {
 #' @param peak_data The output of [nmr_detect_peaks()]
 #' @param ppm_breaks A numeric vector with the breaks that will be used to count the number of the detected peaks.
 #' @param accepted_only If `peak_data` contains a logical column named `accepted`, only those with `accepted=TRUE` will be counted.
+#' @param page Which page of samples to plot (1-indexed), `samples_per_page`
+#'   samples at a time. Requesting a page beyond the number available is an
+#'   error.
+#' @param samples_per_page Number of samples (NMRExperiments) to plot per
+#'   page. There is no faceting in this plot, so this is the only control
+#'   over how many samples get crammed onto the sample axis at once.
 #'
 #' @return A scatter plot, with samples on one axis and chemical shift bins in the other axis. The size of each dot
 #'   represents the number of peaks found on a sample within a chemical shift range.
 #' @export
 #' @seealso Peak_detection
 #' @family peak detection functions
-nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(peak_data$ppm), n = 20), accepted_only = TRUE) {
+nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(peak_data$ppm), n = 20),
+                                            accepted_only = TRUE, page = 1, samples_per_page = 50) {
     to_plot <- peak_data
     if (accepted_only && "accepted" %in% colnames(to_plot)) {
         to_plot <- to_plot[to_plot$accepted, , drop = FALSE]
@@ -253,10 +260,20 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
     to_plot <- dplyr::group_by(to_plot, .data$NMRExperiment, .data$ppm_grp)
     to_plot <- dplyr::summarize(to_plot, num_peaks = dplyr::n(), .groups = "drop")
     to_plot$ppm_grp <- factor(to_plot$ppm_grp, levels = rev(levels(to_plot$ppm_grp)))
-    to_plot$NMRExperiment <- factor(
-        to_plot$NMRExperiment,
-        levels = stringr::str_sort(unique(to_plot$NMRExperiment), numeric = TRUE)
-    )
+
+    all_experiments <- stringr::str_sort(unique(to_plot$NMRExperiment), numeric = TRUE)
+    num_pages <- ceiling(length(all_experiments) / samples_per_page)
+    if (page < 1 || page > num_pages) {
+        cli::cli_abort(
+            "{.arg page} = {page} is out of range: there {?is/are} only {num_pages} page{?s} of {samples_per_page} sample{?s} each ({length(all_experiments)} sample{?s} total)."
+        )
+    }
+    page_start <- (page - 1) * samples_per_page + 1
+    page_end <- min(page * samples_per_page, length(all_experiments))
+    page_experiments <- all_experiments[page_start:page_end]
+
+    to_plot <- to_plot[to_plot$NMRExperiment %in% page_experiments, , drop = FALSE]
+    to_plot$NMRExperiment <- factor(to_plot$NMRExperiment, levels = page_experiments)
 
     gplt <- ggplot2::ggplot(to_plot) +
         ggplot2::geom_point(
