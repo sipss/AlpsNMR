@@ -61,7 +61,7 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = NULL, meth
             )
         )
     }
-    mat <- nmr_dataset$data1r[, threshold_ind, drop = FALSE]
+    mat <- nmr_dataset$data_1r[, threshold_ind, drop = FALSE]
     if ("data_1r_baseline" %in% names(unclass(nmr_dataset))) {
        mat <- mat - nmr_dataset$data_1r_baseline[, threshold_ind, drop = FALSE]
     }
@@ -77,7 +77,7 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = NULL, meth
     } else if (method == "median3mad") {
         out <- rep(NA_real_, nmr_dataset$num_samples)
         for (i in seq_len(nmr_dataset$num_samples)) {
-            spec_region <- mat[i, threshold_ind, drop = FALSE]
+            spec_region <- mat[i, , drop = FALSE]
             out[i] <- stats::median(spec_region) + 3 * stats::mad(spec_region)
         }
         names(out) <- names(nmr_dataset)
