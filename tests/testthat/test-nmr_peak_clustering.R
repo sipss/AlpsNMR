@@ -82,6 +82,123 @@ test_that("set_peak_distances_within_groups defaults to Inf", {
     expect_equal(out["P1", "P2"], Inf)
 })
 
+test_that("set_peak_distances_within_groups masks the same pairs as a dense as.matrix() round-trip, without densifying", {
+    # The implementation assigns directly into the triangular dist vector
+    # (via index arithmetic) rather than round-tripping through as.matrix(),
+    # to avoid doubling peak memory use; this checks the two give identical
+    # results on a case too big to eyeball by hand.
+    set.seed(42)
+    n <- 40
+    peak_names <- paste0("P", seq_len(n))
+    d <- stats::dist(matrix(stats::runif(n), ncol = 1, dimnames = list(peak_names, NULL)))
+    groups <- split(peak_names, sample(1:6, n, replace = TRUE))
+
+    mask_dense_reference <- function(d, groups, value) {
+        m <- as.matrix(d)
+        for (ids in groups) {
+            m[ids, ids] <- value
+            diag(m) <- 0
+        }
+        stats::as.dist(m)
+    }
+
+    expected <- mask_dense_reference(d, groups, 999)
+    actual <- set_peak_distances_within_groups(d, groups, value = 999)
+    expect_equal(as.numeric(actual), as.numeric(expected))
+    expect_equal(attr(actual, "Labels"), attr(d, "Labels"))
+    expect_equal(attr(actual, "Size"), attr(d, "Size"))
+    expect_s3_class(actual, "dist")
+})
+
+test_that("set_peak_distances_within_groups leaves singleton groups untouched", {
+    m <- matrix(c(0, 1, 1, 0), nrow = 2, dimnames = list(c("P1", "P2"), c("P1", "P2")))
+    out <- set_peak_distances_within_groups(stats::as.dist(m), list("P1", "P2"), value = 999)
+    expect_equal(as.numeric(out), 1)
+})
+
+## split_peaks_into_ppm_components --------------------------------------------
+
+test_that("split_peaks_into_ppm_components cuts wherever a gap exceeds the threshold", {
+    peak_data <- data.frame(
+        peak_id = paste0("Peak", 1:5),
+        ppm = c(1.000, 1.001, 1.002, 2.000, 2.001)
+    )
+    # Gaps (ppb): 1, 1, 998, 1 -- only the third exceeds a 500 ppb threshold.
+    components <- split_peaks_into_ppm_components(peak_data, max_dist_thresh_ppb = 500)
+
+    expect_length(components, 2)
+    expect_setequal(components[[1]]$peak_id, c("Peak1", "Peak2", "Peak3"))
+    expect_setequal(components[[2]]$peak_id, c("Peak4", "Peak5"))
+})
+
+test_that("split_peaks_into_ppm_components keeps everything in one group when no gap exceeds the threshold", {
+    peak_data <- data.frame(peak_id = paste0("Peak", 1:3), ppm = c(1, 1.001, 1.002))
+    components <- split_peaks_into_ppm_components(peak_data, max_dist_thresh_ppb = 1e6)
+    expect_length(components, 1)
+    expect_equal(nrow(components[[1]]), 3)
+})
+
+test_that("split_peaks_into_ppm_components handles 0 and 1 peaks", {
+    peak_data0 <- data.frame(peak_id = character(0), ppm = numeric(0))
+    components0 <- split_peaks_into_ppm_components(peak_data0, max_dist_thresh_ppb = 100)
+    expect_length(components0, 1)
+    expect_equal(nrow(components0[[1]]), 0)
+
+    peak_data1 <- data.frame(peak_id = "Peak1", ppm = 1.5)
+    components1 <- split_peaks_into_ppm_components(peak_data1, max_dist_thresh_ppb = 100)
+    expect_length(components1, 1)
+    expect_equal(components1[[1]]$peak_id, "Peak1")
+})
+
+## cluster_one_ppm_component ---------------------------------------------------
+
+test_that("cluster_one_ppm_component returns a single offset cluster for a single peak, with no hclust tree", {
+    comp_peak_data <- data.frame(NMRExperiment = "10", peak_id = "Peak1", ppm = 1.5, gamma_ppb = 100)
+    res <- cluster_one_ppm_component(comp_peak_data, max_dist_thresh_ppb = 300, cluster_offset = 5L)
+
+    expect_equal(res$peak_data$cluster, 6L)
+    expect_null(res$cluster)
+    expect_equal(res$num_clusters, 1L)
+    expect_null(res$num_cluster_estimation)
+})
+
+test_that("cluster_one_ppm_component offsets cluster ids and matches a directly-clustered reference", {
+    comp_peak_data <- data.frame(
+        NMRExperiment = c("10", "10", "20", "20"),
+        peak_id = paste0("Peak", 1:4),
+        ppm = c(1, 2, 1.1, 2.2),
+        gamma_ppb = 100
+    )
+    reference <- nmr_peak_clustering(comp_peak_data, num_clusters = 2)
+    res <- cluster_one_ppm_component(comp_peak_data, max_dist_thresh_ppb = 300, cluster_offset = 10L)
+
+    expect_equal(res$num_clusters, 2L)
+    ref_map <- setNames(reference$peak_data$cluster, reference$peak_data$peak_id)
+    res_map <- setNames(res$peak_data$cluster - 10L, res$peak_data$peak_id)
+    same_partition <- function(a, b) {
+        a <- a[order(names(a))]
+        b <- b[order(names(b))]
+        identical(as.integer(factor(a)), as.integer(factor(b)))
+    }
+    expect_true(same_partition(ref_map, res_map))
+    expect_true(all(res$peak_data$cluster > 10L))
+})
+
+## get_max_dist_ppb_for_num_clusters -------------------------------------------
+
+test_that("get_max_dist_ppb_for_num_clusters handles a length-1 num_clusters (cutree drops to a plain vector)", {
+    peak_list <- data.frame(peak_id = paste0("Peak", 1:3), ppm = c(1, 1.05, 1.1))
+    d <- stats::dist(matrix(peak_list$ppm, dimnames = list(peak_list$peak_id, NULL)))
+    cluster <- stats::hclust(d, method = "complete")
+
+    # A single candidate k: stats::cutree() returns a bare named vector (no
+    # dim) in this case rather than a matrix, which used to break the
+    # subsequent matrix-style indexing.
+    out <- get_max_dist_ppb_for_num_clusters(3, peak_list, cluster, max_dist_thresh_ppb = 1000)
+    expect_equal(out$num_clusters, 3)
+    expect_equal(out$max_distance_ppb, 0)
+})
+
 ## nmr_get_peak_distances -----------------------------------------------------
 
 test_that("nmr_get_peak_distances computes euclidean ppm distances and inflates within-sample pairs", {
@@ -167,6 +284,39 @@ test_that("nmr_peak_clustering's verbose flag reports the estimated max distance
         nmr_peak_clustering(peak_data, verbose = TRUE),
         "300 ppbs"
     )
+})
+
+test_that("nmr_peak_clustering's default (region-split) path matches clustering everything at once", {
+    # 4 widely-separated ppm pairs (consecutive gaps of ~0.9-6.8 ppm, all far
+    # past the default max_dist_thresh_ppb of 300 ppb = 0.3 ppm), each pair
+    # from two different samples. The default auto-estimate path splits by
+    # ppm and clusters each ppm-disjoint group independently (see
+    # split_peaks_into_ppm_components), landing each pair in its own
+    # single-cluster group; this checks that gives the same overall
+    # partition (up to cluster-id relabeling) as forcing everything through
+    # one global hclust tree via a pre-supplied peak2peak_dist.
+    peak_data <- data.frame(
+        NMRExperiment = rep(c("10", "20"), 4),
+        peak_id = paste0("Peak", 1:8),
+        ppm = c(1, 1.1, 2, 2.2, 8, 8.1, 9, 9.2),
+        gamma_ppb = 100
+    )
+
+    fast <- nmr_peak_clustering(peak_data, verbose = TRUE)
+    forced_global <- nmr_peak_clustering(peak_data, peak2peak_dist = nmr_get_peak_distances(peak_data))
+
+    expect_equal(fast$num_clusters, 4L)
+    expect_type(fast$cluster, "list")
+    expect_length(fast$cluster, 4L) # four ppm-disjoint groups, one cluster each
+
+    same_partition <- function(a, b) {
+        a <- a[order(names(a))]
+        b <- b[order(names(b))]
+        identical(as.integer(factor(a)), as.integer(factor(b)))
+    }
+    fast_map <- setNames(fast$peak_data$cluster, fast$peak_data$peak_id)
+    global_map <- setNames(forced_global$peak_data$cluster, forced_global$peak_data$peak_id)
+    expect_true(same_partition(fast_map, global_map))
 })
 
 test_that("nmr_peak_clustering warns and excludes peaks when two peaks from the same sample land in the same cluster", {
