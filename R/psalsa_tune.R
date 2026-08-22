@@ -92,6 +92,126 @@ tune_psalsa <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_sy
   list(baseline = baseline, corrected = corrected, lambda = tuned$lambda, p = tuned$p, k = k)
 }
 
+#' Tune position-varying PSALSA parameters from one or more example spectra
+#'
+#' Like [tune_psalsa()], but instead of a single, signal-wide `lambda`/`p`/`k`,
+#' tunes each of `num_regions` regions independently (via
+#' `tune_psalsa_region_params_1d()`: each region gets its own synthetic pool,
+#' matched to that region's own peak density/width, and its own
+#' `tune_psalsa_params_1d()` search) and combines the per-region optima into
+#' smooth, position-varying `lambda`/`p`/`k` profiles (one value per point),
+#' via a natural cubic spline over each parameter's own transformed scale --
+#' see `spatial_profile_1d()`. [psalsa()] is then run ONCE per spectrum with
+#' these profiles, using the position-varying `diff2_penalty_weighted()`
+#' generalization of the smoothing penalty.
+#'
+#' Useful when a single, signal-wide `lambda`/`p`/`k` (as tuned by
+#' [tune_psalsa()], even with `num_regions` set there merely to build a more
+#' realistic synthetic pool) still isn't enough -- e.g. because one region's
+#' own baseline behaviour genuinely needs a different smoothing/peak-
+#' resistance strength than another, not just a more realistic peak density
+#' during tuning.
+#'
+#' A region with no observed peaks contributes no knot (there's nothing local
+#' to tune against); the spline fills that stretch in smoothly from its
+#' neighbouring regions' knots instead. If fewer than 2 regions have enough
+#' signal to tune at all, this falls back to plain, signal-wide [tune_psalsa()].
+#'
+#' @inheritParams tune_psalsa
+#' @param num_regions Number of contiguous regions to characterize and tune
+#'   independently.
+#' @param p_max Upper bound used for `p`'s logit-space spline interpolation
+#'   (see `spatial_profile_1d()`); should match `tune_psalsa_params_1d()`'s own
+#'   `p_max` (its default, `0.05`, is used here too).
+#'
+#' @return If `y` is a single numeric vector, a list with:
+#'   \describe{
+#'     \item{`baseline`, `corrected`}{as in [psalsa()], for `y` with the tuned
+#'       position-varying parameters.}
+#'     \item{`lambda`, `p`, `k`}{the tuned position-varying parameter profiles,
+#'       each the same length as `y`, reusable via `psalsa(other_y, lambda =
+#'       lambda, p = p, k = k)` on similarly-lengthed spectra without tuning
+#'       again (resample with `resample_profile_1d()` first if the length
+#'       differs).}
+#'     \item{`region_params`}{a data frame with the per-region tuned values
+#'       the profiles were spline-interpolated from (`region`, `frac_mid`,
+#'       `lambda`, `p`, `k_mult`), useful for inspecting what the tuning
+#'       actually found region by region.}
+#'   }
+#'   If `y` is a list, `baseline` and `corrected` are lists (one element per
+#'   input spectrum, using the same tuned profiles -- resampled to that
+#'   spectrum's own length where needed).
+#'
+#' @seealso [tune_psalsa()], [psalsa()].
+#'
+#' @examples
+#' x <- seq_len(600)
+#' baseline <- 10 + 5 * sin(x / 100)
+#' # A crowded region (many small peaks) and a sparse region (one big peak):
+#' peaks <- Reduce(`+`, lapply(seq(50, 250, by = 20), function(c) {
+#'   8 * exp(-((x - c)^2) / (2 * 3^2))
+#' })) + 60 * exp(-((x - 500)^2) / (2 * 6^2))
+#' set.seed(1)
+#' y <- baseline + peaks + rnorm(length(x), 0, 0.5)
+#'
+#' result <- AlpsNMR:::tune_psalsa_spatial(y, num_regions = 6, n_synthetic = 5)
+#' plot(y, type = "l")
+#' lines(result$baseline, col = "red")
+#'
+tune_psalsa_spatial <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_synthetic = 10,
+                                 optim_maxit = 150, optim_reltol = 1e-6, num_regions = 20, p_max = 0.05) {
+  peak_shape <- match.arg(peak_shape)
+  y_list <- if (is.list(y)) y else list(y)
+  n <- round(stats::median(vapply(y_list, length, integer(1))))
+
+  pooled_regions <- pool_signal_stats_regions_1d(y_list, num_regions = num_regions)
+  region_params <- tune_psalsa_region_params_1d(
+    pooled_regions, n_total = n, peak_shape = peak_shape,
+    n_synthetic = n_synthetic, optim_maxit = optim_maxit, optim_reltol = optim_reltol
+  )
+
+  if (is.null(region_params) || nrow(region_params) < 2) {
+    ## Too few regions had enough signal to tune independently (e.g. a very
+    ## sparse or very short spectrum) -- a spline needs at least 2 knots, so
+    ## fall back to a single, signal-wide tune rather than a degenerate one.
+    return(tune_psalsa(
+      y, peak_shape = peak_shape, n_synthetic = n_synthetic,
+      optim_maxit = optim_maxit, optim_reltol = optim_reltol
+    ))
+  }
+
+  lambda_profile <- spatial_profile_1d(n, region_params$frac_mid, region_params$lambda, transform = "log")
+  p_profile <- spatial_profile_1d(n, region_params$frac_mid, region_params$p, transform = "logit", p_max = p_max)
+  k_mult_profile <- spatial_profile_1d(n, region_params$frac_mid, region_params$k_mult, transform = "log")
+  k_profile <- k_mult_profile * pooled_regions$noise_sd
+
+  fit_one <- function(yi) {
+    ni <- length(yi)
+    psalsa(
+      yi,
+      lambda = resample_profile_1d(lambda_profile, ni),
+      p = resample_profile_1d(p_profile, ni),
+      k = resample_profile_1d(k_profile, ni)
+    )
+  }
+
+  if (is.list(y)) {
+    fits <- lapply(y, fit_one)
+    baseline <- lapply(fits, `[[`, "baseline")
+    corrected <- lapply(fits, `[[`, "corrected")
+  } else {
+    fit <- fit_one(y)
+    baseline <- fit$baseline
+    corrected <- fit$corrected
+  }
+
+  list(
+    baseline = baseline, corrected = corrected,
+    lambda = lambda_profile, p = p_profile, k = k_profile,
+    region_params = region_params
+  )
+}
+
 ## Robust noise sd from the MAD of 2nd differences. For pure white noise e,
 ## Var(e[i-1] - 2*e[i] + e[i+1]) = 6*sigma^2, so sigma_hat = MAD(2nd-diff) /
 ## sqrt(6) (MAD is already scaled to be a consistent sigma estimator under
@@ -407,6 +527,92 @@ generate_synthetic_pool_1d_regions <- function(pooled_stats, y_list, n_synthetic
     gen_synthetic_1d_regions(n = n, region_profile = pooled_stats$regions,
                               csnr = pooled_stats$csnr, peak_shape = peak_shape, seed = seed)
   })
+}
+
+## For EACH region in pooled_regions$regions (pool_signal_stats_regions_1d()
+## output), builds a synthetic pool of THAT region ALONE (length matched to
+## its own share of n_total) and tunes lambda/p/k_mult against it
+## independently via tune_psalsa_params_1d() -- one optimal parameter set
+## per region, rather than one signal-wide compromise. A region with no
+## observed peaks (density <= 0 or NA/degenerate fwhm -- see
+## pool_signal_stats_regions_1d()) is skipped entirely: there's no local
+## signal to tune against, and spatial_profile_1d() fills the gap smoothly
+## from its neighbours' knots instead of guessing.
+##
+## Returns a data frame (region, frac_mid, lambda, p, k_mult), one row per
+## region that had enough signal to tune, or NULL if none did.
+#' @noRd
+tune_psalsa_region_params_1d <- function(pooled_regions, n_total, peak_shape = "gaussian",
+                                          n_synthetic = 10, optim_maxit = 150, optim_reltol = 1e-6) {
+  regions <- pooled_regions$regions
+  rows <- lapply(seq_len(nrow(regions)), function(r) {
+    reg <- regions[r, ]
+    if (is.na(reg$density) || reg$density <= 0 ||
+      is.na(reg$fwhm_q1) || is.na(reg$fwhm_q3) || reg$fwhm_q3 <= 0) {
+      return(NULL)
+    }
+    reg_n <- max(10, round((reg$frac_hi - reg$frac_lo) * n_total))
+    pool_r <- lapply(seq_len(n_synthetic), function(seed) {
+      gen_synthetic_1d(n = reg_n, density = reg$density, fwhm_range = c(reg$fwhm_q1, reg$fwhm_q3),
+                        csnr = pooled_regions$csnr, peak_shape = peak_shape, seed = seed)
+    })
+    tuned_r <- tune_psalsa_params_1d(pool_r, optim_maxit = optim_maxit, optim_reltol = optim_reltol)
+    data.frame(
+      region = reg$region, frac_mid = (reg$frac_lo + reg$frac_hi) / 2,
+      lambda = tuned_r$lambda, p = tuned_r$p, k_mult = tuned_r$k_mult
+    )
+  })
+  rows <- rows[!vapply(rows, is.null, logical(1))]
+  if (!length(rows)) return(NULL)
+  do.call(rbind, rows)
+}
+
+## n knot positions (frac_mid * n) + knot values -> a smooth length-n
+## position profile, interpolated in a TRANSFORMED space chosen so the
+## inverse transform always lands back in the parameter's valid range no
+## matter how the spline over/undershoots between knots:
+##   "log"      (lambda, k_mult: positive, no upper bound) -- exp() of
+##              anything real is always > 0.
+##   "logit"    (p: bounded in (0, p_max)) -- plogis() of anything real
+##              always lands in (0, 1), scaled to (0, p_max).
+## A natural cubic spline is used (not linear) so the resulting lambda/p/k
+## profile is itself smooth -- a piecewise-linear profile would put a kink
+## in the penalty at every region boundary, which is exactly the
+## discontinuity this design is meant to avoid.
+#' @noRd
+spatial_profile_1d <- function(n, frac_mid, values, transform = c("log", "logit", "identity"), p_max = 0.05) {
+  transform <- match.arg(transform)
+  y_knots <- switch(transform,
+    log = log(values),
+    logit = stats::qlogis(values / p_max),
+    identity = values
+  )
+  z <- if (length(frac_mid) < 2) {
+    rep(y_knots[1], n)
+  } else {
+    stats::spline(x = frac_mid * n, y = y_knots, xout = seq_len(n), method = "natural")$y
+  }
+  switch(transform,
+    log = exp(z),
+    logit = stats::plogis(z) * p_max,
+    identity = z
+  )
+}
+
+## Stretches/shrinks a length-n_src position profile onto n_target points by
+## linear interpolation over the shared FRACTIONAL axis (0..1) -- used when
+## applying one tuned spatial profile (built at the pooled median length) to
+## an individual spectrum of a different length. rule = 2 (nearest-edge
+## extrapolation) only matters at the very ends, if n_target's fractional
+## grid extends fractionally past n_src's.
+#' @noRd
+resample_profile_1d <- function(profile, n_target) {
+  n_src <- length(profile)
+  if (n_src == n_target) return(profile)
+  stats::approx(
+    x = (seq_len(n_src) - 0.5) / n_src, y = profile,
+    xout = (seq_len(n_target) - 0.5) / n_target, rule = 2
+  )$y
 }
 
 ## Nelder-Mead-tunes psalsa(lambda, p, k) against a synthetic pool with known

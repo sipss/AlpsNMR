@@ -17,14 +17,22 @@ psalsa(
 \item{spectra}{Either a numeric vector containing one spectrum, or a matrix
 containing one spectrum per row.}
 
-\item{lambda}{Smoothing parameter (generally \code{1e5} - \code{1e8}).}
+\item{lambda}{Smoothing parameter (generally \code{1e5} - \code{1e8}). Either a single
+value (used for the whole spectrum) or a numeric vector the same length
+as one spectrum, giving a position-varying smoothing profile -- see
+\code{tune_psalsa_spatial()}, which builds such a profile from per-region
+tuning. When \code{spectra} is a matrix, the same profile is used for every
+row.}
 
-\item{p}{Asymmetry parameter.}
+\item{p}{Asymmetry parameter. Either a single value or a position-varying
+vector, as for \code{lambda}.}
 
 \item{k}{Peak height parameter, controlling how strongly the weights of
 points above the baseline decay with their height. Usually about 5\% of the
 maximum intensity. When \code{k = -1} (the default) it is set to one twentieth
-of the maximum intensity of each spectrum.}
+of the maximum intensity of each spectrum. Either a single value or a
+position-varying vector, as for \code{lambda} (the \code{k = -1} auto-default only
+applies when \code{k} is a single value).}
 
 \item{maxit}{Maximum number of iterations.}
 
