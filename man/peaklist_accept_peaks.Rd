@@ -10,6 +10,8 @@ peaklist_accept_peaks(
   nrmse_max = Inf,
   area_min = 0,
   area_max = Inf,
+  intensity_min = 0,
+  intensity_max = Inf,
   ppm_min = -Inf,
   ppm_max = Inf,
   accept_inflections = TRUE,
@@ -27,6 +29,12 @@ peaklist_accept_peaks(
 \item{area_min}{Peak areas must be larger or equal to this value}
 
 \item{area_max}{Peak areas must be smaller or equal to this value}
+
+\item{intensity_min}{Peak intensities (heights) must be larger or equal to this value. Unlike
+\code{area} (\code{height * pi * gamma}), intensity does not scale with peak width, so this criterion
+doesn't penalize genuinely sharp, narrow peaks (e.g. formate) the way an area-based cutoff can.}
+
+\item{intensity_max}{Peak intensities (heights) must be smaller or equal to this value}
 
 \item{ppm_min}{The peak apex must be above this value}
 

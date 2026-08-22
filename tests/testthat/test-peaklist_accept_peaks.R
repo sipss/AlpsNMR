@@ -77,6 +77,7 @@ test_that("peaklist_accept_peaks's accept_inflections defaults to TRUE (previous
         NMRExperiment = "10",
         ppm = 6,
         pos = 6,
+        intensity = 6,
         ppm_infl_min = 4,
         ppm_infl_max = 8,
         area = 100,
@@ -102,6 +103,7 @@ test_that("peaklist_accept_peaks with accept_inflections = FALSE rejects shoulde
         NMRExperiment = c("10", "20"),
         ppm = c(5, 6),
         pos = c(5, 6),
+        intensity = c(5, 6),
         ppm_infl_min = c(3, 4),
         ppm_infl_max = c(7, 8),
         area = c(100, 100),
@@ -125,6 +127,7 @@ test_that("peaklist_accept_peaks with accept_inflections = FALSE and keep_reject
         NMRExperiment = c("10", "20"),
         ppm = c(5, 6),
         pos = c(5, 6),
+        intensity = c(5, 6),
         ppm_infl_min = c(3, 4),
         ppm_infl_max = c(7, 8),
         area = c(100, 100),
@@ -136,4 +139,56 @@ test_that("peaklist_accept_peaks with accept_inflections = FALSE and keep_reject
     )
     expect_equal(result$peak_id, "PeakA")
     expect_false("accepted" %in% colnames(result))
+})
+
+## peaklist_accept_peaks: intensity_min / intensity_max -----------------------
+
+test_that("peaklist_accept_peaks's intensity_min/intensity_max reject on height, not area", {
+    nmr_dataset <- new_nmr_dataset_1D(
+        1:10,
+        matrix(c(1:5, 4:2, 3, 0), nrow = 1),
+        list(external = data.frame(NMRExperiment = "10"))
+    )
+    peak_data <- data.frame(
+        peak_id = c("Tall", "Short"),
+        NMRExperiment = c("10", "10"),
+        ppm = c(5, 9),
+        pos = c(5, 9),
+        intensity = c(100, 3),
+        ppm_infl_min = c(3, 8),
+        ppm_infl_max = c(7, 10),
+        gamma_ppb = c(1, 1),
+        # Areas deliberately don't track intensity, to confirm the new
+        # criterion filters on intensity and not area:
+        area = c(3, 100),
+        norm_rmse = c(0.01, 0.01)
+    )
+
+    by_intensity_min <- peaklist_accept_peaks(peak_data, nmr_dataset, intensity_min = 10)
+    expect_equal(by_intensity_min$accepted, c(TRUE, FALSE))
+
+    by_intensity_max <- peaklist_accept_peaks(peak_data, nmr_dataset, intensity_max = 10)
+    expect_equal(by_intensity_max$accepted, c(FALSE, TRUE))
+})
+
+test_that("peaklist_accept_peaks defaults intensity_min/intensity_max to a no-op", {
+    nmr_dataset <- new_nmr_dataset_1D(
+        1:10,
+        matrix(c(1:5, 4:2, 3, 0), nrow = 1),
+        list(external = data.frame(NMRExperiment = "10"))
+    )
+    peak_data <- data.frame(
+        peak_id = c("Peak1", "Peak2"),
+        NMRExperiment = c("10", "10"),
+        ppm = c(5, 9),
+        pos = c(5, 9),
+        intensity = c(1e6, 1e-6),
+        ppm_infl_min = c(3, 8),
+        ppm_infl_max = c(7, 10),
+        gamma_ppb = c(1, 1),
+        area = c(25, 25),
+        norm_rmse = c(0.01, 0.01)
+    )
+    result <- peaklist_accept_peaks(peak_data, nmr_dataset)
+    expect_equal(result$accepted, c(TRUE, TRUE))
 })

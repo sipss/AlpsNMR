@@ -466,6 +466,10 @@ peak_is_local_max_1 <- function(intensity, pos, idx_lo, idx_hi, tol_frac) {
 #' @param nrmse_max The normalized root mean squared error of the lorentzian peak fitting must be less than or equal to this value
 #' @param area_min Peak areas must be larger or equal to this value
 #' @param area_max Peak areas must be smaller or equal to this value
+#' @param intensity_min Peak intensities (heights) must be larger or equal to this value. Unlike
+#' `area` (`height * pi * gamma`), intensity does not scale with peak width, so this criterion
+#' doesn't penalize genuinely sharp, narrow peaks (e.g. formate) the way an area-based cutoff can.
+#' @param intensity_max Peak intensities (heights) must be smaller or equal to this value
 #' @param ppm_min The peak apex must be above this value
 #' @param ppm_max The peak apex must be below this value
 #' @param accept_inflections If `FALSE`, also rejects peaks whose apex is not a genuine local
@@ -503,11 +507,13 @@ peak_is_local_max_1 <- function(intensity, pos, idx_lo, idx_hi, tol_frac) {
 #' # Create the accepted column:
 #' peak_data <- peaklist_accept_peaks(peak_data, nmr_dataset, area_min = 10, keep_rejected = FALSE)
 #' stopifnot(identical(peak_data$peak_id, "Peak1"))
-peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_min = 0, area_max = Inf, ppm_min = -Inf, ppm_max = Inf, accept_inflections = TRUE, keep_rejected = TRUE, verbose = FALSE) {
+peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_min = 0, area_max = Inf, intensity_min = 0, intensity_max = Inf, ppm_min = -Inf, ppm_max = Inf, accept_inflections = TRUE, keep_rejected = TRUE, verbose = FALSE) {
     accepted <- (
         peak_data$norm_rmse <= nrmse_max &
             peak_data$area >= area_min &
             peak_data$area <= area_max &
+            peak_data$intensity >= intensity_min &
+            peak_data$intensity <= intensity_max &
             peak_data$ppm >= ppm_min &
             peak_data$ppm <= ppm_max &
             !are_ppm_regions_excluded(peak_data$ppm_infl_min, peak_data$ppm_infl_max, nmr_get_excluded_regions(nmr_dataset))
