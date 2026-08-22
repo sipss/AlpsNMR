@@ -53,26 +53,42 @@ nmr_baseline_removal <- function(nmr_dataset,
 #' automatically when it is present.
 #'
 #' `lambda`, `p` and `k` each default to `"auto"`. Whenever any of them is
-#' `"auto"`, [tune_psalsa()] is run once on every sample in `nmr_dataset`
-#' (pooled together, as it would be for a single call to [tune_psalsa()] with
+#' `"auto"`, `tune_psalsa()` is run once on every sample in `nmr_dataset`
+#' (pooled together, as it would be for a single call to `tune_psalsa()` with
 #' a list of spectra) to pick values for every `"auto"` parameter; a
-#' parameter given as an explicit number instead bypasses tuning for that
-#' parameter and is passed to [psalsa()] as-is. The same `lambda`/`p`/`k` are
-#' then used for every sample. `maxit` also defaults to `"auto"`, meaning
-#' [psalsa()]'s own default is used, since `maxit` is not tuned by
-#' [tune_psalsa()].
+#' parameter given as an explicit number (or, when `num_regions` is set, an
+#' explicit vector -- see below) instead bypasses tuning for that parameter
+#' and is passed to [psalsa()] as-is. The same `lambda`/`p`/`k` are then used
+#' for every sample. `maxit` also defaults to `"auto"`, meaning [psalsa()]'s
+#' own default is used, since `maxit` is not tuned by `tune_psalsa()`.
+#'
+#' Whatever `lambda`/`p`/`k` end up being used (auto-tuned or given
+#' explicitly), together with the `num_regions` this call was given, are
+#' recorded as a `psalsa_params` attribute on the returned `data_1r_baseline`
+#' (`attr(dataset$data_1r_baseline, "psalsa_params")`), so `lambda`/`p`/`k`
+#' can be reused directly on another, similarly-sized dataset without tuning
+#' again: `nmr_baseline_estimation(other_dataset, lambda =
+#' psalsa_params$lambda, p = psalsa_params$p, k = psalsa_params$k)`.
 #'
 #' @family baseline removal functions
-#' @seealso [psalsa()], [tune_psalsa()]
+#' @seealso [psalsa()], `tune_psalsa()`, `tune_psalsa_spatial()`
 #' @param nmr_dataset An [nmr_dataset_1D].
 #' @param lambda Smoothing parameter, or `"auto"` to pick it with
-#'   [tune_psalsa()]. See [psalsa()].
-#' @param p Asymmetry parameter, or `"auto"` to pick it with [tune_psalsa()].
-#'   See [psalsa()].
+#'   `tune_psalsa()`/`tune_psalsa_spatial()`. See [psalsa()].
+#' @param p Asymmetry parameter, or `"auto"` to pick it with
+#'   `tune_psalsa()`/`tune_psalsa_spatial()`. See [psalsa()].
 #' @param k Peak height parameter, or `"auto"` to pick it with
-#'   [tune_psalsa()]. See [psalsa()].
+#'   `tune_psalsa()`/`tune_psalsa_spatial()`. See [psalsa()].
 #' @param maxit Maximum number of iterations, or `"auto"` to use [psalsa()]'s
 #'   own default.
+#' @param num_regions If `NULL` (the default), an `"auto"` parameter is tuned
+#'   with `tune_psalsa()`, a single signal-wide value shared by every point.
+#'   If set, an `"auto"` parameter is instead tuned with
+#'   `tune_psalsa_spatial(num_regions = num_regions)`, giving a smooth,
+#'   position-varying profile (one value per point) that can differ across
+#'   the spectrum -- useful when peak density/baseline behaviour varies
+#'   noticeably from region to region. Ignored if `lambda`, `p` and `k` are
+#'   all given explicitly (nothing left to tune).
 #' @return The same [nmr_dataset_1D] object with the `data_1r_baseline` element.
 #' @export
 #'
@@ -84,12 +100,17 @@ nmr_baseline_estimation <- function(nmr_dataset,
     lambda = "auto",
     p = "auto",
     k = "auto",
-    maxit = "auto") {
+    maxit = "auto",
+    num_regions = NULL) {
     spectra <- nmr_dataset$data_1r
 
     if (identical(lambda, "auto") || identical(p, "auto") || identical(k, "auto")) {
         y_list <- lapply(seq_len(nrow(spectra)), function(i) spectra[i, ])
-        tuned <- tune_psalsa(y_list)
+        tuned <- if (is.null(num_regions)) {
+            tune_psalsa(y_list)
+        } else {
+            tune_psalsa_spatial(y_list, num_regions = num_regions)
+        }
         if (identical(lambda, "auto")) {
             lambda <- tuned$lambda
         }
@@ -111,7 +132,8 @@ nmr_baseline_estimation <- function(nmr_dataset,
     attr(data_1r_baseline, "psalsa_params") <- list(
         lambda = lambda,
         p = p,
-        k = k
+        k = k,
+        num_regions = num_regions
     )
     nmr_dataset$data_1r_baseline <- data_1r_baseline
     nmr_dataset

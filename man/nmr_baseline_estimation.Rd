@@ -9,23 +9,33 @@ nmr_baseline_estimation(
   lambda = "auto",
   p = "auto",
   k = "auto",
-  maxit = "auto"
+  maxit = "auto",
+  num_regions = NULL
 )
 }
 \arguments{
 \item{nmr_dataset}{An \link{nmr_dataset_1D}.}
 
 \item{lambda}{Smoothing parameter, or \code{"auto"} to pick it with
-\code{\link[=tune_psalsa]{tune_psalsa()}}. See \code{\link[=psalsa]{psalsa()}}.}
+\code{tune_psalsa()}/\code{tune_psalsa_spatial()}. See \code{\link[=psalsa]{psalsa()}}.}
 
-\item{p}{Asymmetry parameter, or \code{"auto"} to pick it with \code{\link[=tune_psalsa]{tune_psalsa()}}.
-See \code{\link[=psalsa]{psalsa()}}.}
+\item{p}{Asymmetry parameter, or \code{"auto"} to pick it with
+\code{tune_psalsa()}/\code{tune_psalsa_spatial()}. See \code{\link[=psalsa]{psalsa()}}.}
 
 \item{k}{Peak height parameter, or \code{"auto"} to pick it with
-\code{\link[=tune_psalsa]{tune_psalsa()}}. See \code{\link[=psalsa]{psalsa()}}.}
+\code{tune_psalsa()}/\code{tune_psalsa_spatial()}. See \code{\link[=psalsa]{psalsa()}}.}
 
 \item{maxit}{Maximum number of iterations, or \code{"auto"} to use \code{\link[=psalsa]{psalsa()}}'s
 own default.}
+
+\item{num_regions}{If \code{NULL} (the default), an \code{"auto"} parameter is tuned
+with \code{tune_psalsa()}, a single signal-wide value shared by every point.
+If set, an \code{"auto"} parameter is instead tuned with
+\code{tune_psalsa_spatial(num_regions = num_regions)}, giving a smooth,
+position-varying profile (one value per point) that can differ across
+the spectrum -- useful when peak density/baseline behaviour varies
+noticeably from region to region. Ignored if \code{lambda}, \code{p} and \code{k} are
+all given explicitly (nothing left to tune).}
 }
 \value{
 The same \link{nmr_dataset_1D} object with the \code{data_1r_baseline} element.
@@ -40,14 +50,21 @@ automatically when it is present.
 }
 \details{
 \code{lambda}, \code{p} and \code{k} each default to \code{"auto"}. Whenever any of them is
-\code{"auto"}, \code{\link[=tune_psalsa]{tune_psalsa()}} is run once on every sample in \code{nmr_dataset}
-(pooled together, as it would be for a single call to \code{\link[=tune_psalsa]{tune_psalsa()}} with
+\code{"auto"}, \code{tune_psalsa()} is run once on every sample in \code{nmr_dataset}
+(pooled together, as it would be for a single call to \code{tune_psalsa()} with
 a list of spectra) to pick values for every \code{"auto"} parameter; a
-parameter given as an explicit number instead bypasses tuning for that
-parameter and is passed to \code{\link[=psalsa]{psalsa()}} as-is. The same \code{lambda}/\code{p}/\code{k} are
-then used for every sample. \code{maxit} also defaults to \code{"auto"}, meaning
-\code{\link[=psalsa]{psalsa()}}'s own default is used, since \code{maxit} is not tuned by
-\code{\link[=tune_psalsa]{tune_psalsa()}}.
+parameter given as an explicit number (or, when \code{num_regions} is set, an
+explicit vector -- see below) instead bypasses tuning for that parameter
+and is passed to \code{\link[=psalsa]{psalsa()}} as-is. The same \code{lambda}/\code{p}/\code{k} are then used
+for every sample. \code{maxit} also defaults to \code{"auto"}, meaning \code{\link[=psalsa]{psalsa()}}'s
+own default is used, since \code{maxit} is not tuned by \code{tune_psalsa()}.
+
+Whatever \code{lambda}/\code{p}/\code{k} end up being used (auto-tuned or given
+explicitly), together with the \code{num_regions} this call was given, are
+recorded as a \code{psalsa_params} attribute on the returned \code{data_1r_baseline}
+(\code{attr(dataset$data_1r_baseline, "psalsa_params")}), so \code{lambda}/\code{p}/\code{k}
+can be reused directly on another, similarly-sized dataset without tuning
+again: \code{nmr_baseline_estimation(other_dataset, lambda = psalsa_params$lambda, p = psalsa_params$p, k = psalsa_params$k)}.
 }
 \examples{
 dataset_1D <- nmr_dataset_load(system.file("extdata", "nmr_dataset.rds", package = "AlpsNMR"))
@@ -55,7 +72,7 @@ dataset_1D <- nmr_baseline_estimation(dataset_1D)
 
 }
 \seealso{
-\code{\link[=psalsa]{psalsa()}}, \code{\link[=tune_psalsa]{tune_psalsa()}}
+\code{\link[=psalsa]{psalsa()}}, \code{tune_psalsa()}, \code{tune_psalsa_spatial()}
 
 Other baseline removal functions:
 \code{\link[=nmr_baseline_estimation_plot]{nmr_baseline_estimation_plot()}},
