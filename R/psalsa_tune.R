@@ -112,6 +112,22 @@ tune_psalsa <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_sy
 #' resistance strength than another, not just a more realistic peak density
 #' during tuning.
 #'
+#' Each region's own search is ridge-regularized toward a shared anchor (via
+#' `tune_psalsa_params_1d()`'s own regularization mechanism, at a much
+#' stronger weight -- see `region_lambda_k_weight`/`region_p_weight`)
+#' computed from a single signal-wide tune of the WHOLE spectrum first --
+#' "the pack" -- rather than toward `tune_psalsa_params_1d()`'s generic
+#' literature-default prior. A region with few peaks of its own has a flat,
+#' weakly-constrained objective; verified empirically that anchoring alone,
+#' at the SAME regularization weight the whole-spectrum search uses, is not
+#' enough to stop such a region's knot from still collapsing to the same
+#' "disable peak protection" degenerate optimum described in
+#' `tune_psalsa_params_1d()`'s own comments (`lambda` collapsing toward 0,
+#' `k` exploding) -- a region has far less data to resist that escape hatch
+#' than the whole spectrum does. The stronger per-region weights keep that
+#' region close to the pack unless its own data genuinely justifies moving
+#' away from it.
+#'
 #' A region with no observed peaks contributes no knot (there's nothing local
 #' to tune against); the spline fills that stretch in smoothly from its
 #' neighbouring regions' knots instead. If fewer than 2 regions have enough
@@ -123,6 +139,12 @@ tune_psalsa <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_sy
 #' @param p_max Upper bound used for `p`'s logit-space spline interpolation
 #'   (see `spatial_profile_1d()`); should match `tune_psalsa_params_1d()`'s own
 #'   `p_max` (its default, `0.05`, is used here too).
+#' @param region_lambda_k_weight,region_p_weight Ridge-regularization weights
+#'   for each region's own search toward the signal-wide anchor -- the same
+#'   role as `tune_psalsa_params_1d()`'s own `lambda_k_weight`/`p_weight`, but
+#'   defaulting much stronger (verified necessary; see Details) since a single
+#'   region typically has far less data to constrain the search than the
+#'   whole spectrum does.
 #'
 #' @return If `y` is a single numeric vector, a list with:
 #'   \describe{
@@ -159,15 +181,27 @@ tune_psalsa <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_sy
 #' lines(result$baseline, col = "red")
 #'
 tune_psalsa_spatial <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_synthetic = 10,
-                                 optim_maxit = 150, optim_reltol = 1e-6, num_regions = 20, p_max = 0.05) {
+                                 optim_maxit = 150, optim_reltol = 1e-6, num_regions = 20, p_max = 0.05,
+                                 region_lambda_k_weight = 2, region_p_weight = 10) {
   peak_shape <- match.arg(peak_shape)
   y_list <- if (is.list(y)) y else list(y)
   n <- round(stats::median(vapply(y_list, length, integer(1))))
 
+  ## Signal-wide anchor ("the pack"): a single, ordinary tune_psalsa() pass
+  ## over the WHOLE spectrum, used only to regularize each region's own
+  ## search below (see tune_psalsa_region_params_1d()'s comments) -- not
+  ## itself returned or used as a baseline fit.
+  pooled_global <- pool_signal_stats_1d(y_list)
+  pool_global <- generate_synthetic_pool_1d(pooled_global, y_list, n_synthetic = n_synthetic, peak_shape = peak_shape)
+  tuned_global <- tune_psalsa_params_1d(pool_global, p_max = p_max, optim_maxit = optim_maxit, optim_reltol = optim_reltol)
+  theta0_anchor <- c(log(tuned_global$lambda), stats::qlogis(tuned_global$p / p_max), log(tuned_global$k_mult))
+
   pooled_regions <- pool_signal_stats_regions_1d(y_list, num_regions = num_regions)
   region_params <- tune_psalsa_region_params_1d(
     pooled_regions, n_total = n, peak_shape = peak_shape,
-    n_synthetic = n_synthetic, optim_maxit = optim_maxit, optim_reltol = optim_reltol
+    n_synthetic = n_synthetic, optim_maxit = optim_maxit, optim_reltol = optim_reltol,
+    theta0 = theta0_anchor, p_max = p_max,
+    region_lambda_k_weight = region_lambda_k_weight, region_p_weight = region_p_weight
   )
 
   if (is.null(region_params) || nrow(region_params) < 2) {
@@ -539,12 +573,65 @@ generate_synthetic_pool_1d_regions <- function(pooled_stats, y_list, n_synthetic
 ## signal to tune against, and spatial_profile_1d() fills the gap smoothly
 ## from its neighbours' knots instead of guessing.
 ##
+## theta0 anchors EACH region's own tune_psalsa_params_1d() ridge
+## regularization (see that function's own comments for why the
+## regularization exists at all: unconstrained Nelder-Mead can drift to a
+## degenerate "disable peak protection" optimum on a single finite, noisy
+## pool draw). tune_psalsa_params_1d()'s own default theta0 is a FIXED
+## literature prior -- reasonable for a whole spectrum with plenty of peaks
+## to outweigh it, but a single region typically has far fewer peaks, so its
+## objective is flatter and more easily dominated by the SAME regularization
+## pulling toward a prior that may not even suit this particular spectrum.
+## Passing a theta0 built from THIS spectrum's own signal-wide tune (see
+## tune_psalsa_spatial(), which computes it once and shares it across every
+## region) anchors each region to what's typical for the spectrum at hand --
+## "the pack" -- rather than a generic constant, and (still via the exact
+## same regularization mechanism) keeps any one region's knot from swinging
+## arbitrarily far from it just because that region's own peaks are too
+## sparse to constrain the search on their own. NULL keeps
+## tune_psalsa_params_1d()'s own literature-prior default (its previous,
+## unregularized-by-context behaviour).
+##
+## region_lambda_k_weight/region_p_weight are the SAME regularization
+## weights tune_psalsa_params_1d() uses for its own (whole-spectrum)
+## lambda_k_weight/p_weight, but much stronger by default -- verified
+## necessary, not just cautious: a genuinely sparse region (as few as 3
+## peaks in its own synthetic pool) still collapsed to the SAME
+## "disable peak protection" escape hatch (lambda->tiny, k_mult->huge,
+## p->near p_max) even WITH a spectrum-specific theta0 anchor in place,
+## at the global search's own default weights (0.02/0.4) -- confirmed
+## reproducibly on a real region from the MTBLS242 dataset (region 20/20,
+## 3 peaks/draw): lambda collapsed to ~400 vs. an anchor of ~2.8e7, and
+## the resulting position-varying baseline interpolated the raw signal
+## almost exactly in that region (baseline-corrected threshold collapsing
+## to ~0 for every sample there, not just the ones the tuning was meant to
+## fix). A region has far less data than the whole spectrum to resist that
+## escape hatch, so the SAME ridge weight that suffices globally is
+## comparably weaker locally; lambda_k_weight = 2 and p_weight = 10 (~100x
+## and ~25x the global defaults) were verified to keep this same sparse
+## region's tuned values close to its anchor (lambda within ~2x, k_mult
+## within ~1.5x) across 5 independent synthetic pool draws.
+##
 ## Returns a data frame (region, frac_mid, lambda, p, k_mult), one row per
 ## region that had enough signal to tune, or NULL if none did.
 #' @noRd
 tune_psalsa_region_params_1d <- function(pooled_regions, n_total, peak_shape = "gaussian",
-                                          n_synthetic = 10, optim_maxit = 150, optim_reltol = 1e-6) {
+                                          n_synthetic = 10, optim_maxit = 150, optim_reltol = 1e-6,
+                                          theta0 = NULL, p_max = 0.05,
+                                          region_lambda_k_weight = 2, region_p_weight = 10) {
   regions <- pooled_regions$regions
+  ## p_max is passed alongside theta0 (not on its own) because theta0's
+  ## logit-transformed p component was encoded using THIS p_max -- decoding
+  ## it with a different p_max inside tune_psalsa_params_1d() would silently
+  ## misinterpret the anchor.
+  extra_args <- if (is.null(theta0)) {
+    list()
+  } else {
+    list(
+      theta0 = theta0, p_max = p_max,
+      lambda_k_weight = region_lambda_k_weight, p_weight = region_p_weight
+    )
+  }
   rows <- lapply(seq_len(nrow(regions)), function(r) {
     reg <- regions[r, ]
     if (is.na(reg$density) || reg$density <= 0 ||
@@ -556,7 +643,9 @@ tune_psalsa_region_params_1d <- function(pooled_regions, n_total, peak_shape = "
       gen_synthetic_1d(n = reg_n, density = reg$density, fwhm_range = c(reg$fwhm_q1, reg$fwhm_q3),
                         csnr = pooled_regions$csnr, peak_shape = peak_shape, seed = seed)
     })
-    tuned_r <- tune_psalsa_params_1d(pool_r, optim_maxit = optim_maxit, optim_reltol = optim_reltol)
+    tuned_r <- do.call(tune_psalsa_params_1d, c(
+      list(pool_r, optim_maxit = optim_maxit, optim_reltol = optim_reltol), extra_args
+    ))
     data.frame(
       region = reg$region, frac_mid = (reg$frac_lo + reg$frac_hi) / 2,
       lambda = tuned_r$lambda, p = tuned_r$p, k_mult = tuned_r$k_mult

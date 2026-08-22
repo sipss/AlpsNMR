@@ -11,7 +11,9 @@ tune_psalsa_spatial(
   optim_maxit = 150,
   optim_reltol = 1e-06,
   num_regions = 20,
-  p_max = 0.05
+  p_max = 0.05,
+  region_lambda_k_weight = 2,
+  region_p_weight = 10
 )
 }
 \arguments{
@@ -38,6 +40,13 @@ independently.}
 \item{p_max}{Upper bound used for \code{p}'s logit-space spline interpolation
 (see \code{spatial_profile_1d()}); should match \code{tune_psalsa_params_1d()}'s own
 \code{p_max} (its default, \code{0.05}, is used here too).}
+
+\item{region_lambda_k_weight, region_p_weight}{Ridge-regularization weights
+for each region's own search toward the signal-wide anchor -- the same
+role as \code{tune_psalsa_params_1d()}'s own \code{lambda_k_weight}/\code{p_weight}, but
+defaulting much stronger (verified necessary; see Details) since a single
+region typically has far less data to constrain the search than the
+whole spectrum does.}
 }
 \value{
 If \code{y} is a single numeric vector, a list with:
@@ -76,6 +85,22 @@ realistic synthetic pool) still isn't enough -- e.g. because one region's
 own baseline behaviour genuinely needs a different smoothing/peak-
 resistance strength than another, not just a more realistic peak density
 during tuning.
+
+Each region's own search is ridge-regularized toward a shared anchor (via
+\code{tune_psalsa_params_1d()}'s own regularization mechanism, at a much
+stronger weight -- see \code{region_lambda_k_weight}/\code{region_p_weight})
+computed from a single signal-wide tune of the WHOLE spectrum first --
+"the pack" -- rather than toward \code{tune_psalsa_params_1d()}'s generic
+literature-default prior. A region with few peaks of its own has a flat,
+weakly-constrained objective; verified empirically that anchoring alone,
+at the SAME regularization weight the whole-spectrum search uses, is not
+enough to stop such a region's knot from still collapsing to the same
+"disable peak protection" degenerate optimum described in
+\code{tune_psalsa_params_1d()}'s own comments (\code{lambda} collapsing toward 0,
+\code{k} exploding) -- a region has far less data to resist that escape hatch
+than the whole spectrum does. The stronger per-region weights keep that
+region close to the pack unless its own data genuinely justifies moving
+away from it.
 
 A region with no observed peaks contributes no knot (there's nothing local
 to tune against); the spline fills that stretch in smoothly from its
