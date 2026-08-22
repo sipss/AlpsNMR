@@ -147,10 +147,21 @@ lorentz_peak_1d <- function(x, center, fwhm, h) {
 #'   region's FWHM range, in points). A region with `density <= 0` or `NA`/
 #'   non-positive `fwhm_q1`/`fwhm_q3` (no peaks ever observed there) gets no
 #'   synthetic peaks placed in it -- an empty stretch is real information, not
-#'   missing data.
+#'   missing data. An optional `amplitude` column gives that region's own
+#'   typical peak height scale (used in place of `A` for that region's peaks
+#'   only -- see `A` below); if absent, or `NA`/non-positive for a given
+#'   region, that region's peaks fall back to `A` -- byte-identical to not
+#'   having this column at all, so existing callers are unaffected.
 #' @param csnr,peak_shape,A,seed,cap_density,min_spacing_mult As in
 #'   [gen_synthetic_1d()], applied per-region (`min_spacing_mult` against that
-#'   region's own `fwhm_q3`, not the global widest FWHM).
+#'   region's own `fwhm_q3`, not the global widest FWHM). `A` and `csnr` are
+#'   used AS GIVEN (not overridden by `region_profile$amplitude`) for the
+#'   smooth baseline component and the noise level (`sigma <- A * csnr *
+#'   ...`) -- keeping those tied to the signal-wide `A`/`csnr` rather than a
+#'   region's own amplitude is what keeps the ABSOLUTE noise level constant
+#'   across regions of differing peak height, matching real
+#'   (instrument/electronic) noise, which doesn't scale with local peak
+#'   amplitude the way `A`-scaled peak heights should.
 #'
 #' @return As in [gen_synthetic_1d()].
 #' @noRd
@@ -180,7 +191,13 @@ gen_synthetic_1d_regions <- function(n, region_profile, csnr = 0.03,
     }
     if (npk_r < 1) next
 
-    h_r <- stats::rlnorm(npk_r, meanlog = log(0.35 * A), sdlog = log(6))
+    reg_amplitude <- if (!is.null(region_profile$amplitude) &&
+      !is.na(region_profile$amplitude[r]) && region_profile$amplitude[r] > 0) {
+      region_profile$amplitude[r]
+    } else {
+      A
+    }
+    h_r <- stats::rlnorm(npk_r, meanlog = log(0.35 * reg_amplitude), sdlog = log(6))
     centers_r <- stats::runif(npk_r, lo, hi)
     for (j in seq_len(npk_r)) {
       fw <- stats::runif(1, reg$fwhm_q1, reg$fwhm_q3)
