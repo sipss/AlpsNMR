@@ -10,7 +10,8 @@ psalsa(
   p = 0.001,
   k = -1,
   maxit = 25,
-  k_epsilon = 1e-06
+  k_epsilon = 1e-06,
+  damping = 1
 )
 }
 \arguments{
@@ -44,6 +45,22 @@ usually derived from an estimated noise level (see \code{\link[=tune_psalsa]{tun
 silently degenerating the baseline toward the signal's minimum. Scaled by
 the data's own range (rather than a fixed absolute value) so the floor
 stays proportionate regardless of the signal's amplitude.}
+
+\item{damping}{Under-relaxation factor in \verb{(0, 1]} for the asymmetric
+weight update: each iteration's new weight is \code{damping * w_target + (1 - damping) * w_old} instead of replacing \code{w} outright. \code{damping = 1} (the
+default) is the original, undamped update. Because the reweighting
+depends on a hard threshold (whether each point sits above or below the
+current baseline estimate), a full-step update can occasionally
+overshoot near a flat/quiet region -- many points sit close to that
+threshold there, so a large-enough step in the fitted curve flips a big
+batch of them at once, which then swings the next fitted curve enough to
+flip a comparable batch back, an oscillation that can persist right up
+to \code{maxit} instead of settling. \code{damping < 1} shrinks how much the fitted
+curve moves per iteration, directly shrinking how many points can cross
+the threshold in one step. Verified on real data to eliminate this
+oscillation (see \code{psalsa_core()}'s own comments for the failure mode);
+convergence takes correspondingly more iterations, so \code{maxit} may need
+raising alongside a \code{damping} below 1.}
 }
 \value{
 A list with two elements, each with the same dimensions as

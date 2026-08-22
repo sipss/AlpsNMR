@@ -44,6 +44,22 @@
 #'   silently degenerating the baseline toward the signal's minimum. Scaled by
 #'   the data's own range (rather than a fixed absolute value) so the floor
 #'   stays proportionate regardless of the signal's amplitude.
+#' @param damping Under-relaxation factor in `(0, 1]` for the asymmetric
+#'   weight update: each iteration's new weight is `damping * w_target + (1 -
+#'   damping) * w_old` instead of replacing `w` outright. `damping = 1` (the
+#'   default) is the original, undamped update. Because the reweighting
+#'   depends on a hard threshold (whether each point sits above or below the
+#'   current baseline estimate), a full-step update can occasionally
+#'   overshoot near a flat/quiet region -- many points sit close to that
+#'   threshold there, so a large-enough step in the fitted curve flips a big
+#'   batch of them at once, which then swings the next fitted curve enough to
+#'   flip a comparable batch back, an oscillation that can persist right up
+#'   to `maxit` instead of settling. `damping < 1` shrinks how much the fitted
+#'   curve moves per iteration, directly shrinking how many points can cross
+#'   the threshold in one step. Verified on real data to eliminate this
+#'   oscillation (see `psalsa_core()`'s own comments for the failure mode);
+#'   convergence takes correspondingly more iterations, so `maxit` may need
+#'   raising alongside a `damping` below 1.
 #'
 #' @return A list with two elements, each with the same dimensions as
 #'   `spectra`:
@@ -69,7 +85,7 @@
 #' plot(y, type = "l")
 #' lines(result$baseline, col = "red")
 #'
-psalsa <- function(spectra, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6) {
+psalsa <- function(spectra, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6, damping = 1) {
   if (maxit < 1) {
     stop("maxit smaller than 1")
   }
@@ -77,10 +93,10 @@ psalsa <- function(spectra, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_eps
   if (is.matrix(spectra)) {
     estbaseline <- 0 * spectra
     for (i in seq_len(nrow(spectra))) {
-      estbaseline[i, ] <- psalsa_one(spectra[i, ], lambda, p, k, maxit, k_epsilon)
+      estbaseline[i, ] <- psalsa_one(spectra[i, ], lambda, p, k, maxit, k_epsilon, damping)
     }
   } else {
-    estbaseline <- psalsa_one(spectra, lambda, p, k, maxit, k_epsilon)
+    estbaseline <- psalsa_one(spectra, lambda, p, k, maxit, k_epsilon, damping)
   }
 
   list(baseline = estbaseline, corrected = spectra - estbaseline)
@@ -94,7 +110,7 @@ psalsa <- function(spectra, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_eps
 #' @inheritParams psalsa
 #' @return A numeric vector with the estimated baseline.
 #' @noRd
-psalsa_one <- function(y, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6) {
+psalsa_one <- function(y, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6, damping = 1) {
   ## Scalar lambda keeps the original code path byte-for-byte (lambda * the
   ## unweighted penalty), rather than routing it through
   ## diff2_penalty_weighted()'s sqrt-then-crossprod construction, which is
@@ -104,7 +120,7 @@ psalsa_one <- function(y, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsil
   } else {
     diff2_penalty_weighted(length(y), lambda)
   }
-  psalsa_core(y, function(y, w) whit1d(y, penalty, w), p, k, maxit, k_epsilon)
+  psalsa_core(y, function(y, w) whit1d(y, penalty, w), p, k, maxit, k_epsilon, damping)
 }
 
 #' 1D weighted Whittaker smoother
@@ -140,7 +156,7 @@ whit1d <- function(y, penalty, w) {
 #' @inheritParams psalsa
 #' @return The estimated baseline, with the same shape as `y`.
 #' @noRd
-psalsa_core <- function(y, smoother, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6) {
+psalsa_core <- function(y, smoother, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6, damping = 1) {
   ## The k = -1 auto-default only makes sense for a single value -- a
   ## position-varying k must be supplied explicitly by the caller (e.g.
   ## tune_psalsa_spatial()'s k_mult_profile * noise_sd).
@@ -169,8 +185,13 @@ psalsa_core <- function(y, smoother, p = 0.001, k = -1, maxit = 25, k_epsilon = 
     d_geq_old <- d_geq
     d <- y - s
     d_geq <- d >= 0
-    w[d_geq] <- p[d_geq] * exp(-d[d_geq] / k[d_geq])
-    w[!d_geq] <- 1 - p[!d_geq]
+    w_target <- w
+    w_target[d_geq] <- p[d_geq] * exp(-d[d_geq] / k[d_geq])
+    w_target[!d_geq] <- 1 - p[!d_geq]
+    ## damping = 1 (the default) makes this an exact replacement, identical
+    ## to the original undamped update -- see the `damping` parameter's own
+    ## docs in psalsa() for why a smaller value is sometimes needed.
+    w <- if (damping == 1) w_target else damping * w_target + (1 - damping) * w
 
     # converged once the set of points above the baseline no longer changes
     if (all(d_geq == d_geq_old)) {
