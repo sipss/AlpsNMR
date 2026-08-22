@@ -13,7 +13,8 @@ tune_psalsa_spatial(
   num_regions = 20,
   p_max = 0.05,
   region_lambda_k_weight = 2,
-  region_p_weight = 10
+  region_p_weight = 10,
+  min_peaks = 15
 )
 }
 \arguments{
@@ -47,6 +48,13 @@ role as \code{tune_psalsa_params_1d()}'s own \code{lambda_k_weight}/\code{p_weig
 defaulting much stronger (verified necessary; see Details) since a single
 region typically has far less data to constrain the search than the
 whole spectrum does.}
+
+\item{min_peaks}{Before tuning, adjacent regions with fewer than this many
+estimated peaks are merged together (see \code{merge_sparse_regions_1d()}),
+so every region actually tuned has enough real peaks of its own to
+constrain the search -- addressing sparse-region collapse at its root
+cause (too little data) rather than relying only on
+\code{region_lambda_k_weight}/\code{region_p_weight} to paper over it.}
 }
 \value{
 If \code{y} is a single numeric vector, a list with:

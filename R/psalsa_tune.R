@@ -145,6 +145,12 @@ tune_psalsa <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_sy
 #'   defaulting much stronger (verified necessary; see Details) since a single
 #'   region typically has far less data to constrain the search than the
 #'   whole spectrum does.
+#' @param min_peaks Before tuning, adjacent regions with fewer than this many
+#'   estimated peaks are merged together (see `merge_sparse_regions_1d()`),
+#'   so every region actually tuned has enough real peaks of its own to
+#'   constrain the search -- addressing sparse-region collapse at its root
+#'   cause (too little data) rather than relying only on
+#'   `region_lambda_k_weight`/`region_p_weight` to paper over it.
 #'
 #' @return If `y` is a single numeric vector, a list with:
 #'   \describe{
@@ -182,7 +188,7 @@ tune_psalsa <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_sy
 #'
 tune_psalsa_spatial <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_synthetic = 10,
                                  optim_maxit = 150, optim_reltol = 1e-6, num_regions = 20, p_max = 0.05,
-                                 region_lambda_k_weight = 2, region_p_weight = 10) {
+                                 region_lambda_k_weight = 2, region_p_weight = 10, min_peaks = 15) {
   peak_shape <- match.arg(peak_shape)
   y_list <- if (is.list(y)) y else list(y)
   n <- round(stats::median(vapply(y_list, length, integer(1))))
@@ -201,7 +207,8 @@ tune_psalsa_spatial <- function(y, peak_shape = c("lorentzian", "gaussian", "gex
     pooled_regions, n_total = n, peak_shape = peak_shape,
     n_synthetic = n_synthetic, optim_maxit = optim_maxit, optim_reltol = optim_reltol,
     theta0 = theta0_anchor, p_max = p_max,
-    region_lambda_k_weight = region_lambda_k_weight, region_p_weight = region_p_weight
+    region_lambda_k_weight = region_lambda_k_weight, region_p_weight = region_p_weight,
+    min_peaks = min_peaks
   )
 
   if (is.null(region_params) || nrow(region_params) < 2) {
@@ -563,6 +570,78 @@ generate_synthetic_pool_1d_regions <- function(pooled_stats, y_list, n_synthetic
   })
 }
 
+## Greedily merges ADJACENT rows of a pool_signal_stats_regions_1d() regions
+## table (left-to-right) so each merged group has an ESTIMATED peak count
+## (density * span, in n_total's own point scale) of at least min_peaks --
+## the region-level counterpart of tune_psalsa_params_1d()'s own n_total >=
+## 15 threshold for a well-defined peak-area objective (see
+## compute_peak_size_breaks_1d()). Addresses the root cause of a sparse
+## region's tuning collapsing to a degenerate optimum (see
+## tune_psalsa_region_params_1d()'s own comments): widening the region until
+## it actually contains enough real peaks to constrain the search gives the
+## objective genuine signal to work with, rather than relying on a strong
+## prior to paper over too little data.
+##
+## A trailing group that still falls short after reaching the end is merged
+## backward into the previous group rather than left under-informed. Only
+## ADJACENT regions are merged (never skipping over a gap to reach a
+## non-adjacent region with more peaks) -- growing a genuinely contiguous
+## stretch of the spectrum is what "more data" means physically; splicing
+## together two distant, unrelated regions would misrepresent the merged
+## region's own span as uniformly dense when it isn't.
+##
+## Density/fwhm for a merged group are recombined as span-weighted mean
+## density and min/max fwhm across its member rows (excluding empty rows,
+## na.rm = TRUE) -- an approximation, but a representative one for building
+## a synthetic pool over the merged span. A merged group with literally zero
+## peaks across every member row (e.g. min_peaks can't be met anywhere
+## because the whole tail of the spectrum is empty) keeps density 0/fwhm NA,
+## same as an ordinary empty region -- still skipped by
+## tune_psalsa_region_params_1d(), not force-tuned on nothing.
+#' @noRd
+merge_sparse_regions_1d <- function(regions, n_total, min_peaks = 15) {
+  spans <- (regions$frac_hi - regions$frac_lo) * n_total
+  est_peaks <- ifelse(is.na(regions$density), 0, regions$density * spans)
+
+  groups <- integer(nrow(regions))
+  g <- 1L
+  acc <- 0
+  for (i in seq_len(nrow(regions))) {
+    groups[i] <- g
+    acc <- acc + est_peaks[i]
+    if (acc >= min_peaks && i < nrow(regions)) {
+      g <- g + 1L
+      acc <- 0
+    }
+  }
+  ## Only merge a trailing group backward if it has SOME real signal but not
+  ## enough (acc > 0): a genuinely empty trailing group (acc == 0) gains
+  ## nothing from merging and would only dilute an already well-informed
+  ## previous group's density and needlessly widen its span into empty
+  ## territory -- left as its own (skippable, density-0) group instead.
+  if (acc > 0 && acc < min_peaks && g > 1L) {
+    groups[groups == g] <- g - 1L
+  }
+
+  merged_rows <- lapply(split(seq_len(nrow(regions)), groups), function(idx) {
+    idx <- sort(idx)
+    total_span <- sum(spans[idx])
+    total_peaks <- sum(est_peaks[idx])
+    has_peaks <- total_peaks > 0
+    data.frame(
+      frac_lo = regions$frac_lo[idx[1]], frac_hi = regions$frac_hi[idx[length(idx)]],
+      density = if (has_peaks) total_peaks / total_span else 0,
+      fwhm_q1 = if (has_peaks) min(regions$fwhm_q1[idx], na.rm = TRUE) else NA_real_,
+      fwhm_q3 = if (has_peaks) max(regions$fwhm_q3[idx], na.rm = TRUE) else NA_real_
+    )
+  })
+  merged <- do.call(rbind, merged_rows)
+  merged <- merged[order(merged$frac_lo), ]
+  merged$region <- seq_len(nrow(merged))
+  rownames(merged) <- NULL
+  merged[, c("region", "frac_lo", "frac_hi", "density", "fwhm_q1", "fwhm_q3")]
+}
+
 ## For EACH region in pooled_regions$regions (pool_signal_stats_regions_1d()
 ## output), builds a synthetic pool of THAT region ALONE (length matched to
 ## its own share of n_total) and tunes lambda/p/k_mult against it
@@ -612,14 +691,28 @@ generate_synthetic_pool_1d_regions <- function(pooled_stats, y_list, n_synthetic
 ## region's tuned values close to its anchor (lambda within ~2x, k_mult
 ## within ~1.5x) across 5 independent synthetic pool draws.
 ##
+## min_peaks: before tuning, ADJACENT regions with too few estimated peaks
+## are merged (see merge_sparse_regions_1d()) so each region tuned below has
+## at least this many real peaks to constrain its own search -- addressing
+## the sparse-region collapse at its root cause (too little data) rather
+## than relying only on the regularization above to paper over it. The two
+## mechanisms are complementary, not redundant: merging can still leave a
+## genuinely peak-poor stretch of spectrum under-informed (e.g. the very
+## last group, or a spectrum with too few peaks anywhere to reach
+## min_peaks), and the regularization above is what tune_psalsa_params_1d()
+## itself already relies on even for a well-populated whole-spectrum search
+## (see its own comments) -- it stays as a safety net regardless of how the
+## region was sized.
+##
 ## Returns a data frame (region, frac_mid, lambda, p, k_mult), one row per
 ## region that had enough signal to tune, or NULL if none did.
 #' @noRd
 tune_psalsa_region_params_1d <- function(pooled_regions, n_total, peak_shape = "gaussian",
                                           n_synthetic = 10, optim_maxit = 150, optim_reltol = 1e-6,
                                           theta0 = NULL, p_max = 0.05,
-                                          region_lambda_k_weight = 2, region_p_weight = 10) {
-  regions <- pooled_regions$regions
+                                          region_lambda_k_weight = 2, region_p_weight = 10,
+                                          min_peaks = 15) {
+  regions <- merge_sparse_regions_1d(pooled_regions$regions, n_total = n_total, min_peaks = min_peaks)
   ## p_max is passed alongside theta0 (not on its own) because theta0's
   ## logit-transformed p component was encoded using THIS p_max -- decoding
   ## it with a different p_max inside tune_psalsa_params_1d() would silently

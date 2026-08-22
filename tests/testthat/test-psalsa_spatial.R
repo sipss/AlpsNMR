@@ -164,8 +164,12 @@ test_that("tune_psalsa_region_params_1d skips regions with no observed peaks", {
             density = c(0.02, 0, 0.015), fwhm_q1 = c(5, NA, 6), fwhm_q3 = c(10, NA, 12)
         )
     )
+    # min_peaks = 0 disables adjacent-region merging (see
+    # test-psalsa_region_anchor.R for merging's own tests), isolating the
+    # "skip an empty region" behaviour this test targets.
     result <- AlpsNMR:::tune_psalsa_region_params_1d(
-        pooled_regions, n_total = 900, peak_shape = "gaussian", n_synthetic = 3, optim_maxit = 20
+        pooled_regions, n_total = 900, peak_shape = "gaussian", n_synthetic = 3, optim_maxit = 20,
+        min_peaks = 0
     )
     expect_equal(sort(result$region), c(1, 3))
 })
@@ -197,7 +201,10 @@ test_that("tune_psalsa_spatial runs end-to-end and returns position-varying prof
     sparse <- 40 * exp(-((seq_len(n) - 400)^2) / (2 * 6^2))
     y <- baseline + crowded + sparse + rnorm(n, 0, 0.4)
 
-    result <- AlpsNMR:::tune_psalsa_spatial(y, num_regions = 8, n_synthetic = 3, optim_maxit = 30)
+    # min_peaks = 0 disables adjacent-region merging so this fixture's own
+    # 8-region split is what gets tuned -- merging's effect on the final
+    # profile is covered separately in test-psalsa_region_anchor.R.
+    result <- AlpsNMR:::tune_psalsa_spatial(y, num_regions = 8, n_synthetic = 3, optim_maxit = 30, min_peaks = 0)
     expect_equal(length(result$baseline), n)
     expect_true(all(is.finite(result$baseline)))
     expect_equal(length(result$lambda), n)
