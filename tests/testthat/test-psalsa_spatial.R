@@ -215,6 +215,7 @@ test_that("tune_psalsa_spatial runs end-to-end and returns position-varying prof
     expect_true(all(result$k > 0))
     expect_true(is.data.frame(result$region_params))
     expect_true(nrow(result$region_params) >= 2)
+    expect_true(is.finite(result$noise_sd) && result$noise_sd > 0)
 })
 
 test_that("tune_psalsa_spatial falls back to tune_psalsa when fewer than 2 regions have signal", {

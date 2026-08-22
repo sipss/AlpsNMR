@@ -69,6 +69,10 @@ differs).}
 the profiles were spline-interpolated from (\code{region}, \code{frac_mid},
 \code{lambda}, \code{p}, \code{k_mult}), useful for inspecting what the tuning
 actually found region by region.}
+\item{\code{noise_sd}}{the signal-wide noise level \code{k_mult} was scaled by
+to get \code{k}. \code{region_params} + \code{noise_sd} are enough to rebuild
+\code{lambda}/\code{p}/\code{k} later without re-tuning -- much smaller to store
+than the profiles themselves -- via \code{psalsa_region_params_to_profile()}.}
 }
 If \code{y} is a list, \code{baseline} and \code{corrected} are lists (one element per
 input spectrum, using the same tuned profiles -- resampled to that

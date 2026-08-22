@@ -226,6 +226,55 @@ test_that("with adjacent-region merging (default min_peaks), a sparse region's t
     expect_true(abs(log(result$lambda) - log(2.8e7)) < log(100))
 })
 
+## psalsa_region_params_to_profile ------------------------------------------------
+
+test_that("psalsa_region_params_to_profile exactly reproduces a tune_psalsa_spatial() result", {
+    n <- 800
+    x <- seq_len(n)
+    baseline <- 5 + 2 * sin(x / 200)
+    peak_centers <- c(seq(10, 190, by = 10), seq(210, 390, by = 10))
+    set.seed(1)
+    peaks <- Reduce(`+`, lapply(peak_centers, function(ctr) 15 * exp(-((x - ctr)^2) / (2 * 1.5^2))))
+    y <- baseline + peaks + stats::rnorm(n, 0, 0.2)
+
+    tuned <- AlpsNMR:::tune_psalsa_spatial(y, num_regions = 4, n_synthetic = 5, optim_maxit = 30)
+    expect_true(nrow(tuned$region_params) >= 2)
+    expect_false(is.null(tuned$noise_sd))
+
+    profiles <- psalsa_region_params_to_profile(length(y), tuned$region_params, tuned$noise_sd)
+    expect_equal(profiles$lambda, tuned$lambda)
+    expect_equal(profiles$p, tuned$p)
+    expect_equal(profiles$k, tuned$k)
+})
+
+test_that("psalsa_region_params_to_profile's k scales linearly with noise_sd", {
+    region_params <- data.frame(
+        region = 1:2, frac_mid = c(0.25, 0.75),
+        lambda = c(1e6, 1e7), p = c(0.01, 0.02), k_mult = c(10, 20)
+    )
+    low <- psalsa_region_params_to_profile(100, region_params, noise_sd = 1)
+    high <- psalsa_region_params_to_profile(100, region_params, noise_sd = 5)
+    expect_equal(high$k, low$k * 5)
+    # lambda/p are independent of noise_sd:
+    expect_equal(high$lambda, low$lambda)
+    expect_equal(high$p, low$p)
+})
+
+test_that("psalsa_region_params_to_profile's output feeds directly into psalsa()", {
+    region_params <- data.frame(
+        region = 1:2, frac_mid = c(0.25, 0.75),
+        lambda = c(1e5, 1e7), p = c(0.005, 0.02), k_mult = c(5, 15)
+    )
+    n <- 200
+    set.seed(2)
+    y <- 5 + 20 * exp(-((seq_len(n) - 100)^2) / (2 * 4^2)) + stats::rnorm(n, 0, 0.2)
+
+    profiles <- psalsa_region_params_to_profile(n, region_params, noise_sd = 0.3)
+    fit <- AlpsNMR:::psalsa(y, lambda = profiles$lambda, p = profiles$p, k = profiles$k)
+    expect_equal(length(fit$baseline), n)
+    expect_true(all(is.finite(fit$baseline)))
+})
+
 ## tune_psalsa_spatial(): anchor wiring end-to-end -------------------------------
 
 test_that("tune_psalsa_spatial's per-region tuning stays close to the spectrum-wide anchor for a sparse region", {

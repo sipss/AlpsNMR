@@ -165,6 +165,10 @@ tune_psalsa <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_sy
 #'       the profiles were spline-interpolated from (`region`, `frac_mid`,
 #'       `lambda`, `p`, `k_mult`), useful for inspecting what the tuning
 #'       actually found region by region.}
+#'     \item{`noise_sd`}{the signal-wide noise level `k_mult` was scaled by
+#'       to get `k`. `region_params` + `noise_sd` are enough to rebuild
+#'       `lambda`/`p`/`k` later without re-tuning -- much smaller to store
+#'       than the profiles themselves -- via `psalsa_region_params_to_profile()`.}
 #'   }
 #'   If `y` is a list, `baseline` and `corrected` are lists (one element per
 #'   input spectrum, using the same tuned profiles -- resampled to that
@@ -221,10 +225,10 @@ tune_psalsa_spatial <- function(y, peak_shape = c("lorentzian", "gaussian", "gex
     ))
   }
 
-  lambda_profile <- spatial_profile_1d(n, region_params$frac_mid, region_params$lambda, transform = "log")
-  p_profile <- spatial_profile_1d(n, region_params$frac_mid, region_params$p, transform = "logit", p_max = p_max)
-  k_mult_profile <- spatial_profile_1d(n, region_params$frac_mid, region_params$k_mult, transform = "log")
-  k_profile <- k_mult_profile * pooled_regions$noise_sd
+  profiles <- psalsa_region_params_to_profile(n, region_params, noise_sd = pooled_regions$noise_sd, p_max = p_max)
+  lambda_profile <- profiles$lambda
+  p_profile <- profiles$p
+  k_profile <- profiles$k
 
   fit_one <- function(yi) {
     ni <- length(yi)
@@ -249,8 +253,65 @@ tune_psalsa_spatial <- function(y, peak_shape = c("lorentzian", "gaussian", "gex
   list(
     baseline = baseline, corrected = corrected,
     lambda = lambda_profile, p = p_profile, k = k_profile,
-    region_params = region_params
+    region_params = region_params, noise_sd = pooled_regions$noise_sd
   )
+}
+
+#' Rebuild position-varying PSALSA profiles from a `tune_psalsa_spatial()` region table
+#'
+#' `tune_psalsa_spatial()`'s tuned `lambda`/`p`/`k` profiles are as long as
+#' the spectrum they were tuned on (impractical to store verbatim, e.g. as a
+#' literal in a script or vignette for later reuse without re-tuning), but
+#' they are entirely determined by its much smaller `region_params` table
+#' (one row per region -- typically a few dozen at most) together with
+#' `noise_sd`. This rebuilds the full-length profiles from just those two
+#' small, easily-stored pieces, via the same spline interpolation
+#' `tune_psalsa_spatial()` itself uses (see `spatial_profile_1d()`) --
+#' `psalsa_region_params_to_profile(n, tuned$region_params, tuned$noise_sd)`
+#' reproduces `list(lambda = tuned$lambda, p = tuned$p, k = tuned$k)` exactly
+#' for `n` equal to the length `tuned` was originally computed for.
+#'
+#' @param n Length of the profile to build (the length of the spectra it will
+#'   be applied to via `psalsa()`).
+#' @param region_params A data frame with one row per region: `frac_mid`
+#'   (that region's midpoint, as a fraction 0-1 of the spectrum),
+#'   `lambda`, `p`, `k_mult` -- exactly the `region_params` element of a
+#'   `tune_psalsa_spatial()` result.
+#' @param noise_sd The `noise_sd` element of the same `tune_psalsa_spatial()`
+#'   result (used to turn `k_mult` back into an absolute `k`).
+#' @param p_max Upper bound used for `p`'s logit-space interpolation; must
+#'   match the `p_max` the original `tune_psalsa_spatial()` call used (its
+#'   default, `0.05`, is used here too).
+#'
+#' @return A list with `lambda`, `p`, `k` -- numeric vectors of length `n`,
+#'   directly reusable via `psalsa(y, lambda = lambda, p = p, k = k)` (or
+#'   `nmr_baseline_estimation()`'s `lambda`/`p`/`k` arguments) without
+#'   calling `tune_psalsa_spatial()` again.
+#'
+#' @examples
+#' # A crowded region (many small peaks) and a sparse region (one big peak),
+#' # each with enough peaks of its own to tune independently:
+#' n <- 800
+#' x <- seq_len(n)
+#' baseline <- 5 + 2 * sin(x / 200)
+#' peak_centers <- c(seq(10, 190, by = 10), seq(210, 390, by = 10))
+#' peaks <- Reduce(`+`, lapply(peak_centers, function(ctr) {
+#'   15 * exp(-((x - ctr)^2) / (2 * 1.5^2))
+#' }))
+#' set.seed(1)
+#' y <- baseline + peaks + rnorm(n, 0, 0.2)
+#'
+#' tuned <- AlpsNMR:::tune_psalsa_spatial(y, num_regions = 4, n_synthetic = 5)
+#' # tuned$region_params (a small table) and tuned$noise_sd are cheap to
+#' # store (e.g. as literals in a script), unlike tuned$lambda/p/k directly:
+#' profiles <- AlpsNMR:::psalsa_region_params_to_profile(length(y), tuned$region_params, tuned$noise_sd)
+#' stopifnot(all.equal(profiles$lambda, tuned$lambda))
+#'
+psalsa_region_params_to_profile <- function(n, region_params, noise_sd, p_max = 0.05) {
+  lambda <- spatial_profile_1d(n, region_params$frac_mid, region_params$lambda, transform = "log")
+  p <- spatial_profile_1d(n, region_params$frac_mid, region_params$p, transform = "logit", p_max = p_max)
+  k_mult <- spatial_profile_1d(n, region_params$frac_mid, region_params$k_mult, transform = "log")
+  list(lambda = lambda, p = p, k = k_mult * noise_sd)
 }
 
 ## Robust noise sd from the MAD of 2nd differences. For pure white noise e,
