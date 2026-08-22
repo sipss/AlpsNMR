@@ -30,6 +30,16 @@
 #' @param optim_maxit Maximum number of [stats::optim()] (Nelder-Mead)
 #'   iterations.
 #' @param optim_reltol [stats::optim()] relative convergence tolerance.
+#' @param num_regions If set, characterizes peak density/width separately in
+#'   this many contiguous regions of `y` (instead of one signal-wide, pooled
+#'   density/width) and generates the synthetic tuning pool to match that
+#'   region-by-region variation -- useful when `y`'s peak density is
+#'   noticeably uneven across the spectrum (e.g. crowded aliphatic vs. sparse
+#'   downfield regions), since a single blended density otherwise makes every
+#'   synthetic region look equally busy. `lambda`/`p`/`k` are still tuned as
+#'   single, signal-wide values either way; this only changes how realistic
+#'   the synthetic pool is. `NULL` (the default) keeps the original
+#'   signal-wide characterization.
 #'
 #' @return If `y` is a single numeric vector, a list with:
 #'   \describe{
@@ -57,11 +67,16 @@
 #' lines(result$baseline, col = "red")
 #'
 tune_psalsa <- function(y, peak_shape = c("lorentzian", "gaussian", "gex"), n_synthetic = 10,
-                         optim_maxit = 150, optim_reltol = 1e-6) {
+                         optim_maxit = 150, optim_reltol = 1e-6, num_regions = NULL) {
   peak_shape <- match.arg(peak_shape)
   y_list <- if (is.list(y)) y else list(y)
-  pooled_stats <- pool_signal_stats_1d(y_list)
-  pool <- generate_synthetic_pool_1d(pooled_stats, y_list, n_synthetic = n_synthetic, peak_shape = peak_shape)
+  if (is.null(num_regions)) {
+    pooled_stats <- pool_signal_stats_1d(y_list)
+    pool <- generate_synthetic_pool_1d(pooled_stats, y_list, n_synthetic = n_synthetic, peak_shape = peak_shape)
+  } else {
+    pooled_stats <- pool_signal_stats_regions_1d(y_list, num_regions = num_regions)
+    pool <- generate_synthetic_pool_1d_regions(pooled_stats, y_list, n_synthetic = n_synthetic, peak_shape = peak_shape)
+  }
   tuned <- tune_psalsa_params_1d(pool, optim_maxit = optim_maxit, optim_reltol = optim_reltol)
   k <- tuned$k_mult * pooled_stats$noise_sd
 
@@ -299,6 +314,98 @@ generate_synthetic_pool_1d <- function(pooled_stats, y_list, n_synthetic = 10, p
     gen_synthetic_1d(n = n, density = pooled_stats$density,
                       fwhm_range = c(pooled_stats$fwhm_q1, pooled_stats$fwhm_q3),
                       csnr = pooled_stats$csnr, peak_shape = peak_shape, seed = seed)
+  })
+}
+
+## n, num_regions -> a data frame with one row per region (region, lo, hi):
+## a contiguous, near-equal-sized integer partition of 1:n. num_regions is
+## capped at n so a degenerately short signal never gets empty regions.
+#' @noRd
+compute_region_bounds_1d <- function(n, num_regions) {
+  num_regions <- max(1, min(num_regions, n))
+  edges <- floor(seq(0, n, length.out = num_regions + 1))
+  data.frame(region = seq_len(num_regions), lo = edges[-length(edges)] + 1L, hi = edges[-1])
+}
+
+## Like analyze_signal_1d(), but characterizes peak density/fwhm PER REGION
+## instead of pooling them into one signal-wide density/fwhm -- a spectrum's
+## peak density is rarely uniform (e.g. a crowded aliphatic region vs. a
+## sparse downfield region), and a single blended density/fwhm can't
+## reproduce that when generating synthetic tuning data. noise_sd/csnr stay
+## signal-wide (not per-region): regions from num_regions=20 are typically
+## too short for a robust per-region noise_est_1d(), and noise level is
+## primarily an instrument/acquisition characteristic, not a per-region one.
+## region bounds are stored as FRACTIONS of n (frac_lo/frac_hi), not raw
+## indices, so per-region stats stay comparable/poolable across real input
+## signals of different lengths.
+#' @noRd
+analyze_signal_regions_1d <- function(y, num_regions = 20, height_mult = 5) {
+  n <- length(y)
+  noise_sd <- noise_est_1d(y)
+  z0 <- percentile_init_1d(y)
+  peaks <- detect_peaks_1d(y, height_mult = height_mult)
+
+  A_baseline <- abs(stats::median(z0))
+  A_peaks <- if (nrow(peaks) > 0) stats::median(peaks$height) / 0.35 else NA_real_
+  A <- if (A_baseline >= noise_sd) A_baseline
+       else if (!is.na(A_peaks) && A_peaks >= noise_sd) A_peaks
+       else noise_sd
+  csnr <- noise_sd / A
+
+  bounds <- compute_region_bounds_1d(n, num_regions)
+  region_rows <- lapply(seq_len(nrow(bounds)), function(r) {
+    lo <- bounds$lo[r]; hi <- bounds$hi[r]
+    in_region <- peaks$idx >= lo & peaks$idx <= hi
+    pk_summary <- summarize_peaks_1d(peaks[in_region, , drop = FALSE], hi - lo + 1)
+    data.frame(
+      region = r, frac_lo = (lo - 1) / n, frac_hi = hi / n,
+      n_peaks = pk_summary$n_peaks, density = pk_summary$density,
+      fwhm_q1 = pk_summary$fwhm_q1, fwhm_q2 = pk_summary$fwhm_q2, fwhm_q3 = pk_summary$fwhm_q3
+    )
+  })
+  list(noise_sd = noise_sd, csnr = csnr, regions = do.call(rbind, region_rows))
+}
+
+## Pools analyze_signal_regions_1d() across one or more real input signals:
+## noise_sd/csnr pool the same way pool_signal_stats_1d() does (column-wise
+## median), and each region's density/fwhm pools (median, na.rm=TRUE) against
+## the SAME region index across signals -- valid because region bounds are
+## fractional, so "region 7 of 20" means the same relative stretch of the
+## spectrum regardless of a given signal's own length. A region with zero
+## detected peaks in every pooled signal keeps density 0 and fwhm NA (that's
+## real information -- see gen_synthetic_1d_regions(), which places no peaks
+## there rather than guessing a width for peaks that were never observed).
+#' @noRd
+pool_signal_stats_regions_1d <- function(y_list, num_regions = 20, height_mult = 5) {
+  per_signal <- lapply(y_list, analyze_signal_regions_1d, num_regions = num_regions, height_mult = height_mult)
+  noise_sd <- stats::median(vapply(per_signal, `[[`, numeric(1), "noise_sd"))
+  csnr <- stats::median(vapply(per_signal, `[[`, numeric(1), "csnr"))
+
+  regions_stacked <- do.call(rbind, lapply(per_signal, `[[`, "regions"))
+  pooled_regions <- do.call(rbind, lapply(split(regions_stacked, regions_stacked$region), function(sub) {
+    data.frame(
+      region = sub$region[1], frac_lo = stats::median(sub$frac_lo), frac_hi = stats::median(sub$frac_hi),
+      density = stats::median(sub$density, na.rm = TRUE),
+      fwhm_q1 = stats::median(sub$fwhm_q1, na.rm = TRUE),
+      fwhm_q3 = stats::median(sub$fwhm_q3, na.rm = TRUE)
+    )
+  }))
+  pooled_regions <- pooled_regions[order(pooled_regions$region), ]
+  rownames(pooled_regions) <- NULL
+  list(noise_sd = noise_sd, csnr = csnr, regions = pooled_regions)
+}
+
+## Region-aware counterpart to generate_synthetic_pool_1d(): pooled_stats
+## here comes from pool_signal_stats_regions_1d() instead of
+## pool_signal_stats_1d(), so each synthetic draw reproduces the real
+## signals' own region-to-region density/fwhm variation via
+## gen_synthetic_1d_regions() rather than one blended, uniform density.
+#' @noRd
+generate_synthetic_pool_1d_regions <- function(pooled_stats, y_list, n_synthetic = 10, peak_shape = "gaussian") {
+  n <- round(stats::median(vapply(y_list, length, integer(1))))
+  lapply(seq_len(n_synthetic), function(seed) {
+    gen_synthetic_1d_regions(n = n, region_profile = pooled_stats$regions,
+                              csnr = pooled_stats$csnr, peak_shape = peak_shape, seed = seed)
   })
 }
 

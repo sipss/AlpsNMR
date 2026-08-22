@@ -128,6 +128,99 @@ lorentz_peak_1d <- function(x, center, fwhm, h) {
   lorentzian(x, x0 = center, gamma = gamma, A = h * pi * gamma)
 }
 
+#' Generate a synthetic 1D signal whose peak density/width vary by region
+#'
+#' Like [gen_synthetic_1d()], but instead of one constant `density` and
+#' `fwhm_range` for the whole signal, takes a `region_profile` (as produced by
+#' `pool_signal_stats_regions_1d()` in `psalsa_tune.R`) so different stretches
+#' of the synthetic spectrum can be crowded or sparse, matching how a real
+#' spectrum's peak density actually varies from region to region (e.g. a
+#' crowded aliphatic region vs. a sparse downfield region) -- something a
+#' single pooled density/fwhm blends away. This is what [tune_psalsa()] uses
+#' internally when called with `num_regions` set; [gen_synthetic_1d()] (no
+#' region awareness) remains the default.
+#'
+#' @param n Number of points.
+#' @param region_profile A data frame with one row per region.: `frac_lo`,
+#'   `frac_hi` (the region's span as a fraction of the signal, `0..1`),
+#'   `density` (peaks per point within the region), `fwhm_q1`, `fwhm_q3` (that
+#'   region's FWHM range, in points). A region with `density <= 0` or `NA`/
+#'   non-positive `fwhm_q1`/`fwhm_q3` (no peaks ever observed there) gets no
+#'   synthetic peaks placed in it -- an empty stretch is real information, not
+#'   missing data.
+#' @param csnr,peak_shape,A,seed,cap_density,min_spacing_mult As in
+#'   [gen_synthetic_1d()], applied per-region (`min_spacing_mult` against that
+#'   region's own `fwhm_q3`, not the global widest FWHM).
+#'
+#' @return As in [gen_synthetic_1d()].
+#' @noRd
+gen_synthetic_1d_regions <- function(n, region_profile, csnr = 0.03,
+                                      peak_shape = c("lorentzian", "gaussian", "gex"),
+                                      A = 1, seed = 1, cap_density = TRUE, min_spacing_mult = 2) {
+  peak_shape <- match.arg(peak_shape)
+  set.seed(seed)
+  x <- seq_len(n); xf <- x / n
+  baseline <- A * (1 + 0.5 * xf + 0.3 * xf^2 + 0.15 * sin(2 * pi * 2.3 * xf + stats::runif(1, -pi, pi)))
+
+  peaks <- numeric(n); peak_rows <- list()
+  for (r in seq_len(nrow(region_profile))) {
+    reg <- region_profile[r, ]
+    lo <- max(1L, floor(reg$frac_lo * n) + 1L)
+    hi <- min(n, floor(reg$frac_hi * n))
+    reg_n <- hi - lo + 1L
+    if (reg_n < 1 || is.na(reg$density) || reg$density <= 0 ||
+      is.na(reg$fwhm_q1) || is.na(reg$fwhm_q3) || reg$fwhm_q3 <= 0) {
+      next
+    }
+
+    npk_r <- round(reg$density * reg_n)
+    if (cap_density) {
+      max_npk_r <- floor(reg_n / (min_spacing_mult * reg$fwhm_q3))
+      npk_r <- min(npk_r, max_npk_r)
+    }
+    if (npk_r < 1) next
+
+    h_r <- stats::rlnorm(npk_r, meanlog = log(0.35 * A), sdlog = log(6))
+    centers_r <- stats::runif(npk_r, lo, hi)
+    for (j in seq_len(npk_r)) {
+      fw <- stats::runif(1, reg$fwhm_q1, reg$fwhm_q3)
+      a_j <- NA_real_; b_j <- NA_real_
+      pk_j <- if (peak_shape == "gaussian") {
+        gauss_peak_1d(x, centers_r[j], fw, h_r[j])
+      } else if (peak_shape == "lorentzian") {
+        lorentz_peak_1d(x, centers_r[j], fw, h_r[j])
+      } else {
+        a_j <- stats::runif(1, 0.5, 2); b_j <- stats::runif(1, 5, 8)
+        gex_peak_1d(x, centers_r[j] - fw / 2, centers_r[j] + fw / 2, h_r[j], a_j, b_j)
+      }
+      peaks <- peaks + pk_j
+      above <- which(pk_j > 1e-3 * h_r[j])
+      lo_j <- if (length(above)) min(above) else max(1, round(centers_r[j]))
+      hi_j <- if (length(above)) max(above) else min(n, round(centers_r[j]))
+      peak_rows[[length(peak_rows) + 1]] <- data.frame(
+        idx = length(peak_rows) + 1, height = h_r[j], fwhm = fw, center = centers_r[j],
+        lo = lo_j, hi = hi_j, area = sum(pk_j), a = a_j, b = b_j
+      )
+    }
+  }
+  peak_info <- if (length(peak_rows)) {
+    do.call(rbind, peak_rows)
+  } else {
+    data.frame(
+      idx = integer(0), height = numeric(0), fwhm = numeric(0), center = numeric(0),
+      lo = integer(0), hi = integer(0), area = numeric(0), a = numeric(0), b = numeric(0)
+    )
+  }
+
+  sigma <- A * csnr * (0.6 + 0.4 * xf)
+  noise <- if (csnr == 0) numeric(n) else stats::rnorm(n, 0, 1) * sigma
+
+  list(
+    y = baseline + peaks + noise, baseline = baseline, peaks = peaks, noise = noise,
+    sigma = sigma, peak_info = peak_info, peak_shape = peak_shape
+  )
+}
+
 #' Reconstruct one synthetic peak's own curve from its `peak_info` row
 #'
 #' Exactly reproduces one peak's own contribution (no baseline, no noise, no

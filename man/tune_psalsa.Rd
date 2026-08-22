@@ -9,7 +9,8 @@ tune_psalsa(
   peak_shape = c("lorentzian", "gaussian", "gex"),
   n_synthetic = 10,
   optim_maxit = 150,
-  optim_reltol = 1e-06
+  optim_reltol = 1e-06,
+  num_regions = NULL
 )
 }
 \arguments{
@@ -29,6 +30,17 @@ is left as an explicit argument rather than inferred from the data.}
 iterations.}
 
 \item{optim_reltol}{\code{\link[stats:optim]{stats::optim()}} relative convergence tolerance.}
+
+\item{num_regions}{If set, characterizes peak density/width separately in
+this many contiguous regions of \code{y} (instead of one signal-wide, pooled
+density/width) and generates the synthetic tuning pool to match that
+region-by-region variation -- useful when \code{y}'s peak density is
+noticeably uneven across the spectrum (e.g. crowded aliphatic vs. sparse
+downfield regions), since a single blended density otherwise makes every
+synthetic region look equally busy. \code{lambda}/\code{p}/\code{k} are still tuned as
+single, signal-wide values either way; this only changes how realistic
+the synthetic pool is. \code{NULL} (the default) keeps the original
+signal-wide characterization.}
 }
 \value{
 If \code{y} is a single numeric vector, a list with:
