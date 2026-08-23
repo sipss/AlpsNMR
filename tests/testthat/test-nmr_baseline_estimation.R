@@ -16,6 +16,21 @@ make_test_dataset <- function(seed = 1, n = 300, nsamples = 3) {
     )
 }
 
+test_that("nmr_baseline_estimation's damping = 'auto' matches psalsa()'s own default (undamped)", {
+    dataset <- make_test_dataset()
+    result_auto <- nmr_baseline_estimation(dataset, lambda = 1e6, p = 0.01, k = 5)
+    result_explicit <- nmr_baseline_estimation(dataset, lambda = 1e6, p = 0.01, k = 5, damping = 1)
+    expect_identical(result_auto$data_1r_baseline, result_explicit$data_1r_baseline)
+})
+
+test_that("nmr_baseline_estimation threads damping through to psalsa() and changes the result", {
+    dataset <- make_test_dataset()
+    result_undamped <- nmr_baseline_estimation(dataset, lambda = 1e6, p = 0.01, k = 5, maxit = 50)
+    result_damped <- nmr_baseline_estimation(dataset, lambda = 1e6, p = 0.01, k = 5, maxit = 50, damping = 0.7)
+    expect_true(all(is.finite(result_damped$data_1r_baseline)))
+    expect_false(isTRUE(all.equal(result_undamped$data_1r_baseline, result_damped$data_1r_baseline)))
+})
+
 test_that("nmr_baseline_estimation defaults to scalar tune_psalsa (num_regions = NULL)", {
     dataset <- make_test_dataset()
     result <- nmr_baseline_estimation(dataset)

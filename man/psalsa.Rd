@@ -11,7 +11,11 @@ psalsa(
   k = -1,
   maxit = 25,
   k_epsilon = 1e-06,
-  damping = 1
+  damping = 1,
+  weight_method = c("threshold", "smooth"),
+  s = 500,
+  c_noise = 0.1,
+  w_max = 0.9
 )
 }
 \arguments{
@@ -61,6 +65,27 @@ the threshold in one step. Verified on real data to eliminate this
 oscillation (see \code{psalsa_core()}'s own comments for the failure mode);
 convergence takes correspondingly more iterations, so \code{maxit} may need
 raising alongside a \code{damping} below 1.}
+
+\item{weight_method}{\code{"threshold"} (the default) is the original weight
+update (\code{p * exp(-d/k)} above the current baseline, \code{1 - p} below it,
+split by the hard \code{d >= 0} threshold). \code{"smooth"} instead uses
+\code{compute_psalsa_weights()}: a piecewise, C1-continuous weight curve with
+a central noise band \verb{[-s, s]} (cubic Hermite-interpolated between the
+two boundary weights, matching the exponential pieces' own slopes there)
+instead of a hard threshold at \code{d = 0}. Two effects, addressing two
+distinct issues found with \code{"threshold"}: (1) no discontinuity at \code{d = 0} to oscillate across (may reduce or remove the need for \code{damping < 1}); (2) points near the middle of the noise band get a weight between
+\code{p} and \code{w_max} rather than \code{p} itself, avoiding the systematic
+downward bias \code{"threshold"} introduces even in a genuinely flat/quiet
+region (there, \code{p} alone -- not \code{k} -- sets a floor on how low a
+residual's weight can go, however small the residual, since \code{d >= 0}
+alone triggers the \code{p}-branch). Only supports a single (scalar) \code{p}/\code{k}
+for now, not \code{tune_psalsa_spatial()}'s position-varying profiles.}
+
+\item{s, c_noise, w_max}{Only used when \code{weight_method = "smooth"} -- see
+\code{compute_psalsa_weights()}. \code{s} should be sized to the signal's own
+noise amplitude (e.g. a small multiple of its estimated noise standard
+deviation), not left at its exploratory default of \code{500} for a signal
+whose real noise level is very different.}
 }
 \value{
 A list with two elements, each with the same dimensions as

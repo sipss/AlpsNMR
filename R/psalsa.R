@@ -60,6 +60,27 @@
 #'   oscillation (see `psalsa_core()`'s own comments for the failure mode);
 #'   convergence takes correspondingly more iterations, so `maxit` may need
 #'   raising alongside a `damping` below 1.
+#' @param weight_method `"threshold"` (the default) is the original weight
+#'   update (`p * exp(-d/k)` above the current baseline, `1 - p` below it,
+#'   split by the hard `d >= 0` threshold). `"smooth"` instead uses
+#'   `compute_psalsa_weights()`: a piecewise, C1-continuous weight curve with
+#'   a central noise band `[-s, s]` (cubic Hermite-interpolated between the
+#'   two boundary weights, matching the exponential pieces' own slopes there)
+#'   instead of a hard threshold at `d = 0`. Two effects, addressing two
+#'   distinct issues found with `"threshold"`: (1) no discontinuity at `d =
+#'   0` to oscillate across (may reduce or remove the need for `damping <
+#'   1`); (2) points near the middle of the noise band get a weight between
+#'   `p` and `w_max` rather than `p` itself, avoiding the systematic
+#'   downward bias `"threshold"` introduces even in a genuinely flat/quiet
+#'   region (there, `p` alone -- not `k` -- sets a floor on how low a
+#'   residual's weight can go, however small the residual, since `d >= 0`
+#'   alone triggers the `p`-branch). Only supports a single (scalar) `p`/`k`
+#'   for now, not `tune_psalsa_spatial()`'s position-varying profiles.
+#' @param s,c_noise,w_max Only used when `weight_method = "smooth"` -- see
+#'   `compute_psalsa_weights()`. `s` should be sized to the signal's own
+#'   noise amplitude (e.g. a small multiple of its estimated noise standard
+#'   deviation), not left at its exploratory default of `500` for a signal
+#'   whose real noise level is very different.
 #'
 #' @return A list with two elements, each with the same dimensions as
 #'   `spectra`:
@@ -85,7 +106,9 @@
 #' plot(y, type = "l")
 #' lines(result$baseline, col = "red")
 #'
-psalsa <- function(spectra, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6, damping = 1) {
+psalsa <- function(spectra, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6, damping = 1,
+                    weight_method = c("threshold", "smooth"), s = 500, c_noise = 0.1, w_max = 0.9) {
+  weight_method <- match.arg(weight_method)
   if (maxit < 1) {
     stop("maxit smaller than 1")
   }
@@ -93,10 +116,10 @@ psalsa <- function(spectra, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_eps
   if (is.matrix(spectra)) {
     estbaseline <- 0 * spectra
     for (i in seq_len(nrow(spectra))) {
-      estbaseline[i, ] <- psalsa_one(spectra[i, ], lambda, p, k, maxit, k_epsilon, damping)
+      estbaseline[i, ] <- psalsa_one(spectra[i, ], lambda, p, k, maxit, k_epsilon, damping, weight_method, s, c_noise, w_max)
     }
   } else {
-    estbaseline <- psalsa_one(spectra, lambda, p, k, maxit, k_epsilon, damping)
+    estbaseline <- psalsa_one(spectra, lambda, p, k, maxit, k_epsilon, damping, weight_method, s, c_noise, w_max)
   }
 
   list(baseline = estbaseline, corrected = spectra - estbaseline)
@@ -110,7 +133,8 @@ psalsa <- function(spectra, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_eps
 #' @inheritParams psalsa
 #' @return A numeric vector with the estimated baseline.
 #' @noRd
-psalsa_one <- function(y, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6, damping = 1) {
+psalsa_one <- function(y, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6, damping = 1,
+                        weight_method = "threshold", s = 500, c_noise = 0.1, w_max = 0.9) {
   ## Scalar lambda keeps the original code path byte-for-byte (lambda * the
   ## unweighted penalty), rather than routing it through
   ## diff2_penalty_weighted()'s sqrt-then-crossprod construction, which is
@@ -120,7 +144,7 @@ psalsa_one <- function(y, lambda = 1e+07, p = 0.001, k = -1, maxit = 25, k_epsil
   } else {
     diff2_penalty_weighted(length(y), lambda)
   }
-  psalsa_core(y, function(y, w) whit1d(y, penalty, w), p, k, maxit, k_epsilon, damping)
+  psalsa_core(y, function(y, w) whit1d(y, penalty, w), p, k, maxit, k_epsilon, damping, weight_method, s, c_noise, w_max)
 }
 
 #' 1D weighted Whittaker smoother
@@ -156,7 +180,12 @@ whit1d <- function(y, penalty, w) {
 #' @inheritParams psalsa
 #' @return The estimated baseline, with the same shape as `y`.
 #' @noRd
-psalsa_core <- function(y, smoother, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6, damping = 1) {
+psalsa_core <- function(y, smoother, p = 0.001, k = -1, maxit = 25, k_epsilon = 1e-6, damping = 1,
+                         weight_method = "threshold", s = 500, c_noise = 0.1, w_max = 0.9) {
+  if (weight_method == "smooth" && (length(p) != 1 || length(k) != 1)) {
+    stop("weight_method = \"smooth\" only supports a single (scalar) p/k, not a position-varying profile.")
+  }
+
   ## The k = -1 auto-default only makes sense for a single value -- a
   ## position-varying k must be supplied explicitly by the caller (e.g.
   ## tune_psalsa_spatial()'s k_mult_profile * noise_sd).
@@ -180,14 +209,19 @@ psalsa_core <- function(y, smoother, p = 0.001, k = -1, maxit = 25, k_epsilon = 
   d_geq <- (w < 0)
 
   for (it in seq_len(maxit)) {
-    s <- smoother(y, w)
+    baseline <- smoother(y, w)
 
     d_geq_old <- d_geq
-    d <- y - s
+    d <- y - baseline
     d_geq <- d >= 0
-    w_target <- w
-    w_target[d_geq] <- p[d_geq] * exp(-d[d_geq] / k[d_geq])
-    w_target[!d_geq] <- 1 - p[!d_geq]
+    w_target <- if (weight_method == "smooth") {
+      compute_psalsa_weights(d, s = s, p = p[1], c_noise = c_noise, k = k[1], w_max = w_max)
+    } else {
+      w_target <- w
+      w_target[d_geq] <- p[d_geq] * exp(-d[d_geq] / k[d_geq])
+      w_target[!d_geq] <- 1 - p[!d_geq]
+      w_target
+    }
     ## damping = 1 (the default) makes this an exact replacement, identical
     ## to the original undamped update -- see the `damping` parameter's own
     ## docs in psalsa() for why a smaller value is sometimes needed.
@@ -199,7 +233,7 @@ psalsa_core <- function(y, smoother, p = 0.001, k = -1, maxit = 25, k_epsilon = 
     }
   }
 
-  s
+  baseline
 }
 
 diff2_penalty <- function(n) {
@@ -209,6 +243,92 @@ diff2_penalty <- function(n) {
     diagonals = list(rep(1, n - 2), rep(-2, n - 2), rep(1, n - 2))
   )
   Matrix::crossprod(d2)
+}
+
+#' Asymmetric Weight Function (C1 Continuous) for psalsa
+#'
+#' Calculates the weights w(d) for the residuals (y - z) using a continuously
+#' differentiable piecewise formulation, based on cubic Hermite interpolation
+#' for the noise region.
+#'
+#' @param d Numeric vector of residuals (signal y - baseline z).
+#' @param s Noise threshold (half the width of the central band).
+#' @param p Weight assigned at the boundaries of the noise band (|d| = s).
+#' @param c_noise Approximate minimum weight for the desired noise (helps define mL).
+#' @param k Tau constant (decay scale) for peaks (d > s).
+#' @param w_max Asymptotic maximum penalty for severe underestimates (d < -s).
+#'
+#' @return A numeric vector of weights of the same length as `d`.
+#' @export
+compute_psalsa_weights <- function(d, s = 500, p = 0.3, c_noise = 0.1, k = 50, w_max = 0.9) {
+  ## The left-region (d < -s) exponential is only guaranteed to saturate
+  ## toward w_max (rather than diverge) when gamma_L > 0, which requires
+  ## m_L < 0, which requires p > c_noise -- verified directly: with c_noise
+  ## > p (e.g. PSALSA's typical p, often << 0.1), gamma_L flips negative and
+  ## the exponential grows unboundedly for any point sitting meaningfully
+  ## below the current baseline estimate, reaching -Inf within a few
+  ## reweighting iterations on real data.
+  if (c_noise > p) {
+    stop("compute_psalsa_weights(): c_noise must be <= p, or the left-region weight diverges instead of saturating to w_max.")
+  }
+
+  # 1. Define slopes at the boundaries
+  # m_L: Left slope at d = -s (approximated based on a virtual parabola)
+  # This allows the user to avoid guessing m_L directly.
+  m_L <- -2 * (p - c_noise) / s
+
+  # m_R: Right slope at d = s (dictated by the derivative of the exponential)
+  m_R <- -p / k
+
+  # Pre-allocate results vector
+  w <- numeric(length(d))
+
+  # Indices for each region
+  idx_left  <- d < -s
+  idx_right <- d > s
+  idx_mid   <- !idx_left & !idx_right
+
+  # 2. Left Region (d < -s): High asymptotic penalty
+  if (any(idx_left)) {
+    # Exponent constant: -m_L / (w_max - p)
+    # Ensures that the derivative evaluated at d = -s is exactly m_L
+    gamma_L <- -m_L / (w_max - p)
+    w[idx_left] <- w_max - (w_max - p) * exp(gamma_L * (d[idx_left] + s))
+  }
+
+  # 3. Right Region (d > s): Exponential decay to ignore peaks
+  if (any(idx_right)) {
+    w[idx_right] <- p * exp(-(d[idx_right] - s) / k)
+  }
+
+  # 4. Central Region (-s <= d <= s): Cubic Hermite Polynomial
+  if (any(idx_mid)) {
+    # Normalize d to the interval [0, 1]
+    t <- (d[idx_mid] + s) / (2 * s)
+
+    # Pre-compute powers
+    t2 <- t^2
+    t3 <- t^3
+
+    # Hermite basis functions
+    h00 <-  2 * t3 - 3 * t2 + 1
+    h10 <-      t3 - 2 * t2 + t
+    h01 <- -2 * t3 + 3 * t2
+    h11 <-      t3 -     t2
+
+    # The interval width in 'd' is (2*s).
+    # By the chain rule (dt/dd = 1/(2s)), we must scale
+    # the tangent vectors m_L and m_R by multiplying them by (2*s).
+    scale_factor <- 2 * s
+
+    # Assemble the Hermite polynomial
+    w[idx_mid] <- p * h00 +
+                 (m_L * scale_factor) * h10 +
+                 p * h01 +
+                 (m_R * scale_factor) * h11
+  }
+
+  return(w)
 }
 
 ## Position-varying counterpart to `lambda * diff2_penalty(n)`: builds

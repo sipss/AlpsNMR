@@ -89,6 +89,14 @@ nmr_baseline_removal <- function(nmr_dataset,
 #'   the spectrum -- useful when peak density/baseline behaviour varies
 #'   noticeably from region to region. Ignored if `lambda`, `p` and `k` are
 #'   all given explicitly (nothing left to tune).
+#' @param damping `"auto"` (the default) uses [psalsa()]'s own default
+#'   (`damping = 1`, undamped). Set below `1` to under-relax the asymmetric
+#'   reweighting update -- see [psalsa()]'s own `damping` parameter for why
+#'   this is sometimes necessary: the reweighting depends on a hard
+#'   above/below-baseline threshold, and near a flat/quiet region (many
+#'   points close to that threshold) the undamped update can oscillate
+#'   rather than converge, right up to `maxit`. A `damping` below `1`
+#'   typically needs a correspondingly higher `maxit` to still converge.
 #' @return The same [nmr_dataset_1D] object with the `data_1r_baseline` element.
 #' @export
 #'
@@ -101,7 +109,8 @@ nmr_baseline_estimation <- function(nmr_dataset,
     p = "auto",
     k = "auto",
     maxit = "auto",
-    num_regions = NULL) {
+    num_regions = NULL,
+    damping = "auto") {
     spectra <- nmr_dataset$data_1r
 
     if (identical(lambda, "auto") || identical(p, "auto") || identical(k, "auto")) {
@@ -125,6 +134,9 @@ nmr_baseline_estimation <- function(nmr_dataset,
     psalsa_args <- list(spectra = spectra, lambda = lambda, p = p, k = k)
     if (!identical(maxit, "auto")) {
         psalsa_args$maxit <- maxit
+    }
+    if (!identical(damping, "auto")) {
+        psalsa_args$damping <- damping
     }
     result <- do.call(psalsa, psalsa_args)
 

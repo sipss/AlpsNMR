@@ -10,7 +10,8 @@ nmr_baseline_estimation(
   p = "auto",
   k = "auto",
   maxit = "auto",
-  num_regions = NULL
+  num_regions = NULL,
+  damping = "auto"
 )
 }
 \arguments{
@@ -36,6 +37,15 @@ position-varying profile (one value per point) that can differ across
 the spectrum -- useful when peak density/baseline behaviour varies
 noticeably from region to region. Ignored if \code{lambda}, \code{p} and \code{k} are
 all given explicitly (nothing left to tune).}
+
+\item{damping}{\code{"auto"} (the default) uses \code{\link[=psalsa]{psalsa()}}'s own default
+(\code{damping = 1}, undamped). Set below \code{1} to under-relax the asymmetric
+reweighting update -- see \code{\link[=psalsa]{psalsa()}}'s own \code{damping} parameter for why
+this is sometimes necessary: the reweighting depends on a hard
+above/below-baseline threshold, and near a flat/quiet region (many
+points close to that threshold) the undamped update can oscillate
+rather than converge, right up to \code{maxit}. A \code{damping} below \code{1}
+typically needs a correspondingly higher \code{maxit} to still converge.}
 }
 \value{
 The same \link{nmr_dataset_1D} object with the \code{data_1r_baseline} element.
