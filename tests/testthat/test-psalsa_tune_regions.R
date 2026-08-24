@@ -58,8 +58,8 @@ test_that("pool_signal_stats_regions_1d pools per-region stats across signals of
     expect_true(is.finite(pooled$noise_sd))
     expect_true(is.finite(pooled$csnr))
     # Region 1 (the first 10%) should show nonzero density; a far region should not:
-    expect_true(pooled$regions$density[1] > 0)
-    expect_equal(pooled$regions$density[8], 0)
+    expect_true(pooled$regions$density_q2[1] > 0)
+    expect_equal(pooled$regions$density_q2[8], 0)
 })
 
 ## gen_synthetic_1d_regions -----------------------------------------------------
@@ -67,7 +67,8 @@ test_that("pool_signal_stats_regions_1d pools per-region stats across signals of
 test_that("gen_synthetic_1d_regions places peaks only in regions with positive density", {
     region_profile <- data.frame(
         region = 1:2, frac_lo = c(0, 0.5), frac_hi = c(0.5, 1),
-        density = c(0.05, 0), fwhm_q1 = c(5, NA), fwhm_q3 = c(10, NA)
+        density_q1 = c(0.05, 0), density_q2 = c(0.05, 0), density_q3 = c(0.05, 0),
+        fwhm_q1 = c(5, NA), fwhm_q3 = c(10, NA)
     )
     sig <- gen_synthetic_1d_regions(n = 1000, region_profile = region_profile, seed = 1)
 
@@ -79,7 +80,8 @@ test_that("gen_synthetic_1d_regions places peaks only in regions with positive d
 
 test_that("gen_synthetic_1d_regions returns an empty peak_info when every region is empty", {
     region_profile <- data.frame(
-        region = 1, frac_lo = 0, frac_hi = 1, density = 0, fwhm_q1 = NA_real_, fwhm_q3 = NA_real_
+        region = 1, frac_lo = 0, frac_hi = 1,
+        density_q1 = 0, density_q2 = 0, density_q3 = 0, fwhm_q1 = NA_real_, fwhm_q3 = NA_real_
     )
     sig <- gen_synthetic_1d_regions(n = 200, region_profile = region_profile, seed = 1)
     expect_equal(nrow(sig$peak_info), 0)
@@ -89,7 +91,8 @@ test_that("gen_synthetic_1d_regions returns an empty peak_info when every region
 test_that("gen_synthetic_1d_regions reproduces denser regions with more peaks than sparser ones", {
     region_profile <- data.frame(
         region = 1:2, frac_lo = c(0, 0.5), frac_hi = c(0.5, 1),
-        density = c(0.05, 0.005), fwhm_q1 = c(5, 5), fwhm_q3 = c(10, 10)
+        density_q1 = c(0.05, 0.005), density_q2 = c(0.05, 0.005), density_q3 = c(0.05, 0.005),
+        fwhm_q1 = c(5, 5), fwhm_q3 = c(10, 10)
     )
     sig <- gen_synthetic_1d_regions(n = 2000, region_profile = region_profile, seed = 1, cap_density = FALSE)
     n_dense <- sum(sig$peak_info$center <= 1000)
@@ -101,7 +104,8 @@ test_that("gen_synthetic_1d_regions reproduces denser regions with more peaks th
 
 test_that("generate_synthetic_pool_1d_regions generates n_synthetic distinct draws", {
     region_profile <- data.frame(
-        region = 1, frac_lo = 0, frac_hi = 1, density = 0.02, fwhm_q1 = 10, fwhm_q3 = 30
+        region = 1, frac_lo = 0, frac_hi = 1,
+        density_q1 = 0.02, density_q2 = 0.02, density_q3 = 0.02, fwhm_q1 = 10, fwhm_q3 = 30
     )
     pooled_stats <- list(csnr = 0.03, regions = region_profile)
     pool <- generate_synthetic_pool_1d_regions(pooled_stats, list(seq_len(500)), n_synthetic = 3, peak_shape = "lorentzian")

@@ -326,6 +326,30 @@ noise_est_1d <- function(y) {
   stats::mad(d2) / sqrt(6)
 }
 
+## Draws n values from a distribution characterized only by its Q1/median/Q3
+## (e.g. a pooled density_q1/q2/q3, or a per-region amplitude_q1/q2/q3) -- no
+## parametric family is assumed. Builds a piecewise-linear quantile function
+## through the 3 known points (at probabilities 0.25/0.5/0.75) and
+## extrapolates linearly to the tails using each end's own local slope (the
+## 0.25-0.5 slope below p=0.25, the 0.5-0.75 slope above p=0.75), one more
+## "half step" out to p=0/p=1 respectively. Clamped at min_val since density
+## and amplitude can't go negative -- q1<=q2<=q3 for genuine sample quantiles,
+## so the unclamped knot sequence v0,q1,q2,q3,v1 is already non-decreasing
+## and the clamp only ever raises v0 (never breaks monotonicity in the normal
+## case where min_val <= q1). Degenerates cleanly to a constant draw when
+## q1 == q2 == q3 (e.g. a caller that still wants a single deterministic
+## value can just pass the same number three times).
+#' @noRd
+draw_from_quantiles_1d <- function(n, q1, q2, q3, min_val = 0) {
+  if (anyNA(c(q1, q2, q3))) return(rep(NA_real_, n))
+  v0 <- 2 * q1 - q2
+  v1 <- 2 * q3 - q2
+  probs <- c(0, 0.25, 0.5, 0.75, 1)
+  values <- pmax(min_val, c(v0, q1, q2, q3, v1))
+  u <- stats::runif(n)
+  stats::approx(x = probs, y = values, xout = u, rule = 2)$y
+}
+
 ## Rolling low-percentile filter: for a series of overlapping windows, take
 ## the q-th percentile of y within the window as a control point at the
 ## window's center, then linearly interpolate. Unlike a smoothing pass (which
@@ -396,11 +420,20 @@ detect_peaks_1d <- function(y, height_mult = 5) {
 #' @noRd
 summarize_peaks_1d <- function(peaks, n) {
   if (nrow(peaks) == 0) {
-    return(list(n_peaks = 0, density = 0, fwhm_q1 = NA_real_, fwhm_q2 = NA_real_, fwhm_q3 = NA_real_))
+    return(list(n_peaks = 0, density = 0, fwhm_q1 = NA_real_, fwhm_q2 = NA_real_, fwhm_q3 = NA_real_,
+                amplitude_q1 = NA_real_, amplitude_q2 = NA_real_, amplitude_q3 = NA_real_))
   }
   q <- stats::quantile(peaks$fwhm, c(0.25, 0.5, 0.75), names = FALSE)
+  ## height/0.35: gen_synthetic_1d()'s own convention (peak heights are drawn
+  ## from an amplitude distribution centered so their median is 0.35 * that
+  ## distribution's own "typical" value) -- dividing an observed peak height
+  ## by 0.35 recovers the amplitude scale that peak's height implies, so a
+  ## quantile of heights/0.35 is directly usable as an amplitude_q1/q2/q3
+  ## triple for later synthetic generation.
+  aq <- stats::quantile(peaks$height / 0.35, c(0.25, 0.5, 0.75), names = FALSE)
   list(n_peaks = nrow(peaks), density = nrow(peaks) / n,
-       fwhm_q1 = q[1], fwhm_q2 = q[2], fwhm_q3 = q[3])
+       fwhm_q1 = q[1], fwhm_q2 = q[2], fwhm_q3 = q[3],
+       amplitude_q1 = aq[1], amplitude_q2 = aq[2], amplitude_q3 = aq[3])
 }
 
 ## One real signal -> noise_sd/csnr (continuous signal-to-noise ratio) + a
@@ -427,15 +460,26 @@ analyze_signal_1d <- function(y, height_mult = 5) {
   c(list(noise_sd = noise_sd, csnr = csnr), pk_summary)
 }
 
-## Pools analyze_signal_1d() across one or more real input signals: stacks
-## each signal's stats into one row, takes the column-wise median (robust to
-## one outlier signal in the batch). na.rm=TRUE since fwhm_q1/q2/q3 are NA for
-## any input with zero detected peaks.
+## Pools analyze_signal_1d() across one or more real input signals: most
+## columns (noise_sd, csnr, n_peaks, fwhm_q1-q3, amplitude_q1-q3) take the
+## column-wise median across samples (robust to one outlier signal in the
+## batch, na.rm=TRUE since fwhm/amplitude quantiles are NA for any input with
+## zero detected peaks) -- same as before. density is the one exception:
+## instead of collapsing straight to a single pooled value, its quartiles
+## ACROSS SAMPLES are kept (density_q1/q2/q3) -- generate_synthetic_pool_1d()
+## can then draw a genuinely different density per synthetic sample instead
+## of every draw sharing the exact same value, the way every OTHER pooled
+## stat still does (a single representative number is enough for those).
 #' @noRd
 pool_signal_stats_1d <- function(y_list) {
   stats_list <- lapply(y_list, analyze_signal_1d)
   stats_df <- do.call(rbind, lapply(stats_list, as.data.frame))
-  as.list(sapply(stats_df, stats::median, na.rm = TRUE))
+  dq <- stats::quantile(stats_df$density, c(0.25, 0.5, 0.75), na.rm = TRUE, names = FALSE)
+  pooled <- as.list(sapply(stats_df[setdiff(names(stats_df), "density")], stats::median, na.rm = TRUE))
+  pooled$density_q1 <- dq[1]
+  pooled$density_q2 <- dq[2]
+  pooled$density_q3 <- dq[3]
+  pooled
 }
 
 ## TRUE if a peak's [lo,hi] window doesn't overlap any OTHER peak's window in
@@ -533,9 +577,14 @@ floor_rmse_1d <- function(est, truth, peaks, sigma, scale) {
 generate_synthetic_pool_1d <- function(pooled_stats, y_list, n_synthetic = 10, peak_shape = "gaussian") {
   n <- round(stats::median(vapply(y_list, length, integer(1))))
   lapply(seq_len(n_synthetic), function(seed) {
-    gen_synthetic_1d(n = n, density = pooled_stats$density,
+    gen_synthetic_1d(n = n,
+                      density_q1 = pooled_stats$density_q1, density_q2 = pooled_stats$density_q2,
+                      density_q3 = pooled_stats$density_q3,
                       fwhm_range = c(pooled_stats$fwhm_q1, pooled_stats$fwhm_q3),
-                      csnr = pooled_stats$csnr, peak_shape = peak_shape, seed = seed)
+                      csnr = pooled_stats$csnr,
+                      amplitude_q1 = pooled_stats$amplitude_q1, amplitude_q2 = pooled_stats$amplitude_q2,
+                      amplitude_q3 = pooled_stats$amplitude_q3,
+                      peak_shape = peak_shape, seed = seed)
   })
 }
 
@@ -562,16 +611,18 @@ compute_region_bounds_1d <- function(n, num_regions) {
 ## frac_hi), not raw indices, so per-region stats stay comparable/poolable
 ## across real input signals of different lengths.
 ##
-## amplitude uses the SAME height/0.35 convention as analyze_signal_1d()'s
-## own A_peaks (gen_synthetic_1d()'s peak heights are lognormal with median
-## 0.35*A, so dividing an observed median height by 0.35 recovers the A that
-## reproduces it) -- verified necessary, not cosmetic: detect_peaks_1d()'s
-## height_mult threshold is relative to the GLOBAL noise floor, so it treats
-## a region full of small-but-real features (e.g. a handful of low-abundance
+## amplitude_q1/q2/q3 comes straight from summarize_peaks_1d() -- the SAME
+## function analyze_signal_1d() uses for its own (signal-wide) amplitude
+## quantiles, so the region and non-region analyses stay structurally
+## identical (one set of features per region here, one set for the whole
+## signal there) instead of duplicating the height/0.35 conversion locally.
+## Verified necessary, not cosmetic: detect_peaks_1d()'s height_mult
+## threshold is relative to the GLOBAL noise floor, so it treats a region
+## full of small-but-real features (e.g. a handful of low-abundance
 ## resonances in an otherwise quiet stretch) as equally "peaky" as a region
 ## dominated by orders-of-magnitude taller peaks -- density alone doesn't
 ## capture that difference, but amplitude does, and gen_synthetic_1d()'s own
-## peak heights scale directly with A. NA (not a fallback like 1) for a
+## peak heights scale directly with it. NA (not a fallback like 1) for a
 ## region with no detected peaks: there's nothing to estimate a scale from,
 ## and such a region is skipped by tune_psalsa_region_params_1d() /
 ## gen_synthetic_1d_regions() regardless, same as its NA fwhm already is.
@@ -595,12 +646,12 @@ analyze_signal_regions_1d <- function(y, num_regions = 20, height_mult = 5) {
     in_region <- peaks$idx >= lo & peaks$idx <= hi
     reg_peaks <- peaks[in_region, , drop = FALSE]
     pk_summary <- summarize_peaks_1d(reg_peaks, hi - lo + 1)
-    amplitude <- if (nrow(reg_peaks) > 0) stats::median(reg_peaks$height) / 0.35 else NA_real_
     data.frame(
       region = r, frac_lo = (lo - 1) / n, frac_hi = hi / n,
       n_peaks = pk_summary$n_peaks, density = pk_summary$density,
       fwhm_q1 = pk_summary$fwhm_q1, fwhm_q2 = pk_summary$fwhm_q2, fwhm_q3 = pk_summary$fwhm_q3,
-      amplitude = amplitude
+      amplitude_q1 = pk_summary$amplitude_q1, amplitude_q2 = pk_summary$amplitude_q2,
+      amplitude_q3 = pk_summary$amplitude_q3
     )
   })
   list(noise_sd = noise_sd, csnr = csnr, regions = do.call(rbind, region_rows))
@@ -608,14 +659,22 @@ analyze_signal_regions_1d <- function(y, num_regions = 20, height_mult = 5) {
 
 ## Pools analyze_signal_regions_1d() across one or more real input signals:
 ## noise_sd/csnr pool the same way pool_signal_stats_1d() does (column-wise
-## median), and each region's density/fwhm/amplitude pools (median, na.rm =
-## TRUE) against the SAME region index across signals -- valid because
-## region bounds are fractional, so "region 7 of 20" means the same relative
-## stretch of the spectrum regardless of a given signal's own length. A
-## region with zero detected peaks in every pooled signal keeps density 0
-## and fwhm/amplitude NA (that's real information -- see
-## gen_synthetic_1d_regions(), which places no peaks there rather than
-## guessing a width/height for peaks that were never observed).
+## median), and each region's fwhm/amplitude pool (median, na.rm = TRUE)
+## against the SAME region index across signals -- valid because region
+## bounds are fractional, so "region 7 of 20" means the same relative
+## stretch of the spectrum regardless of a given signal's own length. density
+## is the SAME exception pool_signal_stats_1d() makes: its quartiles ACROSS
+## SAMPLES are kept (density_q1/q2/q3) instead of one pooled median, so each
+## region's synthetic density can vary draw to draw too -- exactly the same
+## treatment, just applied per region instead of signal-wide, keeping the
+## region and non-region pooling consistent with each other. amplitude,
+## already a per-sample q1/q2/q3 triple (from summarize_peaks_1d(), via
+## analyze_signal_regions_1d()), pools the same way fwhm's own quantiles
+## already did: column-wise median across samples, independently for each of
+## amplitude_q1/q2/q3. A region with zero detected peaks in every pooled
+## signal keeps density_q1/q2/q3 all 0 and fwhm/amplitude NA (that's real
+## information -- see gen_synthetic_1d_regions(), which places no peaks there
+## rather than guessing a width/height for peaks that were never observed).
 #' @noRd
 pool_signal_stats_regions_1d <- function(y_list, num_regions = 20, height_mult = 5) {
   per_signal <- lapply(y_list, analyze_signal_regions_1d, num_regions = num_regions, height_mult = height_mult)
@@ -624,12 +683,15 @@ pool_signal_stats_regions_1d <- function(y_list, num_regions = 20, height_mult =
 
   regions_stacked <- do.call(rbind, lapply(per_signal, `[[`, "regions"))
   pooled_regions <- do.call(rbind, lapply(split(regions_stacked, regions_stacked$region), function(sub) {
+    dq <- stats::quantile(sub$density, c(0.25, 0.5, 0.75), na.rm = TRUE, names = FALSE)
     data.frame(
       region = sub$region[1], frac_lo = stats::median(sub$frac_lo), frac_hi = stats::median(sub$frac_hi),
-      density = stats::median(sub$density, na.rm = TRUE),
+      density_q1 = dq[1], density_q2 = dq[2], density_q3 = dq[3],
       fwhm_q1 = stats::median(sub$fwhm_q1, na.rm = TRUE),
       fwhm_q3 = stats::median(sub$fwhm_q3, na.rm = TRUE),
-      amplitude = stats::median(sub$amplitude, na.rm = TRUE)
+      amplitude_q1 = stats::median(sub$amplitude_q1, na.rm = TRUE),
+      amplitude_q2 = stats::median(sub$amplitude_q2, na.rm = TRUE),
+      amplitude_q3 = stats::median(sub$amplitude_q3, na.rm = TRUE)
     )
   }))
   pooled_regions <- pooled_regions[order(pooled_regions$region), ]
@@ -672,31 +734,38 @@ generate_synthetic_pool_1d_regions <- function(pooled_stats, y_list, n_synthetic
 ## together two distant, unrelated regions would misrepresent the merged
 ## region's own span as uniformly dense when it isn't.
 ##
-## Density/fwhm for a merged group are recombined as span-weighted mean
-## density and min/max fwhm across its member rows (excluding empty rows,
-## na.rm = TRUE) -- an approximation, but a representative one for building
-## a synthetic pool over the merged span. amplitude is recombined as a
-## peak-count-weighted mean instead (weighted by each member's own
-## est_peaks, not span): amplitude represents a TYPICAL peak height, so a
-## member region that contributed more of the merged group's peaks should
-## carry proportionally more weight in that average, regardless of how wide
-## its own slice was. A merged group with literally zero peaks across every
-## member row (e.g. min_peaks can't be met anywhere because the whole tail
-## of the spectrum is empty) keeps density 0/fwhm/amplitude NA, same as an
+## density_q1/q2/q3 for a merged group are each recombined as their OWN
+## span-weighted average across member rows (the SAME total_peaks/total_span
+## formula plain `density` used before density became a q1/q2/q3 triple,
+## applied independently to each quantile level; density_q2's recombination
+## is therefore byte-identical to the old single-density formula) -- an
+## approximation, but a representative one for building a synthetic pool
+## over the merged span. fwhm keeps its existing min/max-across-members
+## treatment. amplitude_q1/q2/q3 are each recombined as a peak-count-weighted
+## mean instead (weighted by each member's own est_peaks, not span):
+## amplitude represents a TYPICAL peak height, so a member region that
+## contributed more of the merged group's peaks should carry proportionally
+## more weight in that average, regardless of how wide its own slice was. A
+## merged group with literally zero peaks across every member row (e.g.
+## min_peaks can't be met anywhere because the whole tail of the spectrum is
+## empty) keeps density_q1/q2/q3 all 0 and fwhm/amplitude NA, same as an
 ## ordinary empty region -- still skipped by tune_psalsa_region_params_1d(),
 ## not force-tuned on nothing.
 #' @noRd
 merge_sparse_regions_1d <- function(regions, n_total, min_peaks = 15) {
-  ## amplitude is optional on the input (e.g. a hand-built regions table
-  ## that predates it, or one built without pool_signal_stats_regions_1d())
-  ## -- treated as all-NA when absent, which flows through has_amplitude/
-  ## weighted.mean below exactly like a region whose amplitude just
-  ## couldn't be estimated.
-  if (is.null(regions$amplitude)) {
-    regions$amplitude <- NA_real_
-  }
+  ## amplitude_q1/q2/q3 are optional on the input (e.g. a hand-built regions
+  ## table that predates them, or one built without
+  ## pool_signal_stats_regions_1d()) -- treated as all-NA when absent, which
+  ## flows through has_amplitude/weighted.mean below exactly like a region
+  ## whose amplitude just couldn't be estimated.
+  if (is.null(regions$amplitude_q1)) regions$amplitude_q1 <- NA_real_
+  if (is.null(regions$amplitude_q2)) regions$amplitude_q2 <- NA_real_
+  if (is.null(regions$amplitude_q3)) regions$amplitude_q3 <- NA_real_
   spans <- (regions$frac_hi - regions$frac_lo) * n_total
-  est_peaks <- ifelse(is.na(regions$density), 0, regions$density * spans)
+  ## density_q2 (the median) is the single representative value driving the
+  ## greedy min_peaks accumulation below -- the same role plain `density`
+  ## played before it became a q1/q2/q3 triple.
+  est_peaks <- ifelse(is.na(regions$density_q2), 0, regions$density_q2 * spans)
 
   groups <- integer(nrow(regions))
   g <- 1L
@@ -718,19 +787,36 @@ merge_sparse_regions_1d <- function(regions, n_total, min_peaks = 15) {
     groups[groups == g] <- g - 1L
   }
 
+  span_weighted_density <- function(dvec, idx) {
+    d_est <- ifelse(is.na(dvec[idx]), 0, dvec[idx] * spans[idx])
+    sum(d_est) / sum(spans[idx])
+  }
+
   merged_rows <- lapply(split(seq_len(nrow(regions)), groups), function(idx) {
     idx <- sort(idx)
     total_span <- sum(spans[idx])
     total_peaks <- sum(est_peaks[idx])
     has_peaks <- total_peaks > 0
-    has_amplitude <- has_peaks && any(!is.na(regions$amplitude[idx]))
+    has_amplitude <- has_peaks && any(!is.na(regions$amplitude_q2[idx]))
     data.frame(
       frac_lo = regions$frac_lo[idx[1]], frac_hi = regions$frac_hi[idx[length(idx)]],
-      density = if (has_peaks) total_peaks / total_span else 0,
+      density_q1 = if (has_peaks) span_weighted_density(regions$density_q1, idx) else 0,
+      density_q2 = if (has_peaks) total_peaks / total_span else 0,
+      density_q3 = if (has_peaks) span_weighted_density(regions$density_q3, idx) else 0,
       fwhm_q1 = if (has_peaks) min(regions$fwhm_q1[idx], na.rm = TRUE) else NA_real_,
       fwhm_q3 = if (has_peaks) max(regions$fwhm_q3[idx], na.rm = TRUE) else NA_real_,
-      amplitude = if (has_amplitude) {
-        stats::weighted.mean(regions$amplitude[idx], est_peaks[idx], na.rm = TRUE)
+      amplitude_q1 = if (has_amplitude) {
+        stats::weighted.mean(regions$amplitude_q1[idx], est_peaks[idx], na.rm = TRUE)
+      } else {
+        NA_real_
+      },
+      amplitude_q2 = if (has_amplitude) {
+        stats::weighted.mean(regions$amplitude_q2[idx], est_peaks[idx], na.rm = TRUE)
+      } else {
+        NA_real_
+      },
+      amplitude_q3 = if (has_amplitude) {
+        stats::weighted.mean(regions$amplitude_q3[idx], est_peaks[idx], na.rm = TRUE)
       } else {
         NA_real_
       }
@@ -740,7 +826,8 @@ merge_sparse_regions_1d <- function(regions, n_total, min_peaks = 15) {
   merged <- merged[order(merged$frac_lo), ]
   merged$region <- seq_len(nrow(merged))
   rownames(merged) <- NULL
-  merged[, c("region", "frac_lo", "frac_hi", "density", "fwhm_q1", "fwhm_q3", "amplitude")]
+  merged[, c("region", "frac_lo", "frac_hi", "density_q1", "density_q2", "density_q3",
+             "fwhm_q1", "fwhm_q3", "amplitude_q1", "amplitude_q2", "amplitude_q3")]
 }
 
 ## For EACH region in pooled_regions$regions (pool_signal_stats_regions_1d()
@@ -828,44 +915,58 @@ tune_psalsa_region_params_1d <- function(pooled_regions, n_total, peak_shape = "
   }
   rows <- lapply(seq_len(nrow(regions)), function(r) {
     reg <- regions[r, ]
-    if (is.na(reg$density) || reg$density <= 0 ||
+    if (is.na(reg$density_q2) || reg$density_q2 <= 0 ||
       is.na(reg$fwhm_q1) || is.na(reg$fwhm_q3) || reg$fwhm_q3 <= 0) {
       return(NULL)
     }
     reg_n <- max(10, round((reg$frac_hi - reg$frac_lo) * n_total))
-    ## Region-specific amplitude. csnr is rescaled so that amplitude *
-    ## csnr_region stays equal to the signal-wide noise_sd --
-    ## gen_synthetic_1d()'s own noise is generated as A * csnr, so without
-    ## this rescaling, a region with a larger amplitude would get
-    ## proportionally MORE absolute noise and a smaller-amplitude region
-    ## proportionally LESS, even though real (thermal/electronic) noise is an
-    ## instrument characteristic that doesn't scale with local peak height.
-    ## Two fallbacks, in order: (1) if amplitude couldn't be estimated for
-    ## this region but the signal-wide noise_sd is available (the normal
-    ## case for a genuine pool_signal_stats_regions_1d() result), fall back
-    ## to the signal-wide amplitude (noise_sd/csnr); (2) if noise_sd itself
-    ## isn't available either (e.g. a pooled_regions built by hand, without
-    ## it -- amplitude/noise_sd predate each other in different call sites),
-    ## fall back to the ORIGINAL behaviour entirely: pooled_regions$csnr
-    ## as-is, no A override (gen_synthetic_1d()'s own default A = 1 applies)
-    ## -- byte-identical to how this function worked before amplitude
-    ## existed at all.
-    amplitude <- if (!is.na(reg$amplitude) && reg$amplitude > 0) {
-      reg$amplitude
+    ## Region-specific amplitude (amplitude_q2, the median, playing the same
+    ## representative role the old single `amplitude` field did for the csnr
+    ## rescaling below). csnr is rescaled so that amplitude_q2 * csnr_region
+    ## stays equal to the signal-wide noise_sd -- gen_synthetic_1d()'s own
+    ## noise is generated as A * csnr, so without this rescaling, a region
+    ## with a larger amplitude would get proportionally MORE absolute noise
+    ## and a smaller-amplitude region proportionally LESS, even though real
+    ## (thermal/electronic) noise is an instrument characteristic that
+    ## doesn't scale with local peak height. Two fallbacks, in order: (1) if
+    ## amplitude couldn't be estimated for this region but the signal-wide
+    ## noise_sd is available (the normal case for a genuine
+    ## pool_signal_stats_regions_1d() result), fall back to the signal-wide
+    ## amplitude (noise_sd/csnr); (2) if noise_sd itself isn't available
+    ## either (e.g. a pooled_regions built by hand, without it -- amplitude/
+    ## noise_sd predate each other in different call sites), fall back to the
+    ## ORIGINAL behaviour entirely: pooled_regions$csnr as-is, no A override
+    ## (gen_synthetic_1d()'s own default A = 1 applies) -- byte-identical to
+    ## how this function worked before amplitude existed at all.
+    has_region_amplitude <- !is.na(reg$amplitude_q2) && reg$amplitude_q2 > 0
+    amplitude_q2 <- if (has_region_amplitude) {
+      reg$amplitude_q2
     } else if (!is.null(pooled_regions$noise_sd) && !is.null(pooled_regions$csnr)) {
       pooled_regions$noise_sd / pooled_regions$csnr
     } else {
       NA_real_
     }
     gen_args <- list(
-      n = reg_n, density = reg$density, fwhm_range = c(reg$fwhm_q1, reg$fwhm_q3),
-      peak_shape = peak_shape
+      n = reg_n, density_q1 = reg$density_q1, density_q2 = reg$density_q2, density_q3 = reg$density_q3,
+      fwhm_range = c(reg$fwhm_q1, reg$fwhm_q3), peak_shape = peak_shape
     )
-    if (is.na(amplitude)) {
+    if (is.na(amplitude_q2)) {
       gen_args$csnr <- pooled_regions$csnr
     } else {
-      gen_args$csnr <- pooled_regions$noise_sd / amplitude
-      gen_args$A <- amplitude
+      gen_args$csnr <- pooled_regions$noise_sd / amplitude_q2
+      gen_args$A <- amplitude_q2
+      ## Only pass the region's OWN amplitude_q1/q3 alongside amplitude_q2
+      ## when this region's own amplitude was actually usable (has_region_
+      ## amplitude, not the signal-wide fallback) -- when it wasn't,
+      ## amplitude_q1/q3 are left to gen_synthetic_1d()'s own defaults, which
+      ## are already derived from `A` the same way (see its own defaults),
+      ## reproducing the same distribution shape the pre-existing single-`A`
+      ## fallback behaviour had.
+      if (has_region_amplitude) {
+        gen_args$amplitude_q1 <- reg$amplitude_q1
+        gen_args$amplitude_q2 <- reg$amplitude_q2
+        gen_args$amplitude_q3 <- reg$amplitude_q3
+      }
     }
     pool_r <- lapply(seq_len(n_synthetic), function(seed) {
       do.call(gen_synthetic_1d, c(gen_args, list(seed = seed)))

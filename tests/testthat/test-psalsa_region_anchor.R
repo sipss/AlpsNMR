@@ -5,7 +5,8 @@ test_that("tune_psalsa_region_params_1d with theta0 = NULL keeps the previous, u
         csnr = 0.03,
         regions = data.frame(
             region = 1:2, frac_lo = c(0, 0.5), frac_hi = c(0.5, 1),
-            density = c(0.02, 0.02), fwhm_q1 = c(5, 5), fwhm_q3 = c(10, 10)
+            density_q1 = c(0.02, 0.02), density_q2 = c(0.02, 0.02), density_q3 = c(0.02, 0.02),
+            fwhm_q1 = c(5, 5), fwhm_q3 = c(10, 10)
         )
     )
     set.seed(1)
@@ -26,7 +27,8 @@ test_that("a custom theta0 anchor pulls a sparse, weakly-constrained region's tu
     pooled_regions <- list(
         csnr = 0.03,
         regions = data.frame(
-            region = 1, frac_lo = 0, frac_hi = 1, density = 0.0005, fwhm_q1 = 5, fwhm_q3 = 10
+            region = 1, frac_lo = 0, frac_hi = 1,
+            density_q1 = 0.0005, density_q2 = 0.0005, density_q3 = 0.0005, fwhm_q1 = 5, fwhm_q3 = 10
         )
     )
     p_max <- 0.05
@@ -54,7 +56,8 @@ test_that("p_max is threaded through to the per-region call alongside theta0", {
     pooled_regions <- list(
         csnr = 0.03,
         regions = data.frame(
-            region = 1, frac_lo = 0, frac_hi = 1, density = 0.02, fwhm_q1 = 5, fwhm_q3 = 10
+            region = 1, frac_lo = 0, frac_hi = 1,
+            density_q1 = 0.02, density_q2 = 0.02, density_q3 = 0.02, fwhm_q1 = 5, fwhm_q3 = 10
         )
     )
     p_max_custom <- 0.2
@@ -76,7 +79,10 @@ test_that("region_lambda_k_weight/region_p_weight keep a very sparse region from
     p_max <- 0.05
     anchor <- c(log(2.8e7), stats::qlogis(0.0005 / p_max), log(190))
     set.seed(55)
-    y_sparse <- gen_synthetic_1d(n = 356, density = 0.003, fwhm_range = c(3, 3), csnr = 0.03, seed = 55)
+    y_sparse <- gen_synthetic_1d(
+        n = 356, density_q1 = 0.003, density_q2 = 0.003, density_q3 = 0.003,
+        fwhm_range = c(3, 3), csnr = 0.03, seed = 55
+    )
     pool_r <- list(y_sparse)
 
     weak <- tune_psalsa_params_1d(pool_r, theta0 = anchor, p_max = p_max, lambda_k_weight = 0.02, p_weight = 0.4)
@@ -111,7 +117,8 @@ test_that("tune_psalsa_spatial's default region weights keep every region's lamb
 test_that("merge_sparse_regions_1d leaves regions alone when each already meets min_peaks", {
     regions <- data.frame(
         region = 1:3, frac_lo = c(0, 1 / 3, 2 / 3), frac_hi = c(1 / 3, 2 / 3, 1),
-        density = c(0.1, 0.1, 0.1), fwhm_q1 = c(5, 5, 5), fwhm_q3 = c(10, 10, 10)
+        density_q1 = c(0.1, 0.1, 0.1), density_q2 = c(0.1, 0.1, 0.1), density_q3 = c(0.1, 0.1, 0.1),
+        fwhm_q1 = c(5, 5, 5), fwhm_q3 = c(10, 10, 10)
     )
     merged <- AlpsNMR:::merge_sparse_regions_1d(regions, n_total = 900, min_peaks = 15)
     # Each region alone has 0.1 * 300 = 30 estimated peaks, well above 15:
@@ -123,7 +130,8 @@ test_that("merge_sparse_regions_1d leaves regions alone when each already meets 
 test_that("merge_sparse_regions_1d merges adjacent sparse regions until min_peaks is reached", {
     regions <- data.frame(
         region = 1:4, frac_lo = c(0, 0.25, 0.5, 0.75), frac_hi = c(0.25, 0.5, 0.75, 1),
-        density = c(0.002, 0.002, 0.002, 0.002), fwhm_q1 = rep(5, 4), fwhm_q3 = rep(10, 4)
+        density_q1 = rep(0.002, 4), density_q2 = rep(0.002, 4), density_q3 = rep(0.002, 4),
+        fwhm_q1 = rep(5, 4), fwhm_q3 = rep(10, 4)
     )
     # Each region alone: 0.002 * 250 = 0.5 estimated peaks -- all 4 must
     # merge into one group to reach min_peaks = 2 (2 estimated peaks total,
@@ -137,7 +145,8 @@ test_that("merge_sparse_regions_1d merges adjacent sparse regions until min_peak
 test_that("merge_sparse_regions_1d merges a trailing under-informed group backward", {
     regions <- data.frame(
         region = 1:3, frac_lo = c(0, 1 / 3, 2 / 3), frac_hi = c(1 / 3, 2 / 3, 1),
-        density = c(0.1, 0.1, 0.0001), fwhm_q1 = c(5, 5, 5), fwhm_q3 = c(10, 10, 10)
+        density_q1 = c(0.1, 0.1, 0.0001), density_q2 = c(0.1, 0.1, 0.0001), density_q3 = c(0.1, 0.1, 0.0001),
+        fwhm_q1 = c(5, 5, 5), fwhm_q3 = c(10, 10, 10)
     )
     # Region 1 alone reaches min_peaks (30 peaks); region 2 alone also
     # reaches it (30 peaks); region 3 alone falls far short (0.03 peaks) and
@@ -151,7 +160,8 @@ test_that("merge_sparse_regions_1d merges a trailing under-informed group backwa
 test_that("merge_sparse_regions_1d doesn't force-merge a trailing empty region into an already well-informed neighbour", {
     regions <- data.frame(
         region = 1:2, frac_lo = c(0, 0.5), frac_hi = c(0.5, 1),
-        density = c(0.2, 0), fwhm_q1 = c(5, NA), fwhm_q3 = c(10, NA)
+        density_q1 = c(0.2, 0), density_q2 = c(0.2, 0), density_q3 = c(0.2, 0),
+        fwhm_q1 = c(5, NA), fwhm_q3 = c(10, NA)
     )
     merged <- AlpsNMR:::merge_sparse_regions_1d(regions, n_total = 200, min_peaks = 15)
     # Region 1 alone reaches min_peaks (20 peaks) and closes its own group;
@@ -159,18 +169,21 @@ test_that("merge_sparse_regions_1d doesn't force-merge a trailing empty region i
     # merging, so it's left as its own (skippable, density-0) group rather
     # than diluting region 1's density and span:
     expect_equal(nrow(merged), 2)
-    expect_equal(merged$density[2], 0)
+    expect_equal(merged$density_q2[2], 0)
     expect_true(is.na(merged$fwhm_q1[2]))
 })
 
 test_that("merge_sparse_regions_1d keeps an all-empty spectrum as a single density-0 group", {
     regions <- data.frame(
         region = 1:3, frac_lo = c(0, 1 / 3, 2 / 3), frac_hi = c(1 / 3, 2 / 3, 1),
-        density = c(0, 0, 0), fwhm_q1 = c(NA, NA, NA), fwhm_q3 = c(NA, NA, NA)
+        density_q1 = c(0, 0, 0), density_q2 = c(0, 0, 0), density_q3 = c(0, 0, 0),
+        fwhm_q1 = c(NA, NA, NA), fwhm_q3 = c(NA, NA, NA)
     )
     merged <- AlpsNMR:::merge_sparse_regions_1d(regions, n_total = 900, min_peaks = 15)
     expect_equal(nrow(merged), 1)
-    expect_equal(merged$density, 0)
+    expect_equal(merged$density_q1, 0)
+    expect_equal(merged$density_q2, 0)
+    expect_equal(merged$density_q3, 0)
     expect_true(is.na(merged$fwhm_q1))
 })
 
@@ -181,7 +194,8 @@ test_that("min_peaks controls whether sparse adjacent regions get merged before 
         csnr = 0.03,
         regions = data.frame(
             region = 1:2, frac_lo = c(0, 0.5), frac_hi = c(0.5, 1),
-            density = c(0.001, 0.001), fwhm_q1 = c(5, 5), fwhm_q3 = c(10, 10)
+            density_q1 = c(0.001, 0.001), density_q2 = c(0.001, 0.001), density_q3 = c(0.001, 0.001),
+            fwhm_q1 = c(5, 5), fwhm_q3 = c(10, 10)
         )
     )
     set.seed(20)
@@ -208,7 +222,8 @@ test_that("with adjacent-region merging (default min_peaks), a sparse region's t
         csnr = 0.03,
         regions = data.frame(
             region = 1:2, frac_lo = c(0, 0.5), frac_hi = c(0.5, 1),
-            density = c(0.05, 0.0005), fwhm_q1 = c(5, 5), fwhm_q3 = c(10, 10)
+            density_q1 = c(0.05, 0.0005), density_q2 = c(0.05, 0.0005), density_q3 = c(0.05, 0.0005),
+            fwhm_q1 = c(5, 5), fwhm_q3 = c(10, 10)
         )
     )
     p_max <- 0.05

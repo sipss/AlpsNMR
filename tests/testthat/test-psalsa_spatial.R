@@ -161,7 +161,8 @@ test_that("tune_psalsa_region_params_1d skips regions with no observed peaks", {
         csnr = 0.03,
         regions = data.frame(
             region = 1:3, frac_lo = c(0, 1 / 3, 2 / 3), frac_hi = c(1 / 3, 2 / 3, 1),
-            density = c(0.02, 0, 0.015), fwhm_q1 = c(5, NA, 6), fwhm_q3 = c(10, NA, 12)
+            density_q1 = c(0.02, 0, 0.015), density_q2 = c(0.02, 0, 0.015), density_q3 = c(0.02, 0, 0.015),
+            fwhm_q1 = c(5, NA, 6), fwhm_q3 = c(10, NA, 12)
         )
     )
     # min_peaks = 0 disables adjacent-region merging (see
@@ -179,7 +180,8 @@ test_that("tune_psalsa_region_params_1d returns NULL when no region has observed
         csnr = 0.03,
         regions = data.frame(
             region = 1:2, frac_lo = c(0, 0.5), frac_hi = c(0.5, 1),
-            density = c(0, 0), fwhm_q1 = c(NA, NA), fwhm_q3 = c(NA, NA)
+            density_q1 = c(0, 0), density_q2 = c(0, 0), density_q3 = c(0, 0),
+            fwhm_q1 = c(NA, NA), fwhm_q3 = c(NA, NA)
         )
     )
     result <- AlpsNMR:::tune_psalsa_region_params_1d(

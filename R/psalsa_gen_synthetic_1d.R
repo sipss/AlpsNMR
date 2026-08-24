@@ -8,8 +8,17 @@
 #' called directly, it is a standalone generator.
 #'
 #' @param n Number of points.
-#' @param density Peaks per point; the number of peaks is
-#'   `max(3, round(density * n))` (further reduced by `cap_density`).
+#' @param density_q1,density_q2,density_q3 Peaks per point, as a Q1/median/Q3
+#'   triple (e.g. from `pool_signal_stats_1d()`/`pool_signal_stats_regions_1d()`,
+#'   which pool a REAL dataset's own per-sample density into exactly this
+#'   shape) rather than one fixed value -- a single density value is drawn
+#'   from this triple EACH TIME `gen_synthetic_1d()` is called (see
+#'   `draw_from_quantiles_1d()`), so a batch of synthetic draws (one call per
+#'   seed) reproduces the real dataset's own sample-to-sample density
+#'   variation instead of every draw sharing the exact same density. The
+#'   number of peaks is then `max(3, round(density_draw * n))` (further
+#'   reduced by `cap_density`). All three equal reproduces the old
+#'   deterministic behaviour (every draw gets that one fixed density).
 #' @param fwhm_range `c(lo, hi)`: each peak's full width at half maximum (in
 #'   points) is drawn uniformly from this range.
 #' @param csnr Noise scale, roughly the noise standard deviation as a
@@ -19,7 +28,22 @@
 #'   typical of NMR spectra, the same Cauchy/Lorentzian used by
 #'   [peaklist_fit_lorentzians()]), `"gaussian"`, or `"gex"` (an asymmetric,
 #'   exponentially-modified peak shape typical of chromatography).
-#' @param A Amplitude scale for both the baseline and the peaks.
+#' @param A Amplitude scale for the smooth baseline component and the noise
+#'   level (`sigma <- A * csnr * ...`) -- NOT used for peak heights directly;
+#'   see `amplitude_q1`/`amplitude_q2`/`amplitude_q3` for those. Their
+#'   defaults are expressed in terms of `A` purely to keep a bare
+#'   `gen_synthetic_1d()` call's peak heights at the same rough scale as
+#'   before this parameter existed.
+#' @param amplitude_q1,amplitude_q2,amplitude_q3 Peak height (amplitude), as
+#'   a Q1/median/Q3 triple (e.g. from `summarize_peaks_1d()`'s own
+#'   `amplitude_q1/q2/q3`, which characterizes a REAL sample or region's own
+#'   peak height distribution). EACH peak draws its OWN height independently
+#'   from this triple (see `draw_from_quantiles_1d()`), instead of every peak
+#'   in a draw sharing one lognormal centered on a single `A`. The defaults
+#'   approximate `Lognormal(meanlog = log(0.35 * A), sdlog = log(6))`'s own
+#'   25th/50th/75th percentiles (this function's pre-existing peak-height
+#'   distribution when no real amplitude analysis is available), so a bare
+#'   call without real data behaves like before.
 #' @param seed Random seed, for reproducibility.
 #' @param cap_density If `TRUE` (the default), reduces the peak count so
 #'   peaks have room to stay non-overlapping (`density` and `fwhm_range`
@@ -57,20 +81,23 @@
 #' result <- AlpsNMR:::psalsa(sig$y, lambda = 1e6)
 #' lines(result$baseline, col = "blue", lty = 2)
 #'
-gen_synthetic_1d <- function(n = 1000, density = 0.02, fwhm_range = c(10, 30), csnr = 0.03,
+gen_synthetic_1d <- function(n = 1000, density_q1 = 0.02, density_q2 = 0.02, density_q3 = 0.02,
+                              fwhm_range = c(10, 30), csnr = 0.03,
                               peak_shape = c("lorentzian", "gaussian", "gex"),
-                              A = 1, seed = 1, cap_density = TRUE, min_spacing_mult = 2) {
+                              A = 1, amplitude_q1 = 0.1045 * A, amplitude_q2 = 0.35 * A, amplitude_q3 = 1.1719 * A,
+                              seed = 1, cap_density = TRUE, min_spacing_mult = 2) {
   peak_shape <- match.arg(peak_shape)
   set.seed(seed)
   x <- seq_len(n); xf <- x / n
   baseline <- A * (1 + 0.5 * xf + 0.3 * xf^2 + 0.15 * sin(2 * pi * 2.3 * xf + stats::runif(1, -pi, pi)))
 
-  npk <- max(3, round(density * n))
+  density_draw <- draw_from_quantiles_1d(1, density_q1, density_q2, density_q3, min_val = 0)
+  npk <- max(3, round(density_draw * n))
   if (cap_density) {
     max_npk <- max(3, floor(n / (min_spacing_mult * fwhm_range[2])))
     npk <- min(npk, max_npk)
   }
-  h <- stats::rlnorm(npk, meanlog = log(0.35 * A), sdlog = log(6))
+  h <- draw_from_quantiles_1d(npk, amplitude_q1, amplitude_q2, amplitude_q3, min_val = 0)
   centers <- stats::runif(npk, 0.02 * n, 0.98 * n)
 
   peaks <- numeric(n); peak_rows <- vector("list", npk)
@@ -141,33 +168,45 @@ lorentz_peak_1d <- function(x, center, fwhm, h) {
 #' region awareness) remains the default.
 #'
 #' @param n Number of points.
-#' @param region_profile A data frame with one row per region.: `frac_lo`,
+#' @param region_profile A data frame with one row per region: `frac_lo`,
 #'   `frac_hi` (the region's span as a fraction of the signal, `0..1`),
-#'   `density` (peaks per point within the region), `fwhm_q1`, `fwhm_q3` (that
-#'   region's FWHM range, in points). A region with `density <= 0` or `NA`/
-#'   non-positive `fwhm_q1`/`fwhm_q3` (no peaks ever observed there) gets no
-#'   synthetic peaks placed in it -- an empty stretch is real information, not
-#'   missing data. An optional `amplitude` column gives that region's own
-#'   typical peak height scale (used in place of `A` for that region's peaks
-#'   only -- see `A` below); if absent, or `NA`/non-positive for a given
-#'   region, that region's peaks fall back to `A` -- byte-identical to not
-#'   having this column at all, so existing callers are unaffected.
-#' @param csnr,peak_shape,A,seed,cap_density,min_spacing_mult As in
-#'   [gen_synthetic_1d()], applied per-region (`min_spacing_mult` against that
-#'   region's own `fwhm_q3`, not the global widest FWHM). `A` and `csnr` are
-#'   used AS GIVEN (not overridden by `region_profile$amplitude`) for the
-#'   smooth baseline component and the noise level (`sigma <- A * csnr *
-#'   ...`) -- keeping those tied to the signal-wide `A`/`csnr` rather than a
-#'   region's own amplitude is what keeps the ABSOLUTE noise level constant
-#'   across regions of differing peak height, matching real
-#'   (instrument/electronic) noise, which doesn't scale with local peak
-#'   amplitude the way `A`-scaled peak heights should.
+#'   `density_q1`, `density_q2`, `density_q3` (that region's own peaks-per-point
+#'   distribution, e.g. from `pool_signal_stats_regions_1d()`), `fwhm_q1`,
+#'   `fwhm_q3` (that region's FWHM range, in points). For EACH region, on
+#'   EVERY call, a single density value is drawn from that region's own
+#'   `density_q1/q2/q3` (see `draw_from_quantiles_1d()`) -- so a batch of
+#'   synthetic draws (one call per seed) varies each region's own density
+#'   independently, draw to draw, matching how a real dataset's regional
+#'   density genuinely varies sample to sample. A region with `density_q2 <=
+#'   0` or `NA`/non-positive `fwhm_q1`/`fwhm_q3` (no peaks ever observed
+#'   there) gets no synthetic peaks placed in it -- an empty stretch is real
+#'   information, not missing data. Optional `amplitude_q1`, `amplitude_q2`,
+#'   `amplitude_q3` columns give that region's own peak height distribution
+#'   (used in place of the `amplitude_q1`/`q2`/`q3` defaults for that
+#'   region's peaks only -- see `amplitude_q2` below); if absent, or `NA`/
+#'   non-positive `amplitude_q2` for a given region, that region's peaks fall
+#'   back to the signal-wide `amplitude_q1`/`q2`/`q3` defaults -- byte-
+#'   identical to not having these columns at all, so existing callers are
+#'   unaffected.
+#' @param csnr,peak_shape,A,amplitude_q1,amplitude_q2,amplitude_q3,seed,cap_density,min_spacing_mult
+#'   As in [gen_synthetic_1d()], applied per-region (`min_spacing_mult`
+#'   against that region's own `fwhm_q3`, not the global widest FWHM; EACH
+#'   peak still draws its own height from whichever amplitude triple applies
+#'   to its region). `A` and `csnr` are used AS GIVEN (not overridden by a
+#'   region's own amplitude) for the smooth baseline component and the noise
+#'   level (`sigma <- A * csnr * ...`) -- keeping those tied to the
+#'   signal-wide `A`/`csnr` rather than a region's own amplitude is what
+#'   keeps the ABSOLUTE noise level constant across regions of differing peak
+#'   height, matching real (instrument/electronic) noise, which doesn't scale
+#'   with local peak amplitude the way peak heights should.
 #'
 #' @return As in [gen_synthetic_1d()].
 #' @noRd
 gen_synthetic_1d_regions <- function(n, region_profile, csnr = 0.03,
                                       peak_shape = c("lorentzian", "gaussian", "gex"),
-                                      A = 1, seed = 1, cap_density = TRUE, min_spacing_mult = 2) {
+                                      A = 1, amplitude_q1 = 0.1045 * A, amplitude_q2 = 0.35 * A,
+                                      amplitude_q3 = 1.1719 * A,
+                                      seed = 1, cap_density = TRUE, min_spacing_mult = 2) {
   peak_shape <- match.arg(peak_shape)
   set.seed(seed)
   x <- seq_len(n); xf <- x / n
@@ -179,25 +218,25 @@ gen_synthetic_1d_regions <- function(n, region_profile, csnr = 0.03,
     lo <- max(1L, floor(reg$frac_lo * n) + 1L)
     hi <- min(n, floor(reg$frac_hi * n))
     reg_n <- hi - lo + 1L
-    if (reg_n < 1 || is.na(reg$density) || reg$density <= 0 ||
+    if (reg_n < 1 || is.na(reg$density_q2) || reg$density_q2 <= 0 ||
       is.na(reg$fwhm_q1) || is.na(reg$fwhm_q3) || reg$fwhm_q3 <= 0) {
       next
     }
 
-    npk_r <- round(reg$density * reg_n)
+    density_r <- draw_from_quantiles_1d(1, reg$density_q1, reg$density_q2, reg$density_q3, min_val = 0)
+    npk_r <- round(density_r * reg_n)
     if (cap_density) {
       max_npk_r <- floor(reg_n / (min_spacing_mult * reg$fwhm_q3))
       npk_r <- min(npk_r, max_npk_r)
     }
     if (npk_r < 1) next
 
-    reg_amplitude <- if (!is.null(region_profile$amplitude) &&
-      !is.na(region_profile$amplitude[r]) && region_profile$amplitude[r] > 0) {
-      region_profile$amplitude[r]
-    } else {
-      A
-    }
-    h_r <- stats::rlnorm(npk_r, meanlog = log(0.35 * reg_amplitude), sdlog = log(6))
+    has_reg_amplitude <- !is.null(region_profile$amplitude_q2) &&
+      !is.na(region_profile$amplitude_q2[r]) && region_profile$amplitude_q2[r] > 0
+    reg_amplitude_q1 <- if (has_reg_amplitude) region_profile$amplitude_q1[r] else amplitude_q1
+    reg_amplitude_q2 <- if (has_reg_amplitude) region_profile$amplitude_q2[r] else amplitude_q2
+    reg_amplitude_q3 <- if (has_reg_amplitude) region_profile$amplitude_q3[r] else amplitude_q3
+    h_r <- draw_from_quantiles_1d(npk_r, reg_amplitude_q1, reg_amplitude_q2, reg_amplitude_q3, min_val = 0)
     centers_r <- stats::runif(npk_r, lo, hi)
     for (j in seq_len(npk_r)) {
       fw <- stats::runif(1, reg$fwhm_q1, reg$fwhm_q3)

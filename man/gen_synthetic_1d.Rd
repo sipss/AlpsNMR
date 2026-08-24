@@ -6,11 +6,16 @@
 \usage{
 gen_synthetic_1d(
   n = 1000,
-  density = 0.02,
+  density_q1 = 0.02,
+  density_q2 = 0.02,
+  density_q3 = 0.02,
   fwhm_range = c(10, 30),
   csnr = 0.03,
   peak_shape = c("lorentzian", "gaussian", "gex"),
   A = 1,
+  amplitude_q1 = 0.1045 * A,
+  amplitude_q2 = 0.35 * A,
+  amplitude_q3 = 1.1719 * A,
   seed = 1,
   cap_density = TRUE,
   min_spacing_mult = 2
@@ -19,8 +24,17 @@ gen_synthetic_1d(
 \arguments{
 \item{n}{Number of points.}
 
-\item{density}{Peaks per point; the number of peaks is
-\code{max(3, round(density * n))} (further reduced by \code{cap_density}).}
+\item{density_q1, density_q2, density_q3}{Peaks per point, as a Q1/median/Q3
+triple (e.g. from \code{pool_signal_stats_1d()}/\code{pool_signal_stats_regions_1d()},
+which pool a REAL dataset's own per-sample density into exactly this
+shape) rather than one fixed value -- a single density value is drawn
+from this triple EACH TIME \code{gen_synthetic_1d()} is called (see
+\code{draw_from_quantiles_1d()}), so a batch of synthetic draws (one call per
+seed) reproduces the real dataset's own sample-to-sample density
+variation instead of every draw sharing the exact same density. The
+number of peaks is then \code{max(3, round(density_draw * n))} (further
+reduced by \code{cap_density}). All three equal reproduces the old
+deterministic behaviour (every draw gets that one fixed density).}
 
 \item{fwhm_range}{\code{c(lo, hi)}: each peak's full width at half maximum (in
 points) is drawn uniformly from this range.}
@@ -34,7 +48,23 @@ typical of NMR spectra, the same Cauchy/Lorentzian used by
 \code{\link[=peaklist_fit_lorentzians]{peaklist_fit_lorentzians()}}), \code{"gaussian"}, or \code{"gex"} (an asymmetric,
 exponentially-modified peak shape typical of chromatography).}
 
-\item{A}{Amplitude scale for both the baseline and the peaks.}
+\item{A}{Amplitude scale for the smooth baseline component and the noise
+level (\code{sigma <- A * csnr * ...}) -- NOT used for peak heights directly;
+see \code{amplitude_q1}/\code{amplitude_q2}/\code{amplitude_q3} for those. Their
+defaults are expressed in terms of \code{A} purely to keep a bare
+\code{gen_synthetic_1d()} call's peak heights at the same rough scale as
+before this parameter existed.}
+
+\item{amplitude_q1, amplitude_q2, amplitude_q3}{Peak height (amplitude), as
+a Q1/median/Q3 triple (e.g. from \code{summarize_peaks_1d()}'s own
+\code{amplitude_q1/q2/q3}, which characterizes a REAL sample or region's own
+peak height distribution). EACH peak draws its OWN height independently
+from this triple (see \code{draw_from_quantiles_1d()}), instead of every peak
+in a draw sharing one lognormal centered on a single \code{A}. The defaults
+approximate \code{Lognormal(meanlog = log(0.35 * A), sdlog = log(6))}'s own
+25th/50th/75th percentiles (this function's pre-existing peak-height
+distribution when no real amplitude analysis is available), so a bare
+call without real data behaves like before.}
 
 \item{seed}{Random seed, for reproducibility.}
 
