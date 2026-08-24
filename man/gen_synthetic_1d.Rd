@@ -17,7 +17,7 @@ gen_synthetic_1d(
   amplitude_q2 = 0.35 * A,
   amplitude_q3 = 1.1719 * A,
   seed = 1,
-  cap_density = TRUE,
+  cap_density = FALSE,
   min_spacing_mult = 2
 )
 }
@@ -68,12 +68,19 @@ call without real data behaves like before.}
 
 \item{seed}{Random seed, for reproducibility.}
 
-\item{cap_density}{If \code{TRUE} (the default), reduces the peak count so
-peaks have room to stay non-overlapping (\code{density} and \code{fwhm_range}
-themselves are left untouched -- only how many peaks are actually
-placed). Peak centers are still placed uniformly at random, so this
-lowers the odds of overlap rather than guaranteeing it; set to \code{FALSE}
-to allow arbitrarily dense, overlapping peaks.}
+\item{cap_density}{If \code{TRUE}, reduces the peak count so peaks have room to
+stay non-overlapping (\code{density} and \code{fwhm_range} themselves are left
+untouched -- only how many peaks are actually placed). Peak centers are
+still placed uniformly at random, so this lowers the odds of overlap
+rather than guaranteeing it. \code{FALSE} (the default) allows arbitrarily
+dense, overlapping peaks -- this used to matter for scoring (a hard
+lo:hi window can't validly attribute area wherever peaks overlap), but
+\code{peak_area_errors_1d()}'s fractional attribution (\code{w_i(x) = pk_i(x) / peaks_total(x)}) scores overlapping peaks correctly too, using each
+peak's own known ground-truth shape, so there's no longer a scoring
+reason to keep peaks artificially spaced apart. On the real MTBLS242
+dataset, the cap (when enabled) bound in every region tried -- 3-7x
+fewer peaks than the analyzed density actually implied -- silently
+overriding any density variation regardless of how it was drawn.}
 
 \item{min_spacing_mult}{Only used when \code{cap_density = TRUE}: the peak
 count is capped so the average spacing between peaks is at least

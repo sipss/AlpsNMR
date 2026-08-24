@@ -45,12 +45,20 @@
 #'   distribution when no real amplitude analysis is available), so a bare
 #'   call without real data behaves like before.
 #' @param seed Random seed, for reproducibility.
-#' @param cap_density If `TRUE` (the default), reduces the peak count so
-#'   peaks have room to stay non-overlapping (`density` and `fwhm_range`
-#'   themselves are left untouched -- only how many peaks are actually
-#'   placed). Peak centers are still placed uniformly at random, so this
-#'   lowers the odds of overlap rather than guaranteeing it; set to `FALSE`
-#'   to allow arbitrarily dense, overlapping peaks.
+#' @param cap_density If `TRUE`, reduces the peak count so peaks have room to
+#'   stay non-overlapping (`density` and `fwhm_range` themselves are left
+#'   untouched -- only how many peaks are actually placed). Peak centers are
+#'   still placed uniformly at random, so this lowers the odds of overlap
+#'   rather than guaranteeing it. `FALSE` (the default) allows arbitrarily
+#'   dense, overlapping peaks -- this used to matter for scoring (a hard
+#'   lo:hi window can't validly attribute area wherever peaks overlap), but
+#'   `peak_area_errors_1d()`'s fractional attribution (`w_i(x) = pk_i(x) /
+#'   peaks_total(x)`) scores overlapping peaks correctly too, using each
+#'   peak's own known ground-truth shape, so there's no longer a scoring
+#'   reason to keep peaks artificially spaced apart. On the real MTBLS242
+#'   dataset, the cap (when enabled) bound in every region tried -- 3-7x
+#'   fewer peaks than the analyzed density actually implied -- silently
+#'   overriding any density variation regardless of how it was drawn.
 #' @param min_spacing_mult Only used when `cap_density = TRUE`: the peak
 #'   count is capped so the average spacing between peaks is at least
 #'   `min_spacing_mult` times the widest FWHM in `fwhm_range`.
@@ -85,7 +93,7 @@ gen_synthetic_1d <- function(n = 1000, density_q1 = 0.02, density_q2 = 0.02, den
                               fwhm_range = c(10, 30), csnr = 0.03,
                               peak_shape = c("lorentzian", "gaussian", "gex"),
                               A = 1, amplitude_q1 = 0.1045 * A, amplitude_q2 = 0.35 * A, amplitude_q3 = 1.1719 * A,
-                              seed = 1, cap_density = TRUE, min_spacing_mult = 2) {
+                              seed = 1, cap_density = FALSE, min_spacing_mult = 2) {
   peak_shape <- match.arg(peak_shape)
   set.seed(seed)
   x <- seq_len(n); xf <- x / n
@@ -206,7 +214,7 @@ gen_synthetic_1d_regions <- function(n, region_profile, csnr = 0.03,
                                       peak_shape = c("lorentzian", "gaussian", "gex"),
                                       A = 1, amplitude_q1 = 0.1045 * A, amplitude_q2 = 0.35 * A,
                                       amplitude_q3 = 1.1719 * A,
-                                      seed = 1, cap_density = TRUE, min_spacing_mult = 2) {
+                                      seed = 1, cap_density = FALSE, min_spacing_mult = 2) {
   peak_shape <- match.arg(peak_shape)
   set.seed(seed)
   x <- seq_len(n); xf <- x / n
