@@ -237,13 +237,20 @@ callDetectSpecPeaks <- function(...) {
 #' @param peak_data The output of [nmr_detect_peaks()]
 #' @param ppm_breaks A numeric vector with the breaks that will be used to count the number of the detected peaks.
 #' @param accepted_only If `peak_data` contains a logical column named `accepted`, only those with `accepted=TRUE` will be counted.
+#' @param page Which page of samples to plot (1-indexed), `samples_per_page`
+#'   samples at a time. Requesting a page beyond the number available is an
+#'   error.
+#' @param samples_per_page Number of samples (NMRExperiments) to plot per
+#'   page. There is no faceting in this plot, so this is the only control
+#'   over how many samples get crammed onto the sample axis at once.
 #'
 #' @return A scatter plot, with samples on one axis and chemical shift bins in the other axis. The size of each dot
 #'   represents the number of peaks found on a sample within a chemical shift range.
 #' @export
 #' @seealso Peak_detection
 #' @family peak detection functions
-nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(peak_data$ppm), n = 20), accepted_only = TRUE) {
+nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(peak_data$ppm), n = 20),
+                                            accepted_only = TRUE, page = 1, samples_per_page = 50) {
     to_plot <- peak_data
     if (accepted_only && "accepted" %in% colnames(to_plot)) {
         to_plot <- to_plot[to_plot$accepted, , drop = FALSE]
@@ -253,10 +260,20 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
     to_plot <- dplyr::group_by(to_plot, .data$NMRExperiment, .data$ppm_grp)
     to_plot <- dplyr::summarize(to_plot, num_peaks = dplyr::n(), .groups = "drop")
     to_plot$ppm_grp <- factor(to_plot$ppm_grp, levels = rev(levels(to_plot$ppm_grp)))
-    to_plot$NMRExperiment <- factor(
-        to_plot$NMRExperiment,
-        levels = stringr::str_sort(unique(to_plot$NMRExperiment), numeric = TRUE)
-    )
+
+    all_experiments <- stringr::str_sort(unique(to_plot$NMRExperiment), numeric = TRUE)
+    num_pages <- ceiling(length(all_experiments) / samples_per_page)
+    if (page < 1 || page > num_pages) {
+        cli::cli_abort(
+            "{.arg page} = {page} is out of range: there {?is/are} only {num_pages} page{?s} of {samples_per_page} sample{?s} each ({length(all_experiments)} sample{?s} total)."
+        )
+    }
+    page_start <- (page - 1) * samples_per_page + 1
+    page_end <- min(page * samples_per_page, length(all_experiments))
+    page_experiments <- all_experiments[page_start:page_end]
+
+    to_plot <- to_plot[to_plot$NMRExperiment %in% page_experiments, , drop = FALSE]
+    to_plot$NMRExperiment <- factor(to_plot$NMRExperiment, levels = page_experiments)
 
     gplt <- ggplot2::ggplot(to_plot) +
         ggplot2::geom_point(
@@ -274,6 +291,17 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
 
 
 #' Plot peak detection results
+#'
+#' When `peak_data` carries a fitted lorentzian for a shown peak (the
+#' `gamma_ppb`/`area` columns [peaklist_fit_lorentzians()] adds) and
+#' `nmr_dataset` has a `data_1r_baseline` (e.g. from [nmr_baseline_estimation()]),
+#' each such peak's fitted lorentzian is also drawn as a semi-transparent
+#' shape between the baseline and the fitted curve -- its area visually
+#' matches the peak's own reported `area`, since a lorentzian's own `A`
+#' parameter is exactly its integral. Peaks lacking a
+#' fit (e.g. `peak_data` from [nmr_detect_peaks()] with `fit_lorentzians =
+#' FALSE`), or a dataset with no `data_1r_baseline`, are still plotted with
+#' just the vertical line marker, unchanged from before.
 #'
 #' @family peak detection functions
 #' @inheritParams nmr_detect_peaks
@@ -337,6 +365,7 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
     if (!is.null(peak_id)) {
         peak_data_to_show <- peak_data_to_show[peak_data_to_show$peak_id %in% peak_id, , drop = FALSE]
     }
+    lorentzian_ribbon_data <- build_lorentzian_ribbon_data(nmr_dataset, peak_data_to_show, NMRExperiment)
     # We can't make it interactive here
     interactive <- "interactive" %in% names(dots) && dots[["interactive"]]
     dots[["interactive"]] <- FALSE
@@ -346,6 +375,16 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
         NMRExperiment = NMRExperiment,
         !!!dots
     )
+    if (!is.null(lorentzian_ribbon_data)) {
+        plt <- plt +
+            ggplot2::geom_ribbon(
+                data = lorentzian_ribbon_data,
+                mapping = ggplot2::aes(x = .data$ppm, ymin = .data$baseline, ymax = .data$fitted, group = .data$peak_id),
+                fill = "red",
+                alpha = 0.35,
+                inherit.aes = FALSE
+            )
+    }
     plt <- plt +
         ggplot2::geom_vline(
             data = peak_data_to_show,
@@ -361,6 +400,55 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
     }
 }
 
+## Builds one row per (peak, fine-grid-point) with the fitted lorentzian
+## curve added back onto the sample's own estimated baseline, for
+## nmr_detect_peaks_plot()'s ribbon overlay -- the ribbon's ymin/ymax are the
+## baseline and the fitted curve respectively, so its shaded area visually
+## matches the peak's own reported `area` (a lorentzian's own `A` parameter,
+## see lorentzian(), is exactly its integral). Returns NULL (no ribbon drawn)
+## when peak_data_to_show lacks a usable lorentzian fit (missing gamma_ppb/
+## area/inflection columns, or all NA/non-finite for the shown peaks) or
+## nmr_dataset has no data_1r_baseline -- both cases leave the existing
+## vline-only behaviour untouched.
+#' @noRd
+build_lorentzian_ribbon_data <- function(nmr_dataset, peak_data_to_show, NMRExperiment, n_grid = 200) {
+    if (!all(c("gamma_ppb", "area", "ppm_infl_min", "ppm_infl_max") %in% colnames(peak_data_to_show))) {
+        return(NULL)
+    }
+    if (!"data_1r_baseline" %in% names(unclass(nmr_dataset))) {
+        return(NULL)
+    }
+    fittable <- peak_data_to_show[
+        is.finite(peak_data_to_show$gamma_ppb) & is.finite(peak_data_to_show$area) &
+            is.finite(peak_data_to_show$ppm_infl_min) & is.finite(peak_data_to_show$ppm_infl_max),
+        ,
+        drop = FALSE
+    ]
+    if (nrow(fittable) == 0) {
+        return(NULL)
+    }
+    sample_idx <- which(names(nmr_dataset) == NMRExperiment)
+    if (length(sample_idx) != 1) {
+        return(NULL)
+    }
+    axis <- nmr_dataset$axis
+    baseline <- as.numeric(nmr_dataset$data_1r_baseline[sample_idx, ])
+
+    rows <- lapply(seq_len(nrow(fittable)), function(i) {
+        pk <- fittable[i, ]
+        x0 <- pk$ppm
+        gamma <- pk$gamma_ppb / 1000
+        margin <- max(pk$ppm_infl_max - x0, x0 - pk$ppm_infl_min, gamma)
+        win_lo <- max(min(axis), pk$ppm_infl_min - margin)
+        win_hi <- min(max(axis), pk$ppm_infl_max + margin)
+        xg <- seq(win_lo, win_hi, length.out = n_grid)
+        bl_g <- stats::approx(axis, baseline, xout = xg, rule = 2)$y
+        fitted_g <- lorentzian(xg, x0 = x0, gamma = gamma, A = pk$area) + bl_g
+        data.frame(peak_id = pk$peak_id, ppm = xg, baseline = bl_g, fitted = fitted_g)
+    })
+    do.call(rbind, rows)
+}
+
 signif_transformer <- function(digits = 3) {
     force(digits)
     function(text, envir) {
@@ -373,6 +461,30 @@ signif_transformer <- function(digits = 3) {
     }
 }
 
+
+## Swaps nmr_detect_peaks_plot_peaks()'s own default caption's non-breaking
+## spaces for regular spaces and its gamma sign for a plain "g" -- used only
+## when that default is in effect on a non-UTF-8 locale (see its own caller),
+## where some plotting devices render those characters as their raw UTF-8
+## byte sequence (e.g. literal "<c2><a0>") instead of the intended character,
+## a locale issue rather than a missing glyph (verified: fonts with full
+## coverage for both still render this way under a "C" locale). fixed = TRUE
+## matches the literal byte sequence regardless of locale-dependent string
+## comparison rules.
+#' @noRd
+ascii_fallback_caption <- function(caption) {
+    ## useBytes = TRUE is required, not just a preference: under a plain "C"
+    ## locale, gsub() otherwise tries to validate/translate the (non-ASCII)
+    ## pattern using the session's own native encoding and errors outright
+    ## ("pattern is invalid UTF-8") before ever reaching fixed-string
+    ## matching -- the exact locale this fallback exists for would crash on
+    ## the fallback itself without useBytes = TRUE. Matching raw bytes is
+    ## safe here because the caption's \u escapes are always stored as UTF-8
+    ## internally regardless of locale, so the byte sequences searched for
+    ## are fixed and known.
+    caption <- gsub(" ", " ", caption, fixed = TRUE, useBytes = TRUE)
+    gsub("γ", "g", caption, fixed = TRUE, useBytes = TRUE)
+}
 
 #' Plot multiple peaks from a peak list
 #'
@@ -387,7 +499,14 @@ signif_transformer <- function(digits = 3) {
 #' @param nmr_dataset The `nmr_dataset_1D` object with the spectra
 #' @param peak_data A data frame, the peak list
 #' @param peak_ids The peak ids to plot
-#' @param caption The caption for each subplot
+#' @param caption The caption for each subplot. The default's non-breaking
+#'   spaces and the gamma sign only render correctly in a UTF-8 locale; if
+#'   `caption` is left at its default AND the session's locale isn't UTF-8
+#'   (`l10n_info()[["UTF-8"]]` is not `TRUE`), they're swapped for a regular space
+#'   and a plain "g" respectively, since some plotting devices otherwise
+#'   render them as their raw byte sequence instead of the intended
+#'   character. This fallback only applies to the built-in default -- an
+#'   explicitly supplied `caption` is always used as given.
 #'
 #' @return A plot object
 #' @export
@@ -396,12 +515,16 @@ nmr_detect_peaks_plot_peaks <- function(nmr_dataset,
     peak_data,
     peak_ids,
     caption = paste(
-        "{peak_id}", "(NMRExp.\u00A0{NMRExperiment},", "\u03B3(ppb)\u00a0=\u00a0{gamma_ppb},",
+        "{peak_id}", "(NMRExp.\u00a0{NMRExperiment},", "\u03B3(ppb)\u00a0=\u00a0{gamma_ppb},",
         "\narea\u00a0=\u00a0{area},", "nrmse\u00a0=\u00a0{norm_rmse})"
     )) {
+    used_default_caption <- missing(caption)
     require_pkgs(pkg = c("cowplot", "gridExtra"))
     force(nmr_dataset)
     force(peak_data)
+    if (used_default_caption && !isTRUE(l10n_info()[["UTF-8"]])) {
+        caption <- ascii_fallback_caption(caption)
+    }
     # Workaround https://github.com/r-lib/roxygen2/issues/1342
     plots <- purrr::map(peak_ids, function(peak_id) {
         peak_metadata <- peak_data[peak_data$peak_id == peak_id, , drop = FALSE]

@@ -7,7 +7,9 @@
 nmr_detect_peaks_plot_overview(
   peak_data,
   ppm_breaks = pretty(range(peak_data$ppm), n = 20),
-  accepted_only = TRUE
+  accepted_only = TRUE,
+  page = 1,
+  samples_per_page = 50
 )
 }
 \arguments{
@@ -16,6 +18,14 @@ nmr_detect_peaks_plot_overview(
 \item{ppm_breaks}{A numeric vector with the breaks that will be used to count the number of the detected peaks.}
 
 \item{accepted_only}{If \code{peak_data} contains a logical column named \code{accepted}, only those with \code{accepted=TRUE} will be counted.}
+
+\item{page}{Which page of samples to plot (1-indexed), \code{samples_per_page}
+samples at a time. Requesting a page beyond the number available is an
+error.}
+
+\item{samples_per_page}{Number of samples (NMRExperiments) to plot per
+page. There is no faceting in this plot, so this is the only control
+over how many samples get crammed onto the sample axis at once.}
 }
 \value{
 A scatter plot, with samples on one axis and chemical shift bins in the other axis. The size of each dot

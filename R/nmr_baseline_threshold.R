@@ -36,7 +36,6 @@
 #' bl_threshold <- nmr_baseline_threshold(dataset_1D, range_without_peaks = c(9.5,10))
 #'
 nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = NULL, method = c("mean3sd", "median3mad")) {
-    # FIXME: Maybe a whole baseline would be better, so we can cope with slowly changing baselines better
     method <- match.arg(method)
     if (is.null(range_without_peaks)) {
         cli::cli_abort(
@@ -62,23 +61,23 @@ nmr_baseline_threshold <- function(nmr_dataset, range_without_peaks = NULL, meth
             )
         )
     }
+    mat <- nmr_dataset$data_1r[, threshold_ind, drop = FALSE]
+    if ("data_1r_baseline" %in% names(unclass(nmr_dataset))) {
+       mat <- mat - nmr_dataset$data_1r_baseline[, threshold_ind, drop = FALSE]
+    }
     if (method == "mean3sd") {
         if (nmr_dataset$num_samples > 1) {
-            cent <- mean(apply(nmr_dataset$data_1r[, threshold_ind, drop = FALSE], 2, mean))
-            disp <- mean(apply(nmr_dataset$data_1r[, threshold_ind, drop = FALSE], 2, stats::sd))
+            cent <- mean(apply(mat, 2, mean))
+            disp <- mean(apply(mat, 2, stats::sd))
         } else {
-            cent <- mean(as.numeric(nmr_dataset$data_1r[, threshold_ind]))
-            disp <- stats::sd(as.numeric(nmr_dataset$data_1r[, threshold_ind]))
+            cent <- mean(as.numeric(mat))
+            disp <- stats::sd(as.numeric(mat))
         }
         return(cent + 3 * disp)
     } else if (method == "median3mad") {
         out <- rep(NA_real_, nmr_dataset$num_samples)
         for (i in seq_len(nmr_dataset$num_samples)) {
-            if ("data_1r_baseline" %in% names(unclass(nmr_dataset))) {
-                spec_region <- nmr_dataset$data_1r[i, threshold_ind, drop = FALSE] - nmr_dataset$data_1r_baseline[i, threshold_ind]
-            } else {
-                spec_region <- nmr_dataset$data_1r[i, threshold_ind, drop = FALSE]
-            }
+            spec_region <- mat[i, , drop = FALSE]
             out[i] <- stats::median(spec_region) + 3 * stats::mad(spec_region)
         }
         names(out) <- names(nmr_dataset)

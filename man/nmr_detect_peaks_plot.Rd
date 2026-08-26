@@ -30,7 +30,15 @@ nmr_detect_peaks_plot(
 Plot peak detection results
 }
 \description{
-Plot peak detection results
+When \code{peak_data} carries a fitted lorentzian for a shown peak (the
+\code{gamma_ppb}/\code{area} columns \code{\link[=peaklist_fit_lorentzians]{peaklist_fit_lorentzians()}} adds) and
+\code{nmr_dataset} has a \code{data_1r_baseline} (e.g. from \code{\link[=nmr_baseline_estimation]{nmr_baseline_estimation()}}),
+each such peak's fitted lorentzian is also drawn as a semi-transparent
+shape between the baseline and the fitted curve -- its area visually
+matches the peak's own reported \code{area}, since a lorentzian's own \code{A}
+parameter is exactly its integral. Peaks lacking a
+fit (e.g. \code{peak_data} from \code{\link[=nmr_detect_peaks]{nmr_detect_peaks()}} with \code{fit_lorentzians = FALSE}), or a dataset with no \code{data_1r_baseline}, are still plotted with
+just the vertical line marker, unchanged from before.
 }
 \seealso{
 Peak_detection nmr_detect_peaks

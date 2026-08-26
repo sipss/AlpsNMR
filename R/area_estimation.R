@@ -393,6 +393,72 @@ peaklist_fit_lorentzians <- function(peak_data,
 
 
 
+#' Whether each peak's apex is a genuine local maximum
+#'
+#' For each peak, looks at the raw intensity across its own fitted window
+#' (`ppm_infl_min`-`ppm_infl_max`) and checks that `pos` both attains (within
+#' `tol_frac` of) the window's maximum intensity and that intensity moves
+#' monotonically toward it from both edges (within the same tolerance).
+#' `tol_frac` absorbs fitting/measurement noise around a flat or rounded
+#' apex, where the fitted center can land a grid point away from the exact
+#' digitized maximum despite being a genuine peak. Peaks that fail this --
+#' typically points on the shoulder of a much larger, neighbouring peak
+#' rather than a peak of their own -- are inflection points, not local
+#' maxima.
+#'
+#' @param peak_data A peak list with `NMRExperiment`, `pos`, `ppm_infl_min`,
+#'   `ppm_infl_max` columns.
+#' @param nmr_dataset The [nmr_dataset_1D] the peak list was computed from.
+#' @param tol_frac Relative tolerance (as a fraction of the window's own
+#'   peak intensity) allowed for both the near-max and monotonicity checks.
+#' @return A logical vector, one element per row of `peak_data`. `NA` for a
+#'   peak whose window is degenerate (fewer than 3 points, or `pos` outside
+#'   `ppm_infl_min`-`ppm_infl_max`) and therefore can't be judged.
+#' @noRd
+is_peak_local_max <- function(peak_data, nmr_dataset, tol_frac = 0.01) {
+    axis <- nmr_dataset$axis
+    idx_lo_all <- findInterval(peak_data$ppm_infl_min, axis)
+    idx_hi_all <- findInterval(peak_data$ppm_infl_max, axis)
+    is_local_max <- rep(NA, nrow(peak_data))
+    for (sample_id in names(nmr_dataset)) {
+        rows <- which(peak_data$NMRExperiment == sample_id)
+        if (length(rows) == 0) {
+            next
+        }
+        row_idx <- which(names(nmr_dataset) == sample_id)
+        intensity <- nmr_dataset$data_1r[row_idx, ]
+        for (i in rows) {
+            is_local_max[i] <- peak_is_local_max_1(
+                intensity, peak_data$pos[i], idx_lo_all[i], idx_hi_all[i],
+                tol_frac
+            )
+        }
+    }
+    is_local_max
+}
+
+#' @param intensity The full raw intensity vector for one sample.
+#' @param pos The peak apex, as an index into `intensity`/the ppm axis.
+#' @param idx_lo,idx_hi The peak's own window, as indices into `intensity`.
+#' @noRd
+peak_is_local_max_1 <- function(intensity, pos, idx_lo, idx_hi, tol_frac) {
+    if (is.na(idx_lo) || is.na(idx_hi) || idx_hi - idx_lo < 2 || pos < idx_lo || pos > idx_hi) {
+        return(NA)
+    }
+    vals <- intensity[idx_lo:idx_hi]
+    pos_rank <- pos - idx_lo + 1L
+    wmax <- max(vals)
+    # abs(): wmax can be negative in a flat, near-baseline window, and a
+    # negative tolerance would invert every comparison below.
+    tol <- tol_frac * abs(wmax)
+    is_near_max <- (wmax - vals[pos_rank]) <= tol
+    left_vals <- vals[seq_len(pos_rank)]
+    right_vals <- vals[pos_rank:length(vals)]
+    monotonic_left <- length(left_vals) < 2 || all(diff(left_vals) >= -tol)
+    monotonic_right <- length(right_vals) < 2 || all(diff(right_vals) <= tol)
+    is_near_max && monotonic_left && monotonic_right
+}
+
 #' Peak list: Create an `accepted` column based on some criteria
 #'
 #' @param peak_data The peak list (a data frame)
@@ -400,8 +466,19 @@ peaklist_fit_lorentzians <- function(peak_data,
 #' @param nrmse_max The normalized root mean squared error of the lorentzian peak fitting must be less than or equal to this value
 #' @param area_min Peak areas must be larger or equal to this value
 #' @param area_max Peak areas must be smaller or equal to this value
+#' @param intensity_min Peak intensities (heights) must be larger or equal to this value. Unlike
+#' `area` (`height * pi * gamma`), intensity does not scale with peak width, so this criterion
+#' doesn't penalize genuinely sharp, narrow peaks (e.g. formate) the way an area-based cutoff can.
+#' @param intensity_max Peak intensities (heights) must be smaller or equal to this value
 #' @param ppm_min The peak apex must be above this value
 #' @param ppm_max The peak apex must be below this value
+#' @param accept_inflections If `FALSE`, also rejects peaks whose apex is not a genuine local
+#' maximum of the raw signal within its own fitted window (`ppm_infl_min`-`ppm_infl_max`) --
+#' typically shoulder points detected on the flank of a much larger neighbouring peak in
+#' crowded regions, rather than peaks of their own. `TRUE` (the default) keeps the previous
+#' behaviour, where these are accepted like any other peak. A peak whose window is too small
+#' or malformed to judge is rejected when `accept_inflections = FALSE`, since it can't be
+#' confirmed to be a genuine peak.
 #' @param keep_rejected If `FALSE`, removes those peaks that do not satisfy the criteria and remove the accepted column (since all would be accepted)
 #' @param verbose Print informational message
 #'
@@ -430,15 +507,23 @@ peaklist_fit_lorentzians <- function(peak_data,
 #' # Create the accepted column:
 #' peak_data <- peaklist_accept_peaks(peak_data, nmr_dataset, area_min = 10, keep_rejected = FALSE)
 #' stopifnot(identical(peak_data$peak_id, "Peak1"))
-peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_min = 0, area_max = Inf, ppm_min = -Inf, ppm_max = Inf, keep_rejected = TRUE, verbose = FALSE) {
-    peak_data$accepted <- (
+peaklist_accept_peaks <- function(peak_data, nmr_dataset, nrmse_max = Inf, area_min = 0, area_max = Inf, intensity_min = 0, intensity_max = Inf, ppm_min = -Inf, ppm_max = Inf, accept_inflections = TRUE, keep_rejected = TRUE, verbose = FALSE) {
+    accepted <- (
         peak_data$norm_rmse <= nrmse_max &
             peak_data$area >= area_min &
             peak_data$area <= area_max &
+            peak_data$intensity >= intensity_min &
+            peak_data$intensity <= intensity_max &
             peak_data$ppm >= ppm_min &
             peak_data$ppm <= ppm_max &
             !are_ppm_regions_excluded(peak_data$ppm_infl_min, peak_data$ppm_infl_max, nmr_get_excluded_regions(nmr_dataset))
     )
+    if (!accept_inflections) {
+        is_local_max <- is_peak_local_max(peak_data, nmr_dataset)
+        is_local_max[is.na(is_local_max)] <- FALSE
+        accepted <- accepted & is_local_max
+    }
+    peak_data$accepted <- accepted
     report <- c(
         "Acceptance report",
         "i" = glue::glue("{sum(peak_data$accepted)}/{nrow(peak_data)} peaks accepted. ({signif(100*sum(peak_data$accepted)/nrow(peak_data), 3)}%)")

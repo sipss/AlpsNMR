@@ -29,9 +29,17 @@ this threshold will be computed as 3 times the median peak width (gamma), as giv
 A list including:
 \itemize{
 \item The \code{peak_data} with an additional "cluster" column
-\item cluster: the hierarchical cluster
+\item cluster: the hierarchical cluster. When both \code{peak2peak_dist} and
+\code{num_clusters} are left \code{NULL} (the default), clustering runs
+per ppm-disjoint region instead of on the whole peak list at once (see
+\code{split_peaks_into_ppm_components()}) to avoid ever building one huge
+peak-count-squared distance matrix, so this is instead a list of one
+hclust tree per region (\code{NULL} for a region with a single peak). It stays
+a single hclust tree, as before, whenever \code{peak2peak_dist} or
+\code{num_clusters} is supplied directly.
 \item num_clusters: an estimation of the number of clusters
 \item num_cluster_estimation: A list with tables and plots to justify the number of cluster estimation
+(a list of one such list per region, in the same case as \code{cluster} above)
 }
 }
 \description{

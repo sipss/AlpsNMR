@@ -45,16 +45,24 @@ peak2peak_distance <- function(peak_matrix, distance_method = "euclidean") {
 #'
 set_peak_distances_within_groups <- function(dist_matrix, peak_groups, value = Inf) {
     # Set distances from pairs of peaks belonging to the same sample to Inf,
-    # so they are never in the same cluster
-    dist_matrix <- as.matrix(dist_matrix)
+    # so they are never in the same cluster. Assigned directly on the
+    # triangular "dist" vector (a "dist" object's storage is already just a
+    # plain numeric vector with Size/Labels attributes, which [<- preserves)
+    # instead of round-tripping through a dense n x n matrix, which would
+    # otherwise double peak memory use for no benefit.
+    n <- attr(dist_matrix, "Size")
+    idx_by_label <- stats::setNames(seq_len(n), attr(dist_matrix, "Labels"))
     for (peak_ids in peak_groups) {
-        for (peak_i in peak_ids) {
-            dist_matrix[peak_i, peak_ids] <- value
-            dist_matrix[peak_ids, peak_i] <- value
-            dist_matrix[peak_i, peak_i] <- 0
+        if (length(peak_ids) < 2) {
+            next
         }
+        pos <- idx_by_label[peak_ids]
+        pairs <- utils::combn(pos, 2)
+        i <- pmin(pairs[1, ], pairs[2, ])
+        j <- pmax(pairs[1, ], pairs[2, ])
+        dist_matrix[n * (i - 1) - i * (i - 1) / 2 + (j - i)] <- value
     }
-    stats::as.dist(dist_matrix)
+    dist_matrix
 }
 
 
@@ -92,6 +100,67 @@ nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
     peak2peak_dist
 }
 
+#' Split a peak list into ppm-disjoint groups
+#'
+#' Sorts peaks by `ppm` and cuts wherever the gap to the next peak exceeds
+#' `max_dist_thresh_ppb`. A valid complete-linkage cluster's ppm span must
+#' stay under that same threshold (that is how [nmr_peak_clustering] picks
+#' `num_clusters`), so in 1D, every peak pair sharing a final cluster is
+#' necessarily within `max_dist_thresh_ppb` of each other directly -- meaning
+#' no two peaks split into different groups here could ever end up in the
+#' same final cluster. Clustering each group independently therefore gives
+#' identical results to clustering everything at once, while keeping each
+#' group's (quadratic-memory) distance matrix down to the size of one
+#' contiguous, densely-populated region instead of the whole spectrum.
+#'
+#' @param peak_data A peak list, with at least a `ppm` column.
+#' @param max_dist_thresh_ppb The split radius, in ppb.
+#' @return A list of `peak_data` subsets (data frames), each sorted by `ppm`.
+#' @noRd
+split_peaks_into_ppm_components <- function(peak_data, max_dist_thresh_ppb) {
+    peak_data <- peak_data[order(peak_data$ppm), , drop = FALSE]
+    if (nrow(peak_data) <= 1) {
+        return(list(peak_data))
+    }
+    gaps_ppb <- diff(peak_data$ppm) * 1000
+    component <- c(1L, 1L + cumsum(gaps_ppb > max_dist_thresh_ppb))
+    unname(split(peak_data, component))
+}
+
+#' Cluster one ppm-disjoint group of peaks
+#'
+#' The per-group body of [nmr_peak_clustering]'s auto-estimation path; see
+#' `split_peaks_into_ppm_components()`.
+#'
+#' @param comp_peak_data One group from `split_peaks_into_ppm_components()`.
+#' @param max_dist_thresh_ppb As in [nmr_peak_clustering].
+#' @param cluster_offset Added to this group's local cluster ids so they stay
+#'   globally unique once every group's `peak_data` is concatenated.
+#' @return A list with `peak_data` (with a `cluster` column), `cluster` (the
+#'   local hclust tree, or `NULL` for a single-peak group, which needs none),
+#'   `num_clusters`, and `num_cluster_estimation`.
+#' @noRd
+cluster_one_ppm_component <- function(comp_peak_data, max_dist_thresh_ppb, cluster_offset) {
+    if (nrow(comp_peak_data) == 1) {
+        comp_peak_data$cluster <- cluster_offset + 1L
+        return(list(peak_data = comp_peak_data, cluster = NULL, num_clusters = 1L, num_cluster_estimation = NULL))
+    }
+    comp_dist <- nmr_get_peak_distances(comp_peak_data)
+    comp_cluster <- stats::hclust(d = comp_dist, method = "complete")
+    comp_estimation <- estimate_num_clusters(
+        peak_list = comp_peak_data,
+        cluster = comp_cluster,
+        max_dist_thresh_ppb = max_dist_thresh_ppb
+    )
+    comp_peak_data$cluster <- stats::cutree(comp_cluster, k = comp_estimation$num_clusters) + cluster_offset
+    list(
+        peak_data = comp_peak_data,
+        cluster = comp_cluster,
+        num_clusters = comp_estimation$num_clusters,
+        num_cluster_estimation = comp_estimation
+    )
+}
+
 #' Peak clustering
 #'
 #' @param peak_data The peak list
@@ -103,9 +172,17 @@ nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
 #' @param verbose A logical vector to print additional information
 #' @return A list including:
 #'  - The `peak_data` with an additional "cluster" column
-#'  - cluster: the hierarchical cluster
+#'  - cluster: the hierarchical cluster. When both `peak2peak_dist` and
+#'    `num_clusters` are left `NULL` (the default), clustering runs
+#'    per ppm-disjoint region instead of on the whole peak list at once (see
+#'    `split_peaks_into_ppm_components()`) to avoid ever building one huge
+#'    peak-count-squared distance matrix, so this is instead a list of one
+#'    hclust tree per region (`NULL` for a region with a single peak). It stays
+#'    a single hclust tree, as before, whenever `peak2peak_dist` or
+#'    `num_clusters` is supplied directly.
 #'  -  num_clusters: an estimation of the number of clusters
 #'  -  num_cluster_estimation: A list with tables and plots to justify the number of cluster estimation
+#'    (a list of one such list per region, in the same case as `cluster` above)
 #' @export
 #'
 #' @examples
@@ -119,26 +196,44 @@ nmr_get_peak_distances <- function(peak_data, same_sample_dist_factor = 3) {
 #' peak_data <- clustering_result$peak_data
 #' stopifnot("cluster" %in% colnames(peak_data))
 nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters = NULL, max_dist_thresh_ppb = NULL, verbose = FALSE) {
-    if (is.null(peak2peak_dist)) {
-        peak2peak_dist <- nmr_get_peak_distances(peak_data)
-    }
     num_cluster_estimation <- NULL
-    cluster <- stats::hclust(d = peak2peak_dist, method = "complete")
-    if (is.null(num_clusters)) {
-        if (is.null(max_dist_thresh_ppb)) {
-            max_dist_thresh_ppb <- signif(3 * stats::median(peak_data$gamma_ppb), digits = 2)
-            if (verbose) {
-                cli::cli_inform(c("i" = glue("The maximum distance between two peaks in the same cluster is of {max_dist_thresh_ppb} ppbs")))
-            }
+    if (is.null(num_clusters) && is.null(max_dist_thresh_ppb)) {
+        max_dist_thresh_ppb <- signif(3 * stats::median(peak_data$gamma_ppb), digits = 2)
+        if (verbose) {
+            cli::cli_inform(c("i" = glue("The maximum distance between two peaks in the same cluster is of {max_dist_thresh_ppb} ppbs")))
         }
-        num_cluster_estimation <- estimate_num_clusters(
-            peak_list = peak_data,
-            cluster = cluster,
-            max_dist_thresh_ppb = max_dist_thresh_ppb
-        )
-        num_clusters <- num_cluster_estimation$num_clusters
     }
-    peak_data$cluster <- stats::cutree(cluster, k = num_clusters)
+
+    if (is.null(peak2peak_dist) && is.null(num_clusters)) {
+        components <- split_peaks_into_ppm_components(peak_data, max_dist_thresh_ppb)
+        cluster_offset <- 0L
+        peak_data_parts <- vector("list", length(components))
+        cluster <- vector("list", length(components))
+        num_cluster_estimation <- vector("list", length(components))
+        for (i in seq_along(components)) {
+            comp_result <- cluster_one_ppm_component(components[[i]], max_dist_thresh_ppb, cluster_offset)
+            peak_data_parts[[i]] <- comp_result$peak_data
+            cluster[[i]] <- comp_result$cluster
+            num_cluster_estimation[[i]] <- comp_result$num_cluster_estimation
+            cluster_offset <- cluster_offset + comp_result$num_clusters
+        }
+        peak_data <- dplyr::bind_rows(peak_data_parts)
+        num_clusters <- cluster_offset
+    } else {
+        if (is.null(peak2peak_dist)) {
+            peak2peak_dist <- nmr_get_peak_distances(peak_data)
+        }
+        cluster <- stats::hclust(d = peak2peak_dist, method = "complete")
+        if (is.null(num_clusters)) {
+            num_cluster_estimation <- estimate_num_clusters(
+                peak_list = peak_data,
+                cluster = cluster,
+                max_dist_thresh_ppb = max_dist_thresh_ppb
+            )
+            num_clusters <- num_cluster_estimation$num_clusters
+        }
+        peak_data$cluster <- stats::cutree(cluster, k = num_clusters)
+    }
 
     # Estimate the ppm_ref
     # The digits are at least four. However if the max_dist_thresh is very small
@@ -195,7 +290,14 @@ nmr_peak_clustering <- function(peak_data, peak2peak_dist = NULL, num_clusters =
 #' @noRd
 get_max_dist_ppb_for_num_clusters <- function(num_clusters, peak_list, cluster, max_dist_thresh_ppb) {
     peak_assignments <- stats::cutree(cluster, k = num_clusters)
-    peak_assignments <- peak_assignments[peak_list$peak_id, ]
+    # cutree() drops to a plain vector (not a 1-column matrix) when
+    # num_clusters has length 1 -- e.g. whenever min_clusters_to_test and
+    # max_clusters_to_test coincide in estimate_num_clusters(), which happens
+    # whenever every peak being clustered here comes from a single sample.
+    if (is.null(dim(peak_assignments))) {
+        peak_assignments <- matrix(peak_assignments, ncol = 1, dimnames = list(names(peak_assignments), NULL))
+    }
+    peak_assignments <- peak_assignments[peak_list$peak_id, , drop = FALSE]
     peak_list$cluster <- NULL
     max_dist_ppbs <- numeric(length(num_clusters))
     break_in <- NULL

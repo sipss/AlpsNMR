@@ -10,21 +10,34 @@ psalsa(
   p = 0.001,
   k = -1,
   maxit = 25,
-  k_epsilon = 1e-06
+  k_epsilon = 1e-06,
+  damping = 1,
+  weight_method = c("threshold", "smooth"),
+  s = 500,
+  c_noise = 0.1,
+  w_max = 0.9
 )
 }
 \arguments{
 \item{spectra}{Either a numeric vector containing one spectrum, or a matrix
 containing one spectrum per row.}
 
-\item{lambda}{Smoothing parameter (generally \code{1e5} - \code{1e8}).}
+\item{lambda}{Smoothing parameter (generally \code{1e5} - \code{1e8}). Either a single
+value (used for the whole spectrum) or a numeric vector the same length
+as one spectrum, giving a position-varying smoothing profile -- see
+\code{tune_psalsa_spatial()}, which builds such a profile from per-region
+tuning. When \code{spectra} is a matrix, the same profile is used for every
+row.}
 
-\item{p}{Asymmetry parameter.}
+\item{p}{Asymmetry parameter. Either a single value or a position-varying
+vector, as for \code{lambda}.}
 
 \item{k}{Peak height parameter, controlling how strongly the weights of
 points above the baseline decay with their height. Usually about 5\% of the
 maximum intensity. When \code{k = -1} (the default) it is set to one twentieth
-of the maximum intensity of each spectrum.}
+of the maximum intensity of each spectrum. Either a single value or a
+position-varying vector, as for \code{lambda} (the \code{k = -1} auto-default only
+applies when \code{k} is a single value).}
 
 \item{maxit}{Maximum number of iterations.}
 
@@ -36,6 +49,43 @@ usually derived from an estimated noise level (see \code{\link[=tune_psalsa]{tun
 silently degenerating the baseline toward the signal's minimum. Scaled by
 the data's own range (rather than a fixed absolute value) so the floor
 stays proportionate regardless of the signal's amplitude.}
+
+\item{damping}{Under-relaxation factor in \verb{(0, 1]} for the asymmetric
+weight update: each iteration's new weight is \code{damping * w_target + (1 - damping) * w_old} instead of replacing \code{w} outright. \code{damping = 1} (the
+default) is the original, undamped update. Because the reweighting
+depends on a hard threshold (whether each point sits above or below the
+current baseline estimate), a full-step update can occasionally
+overshoot near a flat/quiet region -- many points sit close to that
+threshold there, so a large-enough step in the fitted curve flips a big
+batch of them at once, which then swings the next fitted curve enough to
+flip a comparable batch back, an oscillation that can persist right up
+to \code{maxit} instead of settling. \code{damping < 1} shrinks how much the fitted
+curve moves per iteration, directly shrinking how many points can cross
+the threshold in one step. Verified on real data to eliminate this
+oscillation (see \code{psalsa_core()}'s own comments for the failure mode);
+convergence takes correspondingly more iterations, so \code{maxit} may need
+raising alongside a \code{damping} below 1.}
+
+\item{weight_method}{\code{"threshold"} (the default) is the original weight
+update (\code{p * exp(-d/k)} above the current baseline, \code{1 - p} below it,
+split by the hard \code{d >= 0} threshold). \code{"smooth"} instead uses
+\code{compute_psalsa_weights()}: a piecewise, C1-continuous weight curve with
+a central noise band \verb{[-s, s]} (cubic Hermite-interpolated between the
+two boundary weights, matching the exponential pieces' own slopes there)
+instead of a hard threshold at \code{d = 0}. Two effects, addressing two
+distinct issues found with \code{"threshold"}: (1) no discontinuity at \code{d = 0} to oscillate across (may reduce or remove the need for \code{damping < 1}); (2) points near the middle of the noise band get a weight between
+\code{p} and \code{w_max} rather than \code{p} itself, avoiding the systematic
+downward bias \code{"threshold"} introduces even in a genuinely flat/quiet
+region (there, \code{p} alone -- not \code{k} -- sets a floor on how low a
+residual's weight can go, however small the residual, since \code{d >= 0}
+alone triggers the \code{p}-branch). Only supports a single (scalar) \code{p}/\code{k}
+for now, not \code{tune_psalsa_spatial()}'s position-varying profiles.}
+
+\item{s, c_noise, w_max}{Only used when \code{weight_method = "smooth"} -- see
+\code{compute_psalsa_weights()}. \code{s} should be sized to the signal's own
+noise amplitude (e.g. a small multiple of its estimated noise standard
+deviation), not left at its exploratory default of \code{500} for a signal
+whose real noise level is very different.}
 }
 \value{
 A list with two elements, each with the same dimensions as
