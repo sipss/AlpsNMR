@@ -20,7 +20,14 @@ nmr_detect_peaks_plot_peaks(
 
 \item{peak_ids}{The peak ids to plot}
 
-\item{caption}{The caption for each subplot}
+\item{caption}{The caption for each subplot. The default's non-breaking
+spaces and the gamma sign only render correctly in a UTF-8 locale; if
+\code{caption} is left at its default AND the session's locale isn't UTF-8
+(\code{l10n_info()[["UTF-8"]]} is not \code{TRUE}), they're swapped for a regular space
+and a plain "g" respectively, since some plotting devices otherwise
+render them as their raw byte sequence instead of the intended
+character. This fallback only applies to the built-in default -- an
+explicitly supplied \code{caption} is always used as given.}
 }
 \value{
 A plot object

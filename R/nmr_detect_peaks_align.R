@@ -462,6 +462,30 @@ signif_transformer <- function(digits = 3) {
 }
 
 
+## Swaps nmr_detect_peaks_plot_peaks()'s own default caption's non-breaking
+## spaces for regular spaces and its gamma sign for a plain "g" -- used only
+## when that default is in effect on a non-UTF-8 locale (see its own caller),
+## where some plotting devices render those characters as their raw UTF-8
+## byte sequence (e.g. literal "<c2><a0>") instead of the intended character,
+## a locale issue rather than a missing glyph (verified: fonts with full
+## coverage for both still render this way under a "C" locale). fixed = TRUE
+## matches the literal byte sequence regardless of locale-dependent string
+## comparison rules.
+#' @noRd
+ascii_fallback_caption <- function(caption) {
+    ## useBytes = TRUE is required, not just a preference: under a plain "C"
+    ## locale, gsub() otherwise tries to validate/translate the (non-ASCII)
+    ## pattern using the session's own native encoding and errors outright
+    ## ("pattern is invalid UTF-8") before ever reaching fixed-string
+    ## matching -- the exact locale this fallback exists for would crash on
+    ## the fallback itself without useBytes = TRUE. Matching raw bytes is
+    ## safe here because the caption's \u escapes are always stored as UTF-8
+    ## internally regardless of locale, so the byte sequences searched for
+    ## are fixed and known.
+    caption <- gsub(" ", " ", caption, fixed = TRUE, useBytes = TRUE)
+    gsub("γ", "g", caption, fixed = TRUE, useBytes = TRUE)
+}
+
 #' Plot multiple peaks from a peak list
 #'
 #' @usage nmr_detect_peaks_plot_peaks(
@@ -475,7 +499,14 @@ signif_transformer <- function(digits = 3) {
 #' @param nmr_dataset The `nmr_dataset_1D` object with the spectra
 #' @param peak_data A data frame, the peak list
 #' @param peak_ids The peak ids to plot
-#' @param caption The caption for each subplot
+#' @param caption The caption for each subplot. The default's non-breaking
+#'   spaces and the gamma sign only render correctly in a UTF-8 locale; if
+#'   `caption` is left at its default AND the session's locale isn't UTF-8
+#'   (`l10n_info()[["UTF-8"]]` is not `TRUE`), they're swapped for a regular space
+#'   and a plain "g" respectively, since some plotting devices otherwise
+#'   render them as their raw byte sequence instead of the intended
+#'   character. This fallback only applies to the built-in default -- an
+#'   explicitly supplied `caption` is always used as given.
 #'
 #' @return A plot object
 #' @export
@@ -484,12 +515,16 @@ nmr_detect_peaks_plot_peaks <- function(nmr_dataset,
     peak_data,
     peak_ids,
     caption = paste(
-        "{peak_id}", "(NMRExp.\u00A0{NMRExperiment},", "\u03B3(ppb)\u00a0=\u00a0{gamma_ppb},",
+        "{peak_id}", "(NMRExp.\u00a0{NMRExperiment},", "\u03B3(ppb)\u00a0=\u00a0{gamma_ppb},",
         "\narea\u00a0=\u00a0{area},", "nrmse\u00a0=\u00a0{norm_rmse})"
     )) {
+    used_default_caption <- missing(caption)
     require_pkgs(pkg = c("cowplot", "gridExtra"))
     force(nmr_dataset)
     force(peak_data)
+    if (used_default_caption && !isTRUE(l10n_info()[["UTF-8"]])) {
+        caption <- ascii_fallback_caption(caption)
+    }
     # Workaround https://github.com/r-lib/roxygen2/issues/1342
     plots <- purrr::map(peak_ids, function(peak_id) {
         peak_metadata <- peak_data[peak_data$peak_id == peak_id, , drop = FALSE]
