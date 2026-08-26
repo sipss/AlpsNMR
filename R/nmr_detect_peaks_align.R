@@ -292,6 +292,17 @@ nmr_detect_peaks_plot_overview <- function(peak_data, ppm_breaks = pretty(range(
 
 #' Plot peak detection results
 #'
+#' When `peak_data` carries a fitted lorentzian for a shown peak (the
+#' `gamma_ppb`/`area` columns [peaklist_fit_lorentzians()] adds) and
+#' `nmr_dataset` has a `data_1r_baseline` (e.g. from [nmr_baseline_estimation()]),
+#' each such peak's fitted lorentzian is also drawn as a semi-transparent
+#' shape between the baseline and the fitted curve -- its area visually
+#' matches the peak's own reported `area`, since a lorentzian's own `A`
+#' parameter is exactly its integral. Peaks lacking a
+#' fit (e.g. `peak_data` from [nmr_detect_peaks()] with `fit_lorentzians =
+#' FALSE`), or a dataset with no `data_1r_baseline`, are still plotted with
+#' just the vertical line marker, unchanged from before.
+#'
 #' @family peak detection functions
 #' @inheritParams nmr_detect_peaks
 #' @param peak_data The peak table returned by [nmr_detect_peaks]
@@ -354,6 +365,7 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
     if (!is.null(peak_id)) {
         peak_data_to_show <- peak_data_to_show[peak_data_to_show$peak_id %in% peak_id, , drop = FALSE]
     }
+    lorentzian_ribbon_data <- build_lorentzian_ribbon_data(nmr_dataset, peak_data_to_show, NMRExperiment)
     # We can't make it interactive here
     interactive <- "interactive" %in% names(dots) && dots[["interactive"]]
     dots[["interactive"]] <- FALSE
@@ -363,6 +375,16 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
         NMRExperiment = NMRExperiment,
         !!!dots
     )
+    if (!is.null(lorentzian_ribbon_data)) {
+        plt <- plt +
+            ggplot2::geom_ribbon(
+                data = lorentzian_ribbon_data,
+                mapping = ggplot2::aes(x = .data$ppm, ymin = .data$baseline, ymax = .data$fitted, group = .data$peak_id),
+                fill = "red",
+                alpha = 0.35,
+                inherit.aes = FALSE
+            )
+    }
     plt <- plt +
         ggplot2::geom_vline(
             data = peak_data_to_show,
@@ -376,6 +398,55 @@ nmr_detect_peaks_plot <- function(nmr_dataset,
     } else {
         plt
     }
+}
+
+## Builds one row per (peak, fine-grid-point) with the fitted lorentzian
+## curve added back onto the sample's own estimated baseline, for
+## nmr_detect_peaks_plot()'s ribbon overlay -- the ribbon's ymin/ymax are the
+## baseline and the fitted curve respectively, so its shaded area visually
+## matches the peak's own reported `area` (a lorentzian's own `A` parameter,
+## see lorentzian(), is exactly its integral). Returns NULL (no ribbon drawn)
+## when peak_data_to_show lacks a usable lorentzian fit (missing gamma_ppb/
+## area/inflection columns, or all NA/non-finite for the shown peaks) or
+## nmr_dataset has no data_1r_baseline -- both cases leave the existing
+## vline-only behaviour untouched.
+#' @noRd
+build_lorentzian_ribbon_data <- function(nmr_dataset, peak_data_to_show, NMRExperiment, n_grid = 200) {
+    if (!all(c("gamma_ppb", "area", "ppm_infl_min", "ppm_infl_max") %in% colnames(peak_data_to_show))) {
+        return(NULL)
+    }
+    if (!"data_1r_baseline" %in% names(unclass(nmr_dataset))) {
+        return(NULL)
+    }
+    fittable <- peak_data_to_show[
+        is.finite(peak_data_to_show$gamma_ppb) & is.finite(peak_data_to_show$area) &
+            is.finite(peak_data_to_show$ppm_infl_min) & is.finite(peak_data_to_show$ppm_infl_max),
+        ,
+        drop = FALSE
+    ]
+    if (nrow(fittable) == 0) {
+        return(NULL)
+    }
+    sample_idx <- which(names(nmr_dataset) == NMRExperiment)
+    if (length(sample_idx) != 1) {
+        return(NULL)
+    }
+    axis <- nmr_dataset$axis
+    baseline <- as.numeric(nmr_dataset$data_1r_baseline[sample_idx, ])
+
+    rows <- lapply(seq_len(nrow(fittable)), function(i) {
+        pk <- fittable[i, ]
+        x0 <- pk$ppm
+        gamma <- pk$gamma_ppb / 1000
+        margin <- max(pk$ppm_infl_max - x0, x0 - pk$ppm_infl_min, gamma)
+        win_lo <- max(min(axis), pk$ppm_infl_min - margin)
+        win_hi <- min(max(axis), pk$ppm_infl_max + margin)
+        xg <- seq(win_lo, win_hi, length.out = n_grid)
+        bl_g <- stats::approx(axis, baseline, xout = xg, rule = 2)$y
+        fitted_g <- lorentzian(xg, x0 = x0, gamma = gamma, A = pk$area) + bl_g
+        data.frame(peak_id = pk$peak_id, ppm = xg, baseline = bl_g, fitted = fitted_g)
+    })
+    do.call(rbind, rows)
 }
 
 signif_transformer <- function(digits = 3) {
