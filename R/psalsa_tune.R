@@ -391,10 +391,34 @@ percentile_init_1d <- function(y, window_frac = 1 / 20, shift_frac = 0.5, q = 0.
   stats::approx(centers, vals, xout = seq_len(n), rule = 2)$y
 }
 
-## Simple strict-local-max peak detection on the residual against
-## percentile_init_1d() -- deliberately simple (no non-max suppression for
-## bumpy peak tops), since this only needs a BALLPARK peak count/width, not
-## precise peak-picking.
+## Strict-local-max peak detection on the residual against
+## percentile_init_1d(), with non-max suppression across each cluster of
+## adjacent local maxima. A plain "every local max above threshold counts as
+## its own peak" rule (the original, simpler version of this function)
+## badly over-counts: noise_est_1d()'s noise_sd is a fine-scale, point-to-
+## point estimate, but the residual can carry broader, lower-frequency
+## texture (rolling baseline, ripple, a swarm of tiny overlapping real
+## resonances) that this threshold can't see -- verified directly on the
+## MTBLS242 dataset: an ostensibly quiet reference region (one obvious real
+## peak) produced 161 OTHER "peaks" from residual bumps of height 200-1000,
+## a 40-300 sigma event under the region's own local noise_sd (~3-5) if it
+## were genuinely white noise, i.e. not noise at all -- just unresolved
+## texture the simple rule chopped into many separate detections. Since this
+## kind of over-detection happens at a similar background rate almost
+## everywhere, it washes out the real density difference between crowded
+## and quiet regions (every region ends up looking similarly "peaky").
+##
+## Fix: non-max suppression. Candidates are still found the same way (local
+## max, residual > height_mult * noise_sd), and each candidate's own naive
+## half-height width is computed the same way too -- but candidates are then
+## processed tallest-first, and a candidate is dropped if it falls within an
+## already-accepted (taller) candidate's own width: a real peak "owns" a
+## stretch about as wide as itself, and any other local max riding on that
+## same stretch is far more likely to be a shoulder/ripple on the SAME
+## feature than a separate one. This deliberately also merges a genuine
+## closely-spaced multiplet's individual lines into one detection when
+## they're within one line's own width of each other -- an accepted
+## trade-off for a BALLPARK peak count/width (not precise peak-picking).
 #' @noRd
 detect_peaks_1d <- function(y, height_mult = 5) {
   z0 <- percentile_init_1d(y)
@@ -406,15 +430,30 @@ detect_peaks_1d <- function(y, height_mult = 5) {
   is_max <- logical(n)
   is_max[2:(n - 1)] <- r[2:(n - 1)] > r[1:(n - 2)] & r[2:(n - 1)] > r[3:n]
   candidates <- which(is_max & r > thresh)
+  if (length(candidates) == 0) {
+    return(data.frame(idx = integer(0), height = numeric(0), fwhm = numeric(0)))
+  }
 
-  rows <- lapply(candidates, function(i) {
+  widths <- vapply(candidates, function(i) {
     half <- r[i] / 2
     lo <- i; while (lo > 1 && r[lo] > half) lo <- lo - 1
     hi <- i; while (hi < n && r[hi] > half) hi <- hi + 1
-    data.frame(idx = i, height = r[i], fwhm = hi - lo)
-  })
-  if (length(rows) == 0) return(data.frame(idx = integer(0), height = numeric(0), fwhm = numeric(0)))
-  do.call(rbind, rows)
+    hi - lo
+  }, numeric(1))
+
+  order_desc <- order(r[candidates], decreasing = TRUE)
+  accepted <- logical(length(candidates))
+  for (k in order_desc) {
+    already_near <- which(accepted)
+    if (length(already_near) &&
+      any(abs(candidates[k] - candidates[already_near]) <= widths[already_near])) {
+      next
+    }
+    accepted[k] <- TRUE
+  }
+
+  keep <- which(accepted)
+  data.frame(idx = candidates[keep], height = r[candidates[keep]], fwhm = widths[keep])
 }
 
 #' @noRd
